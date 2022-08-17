@@ -1,0 +1,10 @@
+{
+  "name": "harmony",
+  "version": "0.0.1",
+  "author": "David Kellner",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "cross-fetch": "^3.1.5"
+  }
+}
