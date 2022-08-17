@@ -7,7 +7,7 @@ export default class Deezer {
 		return this.fetchJSON(`${this.API_BASE_URL}/album/${albumId}`);
 	}
 
-	static getTracklist(albumId: string): Promise<TracklistItem[]> {
+	static getTracklist(albumId: string): Promise<Tracklist> {
 		return this.fetchJSON(`${this.API_BASE_URL}/album/${albumId}/tracks`);
 	}
 
@@ -143,6 +143,11 @@ type TracklistItem = ReleaseTrack & {
 	isrc: string
 	track_position: number
 	disk_number: number
+}
+
+type Tracklist = {
+	data: TracklistItem[]
+	total: number
 }
 
 type Track = TracklistItem & {
