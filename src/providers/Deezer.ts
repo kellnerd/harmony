@@ -17,7 +17,7 @@ export default class Deezer {
 		const data = await this.fetchJSON(`${this.API_BASE_URL}/${path}`);
 
 		if (data.error) {
-			throw new DeezerResponseError(data.error.message, data.error.code);
+			throw new DeezerResponseError(data.error);
 		}
 
 		return data;
@@ -31,11 +31,8 @@ export default class Deezer {
 
 
 class DeezerResponseError extends ResponseError {
-	code: number;
-
-	constructor(message: string, code: number) {
-		super('Deezer', `${message} (code ${code})`);
-		this.code = code;
+	constructor(readonly details: ApiError) {
+		super('Deezer', `${details.message} (code ${details.code})`);
 	}
 }
 
@@ -182,4 +179,12 @@ type Track = TracklistItem & {
 	artist: TrackArtist
 	album: MinimalRelease
 	type: string
+}
+
+type ErrorType = 'Exception' | 'OAuthException' | 'ParameterException' | 'MissingParameterException' | 'InvalidQueryException' | 'DataException' | 'IndividualAccountChangedNotAllowedException'
+
+type ApiError = {
+	code: number
+	message: string
+	type: ErrorType
 }
