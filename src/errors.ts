@@ -2,12 +2,12 @@ import { CustomError } from 'ts-custom-error';
 
 export class ProviderError extends CustomError {
 	constructor(readonly providerName: string, message: string) {
-		super(message);
+		super(`${providerName}: ${message}`);
 	}
 }
 
 export class ResponseError extends ProviderError {
-	constructor(providerName: string, message: string) {
-		super(providerName, `No valid response: ${message}`);
+	constructor(providerName: string, message: string, readonly url: URL) {
+		super(providerName, `${message}: ${url}`);
 	}
 }

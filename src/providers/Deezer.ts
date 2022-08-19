@@ -1,38 +1,55 @@
+import MetadataProvider from './abstract';
+import { GTIN, HarmonyRelease } from './common';
 import { ResponseError } from '../errors';
 
 // See https://developers.deezer.com/api
 
-export default class Deezer {
-	static API_BASE_URL = 'https://api.deezer.com';
+export default class DeezerProvider extends MetadataProvider<Release> {
+	readonly name = 'Deezer';
+	readonly supportedDomains: 'www.deezer.com';
+	readonly releaseUrlRegex = /(?:\w{2}\/)?album\/(\d+)/;
 
-	static getRelease(albumId: string): Promise<Release> {
+	readonly apiBaseUrl = 'https://api.deezer.com';
+
+	getRawReleaseById(albumId: string): Promise<Release> {
 		return this.query(`album/${albumId}`);
 	}
 
-	static getTracklist(albumId: string): Promise<Tracklist> {
+	getRawTracklist(albumId: string): Promise<Tracklist> {
 		return this.query(`album/${albumId}/tracks`);
 	}
 
-	static async query(path: string) {
-		const data = await this.fetchJSON(`${this.API_BASE_URL}/${path}`);
-
-		if (data.error) {
-			throw new DeezerResponseError(data.error);
-		}
-
-		return data;
+	getRawReleaseByGTIN(upc: GTIN): Promise<Release> {
+		throw new Error('Method not implemented.'); // TODO
 	}
 
-	static async fetchJSON(input: RequestInfo, init?: RequestInit) {
-		const response = await fetch(input, init);
-		return response.json();
+	convertRawRelease(rawRelease: Release): HarmonyRelease {
+		return {
+			title: rawRelease.title,
+			gtin: rawRelease.upc,
+			externalLink: new URL(rawRelease.link),
+		};
+	}
+
+	constructReleaseUrl(id: string): URL {
+		return new URL('https://www.deezer.com/album/' + id);
+	}
+
+	private async query(path: string) {
+		const apiUrl = new URL(`${this.apiBaseUrl}/${path}`);
+		const data = await this.fetchJSON(apiUrl);
+
+		if (data.error) {
+			throw new DeezerResponseError(data.error, apiUrl);
+		}
+		return data;
 	}
 }
 
 
 class DeezerResponseError extends ResponseError {
-	constructor(readonly details: ApiError) {
-		super('Deezer', `${details.message} (code ${details.code})`);
+	constructor(readonly details: ApiError, url: URL) {
+		super('Deezer', `${details.message} (code ${details.code})`, url);
 	}
 }
 
