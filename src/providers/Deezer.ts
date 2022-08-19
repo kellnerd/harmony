@@ -1,19 +1,41 @@
+import { ResponseError } from '../errors';
+
 // See https://developers.deezer.com/api
 
 export default class Deezer {
 	static API_BASE_URL = 'https://api.deezer.com';
 
 	static getRelease(albumId: string): Promise<Release> {
-		return this.fetchJSON(`${this.API_BASE_URL}/album/${albumId}`);
+		return this.query(`album/${albumId}`);
 	}
 
 	static getTracklist(albumId: string): Promise<Tracklist> {
-		return this.fetchJSON(`${this.API_BASE_URL}/album/${albumId}/tracks`);
+		return this.query(`album/${albumId}/tracks`);
+	}
+
+	static async query(path: string) {
+		const data = await this.fetchJSON(`${this.API_BASE_URL}/${path}`);
+
+		if (data.error) {
+			throw new DeezerResponseError(data.error.message, data.error.code);
+		}
+
+		return data;
 	}
 
 	static async fetchJSON(input: RequestInfo, init?: RequestInit) {
-		let result = await fetch(input, init);
-		return result.json();
+		const response = await fetch(input, init);
+		return response.json();
+	}
+}
+
+
+class DeezerResponseError extends ResponseError {
+	code: number;
+
+	constructor(message: string, code: number) {
+		super('Deezer', `${message} (code ${code})`);
+		this.code = code;
 	}
 }
 
