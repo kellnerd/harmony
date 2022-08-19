@@ -15,7 +15,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		return this.query(`album/${albumId}`);
 	}
 
-	getRawTracklist(albumId: string): Promise<Tracklist> {
+	getRawTracklist(albumId: string): Promise<Response<TracklistItem>> {
 		return this.query(`album/${albumId}/tracks`);
 	}
 
@@ -181,11 +181,6 @@ type TracklistItem = ReleaseTrack & {
 	disk_number: number
 }
 
-type Tracklist = {
-	data: TracklistItem[]
-	total: number
-}
-
 type Track = TracklistItem & {
 	share: string
 	release_date: string
@@ -204,4 +199,12 @@ type ApiError = {
 	code: number
 	message: string
 	type: ErrorType
+}
+
+type Response<T> = {
+	data: T[]
+	total: number
+	prev?: string
+	next?: string
+	error?: ApiError
 }
