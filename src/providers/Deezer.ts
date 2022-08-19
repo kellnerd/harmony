@@ -20,7 +20,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 	}
 
 	getRawReleaseByGTIN(upc: GTIN): Promise<Release> {
-		throw new Error('Method not implemented.'); // TODO
+		return this.query(`album/upc:${upc}`);
 	}
 
 	convertRawRelease(rawRelease: Release): HarmonyRelease {
