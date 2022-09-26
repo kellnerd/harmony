@@ -1,4 +1,5 @@
 import MetadataProvider from './abstract';
+import { DurationPrecision } from './common';
 import { ResponseError } from '../errors';
 
 import type {
@@ -15,6 +16,8 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 	readonly name = 'Deezer';
 	readonly supportedDomains = 'www.deezer.com';
 	readonly releaseUrlRegex = /(?:\w{2}\/)?album\/(\d+)/;
+
+	readonly durationPrecision = DurationPrecision.SECONDS;
 
 	readonly apiBaseUrl = 'https://api.deezer.com';
 

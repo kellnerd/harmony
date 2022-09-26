@@ -2,6 +2,7 @@ import { ProviderError } from '../errors';
 import { preferArray } from '../utils/array';
 
 import type {
+	DurationPrecision,
 	GTIN,
 	HarmonyRelease,
 	ReleaseOptions,
@@ -27,6 +28,8 @@ export default abstract class MetadataProvider<RawRelease> {
 	 * Matched against the clean URL as returned by `cleanUrl()`.
 	 */
 	abstract readonly releaseUrlRegex: MaybeArray<RegExp>;
+
+	abstract readonly durationPrecision: DurationPrecision;
 
 	/** Looks up the release which is identified by the given URL or GTIN/barcode. */
 	getRelease(urlOrGtin: URL | GTIN, options?: ReleaseOptions): Promise<HarmonyRelease> {
