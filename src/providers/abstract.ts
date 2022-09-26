@@ -1,7 +1,11 @@
 import { ProviderError } from '../errors';
 import { preferArray } from '../utils/array';
 
-import type { GTIN, HarmonyRelease } from './common';
+import type {
+	GTIN,
+	HarmonyRelease,
+	ReleaseOptions,
+} from './common';
 import type { MaybeArray, MaybePromise } from '../utils/types';
 
 /**
@@ -25,34 +29,34 @@ export default abstract class MetadataProvider<RawRelease> {
 	abstract readonly releaseUrlRegex: MaybeArray<RegExp>;
 
 	/** Looks up the release which is identified by the given URL or GTIN/barcode. */
-	getRelease(urlOrGtin: URL | GTIN): Promise<HarmonyRelease> {
+	getRelease(urlOrGtin: URL | GTIN, options?: ReleaseOptions): Promise<HarmonyRelease> {
 		if (urlOrGtin instanceof URL) {
 			const id = this.extractReleaseId(urlOrGtin);
 			if (id === undefined) {
 				throw new ProviderError(this.name, `Could not extract ID from ${urlOrGtin}`);
 			}
-			return this.getReleaseById(id);
+			return this.getReleaseById(id, options);
 		} else {
-			return this.getReleaseByGTIN(urlOrGtin);
+			return this.getReleaseByGTIN(urlOrGtin, options);
 		}
 	};
 
 	/** Looks up the release which is identified by the given provider ID. */
-	async getReleaseById(id: string): Promise<HarmonyRelease> {
-		return this.convertRawRelease(await this.getRawReleaseById(id));
+	async getReleaseById(id: string, options?: ReleaseOptions): Promise<HarmonyRelease> {
+		return this.convertRawRelease(await this.getRawReleaseById(id), options);
 	};
 
 	abstract getRawReleaseById(id: string): Promise<RawRelease>;
 
 	/** Looks up the release which is identified by the given GTIN/barcode. */
-	async getReleaseByGTIN(gtin: GTIN): Promise<HarmonyRelease> {
-		return this.convertRawRelease(await this.getRawReleaseByGTIN(gtin));
+	async getReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<HarmonyRelease> {
+		return this.convertRawRelease(await this.getRawReleaseByGTIN(gtin), options);
 	};
 
 	abstract getRawReleaseByGTIN(gtin: GTIN): Promise<RawRelease>;
 
 	/** Converts the given provider-specific raw release metadata into a common representation. */
-	abstract convertRawRelease(rawRelease: RawRelease): MaybePromise<HarmonyRelease>;
+	abstract convertRawRelease(rawRelease: RawRelease, options?: ReleaseOptions): MaybePromise<HarmonyRelease>;
 
 	/** Constructs a canonical release URL for the given provider ID. */
 	abstract constructReleaseUrl(id: string): URL;

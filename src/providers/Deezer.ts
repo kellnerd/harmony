@@ -1,12 +1,19 @@
 import MetadataProvider from './abstract';
-import { GTIN, HarmonyRelease } from './common';
 import { ResponseError } from '../errors';
+
+import type {
+	GTIN,
+	HarmonyMedium,
+	HarmonyRelease,
+	HarmonyTrack,
+	ReleaseOptions,
+} from './common';
 
 // See https://developers.deezer.com/api
 
 export default class DeezerProvider extends MetadataProvider<Release> {
 	readonly name = 'Deezer';
-	readonly supportedDomains: 'www.deezer.com';
+	readonly supportedDomains = 'www.deezer.com';
 	readonly releaseUrlRegex = /(?:\w{2}\/)?album\/(\d+)/;
 
 	readonly apiBaseUrl = 'https://api.deezer.com';
@@ -23,11 +30,23 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		return this.query(`album/upc:${upc}`);
 	}
 
-	convertRawRelease(rawRelease: Release): HarmonyRelease {
+	async convertRawRelease(rawRelease: Release, options?: ReleaseOptions): Promise<HarmonyRelease> {
+		let media: HarmonyMedium[];
+
+		if (options?.withSeparateMedia || options?.withISRC) {
+			const rawTracklist = await this.getRawTracklist(rawRelease.id.toString());
+			media = convertRawTracklist(rawTracklist.data);
+		} else {
+			media = [{
+				tracklist: rawRelease.tracks.data.map(convertRawTrack),
+			}];
+		}
+
 		return {
 			title: rawRelease.title,
 			gtin: rawRelease.upc,
 			externalLink: new URL(rawRelease.link),
+			media,
 		};
 	}
 
@@ -44,6 +63,52 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		}
 		return data;
 	}
+}
+
+
+function convertRawTracklist(tracklist: TracklistItem[]): HarmonyMedium[] {
+	const result: HarmonyMedium[] = [];
+	let medium: HarmonyMedium = {
+		tracklist: [],
+	};
+
+	// split flat tracklist into media
+	tracklist.forEach((item, index) => {
+		// store the previous medium and create a new one
+		if (item.disk_number !== medium.number) {
+			if (medium.number) {
+				result.push(medium);
+			}
+
+			medium = {
+				number: item.disk_number,
+				tracklist: [],
+			};
+		}
+
+		medium.tracklist.push(convertRawTrack(item, index));
+	});
+
+	// store the final medium
+	result.push(medium);
+
+	return result;
+}
+
+
+function convertRawTrack(track: ReleaseTrack | TracklistItem, index: number): HarmonyTrack {
+	const result: HarmonyTrack = {
+		number: index + 1,
+		title: track.title,
+		duration: track.duration * 1000,
+	};
+
+	if ('isrc' in track) { // this is a detailed tracklist item
+		result.isrc = track.isrc;
+		result.number = track.track_position;
+	}
+
+	return result;
 }
 
 
@@ -164,7 +229,7 @@ type ReleaseTrack = {
 	title_short: string
 	title_version: string
 	link: string
-	duration: string
+	duration: number
 	rank: string
 	explicit_lyrics: boolean
 	explicit_content_lyrics: number
