@@ -6,6 +6,7 @@ export type HarmonyRelease = {
 	gtin: GTIN;
 	externalLink: MaybeArray<URL>;
 	media: HarmonyMedium[];
+	labels?: Label[];
 	images?: Artwork[];
 };
 
@@ -32,6 +33,12 @@ export type ArtistCreditName = {
 };
 
 type ArtistCredit = ArtistCreditName[];
+
+export type Label = {
+	name: string;
+	externalLink?: URL;
+	catalogNumber?: string;
+};
 
 export type Artwork = {
 	url: URL;
