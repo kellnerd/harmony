@@ -40,17 +40,17 @@ export default abstract class MetadataProvider<RawRelease> {
 		return this.convertRawRelease(await this.getRawReleaseById(id), options);
 	}
 
-	abstract getRawReleaseById(id: string): Promise<RawRelease>;
+	protected abstract getRawReleaseById(id: string): Promise<RawRelease>;
 
 	/** Looks up the release which is identified by the given GTIN/barcode. */
 	async getReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<HarmonyRelease> {
 		return this.convertRawRelease(await this.getRawReleaseByGTIN(gtin), options);
 	}
 
-	abstract getRawReleaseByGTIN(gtin: GTIN): Promise<RawRelease>;
+	protected abstract getRawReleaseByGTIN(gtin: GTIN): Promise<RawRelease>;
 
 	/** Converts the given provider-specific raw release metadata into a common representation. */
-	abstract convertRawRelease(rawRelease: RawRelease, options?: ReleaseOptions): MaybePromise<HarmonyRelease>;
+	protected abstract convertRawRelease(rawRelease: RawRelease, options?: ReleaseOptions): MaybePromise<HarmonyRelease>;
 
 	/** Extracts the ID from a release URL. */
 	extractReleaseId(url: URL): string | undefined {

@@ -20,19 +20,19 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		return new URL('https://www.deezer.com/album/' + id);
 	}
 
-	getRawReleaseById(albumId: string): Promise<Release> {
+	protected getRawReleaseById(albumId: string): Promise<Release> {
 		return this.query(`album/${albumId}`);
 	}
 
-	getRawTracklist(albumId: string): Promise<Response<TracklistItem>> {
+	private getRawTracklist(albumId: string): Promise<Response<TracklistItem>> {
 		return this.query(`album/${albumId}/tracks`);
 	}
 
-	getRawReleaseByGTIN(upc: GTIN): Promise<Release> {
+	protected getRawReleaseByGTIN(upc: GTIN): Promise<Release> {
 		return this.query(`album/upc:${upc}`);
 	}
 
-	async convertRawRelease(rawRelease: Release, options?: ReleaseOptions): Promise<HarmonyRelease> {
+	protected async convertRawRelease(rawRelease: Release, options?: ReleaseOptions): Promise<HarmonyRelease> {
 		let media: HarmonyMedium[];
 
 		if (options?.withSeparateMedia || options?.withISRC) {
@@ -52,7 +52,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		};
 	}
 
-	convertRawTracklist(tracklist: TracklistItem[]): HarmonyMedium[] {
+	private convertRawTracklist(tracklist: TracklistItem[]): HarmonyMedium[] {
 		const result: HarmonyMedium[] = [];
 		let medium: HarmonyMedium = {
 			tracklist: [],
@@ -81,7 +81,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		return result;
 	}
 
-	convertRawTrack(track: ReleaseTrack | TracklistItem, index: number): HarmonyTrack {
+	private convertRawTrack(track: ReleaseTrack | TracklistItem, index: number): HarmonyTrack {
 		const result: HarmonyTrack = {
 			number: index + 1,
 			title: track.title,
