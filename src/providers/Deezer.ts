@@ -37,10 +37,10 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 
 		if (options?.withSeparateMedia || options?.withISRC) {
 			const rawTracklist = await this.getRawTracklist(rawRelease.id.toString());
-			media = convertRawTracklist(rawTracklist.data);
+			media = this.convertRawTracklist(rawTracklist.data);
 		} else {
 			media = [{
-				tracklist: rawRelease.tracks.data.map(convertRawTrack),
+				tracklist: rawRelease.tracks.data.map(this.convertRawTrack),
 			}];
 		}
 
@@ -50,6 +50,50 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			externalLink: new URL(rawRelease.link),
 			media,
 		};
+	}
+
+	convertRawTracklist(tracklist: TracklistItem[]): HarmonyMedium[] {
+		const result: HarmonyMedium[] = [];
+		let medium: HarmonyMedium = {
+			tracklist: [],
+		};
+
+		// split flat tracklist into media
+		tracklist.forEach((item, index) => {
+			// store the previous medium and create a new one
+			if (item.disk_number !== medium.number) {
+				if (medium.number) {
+					result.push(medium);
+				}
+
+				medium = {
+					number: item.disk_number,
+					tracklist: [],
+				};
+			}
+
+			medium.tracklist.push(this.convertRawTrack(item, index));
+		});
+
+		// store the final medium
+		result.push(medium);
+
+		return result;
+	}
+
+	convertRawTrack(track: ReleaseTrack | TracklistItem, index: number): HarmonyTrack {
+		const result: HarmonyTrack = {
+			number: index + 1,
+			title: track.title,
+			duration: track.duration * 1000,
+		};
+
+		if ('isrc' in track) { // this is a detailed tracklist item
+			result.isrc = track.isrc;
+			result.number = track.track_position;
+		}
+
+		return result;
 	}
 
 	readonly apiBaseUrl = 'https://api.deezer.com';
@@ -63,50 +107,6 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		}
 		return data;
 	}
-}
-
-function convertRawTracklist(tracklist: TracklistItem[]): HarmonyMedium[] {
-	const result: HarmonyMedium[] = [];
-	let medium: HarmonyMedium = {
-		tracklist: [],
-	};
-
-	// split flat tracklist into media
-	tracklist.forEach((item, index) => {
-		// store the previous medium and create a new one
-		if (item.disk_number !== medium.number) {
-			if (medium.number) {
-				result.push(medium);
-			}
-
-			medium = {
-				number: item.disk_number,
-				tracklist: [],
-			};
-		}
-
-		medium.tracklist.push(convertRawTrack(item, index));
-	});
-
-	// store the final medium
-	result.push(medium);
-
-	return result;
-}
-
-function convertRawTrack(track: ReleaseTrack | TracklistItem, index: number): HarmonyTrack {
-	const result: HarmonyTrack = {
-		number: index + 1,
-		title: track.title,
-		duration: track.duration * 1000,
-	};
-
-	if ('isrc' in track) { // this is a detailed tracklist item
-		result.isrc = track.isrc;
-		result.number = track.track_position;
-	}
-
-	return result;
 }
 
 class DeezerResponseError extends ResponseError {
