@@ -16,7 +16,9 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 
 	readonly durationPrecision = DurationPrecision.SECONDS;
 
-	readonly apiBaseUrl = 'https://api.deezer.com';
+	constructReleaseUrl(id: string): URL {
+		return new URL('https://www.deezer.com/album/' + id);
+	}
 
 	getRawReleaseById(albumId: string): Promise<Release> {
 		return this.query(`album/${albumId}`);
@@ -50,12 +52,10 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		};
 	}
 
-	constructReleaseUrl(id: string): URL {
-		return new URL('https://www.deezer.com/album/' + id);
-	}
+	readonly apiBaseUrl = 'https://api.deezer.com';
 
 	private async query(path: string) {
-		const apiUrl = new URL(`${this.apiBaseUrl}/${path}`);
+		const apiUrl = new URL(path, this.apiBaseUrl);
 		const data = await this.fetchJSON(apiUrl);
 
 		if (data.error) {

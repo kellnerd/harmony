@@ -19,6 +19,9 @@ export default abstract class MetadataProvider<RawRelease> {
 
 	abstract readonly durationPrecision: DurationPrecision;
 
+	/** Constructs a canonical release URL for the given provider ID. */
+	abstract constructReleaseUrl(id: string): URL;
+
 	/** Looks up the release which is identified by the given URL or GTIN/barcode. */
 	getRelease(urlOrGtin: URL | GTIN, options?: ReleaseOptions): Promise<HarmonyRelease> {
 		if (urlOrGtin instanceof URL) {
@@ -48,9 +51,6 @@ export default abstract class MetadataProvider<RawRelease> {
 
 	/** Converts the given provider-specific raw release metadata into a common representation. */
 	abstract convertRawRelease(rawRelease: RawRelease, options?: ReleaseOptions): MaybePromise<HarmonyRelease>;
-
-	/** Constructs a canonical release URL for the given provider ID. */
-	abstract constructReleaseUrl(id: string): URL;
 
 	/** Extracts the ID from a release URL. */
 	extractReleaseId(url: URL): string | undefined {
