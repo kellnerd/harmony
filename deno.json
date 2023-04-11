@@ -1,0 +1,12 @@
+{
+	"fmt": {
+		"options": {
+			"lineWidth": 120,
+			"singleQuote": true,
+			"useTabs": true
+		}
+	},
+	"tasks": {
+		"test": "deno run --allow-net --watch src/test.ts"
+	}
+}
