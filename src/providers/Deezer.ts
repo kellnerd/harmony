@@ -1,6 +1,7 @@
 import MetadataProvider from './abstract.ts';
 import { DurationPrecision } from './common.ts';
 import { ResponseError } from '../errors.ts';
+import { parseHyphenatedDate } from '../utils/date.ts';
 
 import type { ArtistCreditName, GTIN, HarmonyMedium, HarmonyRelease, HarmonyTrack, ReleaseOptions } from './common.ts';
 
@@ -50,6 +51,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			gtin: rawRelease.upc,
 			externalLink: new URL(rawRelease.link),
 			media,
+			releaseDate: parseHyphenatedDate(rawRelease.release_date),
 			labels: [{
 				name: rawRelease.label,
 			}],

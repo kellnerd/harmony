@@ -1,11 +1,12 @@
-import { MaybeArray } from '../utils/types.ts';
+import type { PartialDate } from '../utils/date.ts';
 
 export type HarmonyRelease = {
 	title: string;
 	artists: ArtistCredit;
 	gtin: GTIN;
-	externalLink: MaybeArray<URL>;
+	externalLink: URL;
 	media: HarmonyMedium[];
+	releaseDate: PartialDate;
 	labels?: Label[];
 	images?: Artwork[];
 };
