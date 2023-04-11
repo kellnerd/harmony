@@ -6,6 +6,7 @@ export type HarmonyRelease = {
 	gtin: GTIN;
 	externalLink: MaybeArray<URL>;
 	media: HarmonyMedium[];
+	images?: Artwork[];
 };
 
 export type HarmonyMedium = {
@@ -31,6 +32,14 @@ export type ArtistCreditName = {
 };
 
 type ArtistCredit = ArtistCreditName[];
+
+export type Artwork = {
+	url: URL;
+	types?: ArtworkType[];
+	comment?: string;
+};
+
+type ArtworkType = 'front' | 'back' | 'thumbnail';
 
 /** Global Trade Item Number with 8 (EAN-8), 12 (UPC), 13 (EAN-13) or 14 digits. */
 export type GTIN = number | string;

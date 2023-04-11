@@ -50,6 +50,13 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			gtin: rawRelease.upc,
 			externalLink: new URL(rawRelease.link),
 			media,
+			images: [{
+				url: new URL(rawRelease.cover_xl),
+				types: ['front'],
+			}, {
+				url: new URL(rawRelease.cover_medium),
+				types: ['thumbnail'],
+			}],
 		};
 	}
 
