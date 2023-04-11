@@ -28,7 +28,7 @@ export enum DurationPrecision {
 	SECONDS,
 	MS,
 	US,
-};
+}
 
 export type ReleaseOptions = Partial<{
 	withSeparateMedia: boolean;

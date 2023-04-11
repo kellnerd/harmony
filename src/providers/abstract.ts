@@ -1,12 +1,7 @@
 import { ProviderError } from '../errors.ts';
 import { preferArray } from '../utils/array.ts';
 
-import type {
-	DurationPrecision,
-	GTIN,
-	HarmonyRelease,
-	ReleaseOptions,
-} from './common.ts';
+import type { DurationPrecision, GTIN, HarmonyRelease, ReleaseOptions } from './common.ts';
 import type { MaybeArray, MaybePromise } from '../utils/types.ts';
 
 /**
@@ -42,19 +37,19 @@ export default abstract class MetadataProvider<RawRelease> {
 		} else {
 			return this.getReleaseByGTIN(urlOrGtin, options);
 		}
-	};
+	}
 
 	/** Looks up the release which is identified by the given provider ID. */
 	async getReleaseById(id: string, options?: ReleaseOptions): Promise<HarmonyRelease> {
 		return this.convertRawRelease(await this.getRawReleaseById(id), options);
-	};
+	}
 
 	abstract getRawReleaseById(id: string): Promise<RawRelease>;
 
 	/** Looks up the release which is identified by the given GTIN/barcode. */
 	async getReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<HarmonyRelease> {
 		return this.convertRawRelease(await this.getRawReleaseByGTIN(gtin), options);
-	};
+	}
 
 	abstract getRawReleaseByGTIN(gtin: GTIN): Promise<RawRelease>;
 
@@ -68,7 +63,7 @@ export default abstract class MetadataProvider<RawRelease> {
 	extractReleaseId(url: URL): string | undefined {
 		if (!this.supportsDomain(url)) {
 			throw new ProviderError(this.name, `Unsupported domain: ${url}`);
-		};
+		}
 
 		const cleanUrl = this.cleanUrl(url);
 
