@@ -6,3 +6,6 @@ lib/
 
 # IDE configuration files
 .vscode/
+
+# Deno
+deno.lock
