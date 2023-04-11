@@ -1,4 +1,4 @@
-import { MaybeArray } from '../utils/types';
+import { MaybeArray } from '../utils/types.ts';
 
 export type HarmonyRelease = {
 	title: string;

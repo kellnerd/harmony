@@ -1,4 +1,4 @@
-import { MaybeArray } from './types';
+import { MaybeArray } from './types.ts';
 
 /** Converts a scalar into an array with a single element. */
 export function preferArray<T>(maybeArray: MaybeArray<T>): T[] {

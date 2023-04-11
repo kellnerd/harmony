@@ -1,6 +1,6 @@
-import MetadataProvider from './abstract';
-import { DurationPrecision } from './common';
-import { ResponseError } from '../errors';
+import MetadataProvider from './abstract.ts';
+import { DurationPrecision } from './common.ts';
+import { ResponseError } from '../errors.ts';
 
 import type {
 	GTIN,
@@ -8,7 +8,7 @@ import type {
 	HarmonyRelease,
 	HarmonyTrack,
 	ReleaseOptions,
-} from './common';
+} from './common.ts';
 
 // See https://developers.deezer.com/api
 

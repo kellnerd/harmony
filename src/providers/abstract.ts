@@ -1,13 +1,13 @@
-import { ProviderError } from '../errors';
-import { preferArray } from '../utils/array';
+import { ProviderError } from '../errors.ts';
+import { preferArray } from '../utils/array.ts';
 
 import type {
 	DurationPrecision,
 	GTIN,
 	HarmonyRelease,
 	ReleaseOptions,
-} from './common';
-import type { MaybeArray, MaybePromise } from '../utils/types';
+} from './common.ts';
+import type { MaybeArray, MaybePromise } from '../utils/types.ts';
 
 /**
  * Abstract metadata provider which looks up releases from a specific source.
