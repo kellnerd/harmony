@@ -1,8 +1,7 @@
 import { ProviderError } from '../errors.ts';
-import { preferArray } from '../utils/array.ts';
 
 import type { DurationPrecision, GTIN, HarmonyRelease, ReleaseOptions } from './common.ts';
-import type { MaybeArray, MaybePromise } from '../utils/types.ts';
+import type { MaybePromise } from '../utils/types.ts';
 
 /**
  * Abstract metadata provider which looks up releases from a specific source.
@@ -13,16 +12,10 @@ export default abstract class MetadataProvider<RawRelease> {
 	abstract readonly name: string;
 
 	/**
-	 * Regular expression or host string used to match supported domains.
-	 * Matched against the host (hostname and port) of the URL.
+	 * URL pattern used to check supported domains, match release URLs and extract the ID from the URL.
+	 * The pathname has to contain a named group `id`, e.g. `/release/:id`.
 	 */
-	abstract readonly supportedDomains: MaybeArray<RegExp | string>;
-
-	/**
-	 * Regular expression used to match supported release URLs and extract the ID from the URL.
-	 * Matched against the clean URL as returned by `cleanUrl()`.
-	 */
-	abstract readonly releaseUrlRegex: MaybeArray<RegExp>;
+	abstract readonly supportedUrls: URLPattern;
 
 	abstract readonly durationPrecision: DurationPrecision;
 
@@ -61,42 +54,17 @@ export default abstract class MetadataProvider<RawRelease> {
 
 	/** Extracts the ID from a release URL. */
 	extractReleaseId(url: URL): string | undefined {
-		if (!this.supportsDomain(url)) {
-			throw new ProviderError(this.name, `Unsupported domain: ${url}`);
-		}
-
-		const cleanUrl = this.cleanUrl(url);
-
-		if (!Array.isArray(this.releaseUrlRegex)) {
-			return cleanUrl.match(this.releaseUrlRegex)?.[1];
-		} else {
-			return this.releaseUrlRegex
-				.map((regex) => cleanUrl.match(regex)?.[1])
-				.find((id) => id !== undefined);
-		}
+		return this.supportedUrls.exec(url)?.pathname.groups.id;
 	}
 
 	/** Checks whether the provider supports the domain of the given URL. */
 	supportsDomain(url: URL): boolean {
-		return preferArray(this.supportedDomains).some((domain) => {
-			if (typeof domain === 'string') return domain === url.host;
-			else return domain.test(url.host);
-		});
+		return new URLPattern({ hostname: this.supportedUrls.hostname }).test(url);
 	}
 
 	/** Checks whether the provider supports the given URL for releases. */
 	supportsReleaseUrl(url: URL): boolean {
-		const cleanUrl = this.cleanUrl(url);
-		if (!Array.isArray(this.releaseUrlRegex)) {
-			return this.releaseUrlRegex.test(cleanUrl);
-		} else {
-			return this.releaseUrlRegex.some((regex) => regex.test(cleanUrl));
-		}
-	}
-
-	/** Returns a clean version of the given URL. This version will be used to match against `urlRegex`. */
-	protected cleanUrl(url: URL): string {
-		return url.host + url.pathname;
+		return this.supportedUrls.test(url);
 	}
 
 	protected async fetchJSON(input: RequestInfo | URL, init?: RequestInit) {

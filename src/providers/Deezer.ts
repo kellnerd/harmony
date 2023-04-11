@@ -8,8 +8,11 @@ import type { GTIN, HarmonyMedium, HarmonyRelease, HarmonyTrack, ReleaseOptions 
 
 export default class DeezerProvider extends MetadataProvider<Release> {
 	readonly name = 'Deezer';
-	readonly supportedDomains = 'www.deezer.com';
-	readonly releaseUrlRegex = /(?:\w{2}\/)?album\/(\d+)/;
+
+	readonly supportedUrls = new URLPattern({
+		hostname: 'www.deezer.com',
+		pathname: String.raw`/:country(\w{2})?/album/:id(\d+)`,
+	});
 
 	readonly durationPrecision = DurationPrecision.SECONDS;
 
