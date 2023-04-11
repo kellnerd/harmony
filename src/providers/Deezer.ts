@@ -2,7 +2,7 @@ import MetadataProvider from './abstract.ts';
 import { DurationPrecision } from './common.ts';
 import { ResponseError } from '../errors.ts';
 
-import type { GTIN, HarmonyMedium, HarmonyRelease, HarmonyTrack, ReleaseOptions } from './common.ts';
+import type { ArtistCreditName, GTIN, HarmonyMedium, HarmonyRelease, HarmonyTrack, ReleaseOptions } from './common.ts';
 
 // See https://developers.deezer.com/api
 
@@ -46,6 +46,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 
 		return {
 			title: rawRelease.title,
+			artists: rawRelease.contributors.map(this.convertRawArtist),
 			gtin: rawRelease.upc,
 			externalLink: new URL(rawRelease.link),
 			media,
@@ -86,6 +87,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			number: index + 1,
 			title: track.title,
 			duration: track.duration * 1000,
+			artists: [this.convertRawArtist(track.artist)],
 		};
 
 		if ('isrc' in track) { // this is a detailed tracklist item
@@ -94,6 +96,13 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		}
 
 		return result;
+	}
+
+	private convertRawArtist(artist: MinimalArtist): ArtistCreditName {
+		return {
+			name: artist.name,
+			externalLink: new URL('https://www.deezer.com/artist/' + artist.id),
+		};
 	}
 
 	readonly apiBaseUrl = 'https://api.deezer.com';
