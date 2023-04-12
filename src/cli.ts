@@ -4,13 +4,18 @@ import { parse } from 'std/flags/mod.ts';
 
 const deezer = new DeezerProvider();
 
-const args = parse(Deno.args);
+const args = parse(Deno.args, {
+	boolean: ['isrc', 'multi-disc'],
+	string: '_', // do not parse numeric positional arguments
+});
 
 if (args._.length === 1) {
-	let specifier: GTIN | URL = args._[0];
+	let specifier: GTIN | string | URL = args._[0];
 
-	if (typeof specifier === 'string') {
+	try {
 		specifier = new URL(specifier);
+	} catch {
+		// not a valid URL, treat specifier as GTIN or ID
 	}
 
 	const release = await deezer.getRelease(specifier, {
@@ -20,5 +25,5 @@ if (args._.length === 1) {
 
 	console.log(JSON.stringify(release));
 } else {
-	console.info('Usage: deno task cli <barcode | url> [--isrc] [--multi-disc]');
+	console.info('Usage: deno task cli <barcode | id | url> [--isrc] [--multi-disc]');
 }

@@ -22,16 +22,18 @@ export default abstract class MetadataProvider<RawRelease> {
 	/** Constructs a canonical release URL for the given provider ID. */
 	abstract constructReleaseUrl(id: string): URL;
 
-	/** Looks up the release which is identified by the given URL or GTIN/barcode. */
-	getRelease(urlOrGtin: URL | GTIN, options?: ReleaseOptions): Promise<HarmonyRelease> {
-		if (urlOrGtin instanceof URL) {
-			const id = this.extractReleaseId(urlOrGtin);
+	/** Looks up the release which is identified by the given URL, GTIN/barcode or provider ID. */
+	getRelease(urlOrGtinOrId: URL | GTIN | string, options?: ReleaseOptions): Promise<HarmonyRelease> {
+		if (urlOrGtinOrId instanceof URL) {
+			const id = this.extractReleaseId(urlOrGtinOrId);
 			if (id === undefined) {
-				throw new ProviderError(this.name, `Could not extract ID from ${urlOrGtin}`);
+				throw new ProviderError(this.name, `Could not extract ID from ${urlOrGtinOrId}`);
 			}
 			return this.getReleaseById(id, options);
-		} else {
-			return this.getReleaseByGTIN(urlOrGtin, options);
+		} else if (typeof urlOrGtinOrId === 'string' && !/^\d{12,14}$/.test(urlOrGtinOrId)) {
+			return this.getReleaseById(urlOrGtinOrId, options);
+		} else { // number or string with 12 to 14 digits, most likely a GTIN
+			return this.getReleaseByGTIN(urlOrGtinOrId, options);
 		}
 	}
 
