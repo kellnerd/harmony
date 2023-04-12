@@ -6,7 +6,12 @@
 			"useTabs": true
 		}
 	},
+	"imports": {
+		"std/": "https://deno.land/std@0.182.0/",
+		"ts-custom-error": "https://esm.sh/ts-custom-error@3.3.1"
+	},
 	"tasks": {
+		"cli": "deno run --allow-net src/cli.ts",
 		"test": "deno run --allow-net --watch src/test.ts"
 	}
 }
