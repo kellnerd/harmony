@@ -41,13 +41,13 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			media = this.convertRawTracklist(rawTracklist.data);
 		} else {
 			media = [{
-				tracklist: rawRelease.tracks.data.map(this.convertRawTrack),
+				tracklist: rawRelease.tracks.data.map(this.convertRawTrack.bind(this)),
 			}];
 		}
 
 		return {
 			title: rawRelease.title,
-			artists: rawRelease.contributors.map(this.convertRawArtist),
+			artists: rawRelease.contributors.map(this.convertRawArtist.bind(this)),
 			gtin: rawRelease.upc,
 			externalLink: new URL(rawRelease.link),
 			media,
