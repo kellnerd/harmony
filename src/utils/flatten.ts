@@ -15,7 +15,7 @@ export function flatten(object: any, preservedKeys: Key[] = []): FormDataRecord 
 			for (const childKey in value) {
 				flatObject[key + '.' + childKey] = value[childKey]; // concatenate keys
 			}
-		} else { // value is already flat (e.g. a string) or should be preserved
+		} else if (value !== undefined) { // value is already flat (e.g. a string) or should be preserved
 			flatObject[key] = value; // keep the key
 		}
 	}
