@@ -25,8 +25,17 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		return this.query(`album/${albumId}`);
 	}
 
-	private getRawTracklist(albumId: string): Promise<Response<TracklistItem>> {
-		return this.query(`album/${albumId}/tracks`);
+	private async getRawTracklist(albumId: string): Promise<TracklistItem[]> {
+		const tracklist: TracklistItem[] = [];
+		let nextPageQuery: string | undefined = `album/${albumId}/tracks`;
+
+		while (nextPageQuery) {
+			const response: Response<TracklistItem> = await this.query(nextPageQuery);
+			tracklist.push(...response.data);
+			nextPageQuery = response.next;
+		}
+
+		return tracklist;
 	}
 
 	protected getRawReleaseByGTIN(upc: GTIN): Promise<Release> {
@@ -38,7 +47,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 
 		if (options?.withSeparateMedia || options?.withISRC) {
 			const rawTracklist = await this.getRawTracklist(rawRelease.id.toString());
-			media = this.convertRawTracklist(rawTracklist.data);
+			media = this.convertRawTracklist(rawTracklist);
 		} else {
 			media = [{
 				tracklist: rawRelease.tracks.data.map(this.convertRawTrack.bind(this)),
