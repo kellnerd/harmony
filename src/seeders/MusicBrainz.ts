@@ -1,4 +1,6 @@
 import ReleaseSeeder from './abstract.ts';
+import { urlTypeIds } from '../MusicBrainz/typeId.ts';
+import { preferArray } from '../utils/array.ts';
 import { flatten } from '../utils/flatten.ts';
 import type { ArtistCreditName, HarmonyRelease } from '../providers/common.ts';
 import type { PartialDate } from '../utils/date.ts';
@@ -11,12 +13,39 @@ export default class MusicBrainzSeeder extends ReleaseSeeder {
 	createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 		const seed: ReleaseSeed = {
 			name: release.title,
-			artist_credit: this.convertArtistCreditName(release.artists),
+			artist_credit: this.convertArtistCredit(release.artists),
+			barcode: release.gtin.toString(),
+			events: [{
+				date: release.releaseDate,
+			}],
+			labels: release.labels?.map((label) => ({
+				name: label.name,
+				catalog_number: label.catalogNumber,
+				// mbid: resolveToMBID(label.externalLink), // TODO
+			})),
+			status: 'Official',
+			packaging: 'None',
+			mediums: release.media.map((medium) => ({
+				format: 'Digital Media',
+				position: medium.number,
+				name: medium.title,
+				track: medium.tracklist.map((track) => ({
+					name: track.title,
+					artist_credit: this.convertArtistCredit(track.artists),
+					number: track.number.toString(),
+					length: track.duration,
+				})),
+			})),
+			urls: preferArray(release.externalLink).map((url) => ({
+				url: url.href,
+				link_type: urlTypeIds.streaming, // TODO
+			})),
 		};
 		return flatten(seed);
 	}
 
-	convertArtistCreditName(artists: ArtistCreditName[]): ArtistCreditSeed {
+	convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditSeed | undefined {
+		if (!artists) return;
 		return {
 			names: artists.map((artist) => ({
 				artist: { name: artist.name },
