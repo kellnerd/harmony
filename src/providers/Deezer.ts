@@ -1,7 +1,7 @@
 import MetadataProvider from './abstract.ts';
 import { DurationPrecision } from './common.ts';
-import { ResponseError } from '../errors.ts';
 import { parseHyphenatedDate } from '../utils/date.ts';
+import { ResponseError } from '../utils/errors.ts';
 
 import type { ArtistCreditName, GTIN, HarmonyMedium, HarmonyRelease, HarmonyTrack, ReleaseOptions } from './common.ts';
 
