@@ -1,7 +1,7 @@
 import { ProviderError } from '../errors.ts';
 
 import type { DurationPrecision, GTIN, HarmonyRelease, ReleaseOptions } from './common.ts';
-import type { MaybePromise } from '../utils/types.ts';
+import type { MaybePromise } from 'utils/types.d.ts';
 
 /**
  * Abstract metadata provider which looks up releases from a specific source.

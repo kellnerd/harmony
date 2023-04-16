@@ -1,11 +1,11 @@
 import ReleaseSeeder from './abstract.ts';
 import { urlTypeIds } from '../MusicBrainz/typeId.ts';
-import { preferArray } from '../utils/array.ts';
-import { flatten } from '../utils/flatten.ts';
+import { preferArray } from 'utils/array/scalar.js';
+import { flatten } from 'utils/object/flatten.js';
 import type { ArtistCreditName, HarmonyRelease } from '../providers/common.ts';
 import type { PartialDate } from '../utils/date.ts';
-import type { FormDataRecord, MaybeArray } from '../utils/types.ts';
 import type { Packaging, ReleaseGroupType, ReleaseStatus, UrlLinkTypeId } from '../MusicBrainz/typeId.ts';
+import type { FormDataRecord, MaybeArray } from 'utils/types.d.ts';
 
 export default class MusicBrainzSeeder extends ReleaseSeeder {
 	readonly targetUrl = new URL('/release/add', 'https://musicbrainz.org');

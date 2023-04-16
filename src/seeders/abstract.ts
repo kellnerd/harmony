@@ -1,5 +1,5 @@
 import { HarmonyRelease } from '../providers/common.ts';
-import { FormDataRecord, MaybePromise } from '../utils/types.ts';
+import type { FormDataRecord, MaybePromise } from 'utils/types.d.ts';
 
 export default abstract class ReleaseSeeder {
 	abstract readonly targetUrl: URL;

@@ -1,4 +1,4 @@
-import { zipObject } from './array.ts';
+import { zipObject } from 'utils/object/zipObject.js';
 
 export type PartialDate = Partial<{
 	day: number;
