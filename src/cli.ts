@@ -1,7 +1,9 @@
+import { getReleaseByUrl } from './lookup.ts';
 import DeezerProvider from './providers/Deezer.ts';
 import MusicBrainzSeeder from './seeders/MusicBrainz.ts';
 import { parse } from 'std/flags/mod.ts';
-import type { GTIN } from './providers/common.ts';
+
+import type { GTIN, HarmonyRelease } from './providers/common.ts';
 
 const deezer = new DeezerProvider();
 const seeder = new MusicBrainzSeeder();
@@ -20,10 +22,18 @@ if (args._.length === 1) {
 		// not a valid URL, treat specifier as GTIN or ID
 	}
 
-	const release = await deezer.getRelease(specifier, {
+	const releaseOptions = {
 		withISRC: args['isrc'],
 		withSeparateMedia: args['multi-disc'],
-	});
+	};
+
+	let release: HarmonyRelease;
+
+	if (specifier instanceof URL) {
+		release = await getReleaseByUrl(specifier, releaseOptions);
+	} else {
+		release = await deezer.getRelease(specifier, releaseOptions);
+	}
 
 	if (args.seed) {
 		console.log(seeder.createReleaseSeed(release));
