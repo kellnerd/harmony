@@ -4,7 +4,7 @@ export type HarmonyRelease = {
 	title: string;
 	artists: ArtistCredit;
 	gtin: GTIN;
-	externalLink: URL;
+	externalLinks: URL[];
 	media: HarmonyMedium[];
 	releaseDate: PartialDate;
 	labels?: Label[];

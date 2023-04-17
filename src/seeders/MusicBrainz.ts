@@ -1,6 +1,5 @@
 import ReleaseSeeder from './abstract.ts';
 import { urlTypeIds } from '../MusicBrainz/typeId.ts';
-import { preferArray } from 'utils/array/scalar.js';
 import { flatten } from 'utils/object/flatten.js';
 import type { ArtistCreditName, HarmonyRelease } from '../providers/common.ts';
 import type { PartialDate } from '../utils/date.ts';
@@ -36,7 +35,7 @@ export default class MusicBrainzSeeder extends ReleaseSeeder {
 					length: track.duration,
 				})),
 			})),
-			urls: preferArray(release.externalLink).map((url) => ({
+			urls: release.externalLinks.map((url) => ({
 				url: url.href,
 				link_type: urlTypeIds.streaming, // TODO
 			})),
