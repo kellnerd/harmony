@@ -44,12 +44,21 @@ export function mergeRelease(
 	}
 
 	// copy individual properties from their preferred providers
-	const handledProperties: ReleaseProperty[] = ['media', 'externalLinks'];
 	(Object.entries(preferences) as [ReleaseProperty, ProviderName[]][]).forEach(([property, preferredProviders]) => {
-		if (handledProperties.includes(property)) return;
+		if (property === 'media' || property === 'externalLinks') return;
 
 		const provider = availableProviders.find((name) => preferredProviders.includes(name)) ?? availableProviders[0];
-		copyTo(mergedRelease, releaseMap[provider]!, property);
+		const sourceRelease = releaseMap[provider]!;
+
+		if (property === 'isrc' || property === 'duration') {
+			mergedRelease.media.forEach((medium, mediumIndex) => {
+				medium.tracklist.forEach((track, trackIndex) => {
+					copyTo(track, sourceRelease.media[mediumIndex].tracklist[trackIndex], property);
+				});
+			});
+		} else {
+			copyTo(mergedRelease, sourceRelease, property);
+		}
 	});
 
 	return mergedRelease;
