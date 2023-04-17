@@ -1,5 +1,4 @@
-import { getReleaseByUrl } from './lookup.ts';
-import DeezerProvider from './providers/Deezer.ts';
+import { getMergedReleaseByGTIN, getReleaseByUrl } from './lookup.ts';
 import MusicBrainzSeeder from './seeders/MusicBrainz.ts';
 import { parse } from 'std/flags/mod.ts';
 
@@ -13,12 +12,12 @@ const args = parse(Deno.args, {
 });
 
 if (args._.length === 1) {
-	let specifier: GTIN | string | URL = args._[0];
+	let specifier: GTIN | URL = args._[0];
 
 	try {
 		specifier = new URL(specifier);
 	} catch {
-		// not a valid URL, treat specifier as GTIN or ID
+		// not a valid URL, treat specifier as GTIN
 	}
 
 	const releaseOptions = {
@@ -26,19 +25,19 @@ if (args._.length === 1) {
 		withSeparateMedia: args['multi-disc'],
 	};
 
-	let release: HarmonyRelease;
+	let release: HarmonyRelease | undefined;
 
 	if (specifier instanceof URL) {
 		release = await getReleaseByUrl(specifier, releaseOptions);
 	} else {
-		release = await deezer.getRelease(specifier, releaseOptions);
+		release = await getMergedReleaseByGTIN(specifier, releaseOptions);
 	}
 
-	if (args.seed) {
+	if (args.seed && release) {
 		console.log(seeder.createReleaseSeed(release));
 	} else {
 		console.log(JSON.stringify(release));
 	}
 } else {
-	console.info('Usage: deno task cli <barcode | id | url> [--isrc] [--multi-disc]');
+	console.info('Usage: deno task cli <barcode | url> [--isrc] [--multi-disc]');
 }

@@ -1,4 +1,5 @@
 import DeezerProvider from './providers/Deezer.ts';
+import { mergeRelease } from './harmonizer/merge.ts';
 import { LookupError } from './utils/errors.ts';
 import { zipObject } from 'utils/object/zipObject.js';
 
@@ -33,4 +34,16 @@ export async function getProviderReleaseMapping(gtin: GTIN, options?: ReleaseOpt
 	const releases = releaseResults.map((result) => result.status === 'fulfilled' ? result.value : undefined);
 
 	return zipObject(providerNames, releases);
+}
+
+/**
+ * Looks up the given GTIN with each provider and merges the resulting releases into one.
+ */
+export async function getMergedReleaseByGTIN(
+	gtin: GTIN,
+	options?: ReleaseOptions,
+): Promise<HarmonyRelease | undefined> {
+	const releaseMap = await getProviderReleaseMapping(gtin, options);
+
+	return mergeRelease(releaseMap);
 }

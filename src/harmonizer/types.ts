@@ -58,5 +58,12 @@ export type ReleaseOptions = Partial<{
 	withCountryAvailability: boolean;
 }>;
 
+export type ProviderName = string;
+
 /** Mapping from the provider's name to the release returned by that provider. */
-export type ProviderReleaseMapping = Record<string, HarmonyRelease | undefined>;
+export type ProviderReleaseMapping = Record<ProviderName, HarmonyRelease | undefined>;
+
+export type ReleaseProperty = keyof HarmonyRelease;
+
+/** Mapping from release properties to lists of preferred providers for these properties */
+export type ProviderPreferences = Partial<Record<ReleaseProperty, ProviderName[]>>;
