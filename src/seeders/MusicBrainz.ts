@@ -1,7 +1,8 @@
 import ReleaseSeeder from './abstract.ts';
 import { urlTypeIds } from '../MusicBrainz/typeId.ts';
 import { flatten } from 'utils/object/flatten.js';
-import type { ArtistCreditName, HarmonyRelease } from '../providers/common.ts';
+
+import type { ArtistCreditName, HarmonyRelease } from '../harmonizer/types.ts';
 import type { PartialDate } from '../utils/date.ts';
 import type { Packaging, ReleaseGroupType, ReleaseStatus, UrlLinkTypeId } from '../MusicBrainz/typeId.ts';
 import type { FormDataRecord, MaybeArray } from 'utils/types.d.ts';

@@ -1,9 +1,15 @@
-import MetadataProvider from './abstract.ts';
-import { DurationPrecision } from './common.ts';
+import { DurationPrecision, MetadataProvider } from './abstract.ts';
 import { parseHyphenatedDate } from '../utils/date.ts';
 import { ResponseError } from '../utils/errors.ts';
 
-import type { ArtistCreditName, GTIN, HarmonyMedium, HarmonyRelease, HarmonyTrack, ReleaseOptions } from './common.ts';
+import type {
+	ArtistCreditName,
+	GTIN,
+	HarmonyMedium,
+	HarmonyRelease,
+	HarmonyTrack,
+	ReleaseOptions,
+} from '../harmonizer/types.ts';
 
 // See https://developers.deezer.com/api
 

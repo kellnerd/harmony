@@ -1,4 +1,4 @@
-import { HarmonyRelease } from '../providers/common.ts';
+import type { HarmonyRelease } from '../harmonizer/types.ts';
 import type { FormDataRecord, MaybePromise } from 'utils/types.d.ts';
 
 export default abstract class ReleaseSeeder {

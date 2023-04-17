@@ -2,8 +2,8 @@ import DeezerProvider from './providers/Deezer.ts';
 import { LookupError } from './utils/errors.ts';
 import { zipObject } from 'utils/object/zipObject.js';
 
-import type MetadataProvider from './providers/abstract.ts';
-import type { GTIN, HarmonyRelease, ProviderReleaseMapping, ReleaseOptions } from './providers/common.ts';
+import type { GTIN, HarmonyRelease, ProviderReleaseMapping, ReleaseOptions } from './harmonizer/types.ts';
+import type { MetadataProvider } from './providers/abstract.ts';
 
 const providers: MetadataProvider<unknown>[] = [
 	DeezerProvider,

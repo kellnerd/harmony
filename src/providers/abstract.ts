@@ -1,13 +1,13 @@
 import { ProviderError } from '../utils/errors.ts';
 
-import type { DurationPrecision, GTIN, HarmonyRelease, ReleaseOptions } from './common.ts';
+import type { GTIN, HarmonyRelease, ReleaseOptions } from '../harmonizer/types.ts';
 import type { MaybePromise } from 'utils/types.d.ts';
 
 /**
  * Abstract metadata provider which looks up releases from a specific source.
  * Converts the raw metadata into a common representation.
  */
-export default abstract class MetadataProvider<RawRelease> {
+export abstract class MetadataProvider<RawRelease> {
 	/** Display name of the metadata source. */
 	abstract readonly name: string;
 
@@ -73,4 +73,10 @@ export default abstract class MetadataProvider<RawRelease> {
 		const response = await fetch(input, init);
 		return response.json();
 	}
+}
+
+export enum DurationPrecision {
+	SECONDS,
+	MS,
+	US,
 }

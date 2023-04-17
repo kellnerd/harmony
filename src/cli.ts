@@ -3,9 +3,8 @@ import DeezerProvider from './providers/Deezer.ts';
 import MusicBrainzSeeder from './seeders/MusicBrainz.ts';
 import { parse } from 'std/flags/mod.ts';
 
-import type { GTIN, HarmonyRelease } from './providers/common.ts';
+import type { GTIN, HarmonyRelease } from './harmonizer/types.ts';
 
-const deezer = new DeezerProvider();
 const seeder = new MusicBrainzSeeder();
 
 const args = parse(Deno.args, {
