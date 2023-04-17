@@ -63,3 +63,6 @@ export type ReleaseOptions = Partial<{
 	withISRC: boolean;
 	withCountryAvailability: boolean;
 }>;
+
+/** Mapping from the provider's name to the release returned by that provider. */
+export type ProviderReleaseMapping = Record<string, HarmonyRelease | undefined>;
