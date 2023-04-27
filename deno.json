@@ -1,4 +1,8 @@
 {
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"jsxImportSource": "preact"
+	},
 	"fmt": {
 		"options": {
 			"lineWidth": 120,
@@ -6,13 +10,10 @@
 			"useTabs": true
 		}
 	},
-	"imports": {
-		"std/": "https://deno.land/std@0.182.0/",
-		"ts-custom-error": "https://esm.sh/ts-custom-error@3.3.1",
-		"utils/": "https://deno.land/x/es_utils@v0.1.3/"
-	},
+	"importMap": "./imports.json",
 	"tasks": {
 		"cli": "deno run --allow-net src/cli.ts",
+		"start": "deno run -A --watch=src/server/static/,src/server/routes/ src/server/dev.ts",
 		"test": "deno run --allow-net --watch src/test.ts"
 	}
 }
