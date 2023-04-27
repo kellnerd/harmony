@@ -1,13 +1,30 @@
 import { ProviderError } from '../utils/errors.ts';
+import { rateLimit } from 'utils/async/rateLimit.js';
 
 import type { GTIN, HarmonyRelease, ReleaseOptions } from '../harmonizer/types.ts';
 import type { MaybePromise } from 'utils/types.d.ts';
+
+export type ProviderOptions = Partial<{
+	/** Duration of one rate-limiting interval for requests (in ms). */
+	rateLimitInterval: number | null;
+	/** Maximum number of requests within the interval. */
+	concurrentRequests: number;
+}>;
 
 /**
  * Abstract metadata provider which looks up releases from a specific source.
  * Converts the raw metadata into a common representation.
  */
 export abstract class MetadataProvider<RawRelease> {
+	constructor({
+		rateLimitInterval = null,
+		concurrentRequests = 1,
+	}: ProviderOptions = {}) {
+		if (rateLimitInterval && rateLimitInterval > 0) {
+			this.fetch = rateLimit(fetch, rateLimitInterval, concurrentRequests);
+		}
+	}
+
 	/** Display name of the metadata source. */
 	abstract readonly name: string;
 
@@ -69,8 +86,10 @@ export abstract class MetadataProvider<RawRelease> {
 		return this.supportedUrls.test(url);
 	}
 
+	protected fetch = fetch;
+
 	protected async fetchJSON(input: RequestInfo | URL, init?: RequestInit) {
-		const response = await fetch(input, init);
+		const response = await this.fetch(input, init);
 		return response.json();
 	}
 }
