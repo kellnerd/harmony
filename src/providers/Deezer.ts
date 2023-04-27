@@ -1,4 +1,4 @@
-import { DurationPrecision, MetadataProvider } from './abstract.ts';
+import { DurationPrecision, MetadataProvider, ProviderOptions } from './abstract.ts';
 import { parseHyphenatedDate } from '../utils/date.ts';
 import { ResponseError } from '../utils/errors.ts';
 
@@ -14,6 +14,14 @@ import type {
 // See https://developers.deezer.com/api
 
 export default class DeezerProvider extends MetadataProvider<Release> {
+	constructor(options: ProviderOptions = {}) {
+		super({
+			rateLimitInterval: 5000,
+			concurrentRequests: 50,
+			...options,
+		});
+	}
+
 	readonly name = 'Deezer';
 
 	readonly supportedUrls = new URLPattern({
