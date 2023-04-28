@@ -6,6 +6,7 @@ import { Handlers, PageProps } from 'fresh/server.ts';
 import type { GTIN, HarmonyRelease, ReleaseOptions } from '../../harmonizer/types.ts';
 
 type Data = {
+	errors: Error[];
 	release?: HarmonyRelease;
 	gtin: GTIN | null;
 	link: string | null;
@@ -17,23 +18,30 @@ export const handler: Handlers<Data> = {
 		const gtin = url.searchParams.get('gtin');
 		const link = url.searchParams.get('link');
 
+		const errors: Error[] = [];
 		const options: ReleaseOptions = {
 			withSeparateMedia: true,
 		};
 
 		let release: HarmonyRelease | undefined;
-		if (gtin) {
-			release = await getMergedReleaseByGTIN(gtin, options);
-		} else if (link) {
-			release = await getReleaseByUrl(new URL(link), options);
+		try {
+			if (gtin) {
+				release = await getMergedReleaseByGTIN(gtin, options);
+			} else if (link) {
+				release = await getReleaseByUrl(new URL(link), options);
+			}
+		} catch (error) {
+			if (error instanceof Error) {
+				errors.push(error);
+			}
 		}
 
-		return ctx.render({ release, gtin, link });
+		return ctx.render({ errors, release, gtin, link });
 	},
 };
 
 export default function Page({ data }: PageProps<Data>) {
-	const { release, gtin, link } = data;
+	const { errors, release, gtin, link } = data;
 	return (
 		<>
 			<Head>
@@ -53,6 +61,7 @@ export default function Page({ data }: PageProps<Data>) {
 				</div>
 				<button type='submit'>Lookup</button>
 			</form>
+			{errors.map((error) => <p class='error'>{error.message}</p>)}
 			{release && <Release {...release} />}
 		</>
 	);
