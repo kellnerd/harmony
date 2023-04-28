@@ -80,10 +80,8 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			}],
 			images: [{
 				url: new URL(rawRelease.cover_xl),
+				thumbUrl: new URL(rawRelease.cover_medium),
 				types: ['front'],
-			}, {
-				url: new URL(rawRelease.cover_medium),
-				types: ['thumbnail'],
 			}],
 		};
 	}
