@@ -140,14 +140,20 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			number: index + 1,
 			title: track.title,
 			duration: track.duration * 1000,
-			artists: 'contributors' in track
-				? track.contributors.map(this.convertRawArtist)
-				: [this.convertRawArtist(track.artist)],
 		};
 
-		if ('isrc' in track) { // this is a detailed tracklist item
+		if ('isrc' in track) {
+			// this is a detailed tracklist item
 			result.isrc = track.isrc;
 			result.number = track.track_position;
+		}
+
+		if ('contributors' in track) {
+			// all available details about this track have been fetched
+			result.artists = track.contributors.map(this.convertRawArtist);
+			result.countryAvailability = track.available_countries;
+		} else {
+			result.artists = [this.convertRawArtist(track.artist)];
 		}
 
 		return result;
