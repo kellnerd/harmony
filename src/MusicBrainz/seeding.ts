@@ -1,4 +1,3 @@
-import ReleaseSeeder from './abstract.ts';
 import { urlTypeIds } from '../MusicBrainz/typeId.ts';
 import { flatten } from 'utils/object/flatten.js';
 
@@ -7,54 +6,54 @@ import type { PartialDate } from '../utils/date.ts';
 import type { Packaging, ReleaseGroupType, ReleaseStatus, UrlLinkTypeId } from '../MusicBrainz/typeId.ts';
 import type { FormDataRecord, MaybeArray } from 'utils/types.d.ts';
 
-export default class MusicBrainzSeeder extends ReleaseSeeder {
-	readonly targetUrl = new URL('/release/add', 'https://musicbrainz.org');
+export const targetUrl = new URL('/release/add', 'https://musicbrainz.org');
 
-	createReleaseSeed(release: HarmonyRelease): FormDataRecord {
-		const seed: ReleaseSeed = {
-			name: release.title,
-			artist_credit: this.convertArtistCredit(release.artists),
-			barcode: release.gtin.toString(),
-			events: [{
-				date: release.releaseDate,
-			}],
-			labels: release.labels?.map((label) => ({
-				name: label.name,
-				catalog_number: label.catalogNumber,
-				// mbid: resolveToMBID(label.externalLink), // TODO
+export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
+	const seed: ReleaseSeed = {
+		name: release.title,
+		artist_credit: convertArtistCredit(release.artists),
+		barcode: release.gtin.toString(),
+		events: [{
+			date: release.releaseDate,
+		}],
+		labels: release.labels?.map((label) => ({
+			name: label.name,
+			catalog_number: label.catalogNumber,
+			// mbid: resolveToMBID(label.externalLink), // TODO
+		})),
+		status: 'Official',
+		packaging: 'None',
+		mediums: release.media.map((medium) => ({
+			format: 'Digital Media',
+			position: medium.number,
+			name: medium.title,
+			track: medium.tracklist.map((track) => ({
+				name: track.title,
+				artist_credit: convertArtistCredit(track.artists),
+				number: track.number.toString(),
+				length: track.duration,
 			})),
-			status: 'Official',
-			packaging: 'None',
-			mediums: release.media.map((medium) => ({
-				format: 'Digital Media',
-				position: medium.number,
-				name: medium.title,
-				track: medium.tracklist.map((track) => ({
-					name: track.title,
-					artist_credit: this.convertArtistCredit(track.artists),
-					number: track.number.toString(),
-					length: track.duration,
-				})),
-			})),
-			urls: release.externalLinks.map((url) => ({
-				url: url.href,
-				link_type: urlTypeIds.streaming, // TODO
-			})),
-		};
-		return flatten(seed);
-	}
+		})),
+		urls: release.externalLinks.map((url) => ({
+			url: url.href,
+			link_type: urlTypeIds.streaming, // TODO
+		})),
+	};
 
-	convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditSeed | undefined {
-		if (!artists) return;
-		return {
-			names: artists.map((artist) => ({
-				artist: { name: artist.name },
-				// mbid: resolveToMBID(artist.externalLink), // TODO
-				name: artist.creditedName,
-				join_phrase: artist.joinPhrase,
-			})),
-		};
-	}
+	return flatten(seed);
+}
+
+export function convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditSeed | undefined {
+	if (!artists) return;
+
+	return {
+		names: artists.map((artist) => ({
+			artist: { name: artist.name },
+			// mbid: resolveToMBID(artist.externalLink), // TODO
+			name: artist.creditedName,
+			join_phrase: artist.joinPhrase,
+		})),
+	};
 }
 
 // Adapted from https://musicbrainz.org/doc/Development/Release_Editor_Seeding

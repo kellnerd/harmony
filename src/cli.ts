@@ -1,10 +1,8 @@
 import { getMergedReleaseByGTIN, getReleaseByUrl } from './lookup.ts';
-import MusicBrainzSeeder from './seeders/MusicBrainz.ts';
+import { createReleaseSeed } from './MusicBrainz/seeding.ts';
 import { parse } from 'std/flags/mod.ts';
 
 import type { GTIN, HarmonyRelease } from './harmonizer/types.ts';
-
-const seeder = new MusicBrainzSeeder();
 
 const args = parse(Deno.args, {
 	boolean: ['isrc', 'multi-disc', 'seed'],
@@ -34,7 +32,7 @@ if (args._.length === 1) {
 	}
 
 	if (args.seed && release) {
-		console.log(seeder.createReleaseSeed(release));
+		console.log(createReleaseSeed(release));
 	} else {
 		console.log(JSON.stringify(release));
 	}
