@@ -9,6 +9,8 @@ export type ProviderOptions = Partial<{
 	rateLimitInterval: number | null;
 	/** Maximum number of requests within the interval. */
 	concurrentRequests: number;
+	/** Cache which will be used for  (optional). */
+	cache: Cache;
 }>;
 
 /**
@@ -19,7 +21,10 @@ export abstract class MetadataProvider<RawRelease> {
 	constructor({
 		rateLimitInterval = null,
 		concurrentRequests = 1,
+		cache,
 	}: ProviderOptions = {}) {
+		this.cache = cache;
+
 		if (rateLimitInterval && rateLimitInterval > 0) {
 			this.fetch = rateLimit(fetch, rateLimitInterval, concurrentRequests);
 		}
@@ -86,10 +91,18 @@ export abstract class MetadataProvider<RawRelease> {
 		return this.supportedUrls.test(url);
 	}
 
+	protected cache: Cache | undefined;
+
 	protected fetch = fetch;
 
 	protected async fetchJSON(input: RequestInfo | URL, init?: RequestInit) {
-		const response = await this.fetch(input, init);
+		let response = await this.cache?.match(input);
+
+		if (!response) {
+			response = await this.fetch(input, init);
+			this.cache?.put(input, response.clone());
+		}
+
 		return response.json();
 	}
 }
