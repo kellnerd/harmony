@@ -14,7 +14,14 @@ export function formatDuration(ms: number, {
 		timeComponents.unshift(hours);
 	}
 
-	let duration = timeComponents.map((component) => component.toString().padStart(2, '0')).join(':');
+	let duration = timeComponents.map((component, index) => {
+		if (index) {
+			// zero-pad all used time components except for the leading one
+			return component.toString().padStart(2, '0');
+		} else {
+			return component;
+		}
+	}).join(':');
 
 	ms %= 1000;
 	if (ms || showMs) {
