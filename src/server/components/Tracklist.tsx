@@ -14,9 +14,11 @@ export function Tracklist({ medium }: { medium: HarmonyMedium }) {
 					<th>Artists</th>
 					<th>Duration</th>
 					<th>ISRC</th>
+					<th>Availability</th>
 				</tr>
 			</thead>
 			{medium.tracklist.map((track) => {
+				const countries = track.countryAvailability;
 				return (
 					<tr>
 						<td>{track.number}</td>
@@ -25,6 +27,15 @@ export function Tracklist({ medium }: { medium: HarmonyMedium }) {
 						<td>{formatDuration(track.duration)}</td>
 						<td>
 							{track.isrc && <ISRC code={track.isrc} />}
+						</td>
+						<td>
+							{countries
+								? (
+									<>
+										<abbr title={countries.join(', ')}>{countries.length}</abbr> regions
+									</>
+								)
+								: '&ndash;'}
 						</td>
 					</tr>
 				);

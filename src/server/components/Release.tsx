@@ -6,6 +6,8 @@ import { formatPartialDate } from '../../utils/date.ts';
 import type { HarmonyRelease } from '../../harmonizer/types.ts';
 
 export function Release(release: HarmonyRelease) {
+	const countries = release.countryAvailability;
+
 	return (
 		<div class='release'>
 			<h2>{release.title}</h2>
@@ -48,10 +50,17 @@ export function Release(release: HarmonyRelease) {
 						</ul>
 					</td>
 				</tr>
+				{countries && (
+					<tr>
+						<th>Availability</th>
+						<td>
+							<abbr title={countries.join(', ')}>{countries.length}</abbr> regions
+						</td>
+					</tr>
+				)}
 			</table>
 			{release.images?.map((artwork) => <CoverImage artwork={artwork} />)}
 			{release.media.map((medium) => <Tracklist medium={medium} />)}
-			<pre>{JSON.stringify(release, null, 2)}</pre>
 		</div>
 	);
 }
