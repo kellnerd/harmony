@@ -55,6 +55,7 @@ export type GTIN = number | string;
 
 export type ReleaseOptions = Partial<{
 	withSeparateMedia: boolean;
+	withAllTrackArtists: boolean;
 	withISRC: boolean;
 	withCountryAvailability: boolean;
 }>;

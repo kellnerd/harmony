@@ -22,6 +22,7 @@ export const handler: Handlers<Data> = {
 		const errors: Error[] = [];
 		const options: ReleaseOptions = {
 			withSeparateMedia: true,
+			withAllTrackArtists: true,
 		};
 
 		let release: HarmonyRelease | undefined;

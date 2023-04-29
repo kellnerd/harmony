@@ -52,19 +52,39 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		return tracklist;
 	}
 
+	protected getRawTrackById(trackId: string): Promise<Track> {
+		return this.query(`track/${trackId}`);
+	}
+
 	protected getRawReleaseByGTIN(upc: GTIN): Promise<Release> {
 		return this.query(`album/upc:${upc}`);
 	}
 
 	protected async convertRawRelease(rawRelease: Release, options?: ReleaseOptions): Promise<HarmonyRelease> {
+		const needToFetchIndividualTracks = options?.withAllTrackArtists || options?.withCountryAvailability || false;
+		const needToFetchDetailedTracklist = !needToFetchIndividualTracks &&
+			(options?.withSeparateMedia || options?.withISRC || false);
+
+		let rawTracklist: Array<ReleaseTrack | TracklistItem | Track>;
 		let media: HarmonyMedium[];
 
-		if (options?.withSeparateMedia || options?.withISRC) {
-			const rawTracklist = await this.getRawTracklist(rawRelease.id.toString());
-			media = this.convertRawTracklist(rawTracklist);
+		if (needToFetchDetailedTracklist) {
+			rawTracklist = await this.getRawTracklist(rawRelease.id.toString());
+		} else {
+			rawTracklist = rawRelease.tracks.data;
+
+			if (needToFetchIndividualTracks) {
+				// replace minimal tracklist with all available details for each track
+				rawTracklist = await Promise.all(rawTracklist.map((track) => this.getRawTrackById(track.id.toString())));
+			}
+		}
+
+		if (needToFetchDetailedTracklist || needToFetchIndividualTracks) {
+			// we have enough info to split the tracklist into multiple media
+			media = this.convertRawTracklist(rawTracklist as Array<TracklistItem | Track>);
 		} else {
 			media = [{
-				tracklist: rawRelease.tracks.data.map(this.convertRawTrack.bind(this)),
+				tracklist: rawTracklist.map(this.convertRawTrack.bind(this)),
 			}];
 		}
 
@@ -86,7 +106,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		};
 	}
 
-	private convertRawTracklist(tracklist: TracklistItem[]): HarmonyMedium[] {
+	private convertRawTracklist(tracklist: Array<TracklistItem | Track>): HarmonyMedium[] {
 		const result: HarmonyMedium[] = [];
 		let medium: HarmonyMedium = {
 			tracklist: [],
@@ -115,12 +135,14 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		return result;
 	}
 
-	private convertRawTrack(track: ReleaseTrack | TracklistItem, index: number): HarmonyTrack {
+	private convertRawTrack(track: ReleaseTrack | TracklistItem | Track, index: number): HarmonyTrack {
 		const result: HarmonyTrack = {
 			number: index + 1,
 			title: track.title,
 			duration: track.duration * 1000,
-			artists: [this.convertRawArtist(track.artist)],
+			artists: 'contributors' in track
+				? track.contributors.map(this.convertRawArtist)
+				: [this.convertRawArtist(track.artist)],
 		};
 
 		if ('isrc' in track) { // this is a detailed tracklist item
