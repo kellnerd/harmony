@@ -1,4 +1,5 @@
 import { Release } from '../components/Release.tsx';
+import { ReleaseSeeder } from '../components/ReleaseSeeder.tsx';
 import { getMergedReleaseByGTIN, getReleaseByUrl } from '../../lookup.ts';
 import { Head } from 'fresh/runtime.ts';
 import { Handlers, PageProps } from 'fresh/server.ts';
@@ -56,13 +57,14 @@ export default function Page({ data }: PageProps<Data>) {
 					<input type='text' name='gtin' id='gtin-input' value={gtin ?? ''} />
 				</div>
 				<div>
-					<label for='link-input'>External link:</label>
+					<label for='link-input'>URL:</label>
 					<input type='text' name='link' id='link-input' value={link ?? ''} />
 				</div>
 				<button type='submit'>Lookup</button>
 			</form>
 			{errors.map((error) => <p class='error'>{error.message}</p>)}
 			{release && <Release {...release} />}
+			{release && <ReleaseSeeder release={release} />}
 		</>
 	);
 }

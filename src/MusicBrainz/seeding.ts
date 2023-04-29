@@ -25,7 +25,8 @@ export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 		packaging: 'None',
 		mediums: release.media.map((medium) => ({
 			format: 'Digital Media',
-			position: medium.number,
+			// Unknown field: mediums.0.position ...despite documentation for it
+			// position: medium.number,
 			name: medium.title,
 			track: medium.tracklist.map((track) => ({
 				name: track.title,
@@ -36,7 +37,7 @@ export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 		})),
 		urls: release.externalLinks.map((url) => ({
 			url: url.href,
-			link_type: urlTypeIds.streaming, // TODO
+			// link_type: urlTypeIds.streaming, // TODO
 		})),
 	};
 
