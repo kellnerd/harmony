@@ -1,16 +1,9 @@
-import DeezerProvider from './providers/Deezer.ts';
 import { mergeRelease } from './harmonizer/merge.ts';
+import { providerNames, providers } from './providers.ts';
 import { LookupError } from './utils/errors.ts';
 import { zipObject } from 'utils/object/zipObject.js';
 
 import type { GTIN, HarmonyRelease, ProviderReleaseMapping, ReleaseOptions } from './harmonizer/types.ts';
-import type { MetadataProvider } from './providers/abstract.ts';
-
-const providers: MetadataProvider<unknown>[] = [
-	DeezerProvider,
-].map((Provider) => new Provider());
-
-const providerNames = providers.map((provider) => provider.name);
 
 /**
  * Looks up the given URL with the first matching provider.
