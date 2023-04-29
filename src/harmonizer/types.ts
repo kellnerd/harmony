@@ -9,6 +9,7 @@ export type HarmonyRelease = {
 	releaseDate: PartialDate;
 	labels?: Label[];
 	images?: Artwork[];
+	countryAvailability?: string[];
 };
 
 export type HarmonyMedium = {
@@ -24,6 +25,7 @@ export type HarmonyTrack = {
 	/** Track duration in milliseconds. */
 	duration: number;
 	isrc?: string;
+	countryAvailability?: string[];
 };
 
 export type ArtistCreditName = {
