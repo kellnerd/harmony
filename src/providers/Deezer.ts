@@ -92,7 +92,10 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			title: rawRelease.title,
 			artists: rawRelease.contributors.map(this.convertRawArtist.bind(this)),
 			gtin: rawRelease.upc,
-			externalLinks: [new URL(rawRelease.link)],
+			externalLinks: [{
+				url: new URL(rawRelease.link),
+				types: ['free streaming'],
+			}],
 			media,
 			releaseDate: parseHyphenatedDate(rawRelease.release_date),
 			labels: [{

@@ -1,7 +1,7 @@
 import { urlTypeIds } from '../MusicBrainz/typeId.ts';
 import { flatten } from 'utils/object/flatten.js';
 
-import type { ArtistCreditName, HarmonyRelease } from '../harmonizer/types.ts';
+import type { ArtistCreditName, HarmonyRelease, LinkType } from '../harmonizer/types.ts';
 import type { PartialDate } from '../utils/date.ts';
 import type { Packaging, ReleaseGroupType, ReleaseStatus, UrlLinkTypeId } from '../MusicBrainz/typeId.ts';
 import type { FormDataRecord, MaybeArray } from 'utils/types.d.ts';
@@ -35,10 +35,16 @@ export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 				length: track.duration,
 			})),
 		})),
-		urls: release.externalLinks.map((url) => ({
-			url: url.href,
-			// link_type: urlTypeIds.streaming, // TODO
-		})),
+		urls: release.externalLinks.flatMap((link) =>
+			link.types
+				? link.types.map((type) => ({
+					url: link.url.href,
+					link_type: convertLinkType(type, link.url),
+				}))
+				: ({
+					url: link.url.href,
+				})
+		),
 	};
 
 	return flatten(seed);
@@ -55,6 +61,15 @@ export function convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditS
 			join_phrase: artist.joinPhrase,
 		})),
 	};
+}
+
+function convertLinkType(linkType: LinkType, url?: URL): UrlLinkTypeId | undefined {
+	switch (linkType) {
+		case 'free streaming':
+			return urlTypeIds['free streaming'];
+		case 'paid streaming':
+			return urlTypeIds.streaming;
+	}
 }
 
 // Adapted from https://musicbrainz.org/doc/Development/Release_Editor_Seeding

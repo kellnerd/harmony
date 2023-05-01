@@ -44,7 +44,8 @@ export function Release(release: HarmonyRelease) {
 						<ul>
 							{release.externalLinks.map((link) => (
 								<li>
-									<a href={link.href}>{link.hostname}</a>
+									<a href={link.url.href}>{link.url.hostname}</a>
+									{link.types && ` (${link.types.join(', ')})`}
 								</li>
 							))}
 						</ul>

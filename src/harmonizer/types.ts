@@ -4,7 +4,7 @@ export type HarmonyRelease = {
 	title: string;
 	artists: ArtistCredit;
 	gtin: GTIN;
-	externalLinks: URL[];
+	externalLinks: ExternalLink[];
 	media: HarmonyMedium[];
 	releaseDate: PartialDate;
 	labels?: Label[];
@@ -51,6 +51,19 @@ export type Artwork = {
 };
 
 type ArtworkType = 'front' | 'back';
+
+export type ExternalLink = {
+	url: URL;
+	types?: LinkType[];
+};
+
+export type LinkType =
+	| 'discography page'
+	| 'free download'
+	| 'free streaming'
+	| 'mail order'
+	| 'paid download'
+	| 'paid streaming';
 
 /** Global Trade Item Number with 8 (EAN-8), 12 (UPC), 13 (EAN-13) or 14 digits. */
 export type GTIN = number | string;
