@@ -11,7 +11,7 @@ export type HarmonyRelease = {
 	labels?: Label[];
 	packaging?: Packaging;
 	images?: Artwork[];
-	countryAvailability?: string[];
+	availableIn?: CountryCode[];
 };
 
 export type HarmonyMedium = {
@@ -28,7 +28,7 @@ export type HarmonyTrack = {
 	/** Track duration in milliseconds. */
 	duration: number;
 	isrc?: string;
-	countryAvailability?: string[];
+	availableIn?: CountryCode[];
 };
 
 export type ArtistCreditName = {
@@ -85,11 +85,14 @@ export type MediumFormat =
 /** Global Trade Item Number with 8 (EAN-8), 12 (UPC), 13 (EAN-13) or 14 digits. */
 export type GTIN = number | string;
 
+/** ISO 639-1 two letter county code. */
+export type CountryCode = string;
+
 export type ReleaseOptions = Partial<{
 	withSeparateMedia: boolean;
 	withAllTrackArtists: boolean;
 	withISRC: boolean;
-	withCountryAvailability: boolean;
+	withAvailability: boolean;
 }>;
 
 export type ProviderName = string;

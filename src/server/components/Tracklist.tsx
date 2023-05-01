@@ -18,7 +18,7 @@ export function Tracklist({ medium }: { medium: HarmonyMedium }) {
 				</tr>
 			</thead>
 			{medium.tracklist.map((track) => {
-				const countries = track.countryAvailability;
+				const regions = track.availableIn;
 				return (
 					<tr>
 						<td>{track.number}</td>
@@ -29,10 +29,10 @@ export function Tracklist({ medium }: { medium: HarmonyMedium }) {
 							{track.isrc && <ISRC code={track.isrc} />}
 						</td>
 						<td>
-							{countries
+							{regions
 								? (
 									<>
-										<abbr title={countries.join(', ')}>{countries.length}</abbr> regions
+										<abbr title={regions.join(', ')}>{regions.length}</abbr> regions
 									</>
 								)
 								: '&ndash;'}

@@ -64,7 +64,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 	}
 
 	protected async convertRawRelease(rawRelease: Release, options?: ReleaseOptions): Promise<HarmonyRelease> {
-		const needToFetchIndividualTracks = options?.withAllTrackArtists || options?.withCountryAvailability || false;
+		const needToFetchIndividualTracks = options?.withAllTrackArtists || options?.withAvailability || false;
 		const needToFetchDetailedTracklist = !needToFetchIndividualTracks &&
 			(options?.withSeparateMedia || options?.withISRC || false);
 
@@ -111,7 +111,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 				thumbUrl: new URL(rawRelease.cover_medium),
 				types: ['front'],
 			}],
-			countryAvailability: this.determineAvailability(media),
+			availableIn: this.determineAvailability(media),
 		};
 	}
 
@@ -161,7 +161,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		if ('contributors' in track) {
 			// all available details about this track have been fetched
 			result.artists = track.contributors.map(this.convertRawArtist);
-			result.countryAvailability = track.available_countries;
+			result.availableIn = track.available_countries;
 		} else {
 			result.artists = [this.convertRawArtist(track.artist)];
 		}
@@ -178,7 +178,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 
 	private determineAvailability(media: HarmonyMedium[]): string[] | undefined {
 		const trackAvailabilities = media.flatMap((medium) => medium.tracklist)
-			.map((track) => track.countryAvailability);
+			.map((track) => track.availableIn);
 
 		// calculate the intersection of all tracks' availabilities with Deezer's availability
 		return this.availableRegions.filter((country) =>

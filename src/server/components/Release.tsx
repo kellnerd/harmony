@@ -6,7 +6,7 @@ import { formatPartialDate } from '../../utils/date.ts';
 import type { HarmonyRelease } from '../../harmonizer/types.ts';
 
 export function Release(release: HarmonyRelease) {
-	const countries = release.countryAvailability;
+	const regions = release.availableIn;
 
 	return (
 		<div class='release'>
@@ -51,11 +51,11 @@ export function Release(release: HarmonyRelease) {
 						</ul>
 					</td>
 				</tr>
-				{countries && (
+				{regions && (
 					<tr>
 						<th>Availability</th>
 						<td>
-							<abbr title={countries.join(', ')}>{countries.length}</abbr> regions
+							<abbr title={regions.join(', ')}>{regions.length}</abbr> regions
 						</td>
 					</tr>
 				)}
