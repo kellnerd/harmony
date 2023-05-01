@@ -26,7 +26,7 @@ export function Tracklist({ medium, showTitle = false }: Props) {
 					<th>Artists</th>
 					<th>Duration</th>
 					<th>ISRC</th>
-					<th>Availability</th>
+					{medium.tracklist.some((track) => track.availableIn) && <th>Availability</th>}
 				</tr>
 			</thead>
 			{medium.tracklist.map((track) => {
@@ -40,15 +40,11 @@ export function Tracklist({ medium, showTitle = false }: Props) {
 						<td>
 							{track.isrc && <ISRC code={track.isrc} />}
 						</td>
-						<td>
-							{regions
-								? (
-									<>
-										<abbr title={regions.map(flagEmoji).join(' ')}>{regions.length}</abbr> {plural(regions.length, 'region')}
-									</>
-								)
-								: '&ndash;'}
-						</td>
+						{regions && (
+							<td>
+								<abbr title={regions.map(flagEmoji).join(' ')}>{regions.length}</abbr> {plural(regions.length, 'region')}
+							</td>
+						)}
 					</tr>
 				);
 			})}
