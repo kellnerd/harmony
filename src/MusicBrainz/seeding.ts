@@ -22,9 +22,9 @@ export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 			// mbid: resolveToMBID(label.externalLink), // TODO
 		})),
 		status: 'Official',
-		packaging: 'None',
+		packaging: release.packaging,
 		mediums: release.media.map((medium) => ({
-			format: 'Digital Media',
+			format: medium.format,
 			// Unknown field: mediums.0.position ...despite documentation for it
 			// position: medium.number,
 			name: medium.title,

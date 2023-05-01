@@ -1,3 +1,4 @@
+import type { Packaging } from '../MusicBrainz/typeId.ts';
 import type { PartialDate } from '../utils/date.ts';
 
 export type HarmonyRelease = {
@@ -8,6 +9,7 @@ export type HarmonyRelease = {
 	media: HarmonyMedium[];
 	releaseDate: PartialDate;
 	labels?: Label[];
+	packaging?: Packaging;
 	images?: Artwork[];
 	countryAvailability?: string[];
 };
@@ -15,6 +17,7 @@ export type HarmonyRelease = {
 export type HarmonyMedium = {
 	title?: string;
 	number?: number;
+	format?: MediumFormat;
 	tracklist: HarmonyTrack[];
 };
 
@@ -64,6 +67,20 @@ export type LinkType =
 	| 'mail order'
 	| 'paid download'
 	| 'paid streaming';
+
+/** MusicBrainz medium formats (incomplete). */
+export type MediumFormat =
+	| 'Cassette'
+	| 'CD'
+	| 'CD-R'
+	| 'Data CD'
+	| 'Digital Media'
+	| 'DVD'
+	| 'DVD-Audio'
+	| 'DVD-Video'
+	| 'Vinyl'
+	| '7" Vinyl'
+	| '12" Vinyl';
 
 /** Global Trade Item Number with 8 (EAN-8), 12 (UPC), 13 (EAN-13) or 14 digits. */
 export type GTIN = number | string;

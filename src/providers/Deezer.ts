@@ -84,6 +84,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			media = this.convertRawTracklist(rawTracklist as Array<TracklistItem | Track>);
 		} else {
 			media = [{
+				format: 'Digital Media',
 				tracklist: rawTracklist.map(this.convertRawTrack.bind(this)),
 			}];
 		}
@@ -101,6 +102,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			labels: [{
 				name: rawRelease.label,
 			}],
+			packaging: 'None',
 			images: [{
 				url: new URL(rawRelease.cover_xl),
 				thumbUrl: new URL(rawRelease.cover_medium),
@@ -126,6 +128,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 
 				medium = {
 					number: item.disk_number,
+					format: 'Digital Media',
 					tracklist: [],
 				};
 			}
