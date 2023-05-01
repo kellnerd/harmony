@@ -92,7 +92,7 @@ export function Release(release: HarmonyRelease) {
 							<ul>
 								{releaseCountries.map((code) => (
 									<li>
-										{flagEmoji(code)} {regionName(code)} (<code class='country-code'>{code}</code>)
+										{flagEmoji(code)} {regionName(code)}
 									</li>
 								))}
 							</ul>
