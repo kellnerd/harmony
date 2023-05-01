@@ -2,6 +2,7 @@ import { ProviderError } from '../utils/errors.ts';
 import { rateLimit } from 'utils/async/rateLimit.js';
 
 import type { CountryCode, GTIN, HarmonyRelease, ReleaseOptions } from '../harmonizer/types.ts';
+import type { PartialDate } from '../utils/date.ts';
 import type { MaybePromise } from 'utils/types.d.ts';
 
 export type ProviderOptions = Partial<{
@@ -41,6 +42,8 @@ export abstract class MetadataProvider<RawRelease> {
 
 	/** Country codes of regions in which the provider offers its services (optional). */
 	readonly availableRegions: CountryCode[] = [];
+
+	readonly launchDate: PartialDate = {};
 
 	abstract readonly durationPrecision: DurationPrecision;
 

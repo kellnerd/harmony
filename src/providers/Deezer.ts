@@ -1,6 +1,6 @@
 import { DurationPrecision, MetadataProvider, ProviderOptions } from './abstract.ts';
 import { availableRegions } from './regions/Deezer.ts';
-import { parseHyphenatedDate } from '../utils/date.ts';
+import { parseHyphenatedDate, PartialDate } from '../utils/date.ts';
 import { ResponseError } from '../utils/errors.ts';
 
 import type {
@@ -31,6 +31,12 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 	});
 
 	readonly availableRegions = availableRegions;
+
+	readonly launchDate: PartialDate = {
+		year: 2007,
+		month: 8,
+		day: 22,
+	};
 
 	readonly durationPrecision = DurationPrecision.SECONDS;
 
