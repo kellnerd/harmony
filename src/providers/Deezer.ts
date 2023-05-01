@@ -1,4 +1,5 @@
 import { DurationPrecision, MetadataProvider, ProviderOptions } from './abstract.ts';
+import { availableRegions } from './regions/Deezer.ts';
 import { parseHyphenatedDate } from '../utils/date.ts';
 import { ResponseError } from '../utils/errors.ts';
 
@@ -29,10 +30,12 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		pathname: String.raw`/:country(\w{2})?/album/:id(\d+)`,
 	});
 
+	readonly availableRegions = availableRegions;
+
 	readonly durationPrecision = DurationPrecision.SECONDS;
 
 	constructReleaseUrl(id: string): URL {
-		return new URL('https://www.deezer.com/album/' + id);
+		return new URL(id, 'https://www.deezer.com/album');
 	}
 
 	protected getRawReleaseById(albumId: string): Promise<Release> {
@@ -177,11 +180,8 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		const trackAvailabilities = media.flatMap((medium) => medium.tracklist)
 			.map((track) => track.countryAvailability);
 
-		// start with the availability of an arbitrary track (the last one)
-		const releaseAvailability = trackAvailabilities.pop();
-
-		// calculate the intersection of all tracks' availabilities
-		return releaseAvailability?.filter((country) =>
+		// calculate the intersection of all tracks' availabilities with Deezer's availability
+		return this.availableRegions.filter((country) =>
 			trackAvailabilities.every((availability) => availability?.includes(country))
 		);
 	}
