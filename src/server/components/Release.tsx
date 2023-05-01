@@ -60,14 +60,27 @@ export function Release(release: HarmonyRelease) {
 					<tr>
 						<th>Availability</th>
 						<td>
-							<abbr title={regions.map(flagEmoji).join(' ')}>{regions.length}</abbr> regions
-							{excludedRegions && (excludedRegions?.length
-								? (
-									<>
-										, <abbr title={excludedRegions.map(flagEmoji).join(' ')}>{excludedRegions.length}</abbr> excluded
-									</>
-								)
-								: ', none excluded')}
+							{regions.map((code) => (
+								<>
+									<abbr title={regionName(code)}>{flagEmoji(code)}</abbr>
+									{' '}
+								</>
+							))}
+							({regions.length} regions)
+						</td>
+					</tr>
+				)}
+				{excludedRegions && (
+					<tr>
+						<th>Unavailability</th>
+						<td>
+							{excludedRegions.map((code) => (
+								<>
+									<abbr title={regionName(code)}>{flagEmoji(code)}</abbr>
+									{' '}
+								</>
+							))}
+							({excludedRegions.length} regions)
 						</td>
 					</tr>
 				)}
