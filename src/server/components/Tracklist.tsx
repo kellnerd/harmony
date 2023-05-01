@@ -4,9 +4,19 @@ import { formatDuration } from '../../utils/time.ts';
 
 import type { HarmonyMedium } from '../../harmonizer/types.ts';
 
-export function Tracklist({ medium }: { medium: HarmonyMedium }) {
+type Props = {
+	medium: HarmonyMedium;
+	showTitle?: boolean;
+};
+
+export function Tracklist({ medium, showTitle = false }: Props) {
 	return (
 		<table class='tracklist'>
+			{showTitle && (
+				<caption>
+					{medium.format ?? 'Medium'} {medium.number}{medium.title && `: ${medium.title}`}
+				</caption>
+			)}
 			<thead>
 				<tr>
 					<th>Track</th>

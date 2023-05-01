@@ -10,6 +10,7 @@ export function Release(release: HarmonyRelease) {
 	const regions = release.availableIn;
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
+  const isMultiMedium = release.media.length > 1;
 
 	return (
 		<div class='release'>
@@ -81,7 +82,7 @@ export function Release(release: HarmonyRelease) {
 				)}
 			</table>
 			{release.images?.map((artwork) => <CoverImage artwork={artwork} />)}
-			{release.media.map((medium) => <Tracklist medium={medium} />)}
+			{release.media.map((medium) => <Tracklist medium={medium} showTitle={isMultiMedium} />)}
 		</div>
 	);
 }
