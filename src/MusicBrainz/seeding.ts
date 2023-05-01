@@ -1,7 +1,9 @@
-import { urlTypeIds } from '../MusicBrainz/typeId.ts';
+import { determineReleaseEventCountries } from './releaseCountries.ts';
+import { urlTypeIds } from './typeId.ts';
+import { preferArray } from 'utils/array/scalar.js';
 import { flatten } from 'utils/object/flatten.js';
 
-import type { ArtistCreditName, HarmonyRelease, LinkType } from '../harmonizer/types.ts';
+import type { ArtistCreditName, CountryCode, HarmonyRelease, LinkType } from '../harmonizer/types.ts';
 import type { PartialDate } from '../utils/date.ts';
 import type { Packaging, ReleaseGroupType, ReleaseStatus, UrlLinkTypeId } from '../MusicBrainz/typeId.ts';
 import type { FormDataRecord, MaybeArray } from 'utils/types.d.ts';
@@ -9,13 +11,16 @@ import type { FormDataRecord, MaybeArray } from 'utils/types.d.ts';
 export const targetUrl = new URL('/release/add', 'https://musicbrainz.org');
 
 export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
+	const countries = preferArray(determineReleaseEventCountries(release));
+
 	const seed: ReleaseSeed = {
 		name: release.title,
 		artist_credit: convertArtistCredit(release.artists),
 		barcode: release.gtin.toString(),
-		events: [{
+		events: countries.map((country) => ({
 			date: release.releaseDate,
-		}],
+			country,
+		})),
 		labels: release.labels?.map((label) => ({
 			name: label.name,
 			catalog_number: label.catalogNumber,
@@ -122,7 +127,7 @@ type ReleaseSeed =
 				/** The date of the release event. Each field is an integer. */
 				date: PartialDate;
 				/** The country of the release event. May be any valid country ISO code (for example: `GB`, `US`, `FR`). */
-				country: string;
+				country: CountryCode;
 			}>
 		>;
 

@@ -1,6 +1,7 @@
 import { ArtistCredit } from './ArtistCredit.tsx';
 import { CoverImage } from './CoverImage.tsx';
 import { Tracklist } from './Tracklist.tsx';
+import { determineReleaseEventCountries } from '../../MusicBrainz/releaseCountries.ts';
 import { formatPartialDate } from '../../utils/date.ts';
 
 import type { HarmonyRelease } from '../../harmonizer/types.ts';
@@ -8,6 +9,7 @@ import type { HarmonyRelease } from '../../harmonizer/types.ts';
 export function Release(release: HarmonyRelease) {
 	const regions = release.availableIn;
 	const excludedRegions = release.excludedFrom;
+	const releaseCountries = determineReleaseEventCountries(release);
 
 	return (
 		<div class='release'>
@@ -64,6 +66,16 @@ export function Release(release: HarmonyRelease) {
 									</>
 								)
 								: ', none excluded')}
+						</td>
+					</tr>
+				)}
+				{releaseCountries && (
+					<tr>
+						<th>Release events</th>
+						<td>
+							<ul>
+								{releaseCountries.map((country) => <li>{country}</li>)}
+							</ul>
 						</td>
 					</tr>
 				)}
