@@ -103,6 +103,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 				thumbUrl: new URL(rawRelease.cover_medium),
 				types: ['front'],
 			}],
+			countryAvailability: this.determineAvailability(media),
 		};
 	}
 
@@ -164,6 +165,19 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			name: artist.name,
 			externalLink: new URL('https://www.deezer.com/artist/' + artist.id),
 		};
+	}
+
+	private determineAvailability(media: HarmonyMedium[]): string[] | undefined {
+		const trackAvailabilities = media.flatMap((medium) => medium.tracklist)
+			.map((track) => track.countryAvailability);
+
+		// start with the availability of an arbitrary track (the last one)
+		const releaseAvailability = trackAvailabilities.pop();
+
+		// calculate the intersection of all tracks' availabilities
+		return releaseAvailability?.filter((country) =>
+			trackAvailabilities.every((availability) => availability?.includes(country))
+		);
 	}
 
 	readonly apiBaseUrl = 'https://api.deezer.com';
