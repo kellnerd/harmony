@@ -7,6 +7,7 @@ import type { HarmonyRelease } from '../../harmonizer/types.ts';
 
 export function Release(release: HarmonyRelease) {
 	const regions = release.availableIn;
+	const excludedRegions = release.excludedFrom;
 
 	return (
 		<div class='release'>
@@ -56,6 +57,13 @@ export function Release(release: HarmonyRelease) {
 						<th>Availability</th>
 						<td>
 							<abbr title={regions.join(', ')}>{regions.length}</abbr> regions
+							{excludedRegions && (excludedRegions?.length
+								? (
+									<>
+										, <abbr title={excludedRegions.join(', ')}>{excludedRegions.length}</abbr> excluded
+									</>
+								)
+								: ', none excluded')}
 						</td>
 					</tr>
 				)}

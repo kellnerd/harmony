@@ -1,7 +1,7 @@
 import { ProviderError } from '../utils/errors.ts';
 import { rateLimit } from 'utils/async/rateLimit.js';
 
-import type { GTIN, HarmonyRelease, ReleaseOptions } from '../harmonizer/types.ts';
+import type { CountryCode, GTIN, HarmonyRelease, ReleaseOptions } from '../harmonizer/types.ts';
 import type { MaybePromise } from 'utils/types.d.ts';
 
 export type ProviderOptions = Partial<{
@@ -39,6 +39,9 @@ export abstract class MetadataProvider<RawRelease> {
 	 */
 	abstract readonly supportedUrls: URLPattern;
 
+	/** Country codes of regions in which the provider offers its services (optional). */
+	readonly availableRegions: CountryCode[] = [];
+
 	abstract readonly durationPrecision: DurationPrecision;
 
 	/** Constructs a canonical release URL for the given provider ID. */
@@ -61,14 +64,16 @@ export abstract class MetadataProvider<RawRelease> {
 
 	/** Looks up the release which is identified by the given provider ID. */
 	async getReleaseById(id: string, options?: ReleaseOptions): Promise<HarmonyRelease> {
-		return this.convertRawRelease(await this.getRawReleaseById(id), options);
+		const release = await this.convertRawRelease(await this.getRawReleaseById(id), options);
+		return this.withExcludedRegions(release);
 	}
 
 	protected abstract getRawReleaseById(id: string): Promise<RawRelease>;
 
 	/** Looks up the release which is identified by the given GTIN/barcode. */
 	async getReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<HarmonyRelease> {
-		return this.convertRawRelease(await this.getRawReleaseByGTIN(gtin), options);
+		const release = await this.convertRawRelease(await this.getRawReleaseByGTIN(gtin), options);
+		return this.withExcludedRegions(release);
 	}
 
 	protected abstract getRawReleaseByGTIN(gtin: GTIN): Promise<RawRelease>;
@@ -89,6 +94,19 @@ export abstract class MetadataProvider<RawRelease> {
 	/** Checks whether the provider supports the given URL for releases. */
 	supportsReleaseUrl(url: URL): boolean {
 		return this.supportedUrls.test(url);
+	}
+
+	/** Determines excluded regions of the release (if available regions have been specified for the provider). */
+	private withExcludedRegions(release: HarmonyRelease): HarmonyRelease {
+		if (this.availableRegions.length && release.availableIn) {
+			if (release.availableIn.length) {
+				release.excludedFrom = this.availableRegions.filter((region) => !release.availableIn!.includes(region));
+			} else {
+				release.excludedFrom = [...this.availableRegions];
+			}
+		}
+
+		return release;
 	}
 
 	protected cache: Cache | undefined;

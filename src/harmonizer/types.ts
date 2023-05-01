@@ -12,6 +12,7 @@ export type HarmonyRelease = {
 	packaging?: Packaging;
 	images?: Artwork[];
 	availableIn?: CountryCode[];
+	excludedFrom?: CountryCode[];
 };
 
 export type HarmonyMedium = {
