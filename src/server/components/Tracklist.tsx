@@ -1,5 +1,6 @@
 import { ArtistCredit } from './ArtistCredit.tsx';
 import { ISRC } from './ISRC.tsx';
+import { plural } from '../../utils/plural.ts';
 import { flagEmoji } from '../../utils/regions.ts';
 import { formatDuration } from '../../utils/time.ts';
 
@@ -43,7 +44,7 @@ export function Tracklist({ medium, showTitle = false }: Props) {
 							{regions
 								? (
 									<>
-										<abbr title={regions.map(flagEmoji).join(' ')}>{regions.length}</abbr> regions
+										<abbr title={regions.map(flagEmoji).join(' ')}>{regions.length}</abbr> {plural(regions.length, 'region')}
 									</>
 								)
 								: '&ndash;'}

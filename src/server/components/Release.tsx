@@ -3,6 +3,7 @@ import { CoverImage } from './CoverImage.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import { determineReleaseEventCountries } from '../../MusicBrainz/releaseCountries.ts';
 import { formatPartialDate } from '../../utils/date.ts';
+import { pluralWithCount } from '../../utils/plural.ts';
 import { flagEmoji, regionName } from '../../utils/regions.ts';
 
 import type { HarmonyRelease } from '../../harmonizer/types.ts';
@@ -66,7 +67,7 @@ export function Release(release: HarmonyRelease) {
 									{' '}
 								</>
 							))}
-							({regions.length} regions)
+							({pluralWithCount(regions.length, 'region')})
 						</td>
 					</tr>
 				)}
@@ -80,7 +81,7 @@ export function Release(release: HarmonyRelease) {
 									{' '}
 								</>
 							))}
-							({excludedRegions.length} regions)
+							({pluralWithCount(excludedRegions.length, 'region')})
 						</td>
 					</tr>
 				)}
