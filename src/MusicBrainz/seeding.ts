@@ -59,12 +59,16 @@ export function convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditS
 	if (!artists) return;
 
 	return {
-		names: artists.map((artist) => ({
-			artist: { name: artist.name },
-			// mbid: resolveToMBID(artist.externalLink), // TODO
-			name: artist.creditedName,
-			join_phrase: artist.joinPhrase,
-		})),
+		names: artists.map((artist, index) => {
+			const defaultJoinPhrase = (index !== artists.length - 1) ? ', ' : undefined;
+
+			return {
+				artist: { name: artist.name },
+				// mbid: resolveToMBID(artist.externalLink), // TODO
+				name: artist.creditedName,
+				join_phrase: artist.joinPhrase ?? defaultJoinPhrase,
+			};
+		}),
 	};
 }
 
