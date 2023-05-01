@@ -3,6 +3,7 @@ import { CoverImage } from './CoverImage.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import { determineReleaseEventCountries } from '../../MusicBrainz/releaseCountries.ts';
 import { formatPartialDate } from '../../utils/date.ts';
+import { flagEmoji, regionName } from '../../utils/regions.ts';
 
 import type { HarmonyRelease } from '../../harmonizer/types.ts';
 
@@ -10,7 +11,7 @@ export function Release(release: HarmonyRelease) {
 	const regions = release.availableIn;
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
-  const isMultiMedium = release.media.length > 1;
+	const isMultiMedium = release.media.length > 1;
 
 	return (
 		<div class='release'>
@@ -59,11 +60,11 @@ export function Release(release: HarmonyRelease) {
 					<tr>
 						<th>Availability</th>
 						<td>
-							<abbr title={regions.join(', ')}>{regions.length}</abbr> regions
+							<abbr title={regions.map(flagEmoji).join(' ')}>{regions.length}</abbr> regions
 							{excludedRegions && (excludedRegions?.length
 								? (
 									<>
-										, <abbr title={excludedRegions.join(', ')}>{excludedRegions.length}</abbr> excluded
+										, <abbr title={excludedRegions.map(flagEmoji).join(' ')}>{excludedRegions.length}</abbr> excluded
 									</>
 								)
 								: ', none excluded')}
@@ -75,7 +76,11 @@ export function Release(release: HarmonyRelease) {
 						<th>Release events</th>
 						<td>
 							<ul>
-								{releaseCountries.map((country) => <li>{country}</li>)}
+								{releaseCountries.map((code) => (
+									<li>
+										{flagEmoji(code)} {regionName(code)} (<code class='country-code'>{code}</code>)
+									</li>
+								))}
 							</ul>
 						</td>
 					</tr>
