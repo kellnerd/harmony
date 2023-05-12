@@ -41,6 +41,7 @@ export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 				length: track.duration,
 			})),
 		})),
+		language: release.language?.code,
 		script: release.mainScript?.script,
 		urls: release.externalLinks.flatMap((link) =>
 			link.types

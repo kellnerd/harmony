@@ -8,6 +8,7 @@ export type HarmonyRelease = {
 	gtin: GTIN;
 	externalLinks: ExternalLink[];
 	media: HarmonyMedium[];
+	language?: Language;
 	mainScript?: ScriptFrequency;
 	releaseDate: PartialDate;
 	labels?: Label[];
@@ -87,6 +88,12 @@ export type MediumFormat =
 
 /** Global Trade Item Number with 8 (EAN-8), 12 (UPC), 13 (EAN-13) or 14 digits. */
 export type GTIN = number | string;
+
+export type Language = {
+	/** ISO 639-3 three letter code. */
+	code: string;
+	confidence?: number;
+};
 
 /** ISO 639-1 two letter country code. */
 export type CountryCode = string;

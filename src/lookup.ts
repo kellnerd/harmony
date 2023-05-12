@@ -2,6 +2,7 @@ import { mergeRelease } from './harmonizer/merge.ts';
 import { providerNames, providers } from './providers.ts';
 import { LookupError } from './utils/errors.ts';
 import { detectScripts, scriptCodes } from './utils/script.ts';
+import { francAll } from 'franc';
 import { zipObject } from 'utils/object/zipObject.js';
 
 import type { GTIN, HarmonyRelease, ProviderReleaseMapping, ReleaseOptions } from './harmonizer/types.ts';
@@ -55,5 +56,13 @@ function detectLanguageAndScript(release: HarmonyRelease): void {
 	const mainScript = detectScripts(allTitles.join('\n'), scriptCodes)[0];
 	if (mainScript?.frequency > 0.7) {
 		release.mainScript = mainScript;
+	}
+
+	const guessedLanguage = francAll(allTitles.join('\n'))[0];
+	if (guessedLanguage[1] > 0.9) {
+		release.language = {
+			code: guessedLanguage[0],
+			confidence: guessedLanguage[1],
+		};
 	}
 }

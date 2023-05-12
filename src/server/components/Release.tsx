@@ -12,12 +12,17 @@ const scriptNames = new Intl.DisplayNames('en', {
 	type: 'script',
 });
 
+const languageNames = new Intl.DisplayNames('en', {
+	type: 'language',
+	languageDisplay: 'standard',
+});
+
 export function Release(release: HarmonyRelease) {
 	const regions = release.availableIn;
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
 	const isMultiMedium = release.media.length > 1;
-	const mainScript = release.mainScript;
+	const { language, mainScript } = release;
 
 	return (
 		<div class='release'>
@@ -104,10 +109,19 @@ export function Release(release: HarmonyRelease) {
 						</td>
 					</tr>
 				)}
+				{language && (
+					<tr>
+						<th>Language</th>
+						<td>
+							{languageNames.of(language.code)}
+							{language.confidence && ` (${(100 * language.confidence).toFixed(0)}% confidence)`}
+						</td>
+					</tr>
+				)}
 				{mainScript && (
 					<tr>
 						<th>Script</th>
-						<td>{scriptNames.of(mainScript.script)} ({(100 * mainScript.frequency).toFixed(1)}%)</td>
+						<td>{scriptNames.of(mainScript.script)} ({(100 * mainScript.frequency).toFixed(0)}%)</td>
 					</tr>
 				)}
 			</table>
