@@ -53,16 +53,20 @@ function detectLanguageAndScript(release: HarmonyRelease): void {
 	const allTitles = release.media.flatMap((medium) => medium.tracklist.map((track) => track.title));
 	allTitles.push(release.title);
 
-	const mainScript = detectScripts(allTitles.join('\n'), scriptCodes)[0];
-	if (mainScript?.frequency > 0.7) {
-		release.mainScript = mainScript;
+	if (!release.mainScript) {
+		const mainScript = detectScripts(allTitles.join('\n'), scriptCodes)[0];
+		if (mainScript?.frequency > 0.7) {
+			release.mainScript = mainScript;
+		}
 	}
 
-	const guessedLanguage = francAll(allTitles.join('\n'))[0];
-	if (guessedLanguage[1] > 0.9) {
-		release.language = {
-			code: guessedLanguage[0],
-			confidence: guessedLanguage[1],
-		};
+	if (!release.language) {
+		const guessedLanguage = francAll(allTitles.join('\n'))[0];
+		if (guessedLanguage[1] > 0.9) {
+			release.language = {
+				code: guessedLanguage[0],
+				confidence: guessedLanguage[1],
+			};
+		}
 	}
 }
