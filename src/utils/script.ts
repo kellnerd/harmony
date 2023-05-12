@@ -2,6 +2,7 @@
 export const scriptCodes = [
 	'Latn',
 	'Hani',
+	// Unicode character classes of Han subsets are not supported in RegExp
 	// 'Hant', // subset of Hani
 	// 'Hans', // subset of Hani
 	'Kana',
@@ -23,9 +24,10 @@ const scriptCombinations: Record<CombinedScriptCode, DetectableScriptCode[]> = {
 	'Kore': ['Hang', 'Hani'],
 };
 
+/** ISO 15924 four letter script code. */
 export type ScriptCode = DetectableScriptCode | CombinedScriptCode;
 
-type ScriptFrequency = {
+export type ScriptFrequency = {
 	script: ScriptCode;
 	frequency: number;
 };
@@ -43,6 +45,7 @@ export function detectScripts(text: string, possibleScripts: readonly Detectable
 		const scriptLetterCount = [...scriptMatches].length;
 
 		if (scriptLetterCount) {
+			// TODO: increase weight of logographic scripts?
 			detectedScripts.push({ script, frequency: scriptLetterCount / totalLetters });
 
 			// stop testing once all letters have been classified
@@ -73,7 +76,7 @@ export function detectScripts(text: string, possibleScripts: readonly Detectable
 /** Detects the main script of the given text when its frequency is above the specified minimum. */
 export function detectMainScript(text: string, possibleScripts: readonly DetectableScriptCode[], {
 	minFrequency = 0.75,
-}): ScriptCode | undefined {
+} = {}): ScriptCode | undefined {
 	const scripts = detectScripts(text, possibleScripts);
 	if (scripts.length && scripts[0].frequency >= minFrequency) {
 		return scripts[0].script;

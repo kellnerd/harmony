@@ -1,5 +1,6 @@
 import type { Packaging } from '../MusicBrainz/typeId.ts';
 import type { PartialDate } from '../utils/date.ts';
+import type { ScriptFrequency } from '../utils/script.ts';
 
 export type HarmonyRelease = {
 	title: string;
@@ -7,6 +8,7 @@ export type HarmonyRelease = {
 	gtin: GTIN;
 	externalLinks: ExternalLink[];
 	media: HarmonyMedium[];
+	mainScript?: ScriptFrequency;
 	releaseDate: PartialDate;
 	labels?: Label[];
 	packaging?: Packaging;
@@ -86,7 +88,7 @@ export type MediumFormat =
 /** Global Trade Item Number with 8 (EAN-8), 12 (UPC), 13 (EAN-13) or 14 digits. */
 export type GTIN = number | string;
 
-/** ISO 639-1 two letter county code. */
+/** ISO 639-1 two letter country code. */
 export type CountryCode = string;
 
 export type ReleaseOptions = Partial<{

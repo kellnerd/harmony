@@ -3,9 +3,10 @@ import { urlTypeIds } from './typeId.ts';
 import { preferArray } from 'utils/array/scalar.js';
 import { flatten } from 'utils/object/flatten.js';
 
+import type { Packaging, ReleaseGroupType, ReleaseStatus, UrlLinkTypeId } from './typeId.ts';
 import type { ArtistCreditName, CountryCode, HarmonyRelease, LinkType } from '../harmonizer/types.ts';
 import type { PartialDate } from '../utils/date.ts';
-import type { Packaging, ReleaseGroupType, ReleaseStatus, UrlLinkTypeId } from '../MusicBrainz/typeId.ts';
+import type { ScriptCode } from '../utils/script.ts';
 import type { FormDataRecord, MaybeArray } from 'utils/types.d.ts';
 
 export const targetUrl = new URL('/release/add', 'https://musicbrainz.org');
@@ -40,6 +41,7 @@ export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 				length: track.duration,
 			})),
 		})),
+		script: release.mainScript?.script,
 		urls: release.externalLinks.flatMap((link) =>
 			link.types
 				? link.types.map((type) => ({
@@ -116,7 +118,7 @@ type ReleaseSeed =
 		 * The script of the text on the release.
 		 * May be any valid [ISO 15924](https://en.wikipedia.org/wiki/ISO_15924) code (for example: `Latn`, `Cyrl`).
 		 */
-		script: string;
+		script: ScriptCode;
 		/** The status of the release, as defined by MusicBrainz. */
 		status: ReleaseStatus;
 		/** The type of packaging of the release. The possible values are the names of the release group types, in English (see the documentation). */

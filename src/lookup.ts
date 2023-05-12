@@ -1,6 +1,7 @@
 import { mergeRelease } from './harmonizer/merge.ts';
 import { providerNames, providers } from './providers.ts';
 import { LookupError } from './utils/errors.ts';
+import { detectScripts, scriptCodes } from './utils/script.ts';
 import { zipObject } from 'utils/object/zipObject.js';
 
 import type { GTIN, HarmonyRelease, ProviderReleaseMapping, ReleaseOptions } from './harmonizer/types.ts';
@@ -8,14 +9,17 @@ import type { GTIN, HarmonyRelease, ProviderReleaseMapping, ReleaseOptions } fro
 /**
  * Looks up the given URL with the first matching provider.
  */
-export function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<HarmonyRelease> {
+export async function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<HarmonyRelease> {
 	const matchingProvider = providers.find((provider) => provider.supportsDomain(url));
 
 	if (!matchingProvider) {
 		throw new LookupError(`No provider supports ${url}`);
 	}
 
-	return matchingProvider.getRelease(url, options);
+	const release = await matchingProvider.getRelease(url, options);
+	detectLanguageAndScript(release);
+
+	return release;
 }
 
 /**
@@ -37,6 +41,19 @@ export async function getMergedReleaseByGTIN(
 	options?: ReleaseOptions,
 ): Promise<HarmonyRelease | undefined> {
 	const releaseMap = await getProviderReleaseMapping(gtin, options);
+	const release = mergeRelease(releaseMap);
 
-	return mergeRelease(releaseMap);
+	if (release) detectLanguageAndScript(release);
+
+	return release;
+}
+
+function detectLanguageAndScript(release: HarmonyRelease): void {
+	const allTitles = release.media.flatMap((medium) => medium.tracklist.map((track) => track.title));
+	allTitles.push(release.title);
+
+	const mainScript = detectScripts(allTitles.join('\n'), scriptCodes)[0];
+	if (mainScript?.frequency > 0.7) {
+		release.mainScript = mainScript;
+	}
 }

@@ -8,11 +8,16 @@ import { flagEmoji, regionName } from '../../utils/regions.ts';
 
 import type { HarmonyRelease } from '../../harmonizer/types.ts';
 
+const scriptNames = new Intl.DisplayNames('en', {
+	type: 'script',
+});
+
 export function Release(release: HarmonyRelease) {
 	const regions = release.availableIn;
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
 	const isMultiMedium = release.media.length > 1;
+	const mainScript = release.mainScript;
 
 	return (
 		<div class='release'>
@@ -97,6 +102,12 @@ export function Release(release: HarmonyRelease) {
 								))}
 							</ul>
 						</td>
+					</tr>
+				)}
+				{mainScript && (
+					<tr>
+						<th>Script</th>
+						<td>{scriptNames.of(mainScript.script)} ({(100 * mainScript.frequency).toFixed(1)}%)</td>
 					</tr>
 				)}
 			</table>
