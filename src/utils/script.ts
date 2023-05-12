@@ -1,10 +1,7 @@
 /** ISO 15924 script codes, ordered by frequency (in MusicBrainz). */
 export const scriptCodes = [
 	'Latn',
-	'Hani',
-	// Unicode character classes of Han subsets are not supported in RegExp
-	// 'Hant', // subset of Hani
-	// 'Hans', // subset of Hani
+	'Hani', // Han subsets `Hant` and `Hans` are not defined as Unicode character classes
 	'Kana',
 	'Hira',
 	'Cyrl',
@@ -15,17 +12,19 @@ export const scriptCodes = [
 	'Thai',
 ] as const;
 
-type DetectableScriptCode = typeof scriptCodes[number];
+/** ISO 15924 script codes which are defined as Unicode character classes. */
+type UnicodeScriptCode = typeof scriptCodes[number];
 
+/** ISO 15924 script codes which are aliases for combinations of multiple Unicode character classes. */
 type CombinedScriptCode = 'Jpan' | 'Kore';
 
-const scriptCombinations: Record<CombinedScriptCode, DetectableScriptCode[]> = {
+const scriptCombinations: Record<CombinedScriptCode, UnicodeScriptCode[]> = {
 	'Jpan': ['Kana', 'Hira', 'Hani'],
 	'Kore': ['Hang', 'Hani'],
 };
 
 /** ISO 15924 four letter script code. */
-export type ScriptCode = DetectableScriptCode | CombinedScriptCode;
+export type ScriptCode = UnicodeScriptCode | CombinedScriptCode;
 
 export type ScriptFrequency = {
 	script: ScriptCode;
@@ -33,7 +32,7 @@ export type ScriptFrequency = {
 };
 
 /** Detects the scripts in which the input is written and orders them by frequency (descending). */
-export function detectScripts(text: string, possibleScripts: readonly DetectableScriptCode[]): ScriptFrequency[] {
+export function detectScripts(text: string, possibleScripts: readonly UnicodeScriptCode[]): ScriptFrequency[] {
 	const detectedScripts: ScriptFrequency[] = [];
 	const letters = text.replaceAll(/\P{Letter}/gu, '');
 	const totalLetters = letters.length;
@@ -74,7 +73,7 @@ export function detectScripts(text: string, possibleScripts: readonly Detectable
 }
 
 /** Detects the main script of the given text when its frequency is above the specified minimum. */
-export function detectMainScript(text: string, possibleScripts: readonly DetectableScriptCode[], {
+export function detectMainScript(text: string, possibleScripts: readonly UnicodeScriptCode[], {
 	minFrequency = 0.75,
 } = {}): ScriptCode | undefined {
 	const scripts = detectScripts(text, possibleScripts);
