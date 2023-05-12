@@ -3,6 +3,7 @@ import { providerNames, providers } from './providers.ts';
 import { LookupError } from './utils/errors.ts';
 import { detectScripts, scriptCodes } from './utils/script.ts';
 import { francAll } from 'franc';
+import lande from 'lande';
 import { zipObject } from 'utils/object/zipObject.js';
 
 import type { GTIN, HarmonyRelease, ProviderReleaseMapping, ReleaseOptions } from './harmonizer/types.ts';
@@ -54,18 +55,24 @@ function detectLanguageAndScript(release: HarmonyRelease): void {
 	allTitles.push(release.title);
 
 	if (!release.mainScript) {
-		const mainScript = detectScripts(allTitles.join('\n'), scriptCodes)[0];
+		const scripts = detectScripts(allTitles.join('\n'), scriptCodes);
+		const mainScript = scripts[0];
+		// console.debug(scripts);
+
 		if (mainScript?.frequency > 0.7) {
 			release.mainScript = mainScript;
 		}
 	}
 
 	if (!release.language) {
-		const guessedLanguage = francAll(allTitles.join('\n'))[0];
-		if (guessedLanguage[1] > 0.9) {
+		const guessedLanguages = lande(allTitles.join('\n'));
+		const topLanguage = guessedLanguages[0];
+		// console.debug(guessedLanguages.slice(0, 3));
+
+		if (topLanguage[1] > 0.7) {
 			release.language = {
-				code: guessedLanguage[0],
-				confidence: guessedLanguage[1],
+				code: topLanguage[0],
+				confidence: topLanguage[1],
 			};
 		}
 	}
