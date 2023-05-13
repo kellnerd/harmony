@@ -29,3 +29,13 @@ export function parseHyphenatedDate(date: string): PartialDate {
 	}
 	return {};
 }
+
+/** Parses a simple ISO 8601 date time string (`YYYY-MM-DDTHH:mm:ss.sssZ`) */
+export function parseISODateTime(dateTime: string): PartialDate {
+	const date = new Date(dateTime);
+	return {
+		day: date.getUTCDate(),
+		month: date.getUTCMonth() + 1,
+		year: date.getUTCFullYear(),
+	};
+}
