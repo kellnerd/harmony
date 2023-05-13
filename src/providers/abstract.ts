@@ -10,7 +10,7 @@ export type ProviderOptions = Partial<{
 	rateLimitInterval: number | null;
 	/** Maximum number of requests within the interval. */
 	concurrentRequests: number;
-	/** Cache which will be used for  (optional). */
+	/** Cache which will be used for requests (optional). */
 	cache: Cache;
 }>;
 
@@ -67,19 +67,19 @@ export abstract class MetadataProvider<RawRelease> {
 
 	/** Looks up the release which is identified by the given provider ID. */
 	async getReleaseById(id: string, options?: ReleaseOptions): Promise<HarmonyRelease> {
-		const release = await this.convertRawRelease(await this.getRawReleaseById(id), options);
+		const release = await this.convertRawRelease(await this.getRawReleaseById(id, options), options);
 		return this.withExcludedRegions(release);
 	}
 
-	protected abstract getRawReleaseById(id: string): Promise<RawRelease>;
+	protected abstract getRawReleaseById(id: string, options?: ReleaseOptions): Promise<RawRelease>;
 
 	/** Looks up the release which is identified by the given GTIN/barcode. */
 	async getReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<HarmonyRelease> {
-		const release = await this.convertRawRelease(await this.getRawReleaseByGTIN(gtin), options);
+		const release = await this.convertRawRelease(await this.getRawReleaseByGTIN(gtin, options), options);
 		return this.withExcludedRegions(release);
 	}
 
-	protected abstract getRawReleaseByGTIN(gtin: GTIN): Promise<RawRelease>;
+	protected abstract getRawReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<RawRelease>;
 
 	/** Converts the given provider-specific raw release metadata into a common representation. */
 	protected abstract convertRawRelease(rawRelease: RawRelease, options?: ReleaseOptions): MaybePromise<HarmonyRelease>;
