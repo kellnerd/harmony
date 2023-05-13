@@ -17,7 +17,7 @@ const languageNames = new Intl.DisplayNames('en', {
 	languageDisplay: 'standard',
 });
 
-export function Release(release: HarmonyRelease) {
+export function Release({ release }: { release: HarmonyRelease }) {
 	const regions = release.availableIn;
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
