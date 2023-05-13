@@ -1,8 +1,10 @@
 import { DurationPrecision, MetadataProvider } from './abstract.ts';
-import { PartialDate, parseISODateTime } from '../utils/date.ts';
+import { parseISODateTime, PartialDate } from '../utils/date.ts';
+import { ResponseError } from '../utils/errors.ts';
 
 import type {
 	ArtistCreditName,
+	CountryCode,
 	GTIN,
 	HarmonyMedium,
 	HarmonyRelease,
@@ -26,16 +28,16 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 
 	readonly durationPrecision = DurationPrecision.MS;
 
-	constructReleaseUrl(id: string): URL {
-		return new URL(id, 'https://music.apple.com/album'); // TODO: region-specific URL
+	constructReleaseUrl(id: string, region: CountryCode = 'US'): URL {
+		return new URL([region.toLowerCase(), 'album', id].join('/'), 'https://music.apple.com');
 	}
 
-	protected getRawReleaseById(id: string): Promise<ReleaseResult> {
-		return this.query(`lookup?id=${id}&entity=song`);
+	protected getRawReleaseById(id: string, options?: ReleaseOptions): Promise<ReleaseResult> {
+		return this.query(`lookup?id=${id}&entity=song`, options?.regions);
 	}
 
-	protected getRawReleaseByGTIN(gtin: GTIN): Promise<ReleaseResult> {
-		return this.query(`lookup?upc=${gtin}&entity=song`);
+	protected getRawReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<ReleaseResult> {
+		return this.query(`lookup?upc=${gtin}&entity=song`, options?.regions);
 	}
 
 	protected convertRawRelease(rawRelease: ReleaseResult, options?: ReleaseOptions): HarmonyRelease {
@@ -96,11 +98,19 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 
 	readonly apiBaseUrl = 'https://itunes.apple.com';
 
-	private async query(path: string) {
-		const apiUrl = new URL(path, this.apiBaseUrl); // TODO: region-specific URL
-		const data = await this.fetchJSON(apiUrl);
+	private async query(path: string, preferredRegions?: CountryCode[]) {
+		let apiUrl: URL;
 
-		return data;
+		for (const region of (preferredRegions ?? ['US'])) {
+			apiUrl = new URL([region.toLowerCase(), path].join('/'), this.apiBaseUrl);
+
+			const data = await this.fetchJSON(apiUrl);
+			if (data.resultCount) {
+				return data;
+			}
+		}
+
+		throw new ResponseError(this.name, 'API returned no results', apiUrl!);
 	}
 }
 
