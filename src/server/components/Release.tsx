@@ -33,26 +33,28 @@ export function Release({ release }: { release: HarmonyRelease }) {
 			<table>
 				<tr>
 					<th>Release date</th>
-					<td>{formatPartialDate(release.releaseDate) || '????'}</td>
+					<td>{formatPartialDate(release.releaseDate) || '[unknown]'}</td>
 				</tr>
-				<tr>
-					<th>Labels</th>
-					<td>
-						<ul>
-							{release.labels?.map((label) => (
-								<li>
-									<a href={label.externalLink?.href}>{label.name}</a>
-									{label.catalogNumber}
-								</li>
-							))}
-						</ul>
-					</td>
-				</tr>
+				{release.labels && (
+					<tr>
+						<th>Labels</th>
+						<td>
+							<ul>
+								{release.labels?.map((label) => (
+									<li>
+										<a href={label.externalLink?.href}>{label.name}</a>
+										{label.catalogNumber}
+									</li>
+								))}
+							</ul>
+						</td>
+					</tr>
+				)}
 				<tr>
 					<th>
 						<abbr title='Global Trade Item Number'>GTIN</abbr>
 					</th>
-					<td>{release.gtin}</td>
+					<td>{release.gtin || '[unknown]'}</td>
 				</tr>
 				<tr>
 					<th>External links</th>
