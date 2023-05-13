@@ -25,7 +25,7 @@ export function mergeRelease(
 	const preferredProviders: ProviderName[] = preferSameProvider ? preferences : preferences.media ?? [];
 
 	// select the first available provider from the preferred providers and use its data as a basis
-	const primaryProviderName = availableProviders.find((name) => preferredProviders.includes(name)) ??
+	const primaryProviderName = preferredProviders.find((name) => availableProviders.includes(name)) ??
 		availableProviders[0];
 	const mergedRelease = releaseMap[primaryProviderName]!;
 
@@ -67,7 +67,7 @@ export function mergeRelease(
 	(Object.entries(preferences) as [ReleaseProperty, ProviderName[]][]).forEach(([property, preferredProviders]) => {
 		if (property === 'media' || property === 'externalLinks') return;
 
-		const provider = availableProviders.find((name) => preferredProviders.includes(name)) ?? availableProviders[0];
+		const provider = preferredProviders.find((name) => availableProviders.includes(name)) ?? availableProviders[0];
 		const sourceRelease = releaseMap[provider]!;
 
 		if (property === 'isrc' || property === 'duration') {
