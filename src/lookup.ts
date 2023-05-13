@@ -1,5 +1,5 @@
 import { mergeRelease } from './harmonizer/merge.ts';
-import { providerNames, providers } from './providers.ts';
+import { providerNames, providerPreferences, providers } from './providers.ts';
 import { LookupError } from './utils/errors.ts';
 import { detectScripts, scriptCodes } from './utils/script.ts';
 import { francAll } from 'franc';
@@ -43,7 +43,7 @@ export async function getMergedReleaseByGTIN(
 	options?: ReleaseOptions,
 ): Promise<HarmonyRelease | undefined> {
 	const releaseMap = await getProviderReleaseMapping(gtin, options);
-	const release = mergeRelease(releaseMap);
+	const release = mergeRelease(releaseMap, providerPreferences);
 
 	if (release) detectLanguageAndScript(release);
 
