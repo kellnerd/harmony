@@ -29,14 +29,34 @@ export function mergeRelease(
 		availableProviders[0];
 	const mergedRelease = releaseMap[primaryProviderName]!;
 
-	// keep external links for all providers
+	// create temporary sets to speed up merging lists of regions
+	const availableRegions = new Set(mergedRelease.availableIn);
+	const excludedRegions = new Set(mergedRelease.excludedFrom);
+
+	// keep external links for all providers, merge availabilities
 	availableProviders.forEach((providerName) => {
 		if (providerName === primaryProviderName) return;
 
 		const release = releaseMap[providerName]!;
 
 		mergedRelease.externalLinks.push(...release.externalLinks);
+
+		release.availableIn?.forEach((region) => {
+			availableRegions.add(region);
+			excludedRegions.delete(region);
+		});
+		release.excludedFrom?.forEach((region) => {
+			// make sure the current region is not available through another provider
+			if (!availableRegions.has(region)) {
+				excludedRegions.add(region);
+			}
+		});
 	});
+
+	if (availableRegions.size) {
+		mergedRelease.availableIn = Array.from(availableRegions);
+		mergedRelease.excludedFrom = Array.from(excludedRegions);
+	}
 
 	// when all properties should be taken from the same provider, we are done
 	if (preferSameProvider) {
