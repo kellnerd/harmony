@@ -103,6 +103,7 @@ export type ReleaseOptions = Partial<{
 	withAllTrackArtists: boolean;
 	withISRC: boolean;
 	withAvailability: boolean;
+	regions?: CountryCode[];
 }>;
 
 export type ProviderName = string;

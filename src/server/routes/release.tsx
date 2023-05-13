@@ -23,6 +23,7 @@ export const handler: Handlers<Data> = {
 		const options: ReleaseOptions = {
 			withSeparateMedia: true,
 			withAllTrackArtists: true,
+			regions: ['GB', 'US', 'DE'],
 		};
 
 		let release: HarmonyRelease | undefined;

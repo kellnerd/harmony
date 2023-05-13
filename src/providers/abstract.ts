@@ -47,8 +47,8 @@ export abstract class MetadataProvider<RawRelease> {
 
 	abstract readonly durationPrecision: DurationPrecision;
 
-	/** Constructs a canonical release URL for the given provider ID. */
-	abstract constructReleaseUrl(id: string): URL;
+	/** Constructs a canonical release URL for the given provider ID (and optional region). */
+	abstract constructReleaseUrl(id: string, region?: CountryCode): URL;
 
 	/** Looks up the release which is identified by the given URL, GTIN/barcode or provider ID. */
 	getRelease(urlOrGtinOrId: URL | GTIN | string, options?: ReleaseOptions): Promise<HarmonyRelease> {
