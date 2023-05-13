@@ -10,14 +10,14 @@ type Data = {
 	errors: Error[];
 	release?: HarmonyRelease;
 	gtin: GTIN | null;
-	link: string | null;
+	externalUrl: string | null;
 };
 
 export const handler: Handlers<Data> = {
 	async GET(req, ctx) {
 		const url = new URL(req.url);
 		const gtin = url.searchParams.get('gtin');
-		const link = url.searchParams.get('link');
+		const externalUrl = url.searchParams.get('url'); // TODO: handle multiple values
 
 		const errors: Error[] = [];
 		const options: ReleaseOptions = {
@@ -29,8 +29,8 @@ export const handler: Handlers<Data> = {
 		try {
 			if (gtin) {
 				release = await getMergedReleaseByGTIN(gtin, options);
-			} else if (link) {
-				release = await getReleaseByUrl(new URL(link), options);
+			} else if (externalUrl) {
+				release = await getReleaseByUrl(new URL(externalUrl), options);
 			}
 		} catch (error) {
 			if (error instanceof Error) {
@@ -38,12 +38,12 @@ export const handler: Handlers<Data> = {
 			}
 		}
 
-		return ctx.render({ errors, release, gtin, link });
+		return ctx.render({ errors, release, gtin, externalUrl });
 	},
 };
 
 export default function Page({ data }: PageProps<Data>) {
-	const { errors, release, gtin, link } = data;
+	const { errors, release, gtin, externalUrl } = data;
 	return (
 		<>
 			<Head>
@@ -58,8 +58,8 @@ export default function Page({ data }: PageProps<Data>) {
 					<input type='text' name='gtin' id='gtin-input' value={gtin ?? ''} />
 				</div>
 				<div>
-					<label for='link-input'>URL:</label>
-					<input type='text' name='link' id='link-input' value={link ?? ''} />
+					<label for='url-input'>URL:</label>
+					<input type='text' name='url' id='url-input' value={externalUrl ?? ''} />
 				</div>
 				<button type='submit'>Lookup</button>
 			</form>
