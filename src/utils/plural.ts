@@ -5,5 +5,5 @@ export function plural(count: number, term: string, pluralForm?: string) {
 
 /** Returns the given term (or its plural form) prefixed by a count. */
 export function pluralWithCount(count: number, term: string, pluralForm?: string) {
-	return [count, plural(count, term, pluralForm)].join(' ');
+	return [count, plural(count, term, pluralForm)].join('\xa0'); // non-breaking space
 }
