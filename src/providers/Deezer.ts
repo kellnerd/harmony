@@ -184,11 +184,11 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 
 	private determineAvailability(media: HarmonyMedium[]): string[] | undefined {
 		const trackAvailabilities = media.flatMap((medium) => medium.tracklist)
-			.map((track) => track.availableIn);
+			.map((track) => new Set(track.availableIn));
 
 		// calculate the intersection of all tracks' availabilities with Deezer's availability
 		return this.availableRegions.filter((country) =>
-			trackAvailabilities.every((availability) => availability?.includes(country))
+			trackAvailabilities.every((availability) => availability?.has(country))
 		);
 	}
 

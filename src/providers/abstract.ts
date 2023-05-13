@@ -103,7 +103,8 @@ export abstract class MetadataProvider<RawRelease> {
 	private withExcludedRegions(release: HarmonyRelease): HarmonyRelease {
 		if (this.availableRegions.length && release.availableIn) {
 			if (release.availableIn.length) {
-				release.excludedFrom = this.availableRegions.filter((region) => !release.availableIn!.includes(region));
+				const releaseAvailability = new Set(release.availableIn);
+				release.excludedFrom = this.availableRegions.filter((region) => !releaseAvailability.has(region));
 			} else {
 				release.excludedFrom = [...this.availableRegions];
 			}

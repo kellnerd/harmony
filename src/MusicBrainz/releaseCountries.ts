@@ -12,8 +12,8 @@ export function determineReleaseEventCountries(release: HarmonyRelease, maxEvent
 
 function isImportantRegionExcluded(excludedRegions?: CountryCode[]): boolean {
 	if (!excludedRegions?.length) return false;
-	if (excludedRegions.length > ignoredExcludedRegions.length) return true;
-	return excludedRegions.some((region) => !ignoredExcludedRegions.includes(region));
+	if (excludedRegions.length > ignoredExcludedRegions.size) return true;
+	return excludedRegions.some((region) => !ignoredExcludedRegions.has(region));
 }
 
 const uninhabitedRegions = [
@@ -31,7 +31,7 @@ const dependentTerritories = [
 	'TK', // Tokelau -> New Zealand
 ];
 
-const ignoredExcludedRegions = [
+const ignoredExcludedRegions = new Set([
 	...uninhabitedRegions,
 	...dependentTerritories,
-];
+]);
