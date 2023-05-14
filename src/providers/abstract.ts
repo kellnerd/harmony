@@ -125,7 +125,10 @@ export abstract class MetadataProvider<RawRelease> {
 
 		if (!response) {
 			response = await this.fetch(input, init);
-			this.cache?.put(input, response.clone());
+
+			if (this.cache && response.ok) {
+				this.cache.put(input, response.clone());
+			}
 		}
 
 		return response.json();
