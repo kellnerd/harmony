@@ -95,7 +95,7 @@ export type Language = {
 	confidence?: number;
 };
 
-/** ISO 639-1 two letter country code. */
+/** ISO 3166-1 alpha-2 two letter country code. */
 export type CountryCode = string;
 
 export type ReleaseOptions = Partial<{
