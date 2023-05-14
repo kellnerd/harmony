@@ -70,14 +70,19 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 				url: this.cleanViewUrl(collection.collectionViewUrl),
 				types: linkTypes,
 			}],
-			media: this.convertRawTracklist(tracks, tracks[0].discCount),
+			media: this.convertRawTracklist(tracks),
 			releaseDate: parseISODateTime(collection.releaseDate),
 			packaging: 'None',
 			images: [this.processImage(collection.artworkUrl100, ['front'])],
 		};
 	}
 
-	private convertRawTracklist(tracklist: Track[], mediumCount: number): HarmonyMedium[] {
+	private convertRawTracklist(tracklist: Track[]): HarmonyMedium[] {
+		if (!tracklist.length) {
+			return [];
+		}
+
+		const mediumCount = tracklist[0].discCount;
 		const media: HarmonyMedium[] = new Array(mediumCount).fill(null).map((_, index) => ({
 			format: 'Digital Media',
 			number: index + 1,
