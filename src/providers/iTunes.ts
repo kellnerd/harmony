@@ -146,13 +146,13 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 
 	readonly apiBaseUrl = 'https://itunes.apple.com';
 
-	private async query(path: string, preferredRegions?: CountryCode[]) {
+	private async query<T>(path: string, preferredRegions?: CountryCode[]) {
 		let apiUrl: URL;
 
 		for (const region of (preferredRegions ?? ['US'])) {
 			apiUrl = new URL([region.toLowerCase(), path].join('/'), this.apiBaseUrl);
 
-			const data = await this.fetchJSON(apiUrl);
+			const data = await this.fetchJSON(apiUrl) as Result<T>;
 			if (data.resultCount) {
 				return data;
 			}
@@ -162,10 +162,12 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 	}
 }
 
-type ReleaseResult = {
+type Result<T> = {
 	resultCount: number;
-	results: Array<Collection | Track>;
+	results: Array<T>;
 };
+
+type ReleaseResult = Result<Collection | Track>;
 
 type Collection = {
 	wrapperType: 'collection';
