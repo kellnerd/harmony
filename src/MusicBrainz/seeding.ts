@@ -81,6 +81,15 @@ function convertLinkType(linkType: LinkType, url?: URL): UrlLinkTypeId | undefin
 			return urlTypeIds['free streaming'];
 		case 'paid streaming':
 			return urlTypeIds.streaming;
+		case 'free download':
+			return urlTypeIds['download for free'];
+		case 'paid download':
+			return urlTypeIds['purchase for download'];
+		case 'mail order':
+			return urlTypeIds['purchase for mail-order'];
+		case 'discography page':
+			// TODO: handle special cases based on their URLs
+			return urlTypeIds['discography entry'];
 	}
 }
 
