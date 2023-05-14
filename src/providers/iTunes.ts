@@ -4,6 +4,8 @@ import { ResponseError } from '../utils/errors.ts';
 
 import type {
 	ArtistCreditName,
+	Artwork,
+	ArtworkType,
 	CountryCode,
 	GTIN,
 	HarmonyMedium,
@@ -61,10 +63,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 			media: this.convertRawTracklist(tracks, tracks[0].discCount),
 			releaseDate: parseISODateTime(collection.releaseDate),
 			packaging: 'None',
-			images: [{
-				url: new URL(collection.artworkUrl100), // TODO: get larger image
-				types: ['front'],
-			}],
+			images: [this.processImage(collection.artworkUrl100, ['front'])],
 		};
 	}
 
@@ -93,6 +92,24 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 		return {
 			name,
 			externalLink: this.cleanViewUrl(url),
+		};
+	}
+
+	private processImage(url: string, types?: ArtworkType[]): Artwork {
+		// transform image URL to point to the source image in its original resolution
+		const imageUrl = new URL(url);
+		imageUrl.hostname = 'a1.mzstatic.com';
+		imageUrl.pathname = imageUrl.pathname.replace(/^\/image\/thumb\//, '/us/r1000/063/');
+		const pathComponents = imageUrl.pathname.split('/');
+		if (pathComponents.length === 12) {
+			// drop trailing path component which did the image conversion
+			imageUrl.pathname = pathComponents.slice(0, -1).join('/');
+		}
+
+		return {
+			url: imageUrl,
+			thumbUrl: new URL(url.replace('100x100bb', '250x250bb')),
+			types,
 		};
 	}
 

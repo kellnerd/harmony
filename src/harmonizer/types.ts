@@ -57,7 +57,7 @@ export type Artwork = {
 	comment?: string;
 };
 
-type ArtworkType = 'front' | 'back';
+export type ArtworkType = 'front' | 'back';
 
 export type ExternalLink = {
 	url: URL;
