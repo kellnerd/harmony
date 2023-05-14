@@ -110,9 +110,10 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			}],
 			media,
 			releaseDate: parseHyphenatedDate(rawRelease.release_date),
-			labels: [{
-				name: rawRelease.label,
-			}],
+			// split label string using slashes if the results have at least 3 characters
+			labels: rawRelease.label.split(/(?<=[^/]{3,})\/(?=[^/]{3,})/).map((label) => ({
+				name: label.trim(),
+			})),
 			packaging: 'None',
 			images: [{
 				url: new URL(rawRelease.cover_xl),
