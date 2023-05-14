@@ -92,9 +92,16 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 		// split flat tracklist into media
 		tracklist.forEach((track) => {
 			const medium = media[track.discNumber - 1];
+
+			// sometimes the censored name is not censored but more complete with extra title information
+			let title = track.trackName;
+			if (track.trackCensoredName.length > title.length) {
+				title = track.trackCensoredName;
+			}
+
 			medium.tracklist.push({
 				number: track.trackNumber,
-				title: track.trackName,
+				title,
 				duration: track.trackTimeMillis,
 				artists: [this.convertRawArtist(track.artistName, track.artistViewUrl)],
 			});
