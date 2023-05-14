@@ -47,7 +47,11 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 
 	protected convertRawRelease(rawRelease: ReleaseResult, options?: ReleaseOptions): HarmonyRelease {
 		const collection = rawRelease.results.find((result) => result.wrapperType === 'collection') as Collection;
-		const tracks = rawRelease.results.filter((result) => result.wrapperType === 'track') as Track[];
+		const tracks = rawRelease.results.filter((result) =>
+			// skip bonus items (e.g. booklets or videos)
+			result.wrapperType === 'track' && result.kind === 'song'
+		) as Track[];
+
 		const linkTypes: LinkType[] = [];
 
 		// TODO: check whether release is downloadable
