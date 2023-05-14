@@ -169,8 +169,8 @@ type Collection = {
 	'artworkUrl60': string;
 	'artworkUrl100': string;
 	'collectionPrice': number;
-	'collectionExplicitness': string;
-	'contentAdvisoryRating': string;
+	'collectionExplicitness': Explicitness;
+	'contentAdvisoryRating'?: 'Explicit';
 	'trackCount': number;
 	'copyright': string;
 	'country': string;
@@ -181,7 +181,7 @@ type Collection = {
 
 type Track = {
 	'wrapperType': 'track';
-	'kind': 'song';
+	'kind': Kind;
 	'artistId': number;
 	'collectionId': number;
 	'trackId': number;
@@ -200,8 +200,8 @@ type Track = {
 	'collectionPrice': number;
 	'trackPrice': number;
 	'releaseDate': string;
-	'collectionExplicitness': string;
-	'trackExplicitness': string;
+	'collectionExplicitness': Explicitness;
+	'trackExplicitness': Explicitness;
 	'discCount': number;
 	'discNumber': number;
 	'trackCount': number;
@@ -212,3 +212,19 @@ type Track = {
 	'primaryGenreName': string;
 	'isStreamable': boolean;
 };
+
+type Explicitness = 'clean' | 'explicit' | 'notExplicit';
+
+type Kind =
+	| 'album'
+	| 'artist'
+	| 'book'
+	| 'coached-audio'
+	| 'feature-movie'
+	| 'interactive-booklet'
+	| 'music-video'
+	| 'pdf podcast'
+	| 'podcast-episode'
+	| 'software-package'
+	| 'song'
+	| 'tv-episode';
