@@ -53,8 +53,11 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 		) as Track[];
 
 		const linkTypes: LinkType[] = [];
-
-		// TODO: check whether release is downloadable
+		if (collection.collectionPrice) {
+			// A missing price might also indicate that the release date is in the future,
+			// but then it is technically also not yet available for download.
+			linkTypes.push('paid download');
+		}
 		if (tracks.every((track) => track.isStreamable)) {
 			linkTypes.push('paid streaming');
 		}
@@ -172,7 +175,7 @@ type Collection = {
 	collectionViewUrl: string;
 	artworkUrl60: string;
 	artworkUrl100: string;
-	collectionPrice: number;
+	collectionPrice?: number;
 	collectionExplicitness: Explicitness;
 	contentAdvisoryRating?: 'Explicit';
 	trackCount: number;
