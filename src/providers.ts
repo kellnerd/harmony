@@ -16,11 +16,21 @@ export const providerNames = providers.map((provider) => provider.name);
 
 export const providerPreferences: ProviderPreferences = {
 	// get track durations from the provider with the highest precision
-	duration: providers
+	duration: sortProvidersByQuality('durationPrecision'),
+};
+
+/** Returns a list of provider names sorted by the value of the given numeric property (descending). */
+function sortProvidersByQuality(property: NumericKeys<MetadataProvider<unknown>>): string[] {
+	return providers
 		.map((provider) => ({
 			name: provider.name,
-			precision: provider.durationPrecision,
+			quality: provider[property],
 		}))
-		.sort((a, b) => b.precision - a.precision)
-		.map((provider) => provider.name),
-};
+		.sort((a, b) => b.quality - a.quality)
+		.map((provider) => provider.name);
+}
+
+// https://stackoverflow.com/a/73025031
+type NumericKeys<T> = {
+	[K in keyof T]: T[K] extends number ? K : never;
+}[keyof T];
