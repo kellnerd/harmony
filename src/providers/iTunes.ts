@@ -1,6 +1,7 @@
 import { DurationPrecision, MetadataProvider } from './abstract.ts';
 import { parseISODateTime, PartialDate } from '../utils/date.ts';
 import { ResponseError } from '../utils/errors.ts';
+import { isValidGTIN } from '../utils/gtin.ts';
 
 import type {
 	ArtistCreditName,
@@ -114,7 +115,10 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 	}
 
 	extractGTINFromUrl(url: string): GTIN | undefined {
-		return url.match(/\b\d{12,14}\b/)?.[0];
+		const gtinCandidate = url.match(/\b\d{12,14}\b/)?.[0];
+		if (gtinCandidate && isValidGTIN(gtinCandidate)) {
+			return gtinCandidate;
+		}
 	}
 
 	private cleanViewUrl(viewUrl: string) {
