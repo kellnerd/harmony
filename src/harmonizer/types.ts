@@ -5,7 +5,7 @@ import type { ScriptFrequency } from '../utils/script.ts';
 export type HarmonyRelease = {
 	title: string;
 	artists: ArtistCredit;
-	gtin: GTIN;
+	gtin?: GTIN;
 	externalLinks: ExternalLink[];
 	media: HarmonyMedium[];
 	language?: Language;

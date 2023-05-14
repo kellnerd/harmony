@@ -53,7 +53,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 		return {
 			title: collection.collectionName,
 			artists: [this.convertRawArtist(collection.artistName, collection.artistViewUrl)],
-			gtin: '', // TODO: try to extract from cover art URL
+			gtin: this.extractGTINFromUrl(collection.artworkUrl100),
 			externalLinks: [{
 				url: this.cleanViewUrl(collection.collectionViewUrl),
 				types: linkTypes,
@@ -94,6 +94,10 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 			name,
 			externalLink: this.cleanViewUrl(url),
 		};
+	}
+
+	extractGTINFromUrl(url: string): GTIN | undefined {
+		return url.match(/\b\d{12,14}\b/)?.[0];
 	}
 
 	private cleanViewUrl(viewUrl: string) {
