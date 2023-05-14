@@ -16,7 +16,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 	readonly name = 'iTunes';
 
 	readonly supportedUrls = new URLPattern({
-		hostname: ':service(itunes|music).apple.com',
+		hostname: '(itunes|music).apple.com',
 		pathname: String.raw`/:country(\w{2})?/album/:blurb?/:id(\d+)`,
 	});
 
@@ -55,7 +55,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 			artists: [this.convertRawArtist(collection.artistName, collection.artistViewUrl)],
 			gtin: '', // TODO: try to extract from cover art URL
 			externalLinks: [{
-				url: new URL(collection.collectionViewUrl), // TODO: clean url
+				url: this.cleanViewUrl(collection.collectionViewUrl),
 				types: linkTypes,
 			}],
 			media: this.convertRawTracklist(tracks, tracks[0].discCount),
@@ -92,8 +92,17 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 	private convertRawArtist(name: string, url: string): ArtistCreditName {
 		return {
 			name,
-			externalLink: new URL(url), // TODO: clean url
+			externalLink: this.cleanViewUrl(url),
 		};
+	}
+
+	private cleanViewUrl(viewUrl: string) {
+		// remove tracking(?) query parameters and blurb before ID
+		const url = new URL(viewUrl);
+		url.search = '';
+		url.pathname = url.pathname.replace(/(?<=\/(artist|album))\/[^/]+(?=\/\d+)/, '');
+
+		return url;
 	}
 
 	readonly apiBaseUrl = 'https://itunes.apple.com';
