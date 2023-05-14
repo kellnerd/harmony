@@ -17,7 +17,7 @@ export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 	const seed: ReleaseSeed = {
 		name: release.title,
 		artist_credit: convertArtistCredit(release.artists),
-		barcode: release.gtin.toString(),
+		barcode: release.gtin?.toString(),
 		events: countries.map((country) => ({
 			date: release.releaseDate,
 			country,
