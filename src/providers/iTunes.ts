@@ -31,6 +31,8 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 
 	readonly durationPrecision = DurationPrecision.MS;
 
+	readonly artworkQuality = 3000;
+
 	constructReleaseUrl(id: string, region: CountryCode = 'US'): URL {
 		return new URL([region.toLowerCase(), 'album', id].join('/'), 'https://music.apple.com');
 	}

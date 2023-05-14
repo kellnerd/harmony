@@ -47,6 +47,9 @@ export abstract class MetadataProvider<RawRelease> {
 
 	abstract readonly durationPrecision: DurationPrecision;
 
+	/** Uses the median image height in pixels as the basic metric. */
+	abstract readonly artworkQuality: number;
+
 	/** Constructs a canonical release URL for the given provider ID (and optional region). */
 	abstract constructReleaseUrl(id: string, region?: CountryCode): URL;
 

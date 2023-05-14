@@ -40,6 +40,8 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 
 	readonly durationPrecision = DurationPrecision.SECONDS;
 
+	readonly artworkQuality = 1400;
+
 	constructReleaseUrl(id: string): URL {
 		return new URL(id, 'https://www.deezer.com/album');
 	}

@@ -17,6 +17,8 @@ export const providerNames = providers.map((provider) => provider.name);
 export const providerPreferences: ProviderPreferences = {
 	// get track durations from the provider with the highest precision
 	duration: sortProvidersByQuality('durationPrecision'),
+	// get cover art from the provider with the highest quality (currently: image resolution)
+	images: sortProvidersByQuality('artworkQuality'),
 };
 
 /** Returns a list of provider names sorted by the value of the given numeric property (descending). */
