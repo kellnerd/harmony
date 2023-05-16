@@ -42,7 +42,7 @@ export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 			})),
 		})),
 		language: release.language?.code,
-		script: release.mainScript?.script,
+		script: release.script?.code,
 		urls: release.externalLinks.flatMap((link) =>
 			link.types
 				? link.types.map((type) => ({

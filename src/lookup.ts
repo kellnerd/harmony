@@ -54,13 +54,13 @@ function detectLanguageAndScript(release: HarmonyRelease): void {
 	const allTitles = release.media.flatMap((medium) => medium.tracklist.map((track) => track.title));
 	allTitles.push(release.title);
 
-	if (!release.mainScript) {
+	if (!release.script) {
 		const scripts = detectScripts(allTitles.join('\n'), scriptCodes);
 		const mainScript = scripts[0];
 		// console.debug(scripts);
 
 		if (mainScript?.frequency > 0.7) {
-			release.mainScript = mainScript;
+			release.script = mainScript;
 		}
 	}
 

@@ -27,7 +27,7 @@ const scriptCombinations: Record<CombinedScriptCode, UnicodeScriptCode[]> = {
 export type ScriptCode = UnicodeScriptCode | CombinedScriptCode;
 
 export type ScriptFrequency = {
-	script: ScriptCode;
+	code: ScriptCode;
 	frequency: number;
 };
 
@@ -38,14 +38,14 @@ export function detectScripts(text: string, possibleScripts: readonly UnicodeScr
 	const totalLetters = letters.length;
 	let remainingLetters = totalLetters;
 
-	for (const script of possibleScripts) {
-		const scriptRegex = new RegExp(`\\p{Script=${script}}`, 'gu');
+	for (const code of possibleScripts) {
+		const scriptRegex = new RegExp(`\\p{Script=${code}}`, 'gu');
 		const scriptMatches = letters.matchAll(scriptRegex);
 		const scriptLetterCount = [...scriptMatches].length;
 
 		if (scriptLetterCount) {
 			// TODO: increase weight of logographic scripts?
-			detectedScripts.push({ script, frequency: scriptLetterCount / totalLetters });
+			detectedScripts.push({ code, frequency: scriptLetterCount / totalLetters });
 
 			// stop testing once all letters have been classified
 			remainingLetters -= scriptLetterCount;
@@ -57,13 +57,13 @@ export function detectScripts(text: string, possibleScripts: readonly UnicodeScr
 	(Object.entries(scriptCombinations) as [CombinedScriptCode, ScriptCode[]][]).forEach(
 		([combinedScript, combination]) => {
 			const frequencies = detectedScripts
-				.filter((script) => combination.includes(script.script))
+				.filter((script) => combination.includes(script.code))
 				.map((script) => script.frequency);
 
 			if (frequencies.length > 1) {
 				detectedScripts.push({
-					script: combinedScript,
-					frequency: frequencies.reduce((sum, current) => sum + current),
+					code: combinedScript,
+					frequency: frequencies.reduce((sum, current) => sum + current, 0),
 				});
 			}
 		},
@@ -78,6 +78,6 @@ export function detectMainScript(text: string, possibleScripts: readonly Unicode
 } = {}): ScriptCode | undefined {
 	const scripts = detectScripts(text, possibleScripts);
 	if (scripts.length && scripts[0].frequency >= minFrequency) {
-		return scripts[0].script;
+		return scripts[0].code;
 	}
 }

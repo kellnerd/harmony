@@ -9,7 +9,7 @@ export type HarmonyRelease = {
 	externalLinks: ExternalLink[];
 	media: HarmonyMedium[];
 	language?: Language;
-	mainScript?: ScriptFrequency;
+	script?: ScriptFrequency;
 	releaseDate: PartialDate;
 	labels?: Label[];
 	packaging?: Packaging;

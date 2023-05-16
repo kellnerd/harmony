@@ -22,7 +22,7 @@ export function Release({ release }: { release: HarmonyRelease }) {
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
 	const isMultiMedium = release.media.length > 1;
-	const { language, mainScript } = release;
+	const { language, script } = release;
 
 	return (
 		<div class='release'>
@@ -120,10 +120,10 @@ export function Release({ release }: { release: HarmonyRelease }) {
 						</td>
 					</tr>
 				)}
-				{mainScript && (
+				{script && (
 					<tr>
 						<th>Script</th>
-						<td>{scriptNames.of(mainScript.script)} ({(100 * mainScript.frequency).toFixed(0)}%)</td>
+						<td>{scriptNames.of(script.code)} ({(100 * script.frequency).toFixed(0)}%)</td>
 					</tr>
 				)}
 			</table>
