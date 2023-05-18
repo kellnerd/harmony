@@ -1,5 +1,6 @@
 import { ArtistCredit } from './ArtistCredit.tsx';
 import { CoverImage } from './CoverImage.tsx';
+import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import { determineReleaseEventCountries } from '../../MusicBrainz/releaseCountries.ts';
 import { formatPartialDate } from '../../utils/date.ts';
@@ -22,7 +23,7 @@ export function Release({ release }: { release: HarmonyRelease }) {
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
 	const isMultiMedium = release.media.length > 1;
-	const { language, script } = release;
+	const { copyright, language, script } = release;
 
 	return (
 		<div class='release'>
@@ -108,6 +109,14 @@ export function Release({ release }: { release: HarmonyRelease }) {
 									</li>
 								))}
 							</ul>
+						</td>
+					</tr>
+				)}
+				{copyright && (
+					<tr>
+						<th>Copyright</th>
+						<td>
+							<TextWithLineBreaks lines={copyright.split('\n')} />
 						</td>
 					</tr>
 				)}
