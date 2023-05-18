@@ -100,12 +100,14 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			}];
 		}
 
+		const releaseUrl = new URL(rawRelease.link);
+
 		return {
 			title: rawRelease.title,
 			artists: rawRelease.contributors.map(this.convertRawArtist.bind(this)),
 			gtin: rawRelease.upc,
 			externalLinks: [{
-				url: new URL(rawRelease.link),
+				url: releaseUrl,
 				types: ['free streaming'],
 			}],
 			media,
@@ -122,6 +124,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 				types: ['front'],
 			}],
 			availableIn: this.determineAvailability(media),
+			info: this.generateReleaseInfo(releaseUrl),
 		};
 	}
 

@@ -62,12 +62,14 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 			linkTypes.push('paid streaming');
 		}
 
+		const releaseUrl = this.cleanViewUrl(collection.collectionViewUrl);
+
 		return {
 			title: collection.collectionName,
 			artists: [this.convertRawArtist(collection.artistName, collection.artistViewUrl)],
 			gtin: this.extractGTINFromUrl(collection.artworkUrl100),
 			externalLinks: [{
-				url: this.cleanViewUrl(collection.collectionViewUrl),
+				url: releaseUrl,
 				types: linkTypes,
 			}],
 			media: this.convertRawTracklist(tracks),
@@ -76,6 +78,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 			packaging: 'None',
 			images: [this.processImage(collection.artworkUrl100, ['front'])],
 			copyright: collection.copyright,
+			info: this.generateReleaseInfo(releaseUrl),
 		};
 	}
 

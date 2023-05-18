@@ -18,6 +18,7 @@ export type HarmonyRelease = {
 	copyright?: string;
 	availableIn?: CountryCode[];
 	excludedFrom?: CountryCode[];
+	info: ReleaseInfo;
 };
 
 export type HarmonyMedium = {
@@ -117,3 +118,20 @@ export type ReleaseProperty = keyof HarmonyRelease | 'duration' | 'isrc';
 
 /** Mapping from release properties to lists of preferred providers for these properties */
 export type ProviderPreferences = Partial<Record<ReleaseProperty, ProviderName[]>>;
+
+export type ProviderInfo = {
+	name: ProviderName;
+	url: URL;
+	id: string;
+};
+
+export type ProviderMessage = {
+	provider: ProviderName;
+	text: string;
+	type: 'info' | 'warning'; // errors will be thrown
+};
+
+export type ReleaseInfo = {
+	providers: ProviderInfo[];
+	messages: ProviderMessage[];
+};

@@ -33,13 +33,15 @@ export function mergeRelease(
 	const availableRegions = new Set(mergedRelease.availableIn);
 	const excludedRegions = new Set(mergedRelease.excludedFrom);
 
-	// keep external links for all providers, merge availabilities
+	// keep external links and info for all providers, merge availabilities
 	availableProviders.forEach((providerName) => {
 		if (providerName === primaryProviderName) return;
 
 		const release = releaseMap[providerName]!;
 
 		mergedRelease.externalLinks.push(...release.externalLinks);
+		mergedRelease.info.providers.push(...release.info.providers);
+		mergedRelease.info.messages.push(...release.info.messages);
 
 		release.availableIn?.forEach((region) => {
 			availableRegions.add(region);

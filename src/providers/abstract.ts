@@ -1,7 +1,14 @@
 import { ProviderError } from '../utils/errors.ts';
 import { rateLimit } from 'utils/async/rateLimit.js';
 
-import type { CountryCode, GTIN, HarmonyRelease, ReleaseOptions } from '../harmonizer/types.ts';
+import type {
+	CountryCode,
+	GTIN,
+	HarmonyRelease,
+	ProviderMessage,
+	ReleaseInfo,
+	ReleaseOptions,
+} from '../harmonizer/types.ts';
 import type { PartialDate } from '../utils/date.ts';
 import type { MaybePromise } from 'utils/types.d.ts';
 
@@ -100,6 +107,17 @@ export abstract class MetadataProvider<RawRelease> {
 	/** Checks whether the provider supports the given URL for releases. */
 	supportsReleaseUrl(url: URL): boolean {
 		return this.supportedUrls.test(url);
+	}
+
+	protected generateReleaseInfo(releaseUrl: URL, messages: ProviderMessage[] = []): ReleaseInfo {
+		return {
+			providers: [{
+				name: this.name,
+				url: releaseUrl,
+				id: this.extractReleaseId(releaseUrl)!,
+			}],
+			messages,
+		};
 	}
 
 	/** Determines excluded regions of the release (if available regions have been specified for the provider). */
