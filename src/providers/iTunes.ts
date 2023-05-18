@@ -75,6 +75,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 			status: 'Official',
 			packaging: 'None',
 			images: [this.processImage(collection.artworkUrl100, ['front'])],
+			copyright: collection.copyright,
 		};
 	}
 
