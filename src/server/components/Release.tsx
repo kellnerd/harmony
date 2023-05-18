@@ -33,6 +33,18 @@ export function Release({ release }: { release: HarmonyRelease }) {
 			</p>
 			<table>
 				<tr>
+					<th>Providers</th>
+					<td>
+						<ul>
+							{release.info.providers.map((provider) => (
+								<li>
+									{provider.name}: <a href={provider.url.href} target='_blank'>{provider.id}</a>
+								</li>
+							))}
+						</ul>
+					</td>
+				</tr>
+				<tr>
 					<th>Release date</th>
 					<td>{formatPartialDate(release.releaseDate) || '[unknown]'}</td>
 				</tr>
