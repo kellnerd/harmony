@@ -1,4 +1,4 @@
-import type { Packaging } from '../MusicBrainz/typeId.ts';
+import type { Packaging, ReleaseStatus } from '../MusicBrainz/typeId.ts';
 import type { PartialDate } from '../utils/date.ts';
 import type { ScriptFrequency } from '../utils/script.ts';
 
@@ -10,6 +10,7 @@ export type HarmonyRelease = {
 	media: HarmonyMedium[];
 	language?: Language;
 	script?: ScriptFrequency;
+	status?: ReleaseStatus;
 	releaseDate: PartialDate;
 	labels?: Label[];
 	packaging?: Packaging;

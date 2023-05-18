@@ -114,6 +114,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			labels: rawRelease.label.split(/(?<=[^/]{3,})\/(?=[^/]{3,})/).map((label) => ({
 				name: label.trim(),
 			})),
+			status: 'Official',
 			packaging: 'None',
 			images: [{
 				url: new URL(rawRelease.cover_xl),

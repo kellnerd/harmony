@@ -27,7 +27,7 @@ export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 			catalog_number: label.catalogNumber,
 			// mbid: resolveToMBID(label.externalLink), // TODO
 		})),
-		status: 'Official',
+		status: release.status,
 		packaging: release.packaging,
 		mediums: release.media.map((medium) => ({
 			format: medium.format,

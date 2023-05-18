@@ -72,6 +72,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 			}],
 			media: this.convertRawTracklist(tracks),
 			releaseDate: parseISODateTime(collection.releaseDate),
+			status: 'Official',
 			packaging: 'None',
 			images: [this.processImage(collection.artworkUrl100, ['front'])],
 		};
