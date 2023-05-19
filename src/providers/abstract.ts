@@ -6,6 +6,7 @@ import type {
 	GTIN,
 	HarmonyRelease,
 	ProviderMessage,
+	ReleaseLookupOptions,
 	ReleaseConverterOptions,
 	ReleaseInfo,
 	ReleaseOptions,
@@ -60,6 +61,9 @@ export abstract class MetadataProvider<RawRelease> {
 
 	/** Constructs a canonical release URL for the given provider ID (and optional region). */
 	abstract constructReleaseUrl(id: string, region?: CountryCode): URL;
+
+	/** Constructs an optional API URL for a release using the given data. */
+	abstract constructReleaseApiUrl(options: ReleaseLookupOptions): URL | undefined;
 
 	/** Looks up the release which is identified by the given URL, GTIN/barcode or provider ID. */
 	getRelease(urlOrGtinOrId: URL | GTIN | string, options?: ReleaseOptions): Promise<HarmonyRelease> {

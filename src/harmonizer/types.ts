@@ -117,6 +117,12 @@ export type ReleaseConverterOptions = ReleaseOptions & {
 	};
 };
 
+export type ReleaseLookupOptions = Partial<{
+	gtin: GTIN;
+	id: string;
+	region: CountryCode;
+}>;
+
 export type ProviderName = string;
 
 /** Mapping from the provider's name to the release returned by that provider. */

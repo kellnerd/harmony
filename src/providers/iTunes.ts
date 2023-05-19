@@ -13,6 +13,7 @@ import type {
 	HarmonyRelease,
 	LinkType,
 	ReleaseConverterOptions,
+	ReleaseLookupOptions,
 	ReleaseOptions,
 } from '../harmonizer/types.ts';
 
@@ -38,12 +39,34 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 		return new URL([region.toLowerCase(), 'album', id].join('/'), 'https://music.apple.com');
 	}
 
+	constructReleaseApiUrl(options: ReleaseLookupOptions): URL | undefined {
+		if (!options.gtin && !options.id) return;
+
+		const lookupUrl = new URL('lookup', this.apiBaseUrl);
+		const query = new URLSearchParams({
+			entity: 'song', // include tracks of the release in the response
+		});
+
+		if (options.gtin) {
+			query.append('upc', options.gtin.toString());
+		} else if (options.id) {
+			query.append('id', options.id);
+		}
+
+		if (options.region) {
+			query.append('country', options.region.toLowerCase());
+		}
+
+		lookupUrl.search = query.toString();
+		return lookupUrl;
+	}
+
 	protected getRawReleaseById(id: string, options?: ReleaseOptions): Promise<ReleaseResult> {
-		return this.query(`lookup?id=${id}&entity=song`, options?.regions);
+		return this.queryRelease({ id }, options?.regions);
 	}
 
 	protected getRawReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<ReleaseResult> {
-		return this.query(`lookup?upc=${gtin}&entity=song`, options?.regions);
+		return this.queryRelease({ gtin }, options?.regions);
 	}
 
 	protected convertRawRelease(rawRelease: ReleaseResult, options: ReleaseConverterOptions): HarmonyRelease {
@@ -159,16 +182,19 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 
 	readonly apiBaseUrl = 'https://itunes.apple.com';
 
-	private async query<T>(path: string, preferredRegions?: CountryCode[]) {
+	private async queryRelease(options: ReleaseLookupOptions, preferredRegions?: CountryCode[]) {
 		if (!preferredRegions?.length) {
 			preferredRegions = ['US'];
 		}
 
-		let apiUrl: URL;
-		for (const region of preferredRegions) {
-			apiUrl = new URL([region.toLowerCase(), path].join('/'), this.apiBaseUrl);
+		const apiUrl = this.constructReleaseApiUrl(options)!;
+		const query = apiUrl.searchParams;
 
-			const data = await this.fetchJSON(apiUrl) as Result<T>;
+		for (const region of preferredRegions) {
+			query.set('country', region);
+			apiUrl.search = query.toString();
+
+			const data = await this.fetchJSON(apiUrl) as ReleaseResult;
 			if (data.resultCount) {
 				return data;
 			}

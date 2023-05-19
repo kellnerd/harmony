@@ -10,6 +10,7 @@ import type {
 	HarmonyRelease,
 	HarmonyTrack,
 	ReleaseConverterOptions,
+	ReleaseLookupOptions,
 } from '../harmonizer/types.ts';
 
 // See https://developers.deezer.com/api
@@ -46,8 +47,16 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		return new URL(id, 'https://www.deezer.com/album');
 	}
 
-	protected getRawReleaseById(albumId: string): Promise<Release> {
-		return this.query(`album/${albumId}`);
+	constructReleaseApiUrl({ gtin, id }: ReleaseLookupOptions): URL | undefined {
+		if (gtin) {
+			return new URL(`album/upc:${gtin}`, this.apiBaseUrl);
+		} else if (id) {
+			return new URL(`album/${id}`, this.apiBaseUrl);
+		}
+	}
+
+	protected getRawReleaseById(id: string): Promise<Release> {
+		return this.query(this.constructReleaseApiUrl({ id })!);
 	}
 
 	private async getRawTracklist(albumId: string): Promise<TracklistItem[]> {
@@ -55,7 +64,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		let nextPageQuery: string | undefined = `album/${albumId}/tracks`;
 
 		while (nextPageQuery) {
-			const response: Response<TracklistItem> = await this.query(nextPageQuery);
+			const response: Response<TracklistItem> = await this.query(new URL(nextPageQuery, this.apiBaseUrl));
 			tracklist.push(...response.data);
 			nextPageQuery = response.next;
 		}
@@ -64,11 +73,11 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 	}
 
 	protected getRawTrackById(trackId: string): Promise<Track> {
-		return this.query(`track/${trackId}`);
+		return this.query(new URL(`track/${trackId}`, this.apiBaseUrl));
 	}
 
-	protected getRawReleaseByGTIN(upc: GTIN): Promise<Release> {
-		return this.query(`album/upc:${upc}`);
+	protected getRawReleaseByGTIN(gtin: GTIN): Promise<Release> {
+		return this.query(this.constructReleaseApiUrl({ gtin })!);
 	}
 
 	protected async convertRawRelease(rawRelease: Release, options: ReleaseConverterOptions): Promise<HarmonyRelease> {
@@ -201,8 +210,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 
 	readonly apiBaseUrl = 'https://api.deezer.com';
 
-	private async query(path: string) {
-		const apiUrl = new URL(path, this.apiBaseUrl);
+	private async query(apiUrl: URL) {
 		const data = await this.fetchJSON(apiUrl);
 
 		if (data.error) {
