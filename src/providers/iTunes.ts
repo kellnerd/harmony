@@ -159,9 +159,12 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 	readonly apiBaseUrl = 'https://itunes.apple.com';
 
 	private async query<T>(path: string, preferredRegions?: CountryCode[]) {
-		let apiUrl: URL;
+		if (!preferredRegions?.length) {
+			preferredRegions = ['US'];
+		}
 
-		for (const region of (preferredRegions ?? ['US'])) {
+		let apiUrl: URL;
+		for (const region of preferredRegions) {
 			apiUrl = new URL([region.toLowerCase(), path].join('/'), this.apiBaseUrl);
 
 			const data = await this.fetchJSON(apiUrl) as Result<T>;
