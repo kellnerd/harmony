@@ -43,6 +43,8 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 
 	readonly artworkQuality = 1400;
 
+	readonly apiBaseUrl = 'https://api.deezer.com';
+
 	constructReleaseUrl(id: string): URL {
 		return new URL(id, 'https://www.deezer.com/album');
 	}
@@ -207,8 +209,6 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 			trackAvailabilities.every((availability) => availability?.has(country))
 		);
 	}
-
-	readonly apiBaseUrl = 'https://api.deezer.com';
 
 	private async query(apiUrl: URL) {
 		const data = await this.fetchJSON(apiUrl);

@@ -35,6 +35,8 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 
 	readonly artworkQuality = 3000;
 
+	readonly apiBaseUrl = 'https://itunes.apple.com';
+
 	constructReleaseUrl(id: string, region: CountryCode = 'US'): URL {
 		return new URL([region.toLowerCase(), 'album', id].join('/'), 'https://music.apple.com');
 	}
@@ -179,8 +181,6 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 
 		return url;
 	}
-
-	readonly apiBaseUrl = 'https://itunes.apple.com';
 
 	private async queryRelease(options: ReleaseLookupOptions, preferredRegions?: CountryCode[]) {
 		if (!preferredRegions?.length) {
