@@ -12,6 +12,7 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	LinkType,
+	ReleaseConverterOptions,
 	ReleaseOptions,
 } from '../harmonizer/types.ts';
 
@@ -45,7 +46,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 		return this.query(`lookup?upc=${gtin}&entity=song`, options?.regions);
 	}
 
-	protected convertRawRelease(rawRelease: ReleaseResult, options?: ReleaseOptions): HarmonyRelease {
+	protected convertRawRelease(rawRelease: ReleaseResult, options: ReleaseConverterOptions): HarmonyRelease {
 		const collection = rawRelease.results.find((result) => result.wrapperType === 'collection') as Collection;
 		const tracks = rawRelease.results.filter((result) =>
 			// skip bonus items (e.g. booklets or videos)

@@ -9,7 +9,7 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	HarmonyTrack,
-	ReleaseOptions,
+	ReleaseConverterOptions,
 } from '../harmonizer/types.ts';
 
 // See https://developers.deezer.com/api
@@ -71,10 +71,10 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		return this.query(`album/upc:${upc}`);
 	}
 
-	protected async convertRawRelease(rawRelease: Release, options?: ReleaseOptions): Promise<HarmonyRelease> {
-		const needToFetchIndividualTracks = options?.withAllTrackArtists || options?.withAvailability || false;
+	protected async convertRawRelease(rawRelease: Release, options: ReleaseConverterOptions): Promise<HarmonyRelease> {
+		const needToFetchIndividualTracks = options.withAllTrackArtists || options.withAvailability || false;
 		const needToFetchDetailedTracklist = !needToFetchIndividualTracks &&
-			(options?.withSeparateMedia || options?.withISRC || false);
+			(options.withSeparateMedia || options.withISRC || false);
 
 		let rawTracklist: Array<ReleaseTrack | TracklistItem | Track>;
 		let media: HarmonyMedium[];

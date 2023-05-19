@@ -6,6 +6,7 @@ import type {
 	GTIN,
 	HarmonyRelease,
 	ProviderMessage,
+	ReleaseConverterOptions,
 	ReleaseInfo,
 	ReleaseOptions,
 } from '../harmonizer/types.ts';
@@ -76,8 +77,13 @@ export abstract class MetadataProvider<RawRelease> {
 	}
 
 	/** Looks up the release which is identified by the given provider ID. */
-	async getReleaseById(id: string, options?: ReleaseOptions): Promise<HarmonyRelease> {
-		const release = await this.convertRawRelease(await this.getRawReleaseById(id, options), options);
+	async getReleaseById(id: string, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
+		const converterOptions: ReleaseConverterOptions = {
+			...options,
+			lookup: { method: 'id', value: id },
+		};
+		const rawRelease = await this.getRawReleaseById(id, options);
+		const release = await this.convertRawRelease(rawRelease, converterOptions);
 		return this.withExcludedRegions(release);
 	}
 
@@ -85,14 +91,22 @@ export abstract class MetadataProvider<RawRelease> {
 
 	/** Looks up the release which is identified by the given GTIN/barcode. */
 	async getReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<HarmonyRelease> {
-		const release = await this.convertRawRelease(await this.getRawReleaseByGTIN(gtin, options), options);
+		const converterOptions: ReleaseConverterOptions = {
+			...options,
+			lookup: { method: 'gtin', value: gtin.toString() },
+		};
+		const rawRelease = await this.getRawReleaseByGTIN(gtin, options);
+		const release = await this.convertRawRelease(rawRelease, converterOptions);
 		return this.withExcludedRegions(release);
 	}
 
 	protected abstract getRawReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<RawRelease>;
 
 	/** Converts the given provider-specific raw release metadata into a common representation. */
-	protected abstract convertRawRelease(rawRelease: RawRelease, options?: ReleaseOptions): MaybePromise<HarmonyRelease>;
+	protected abstract convertRawRelease(
+		rawRelease: RawRelease,
+		options: ReleaseConverterOptions,
+	): MaybePromise<HarmonyRelease>;
 
 	/** Extracts the ID from a release URL. */
 	extractReleaseId(url: URL): string | undefined {

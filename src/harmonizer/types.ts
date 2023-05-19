@@ -109,6 +109,14 @@ export type ReleaseOptions = Partial<{
 	regions?: CountryCode[];
 }>;
 
+export type ReleaseConverterOptions = ReleaseOptions & {
+	/** Details about the currently used lookup method, filled automatically. */
+	lookup: {
+		method: 'gtin' | 'id';
+		value: string;
+	};
+};
+
 export type ProviderName = string;
 
 /** Mapping from the provider's name to the release returned by that provider. */
