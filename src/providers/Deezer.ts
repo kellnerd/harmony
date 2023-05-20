@@ -57,8 +57,8 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		}
 	}
 
-	protected getRawReleaseById(id: string): Promise<Release> {
-		return this.query(this.constructReleaseApiUrl({ id })!);
+	protected getRawRelease(lookupOptions: ReleaseLookupOptions): Promise<Release> {
+		return this.query(this.constructReleaseApiUrl(lookupOptions)!);
 	}
 
 	private async getRawTracklist(albumId: string): Promise<TracklistItem[]> {
@@ -76,10 +76,6 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 
 	protected getRawTrackById(trackId: string): Promise<Track> {
 		return this.query(new URL(`track/${trackId}`, this.apiBaseUrl));
-	}
-
-	protected getRawReleaseByGTIN(gtin: GTIN): Promise<Release> {
-		return this.query(this.constructReleaseApiUrl({ gtin })!);
 	}
 
 	protected async convertRawRelease(rawRelease: Release, options: ReleaseConverterOptions): Promise<HarmonyRelease> {

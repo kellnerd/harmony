@@ -6,9 +6,9 @@ import type {
 	GTIN,
 	HarmonyRelease,
 	ProviderMessage,
-	ReleaseLookupOptions,
 	ReleaseConverterOptions,
 	ReleaseInfo,
+	ReleaseLookupOptions,
 	ReleaseOptions,
 } from '../harmonizer/types.ts';
 import type { PartialDate } from '../utils/date.ts';
@@ -86,12 +86,10 @@ export abstract class MetadataProvider<RawRelease> {
 			...options,
 			lookup: { method: 'id', value: id },
 		};
-		const rawRelease = await this.getRawReleaseById(id, options);
+		const rawRelease = await this.getRawRelease({ id }, options);
 		const release = await this.convertRawRelease(rawRelease, converterOptions);
 		return this.withExcludedRegions(release);
 	}
-
-	protected abstract getRawReleaseById(id: string, options?: ReleaseOptions): Promise<RawRelease>;
 
 	/** Looks up the release which is identified by the given GTIN/barcode. */
 	async getReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<HarmonyRelease> {
@@ -99,12 +97,16 @@ export abstract class MetadataProvider<RawRelease> {
 			...options,
 			lookup: { method: 'gtin', value: gtin.toString() },
 		};
-		const rawRelease = await this.getRawReleaseByGTIN(gtin, options);
+		const rawRelease = await this.getRawRelease({ gtin }, options);
 		const release = await this.convertRawRelease(rawRelease, converterOptions);
 		return this.withExcludedRegions(release);
 	}
 
-	protected abstract getRawReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<RawRelease>;
+	/**
+	 * Loads the raw release data for the given lookup options.
+	 * This method is only used internally and guaranteed to be called with either a GTIN or a provider ID.
+	 */
+	protected abstract getRawRelease(lookupOptions: ReleaseLookupOptions, options?: ReleaseOptions): Promise<RawRelease>;
 
 	/** Converts the given provider-specific raw release metadata into a common representation. */
 	protected abstract convertRawRelease(

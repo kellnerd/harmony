@@ -63,12 +63,8 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 		return lookupUrl;
 	}
 
-	protected getRawReleaseById(id: string, options?: ReleaseOptions): Promise<ReleaseResult> {
-		return this.queryRelease({ id }, options?.regions);
-	}
-
-	protected getRawReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<ReleaseResult> {
-		return this.queryRelease({ gtin }, options?.regions);
+	protected getRawRelease(lookupOptions: ReleaseLookupOptions, options?: ReleaseOptions): Promise<ReleaseResult> {
+		return this.queryRelease(lookupOptions, options?.regions);
 	}
 
 	protected convertRawRelease(rawRelease: ReleaseResult, options: ReleaseConverterOptions): HarmonyRelease {
