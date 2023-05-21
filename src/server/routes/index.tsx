@@ -1,4 +1,3 @@
-import Counter from '../islands/Counter.tsx';
 import { Head } from 'fresh/runtime.ts';
 
 export default function Home() {
@@ -9,7 +8,6 @@ export default function Home() {
 			</Head>
 			<div>
 				<p>Welcome to Harmony!</p>
-				<Counter start={3} />
 			</div>
 		</>
 	);
