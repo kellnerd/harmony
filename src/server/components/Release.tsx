@@ -4,19 +4,11 @@ import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import { determineReleaseEventCountries } from '../../MusicBrainz/releaseCountries.ts';
 import { formatPartialDate } from '../../utils/date.ts';
+import { formatLanguageConfidence, formatScriptFrequency, regionName } from '../../utils/locale.ts';
 import { pluralWithCount } from '../../utils/plural.ts';
-import { flagEmoji, regionName } from '../../utils/regions.ts';
+import { flagEmoji } from '../../utils/regions.ts';
 
 import type { HarmonyRelease } from '../../harmonizer/types.ts';
-
-const scriptNames = new Intl.DisplayNames('en', {
-	type: 'script',
-});
-
-const languageNames = new Intl.DisplayNames('en', {
-	type: 'language',
-	languageDisplay: 'standard',
-});
 
 export function Release({ release }: { release: HarmonyRelease }) {
 	const regions = release.availableIn;
@@ -140,16 +132,13 @@ export function Release({ release }: { release: HarmonyRelease }) {
 				{language && (
 					<tr>
 						<th>Language</th>
-						<td>
-							{languageNames.of(language.code)}
-							{language.confidence && ` (${(100 * language.confidence).toFixed(0)}% confidence)`}
-						</td>
+						<td>{formatLanguageConfidence(language)}</td>
 					</tr>
 				)}
 				{script && (
 					<tr>
 						<th>Script</th>
-						<td>{scriptNames.of(script.code)} ({(100 * script.frequency).toFixed(0)}%)</td>
+						<td>{formatScriptFrequency(script)}</td>
 					</tr>
 				)}
 			</table>
