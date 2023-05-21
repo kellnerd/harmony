@@ -1,6 +1,7 @@
 import { mergeRelease } from './harmonizer/merge.ts';
 import { providerNames, providerPreferences, providers } from './providers.ts';
 import { LookupError } from './utils/errors.ts';
+import { formatLanguageConfidence, formatScriptFrequency } from './utils/locale.ts';
 import { detectScripts, scriptCodes } from './utils/script.ts';
 import { francAll } from 'franc';
 import lande from 'lande';
@@ -57,7 +58,11 @@ function detectLanguageAndScript(release: HarmonyRelease): void {
 	if (!release.script) {
 		const scripts = detectScripts(allTitles.join('\n'), scriptCodes);
 		const mainScript = scripts[0];
-		// console.debug(scripts);
+
+		release.info.messages.push({
+			type: 'debug',
+			text: `Detected scripts of the titles: ${scripts.map(formatScriptFrequency).join(', ')}`,
+		});
 
 		if (mainScript?.frequency > 0.7) {
 			release.script = mainScript;
@@ -67,7 +72,15 @@ function detectLanguageAndScript(release: HarmonyRelease): void {
 	if (!release.language) {
 		const guessedLanguages = lande(allTitles.join('\n'));
 		const topLanguage = guessedLanguages[0];
-		// console.debug(guessedLanguages.slice(0, 3));
+
+		const formattedList = guessedLanguages
+			.map(([code, confidence]) => ({ code, confidence }))
+			.filter(({ confidence }) => confidence > 0.3)
+			.map(formatLanguageConfidence);
+		release.info.messages.push({
+			type: 'debug',
+			text: `Guessed language of the titles: ${formattedList.join(', ')}`,
+		});
 
 		if (topLanguage[1] > 0.7) {
 			release.language = {

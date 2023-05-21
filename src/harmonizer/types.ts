@@ -138,9 +138,9 @@ export type ProviderInfo = {
 };
 
 export type ProviderMessage = {
-	provider: ProviderName;
+	provider?: ProviderName;
 	text: string;
-	type: 'info' | 'warning'; // errors will be thrown
+	type: 'debug' | 'info' | 'warning'; // errors will be thrown
 };
 
 export type ReleaseInfo = {
