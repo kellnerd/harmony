@@ -109,19 +109,16 @@ export type ReleaseOptions = Partial<{
 	regions?: CountryCode[];
 }>;
 
-export type ReleaseConverterOptions = ReleaseOptions & {
+export type RawReleaseOptions = ReleaseOptions & {
 	/** Details about the currently used lookup method, filled automatically. */
-	lookup: {
-		method: 'gtin' | 'id';
-		value: string;
-	};
+	lookup: ReleaseLookupInfo;
 };
 
-export type ReleaseLookupOptions = Partial<{
-	gtin: GTIN;
-	id: string;
-	region: CountryCode;
-}>;
+export type ReleaseLookupInfo = {
+	method: 'gtin' | 'id';
+	value: string;
+	region?: CountryCode;
+};
 
 export type ProviderName = string;
 
@@ -135,8 +132,9 @@ export type ProviderPreferences = Partial<Record<ReleaseProperty, ProviderName[]
 
 export type ProviderInfo = {
 	name: ProviderName;
-	url: URL;
 	id: string;
+	url: URL;
+	apiUrl?: URL;
 };
 
 export type ProviderMessage = {
@@ -148,4 +146,9 @@ export type ProviderMessage = {
 export type ReleaseInfo = {
 	providers: ProviderInfo[];
 	messages: ProviderMessage[];
+};
+
+export type RawResult<T> = {
+	data: T;
+	lookupInfo: ReleaseLookupInfo;
 };

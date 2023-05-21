@@ -5,12 +5,11 @@ import { ResponseError } from '../utils/errors.ts';
 
 import type {
 	ArtistCreditName,
-	GTIN,
 	HarmonyMedium,
 	HarmonyRelease,
 	HarmonyTrack,
-	ReleaseConverterOptions,
-	ReleaseLookupOptions,
+	RawReleaseOptions,
+	RawResult,
 } from '../harmonizer/types.ts';
 
 // See https://developers.deezer.com/api
@@ -49,16 +48,21 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		return new URL(id, 'https://www.deezer.com/album');
 	}
 
-	constructReleaseApiUrl({ gtin, id }: ReleaseLookupOptions): URL | undefined {
-		if (gtin) {
-			return new URL(`album/upc:${gtin}`, this.apiBaseUrl);
-		} else if (id) {
-			return new URL(`album/${id}`, this.apiBaseUrl);
+	constructReleaseApiUrl({ lookup }: RawReleaseOptions): URL | undefined {
+		if (lookup.method === 'gtin') {
+			return new URL(`album/upc:${lookup.value}`, this.apiBaseUrl);
+		} else if (lookup.method === 'id') {
+			return new URL(`album/${lookup.value}`, this.apiBaseUrl);
 		}
 	}
 
-	protected getRawRelease(lookupOptions: ReleaseLookupOptions): Promise<Release> {
-		return this.query(this.constructReleaseApiUrl(lookupOptions)!);
+	protected async getRawRelease(options: RawReleaseOptions): Promise<RawResult<Release>> {
+		const apiUrl = this.constructReleaseApiUrl(options)!;
+
+		return {
+			data: await this.query(apiUrl),
+			lookupInfo: options.lookup,
+		};
 	}
 
 	private async getRawTracklist(albumId: string): Promise<TracklistItem[]> {
@@ -78,7 +82,11 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		return this.query(new URL(`track/${trackId}`, this.apiBaseUrl));
 	}
 
-	protected async convertRawRelease(rawRelease: Release, options: ReleaseConverterOptions): Promise<HarmonyRelease> {
+	protected async convertRawRelease(
+		{ data: rawRelease, lookupInfo }: RawResult<Release>,
+		options: RawReleaseOptions,
+	): Promise<HarmonyRelease> {
+		const id = rawRelease.id.toString();
 		const needToFetchIndividualTracks = options.withAllTrackArtists || options.withAvailability || false;
 		const needToFetchDetailedTracklist = !needToFetchIndividualTracks &&
 			(options.withSeparateMedia || options.withISRC || false);
@@ -87,7 +95,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 		let media: HarmonyMedium[];
 
 		if (needToFetchDetailedTracklist) {
-			rawTracklist = await this.getRawTracklist(rawRelease.id.toString());
+			rawTracklist = await this.getRawTracklist(id);
 		} else {
 			rawTracklist = rawRelease.tracks.data;
 
@@ -131,7 +139,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 				types: ['front'],
 			}],
 			availableIn: this.determineAvailability(media),
-			info: this.generateReleaseInfo(releaseUrl),
+			info: this.generateReleaseInfo({ id, lookupInfo, options }),
 		};
 	}
 

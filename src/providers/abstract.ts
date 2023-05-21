@@ -6,9 +6,10 @@ import type {
 	GTIN,
 	HarmonyRelease,
 	ProviderMessage,
-	ReleaseConverterOptions,
+	RawReleaseOptions,
+	RawResult,
 	ReleaseInfo,
-	ReleaseLookupOptions,
+	ReleaseLookupInfo,
 	ReleaseOptions,
 } from '../harmonizer/types.ts';
 import type { PartialDate } from '../utils/date.ts';
@@ -63,7 +64,7 @@ export abstract class MetadataProvider<RawRelease> {
 	abstract constructReleaseUrl(id: string, region?: CountryCode): URL;
 
 	/** Constructs an optional API URL for a release using the given data. */
-	abstract constructReleaseApiUrl(options: ReleaseLookupOptions): URL | undefined;
+	abstract constructReleaseApiUrl(options: RawReleaseOptions): URL | undefined;
 
 	/** Looks up the release which is identified by the given URL, GTIN/barcode or provider ID. */
 	getRelease(urlOrGtinOrId: URL | GTIN | string, options?: ReleaseOptions): Promise<HarmonyRelease> {
@@ -82,23 +83,23 @@ export abstract class MetadataProvider<RawRelease> {
 
 	/** Looks up the release which is identified by the given provider ID. */
 	async getReleaseById(id: string, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
-		const converterOptions: ReleaseConverterOptions = {
-			...options,
-			lookup: { method: 'id', value: id },
-		};
-		const rawRelease = await this.getRawRelease({ id }, options);
-		const release = await this.convertRawRelease(rawRelease, converterOptions);
+		const rawOptions = options as RawReleaseOptions;
+		rawOptions.lookup = { method: 'id', value: id };
+
+		const rawRelease = await this.getRawRelease(rawOptions);
+		const release = await this.convertRawRelease(rawRelease, rawOptions);
+
 		return this.withExcludedRegions(release);
 	}
 
 	/** Looks up the release which is identified by the given GTIN/barcode. */
-	async getReleaseByGTIN(gtin: GTIN, options?: ReleaseOptions): Promise<HarmonyRelease> {
-		const converterOptions: ReleaseConverterOptions = {
-			...options,
-			lookup: { method: 'gtin', value: gtin.toString() },
-		};
-		const rawRelease = await this.getRawRelease({ gtin }, options);
-		const release = await this.convertRawRelease(rawRelease, converterOptions);
+	async getReleaseByGTIN(gtin: GTIN, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
+		const rawOptions = options as RawReleaseOptions;
+		rawOptions.lookup = { method: 'gtin', value: gtin.toString() };
+
+		const rawRelease = await this.getRawRelease(rawOptions);
+		const release = await this.convertRawRelease(rawRelease, rawOptions);
+
 		return this.withExcludedRegions(release);
 	}
 
@@ -106,12 +107,12 @@ export abstract class MetadataProvider<RawRelease> {
 	 * Loads the raw release data for the given lookup options.
 	 * This method is only used internally and guaranteed to be called with either a GTIN or a provider ID.
 	 */
-	protected abstract getRawRelease(lookupOptions: ReleaseLookupOptions, options?: ReleaseOptions): Promise<RawRelease>;
+	protected abstract getRawRelease(options: RawReleaseOptions): Promise<RawResult<RawRelease>>;
 
 	/** Converts the given provider-specific raw release metadata into a common representation. */
 	protected abstract convertRawRelease(
-		rawRelease: RawRelease,
-		options: ReleaseConverterOptions,
+		rawResult: RawResult<RawRelease>,
+		options: RawReleaseOptions,
 	): MaybePromise<HarmonyRelease>;
 
 	/** Extracts the ID from a release URL. */
@@ -129,12 +130,21 @@ export abstract class MetadataProvider<RawRelease> {
 		return this.supportedUrls.test(url);
 	}
 
-	protected generateReleaseInfo(releaseUrl: URL, messages: ProviderMessage[] = []): ReleaseInfo {
+	protected generateReleaseInfo({ id, lookupInfo, messages = [], options }: {
+		id: string;
+		lookupInfo: ReleaseLookupInfo;
+		messages?: ProviderMessage[];
+		options: RawReleaseOptions;
+	}): ReleaseInfo {
+		// overwrite optional property with the actually used region (in order to build the accurate API URL)
+		options.lookup.region = lookupInfo.region;
+
 		return {
 			providers: [{
 				name: this.name,
-				url: releaseUrl,
-				id: this.extractReleaseId(releaseUrl)!,
+				id,
+				url: this.constructReleaseUrl(id, lookupInfo.region),
+				apiUrl: this.constructReleaseApiUrl(options),
 			}],
 			messages,
 		};

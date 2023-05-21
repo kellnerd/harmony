@@ -12,9 +12,8 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	LinkType,
-	ReleaseConverterOptions,
-	ReleaseLookupOptions,
-	ReleaseOptions,
+	RawReleaseOptions,
+	RawResult,
 } from '../harmonizer/types.ts';
 
 export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
@@ -41,35 +40,45 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 		return new URL([region.toLowerCase(), 'album', id].join('/'), 'https://music.apple.com');
 	}
 
-	constructReleaseApiUrl({ gtin, id, region }: ReleaseLookupOptions): URL | undefined {
-		if (!gtin && !id) return;
-
+	constructReleaseApiUrl({ lookup }: RawReleaseOptions): URL | undefined {
 		const lookupUrl = new URL('lookup', this.apiBaseUrl);
 		const query = new URLSearchParams({
 			entity: 'song', // include tracks of the release in the response
 		});
 
-		if (gtin) {
-			query.append('upc', gtin.toString());
-		} else if (id) {
-			query.append('id', id);
+		if (lookup.method === 'gtin') {
+			query.append('upc', lookup.value);
+		} else if (lookup.method === 'id') {
+			query.append('id', lookup.value);
 		}
 
-		if (region) {
-			query.append('country', region.toLowerCase());
+		if (lookup.region) {
+			query.append('country', lookup.region.toLowerCase());
 		}
 
 		lookupUrl.search = query.toString();
 		return lookupUrl;
 	}
 
-	protected getRawRelease(lookupOptions: ReleaseLookupOptions, options?: ReleaseOptions): Promise<ReleaseResult> {
-		return this.query(this.constructReleaseApiUrl(lookupOptions)!, options?.regions);
+	protected async getRawRelease(options: RawReleaseOptions): Promise<RawResult<ReleaseResult>> {
+		const apiUrl = this.constructReleaseApiUrl(options)!;
+		const data = await this.query(apiUrl, options?.regions) as ReleaseResult;
+
+		return {
+			data,
+			lookupInfo: {
+				...options.lookup,
+				region: data.region, // the region which has actually been used successfully
+			},
+		};
 	}
 
-	protected convertRawRelease(rawRelease: ReleaseResult, options: ReleaseConverterOptions): HarmonyRelease {
-		const collection = rawRelease.results.find((result) => result.wrapperType === 'collection') as Collection;
-		const tracks = rawRelease.results.filter((result) =>
+	protected convertRawRelease(
+		{ data, lookupInfo }: RawResult<ReleaseResult>,
+		options: RawReleaseOptions,
+	): HarmonyRelease {
+		const collection = data.results.find((result) => result.wrapperType === 'collection') as Collection;
+		const tracks = data.results.filter((result) =>
 			// skip bonus items (e.g. booklets or videos)
 			result.wrapperType === 'track' && result.kind === 'song'
 		) as Track[];
@@ -100,7 +109,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 			packaging: 'None',
 			images: [this.processImage(collection.artworkUrl100, ['front'])],
 			copyright: collection.copyright,
-			info: this.generateReleaseInfo(releaseUrl),
+			info: this.generateReleaseInfo({ id: collection.collectionId.toString(), lookupInfo, options }),
 		};
 	}
 
@@ -192,6 +201,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 
 			const data = await this.fetchJSON(apiUrl) as Result<T>;
 			if (data.resultCount) {
+				data.region = region;
 				return data;
 			}
 		}
@@ -203,6 +213,8 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 type Result<T> = {
 	resultCount: number;
 	results: Array<T>;
+	/** Custom property to remember the successfully queried region of the API. */
+	region: CountryCode;
 };
 
 type ReleaseResult = Result<Collection | Track>;
