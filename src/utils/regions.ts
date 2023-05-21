@@ -1,6 +1,6 @@
-import { CountryCode } from '../harmonizer/types.ts';
+import type { CountryCode } from '../harmonizer/types.ts';
 
-/** Converts an ISO 3166-1 alpha-2 country code into an Unicode regional indicator symbol (flag emoji). */
+/** Converts a country code into an Unicode regional indicator symbol (flag emoji). */
 export function flagEmoji(code: CountryCode) {
 	code = code.toUpperCase();
 
