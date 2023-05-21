@@ -1,5 +1,6 @@
 import { ArtistCredit } from './ArtistCredit.tsx';
 import { CoverImage } from './CoverImage.tsx';
+import { MessageBox } from './MessageBox.tsx';
 import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import { determineReleaseEventCountries } from '../../MusicBrainz/releaseCountries.ts';
@@ -15,7 +16,7 @@ export function Release({ release }: { release: HarmonyRelease }) {
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
 	const isMultiMedium = release.media.length > 1;
-	const { copyright, language, script } = release;
+	const { copyright, language, script, info } = release;
 
 	return (
 		<div class='release'>
@@ -23,12 +24,13 @@ export function Release({ release }: { release: HarmonyRelease }) {
 			<p>
 				by <ArtistCredit artists={release.artists} />
 			</p>
+			{info.messages.map((message) => <MessageBox message={message} />)}
 			<table>
 				<tr>
 					<th>Providers</th>
 					<td>
 						<ul>
-							{release.info.providers.map((provider) => (
+							{info.providers.map((provider) => (
 								<li>
 									{provider.name}: <a href={provider.url.href} target='_blank'>{provider.id}</a>
 									{provider.apiUrl && (
