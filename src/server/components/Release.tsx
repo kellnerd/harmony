@@ -39,6 +39,11 @@ export function Release({ release }: { release: HarmonyRelease }) {
 							{release.info.providers.map((provider) => (
 								<li>
 									{provider.name}: <a href={provider.url.href} target='_blank'>{provider.id}</a>
+									{provider.apiUrl && (
+										<>
+											{' '}(<a href={provider.apiUrl.href} target='_blank'>API</a>)
+										</>
+									)}
 								</li>
 							))}
 						</ul>
