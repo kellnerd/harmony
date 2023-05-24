@@ -12,17 +12,14 @@ import type { GTIN, HarmonyRelease, ProviderReleaseMapping, ReleaseOptions } fro
 /**
  * Looks up the given URL with the first matching provider.
  */
-export async function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<HarmonyRelease> {
+export function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<HarmonyRelease> {
 	const matchingProvider = providers.find((provider) => provider.supportsDomain(url));
 
 	if (!matchingProvider) {
 		throw new LookupError(`No provider supports ${url}`);
 	}
 
-	const release = await matchingProvider.getRelease(url, options);
-	detectLanguageAndScript(release);
-
-	return release;
+	return matchingProvider.getRelease(url, options);
 }
 
 /**
@@ -49,6 +46,21 @@ export async function getMergedReleaseByGTIN(
 	if (release) detectLanguageAndScript(release);
 
 	return release;
+}
+
+/**
+ * Looks up the given URL with the first matching provider.
+ * Then tries to find that release on other providers (by GTIN) and merges the resulting data.
+ */
+export async function getMergedReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<HarmonyRelease | undefined> {
+	const release = await getReleaseByUrl(url, options);
+
+	if (release.gtin) {
+		return getMergedReleaseByGTIN(release.gtin, options);
+	} else {
+		detectLanguageAndScript(release);
+		return release;
+	}
 }
 
 function detectLanguageAndScript(release: HarmonyRelease): void {

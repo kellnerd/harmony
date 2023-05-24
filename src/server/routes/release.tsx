@@ -1,6 +1,6 @@
 import { Release } from '../components/Release.tsx';
 import { ReleaseSeeder } from '../components/ReleaseSeeder.tsx';
-import { getMergedReleaseByGTIN, getReleaseByUrl } from '../../lookup.ts';
+import { getMergedReleaseByGTIN, getMergedReleaseByUrl } from '../../lookup.ts';
 import { Head } from 'fresh/runtime.ts';
 import { Handlers, PageProps } from 'fresh/server.ts';
 
@@ -23,7 +23,7 @@ export const handler: Handlers<Data> = {
 		const options: ReleaseOptions = {
 			withSeparateMedia: true,
 			withAllTrackArtists: true,
-			regions: ['GB', 'US', 'DE'],
+			regions: ['GB', 'US', 'DE', 'JP'],
 		};
 
 		let release: HarmonyRelease | undefined;
@@ -31,7 +31,7 @@ export const handler: Handlers<Data> = {
 			if (gtin) {
 				release = await getMergedReleaseByGTIN(gtin, options);
 			} else if (externalUrl) {
-				release = await getReleaseByUrl(new URL(externalUrl), options);
+				release = await getMergedReleaseByUrl(new URL(externalUrl), options);
 			}
 		} catch (error) {
 			if (error instanceof Error) {
