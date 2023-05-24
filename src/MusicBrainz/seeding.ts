@@ -4,7 +4,7 @@ import { preferArray } from 'utils/array/scalar.js';
 import { flatten } from 'utils/object/flatten.js';
 
 import type { Packaging, ReleaseGroupType, ReleaseStatus, UrlLinkTypeId } from './typeId.ts';
-import type { ArtistCreditName, CountryCode, HarmonyRelease, LinkType } from '../harmonizer/types.ts';
+import type { ArtistCreditName, CountryCode, HarmonyRelease, LinkType, ReleaseInfo } from '../harmonizer/types.ts';
 import type { PartialDate } from '../utils/date.ts';
 import type { ScriptCode } from '../utils/script.ts';
 import type { FormDataRecord, MaybeArray } from 'utils/types.d.ts';
@@ -53,6 +53,7 @@ export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 					url: link.url.href,
 				})
 		),
+		edit_note: buildEditNote(release.info),
 	};
 
 	return flatten(seed);
@@ -91,6 +92,18 @@ function convertLinkType(linkType: LinkType, url?: URL): UrlLinkTypeId | undefin
 			// TODO: handle special cases based on their URLs
 			return urlTypeIds['discography entry'];
 	}
+}
+
+function buildEditNote(info: ReleaseInfo): string {
+	const lines = info.providers.map(({ name, url, apiUrl }) => {
+		let line = `* ${name}: ${url}`;
+		if (apiUrl) line += ` (API: ${apiUrl})`;
+		return line;
+	});
+
+	lines.unshift('Imported with Harmony, using data from:');
+
+	return lines.join('\n');
 }
 
 // Adapted from https://musicbrainz.org/doc/Development/Release_Editor_Seeding
