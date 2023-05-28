@@ -27,7 +27,7 @@ export function mergeRelease(
 	if (availableProviders.length === 0) {
 		return;
 	} else if (availableProviders.length === 1) {
-		return Object.values(releaseMap)[0];
+		return releaseMap[availableProviders[0]];
 	}
 
 	// create an empty merge target
