@@ -53,6 +53,7 @@ export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 					url: link.url.href,
 				})
 		),
+		annotation: buildAnnotation(release),
 		edit_note: buildEditNote(release.info),
 	};
 
@@ -92,6 +93,16 @@ function convertLinkType(linkType: LinkType, url?: URL): UrlLinkTypeId | undefin
 			// TODO: handle special cases based on their URLs
 			return urlTypeIds['discography entry'];
 	}
+}
+
+function buildAnnotation(release: HarmonyRelease): string {
+	const lines: string[] = [];
+
+	if (release.copyright) {
+		lines.push(`Copyright: ${release.copyright}`);
+	}
+
+	return lines.join('\n');
 }
 
 function buildEditNote(info: ReleaseInfo): string {
