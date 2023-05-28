@@ -61,7 +61,7 @@ export function mergeRelease(
 	const availableRegions = new Set<CountryCode>();
 	const excludedRegions = new Set<CountryCode>();
 
-	sortProviderNames(availableProviders, preferredProviders);
+	orderByPreference(availableProviders, preferredProviders);
 
 	// Phase 1: Copy properties without specific provider preferences
 	for (const providerName of availableProviders) {
@@ -132,7 +132,7 @@ export function mergeRelease(
 			return;
 		}
 
-		sortProviderNames(availableProviders, preferredProviders);
+		orderByPreference(availableProviders, preferredProviders);
 
 		for (const providerName of availableProviders) {
 			const sourceRelease = releaseMap[providerName]!;
@@ -181,18 +181,18 @@ function isTrackProperty(property: PreferenceProperty): property is ImmutableTra
 }
 
 /**
- * Sorts the given provider names by the given order of preference.
- * The remaining providers will be kept at the end of the sorted array.
+ * Sorts the given items according to the given order of preference.
+ * The remaining items will be kept at the end of the sorted array.
  */
-function sortProviderNames(providers: ProviderName[], preferredProviders: ProviderName[]) {
-	if (!preferredProviders.length) {
+function orderByPreference<T>(items: T[], preference: T[]) {
+	if (!preference.length) {
 		// no preferences, nothing to sort
 		return;
 	}
 
-	providers.sort((a, b) => {
-		const orderA = preferredProviders.indexOf(a);
-		const orderB = preferredProviders.indexOf(b);
+	items.sort((a, b) => {
+		const orderA = preference.indexOf(a);
+		const orderB = preference.indexOf(b);
 		if (orderA === -1 || orderB === -1) {
 			// preference for one of the items was not specified, -1 would be sorted first, but we want them last
 			return orderB - orderA;
