@@ -1,3 +1,5 @@
+import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
+
 import type { Packaging, ReleaseStatus } from '../MusicBrainz/typeId.ts';
 import type { PartialDate } from '../utils/date.ts';
 import type { ScriptFrequency } from '../utils/script.ts';
@@ -11,7 +13,7 @@ export type HarmonyRelease = {
 	language?: Language;
 	script?: ScriptFrequency;
 	status?: ReleaseStatus;
-	releaseDate: PartialDate;
+	releaseDate?: PartialDate;
 	labels?: Label[];
 	packaging?: Packaging;
 	images?: Artwork[];
@@ -125,10 +127,14 @@ export type ProviderName = string;
 /** Mapping from the provider's name to the release returned by that provider. */
 export type ProviderReleaseMapping = Record<ProviderName, HarmonyRelease | undefined>;
 
-export type ReleaseProperty = keyof HarmonyRelease | 'duration' | 'isrc';
+export type ImmutableTrackProperty = typeof immutableTrackProperties[number];
 
-/** Mapping from release properties to lists of preferred providers for these properties */
-export type ProviderPreferences = Partial<Record<ReleaseProperty, ProviderName[]>>;
+export type ImmutableReleaseProperty = typeof immutableReleaseProperties[number];
+
+export type PreferenceProperty = ImmutableReleaseProperty | ImmutableTrackProperty;
+
+/** Mapping from release/track properties to lists of preferred providers for these properties. */
+export type ProviderPreferences = Partial<Record<PreferenceProperty, ProviderName[]>>;
 
 export type ProviderInfo = {
 	name: ProviderName;
@@ -144,8 +150,12 @@ export type ProviderMessage = {
 };
 
 export type ReleaseInfo = {
+	/** Information about each provider which was used to lookup the release. */
 	providers: ProviderInfo[];
+	/** Messages from the providers which were used to lookup the release. */
 	messages: ProviderMessage[];
+	/** Mapping from release/track properties to the used provider for these properties. */
+	sourceMap?: Partial<Record<PreferenceProperty, ProviderName>>;
 };
 
 export type RawResult<T> = {
