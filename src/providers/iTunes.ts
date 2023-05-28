@@ -12,6 +12,7 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	LinkType,
+	ProviderMessage,
 	RawReleaseOptions,
 	RawResult,
 } from '../harmonizer/types.ts';
@@ -77,6 +78,8 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 		{ data, lookupInfo }: RawResult<ReleaseResult>,
 		options: RawReleaseOptions,
 	): HarmonyRelease {
+		const messages: ProviderMessage[] = [];
+
 		const collection = data.results.find((result) => result.wrapperType === 'collection') as Collection;
 		const tracks = data.results.filter((result) =>
 			// skip bonus items (e.g. booklets or videos)
@@ -94,11 +97,16 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 		}
 
 		const releaseUrl = this.cleanViewUrl(collection.collectionViewUrl);
+		const gtin = this.extractGTINFromUrl(collection.artworkUrl100);
+
+		if (!gtin) {
+			messages.push(this.generateMessage('Failed to extract GTIN from artwork URL', 'warning'));
+		}
 
 		return {
 			title: collection.collectionName,
 			artists: [this.convertRawArtist(collection.artistName, collection.artistViewUrl)],
-			gtin: this.extractGTINFromUrl(collection.artworkUrl100),
+			gtin: gtin,
 			externalLinks: [{
 				url: releaseUrl,
 				types: linkTypes,
@@ -109,7 +117,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 			packaging: 'None',
 			images: [this.processImage(collection.artworkUrl100, ['front'])],
 			copyright: collection.copyright,
-			info: this.generateReleaseInfo({ id: collection.collectionId.toString(), lookupInfo, options }),
+			info: this.generateReleaseInfo({ id: collection.collectionId.toString(), lookupInfo, messages, options }),
 		};
 	}
 
