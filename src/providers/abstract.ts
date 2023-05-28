@@ -178,7 +178,13 @@ export abstract class MetadataProvider<RawRelease> {
 	protected fetch = fetch;
 
 	protected async fetchJSON(input: RequestInfo | URL, init?: RequestInit) {
-		let response = await this.cache?.match(input);
+		let response: Response | undefined;
+
+		try {
+			response = await this.cache?.match(input);
+		} catch (error) {
+			console.warn(this.name, 'cache match error:', error instanceof Error ? error.message : error);
+		}
 
 		if (!response) {
 			response = await this.fetch(input, init);
