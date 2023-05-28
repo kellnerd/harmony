@@ -2,6 +2,7 @@ import { DurationPrecision, MetadataProvider } from './abstract.ts';
 import { parseISODateTime, PartialDate } from '../utils/date.ts';
 import { ResponseError } from '../utils/errors.ts';
 import { isValidGTIN } from '../utils/gtin.ts';
+import { pluralWithCount } from '../utils/plural.ts';
 
 import type {
 	ArtistCreditName,
@@ -80,11 +81,27 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 	): HarmonyRelease {
 		const messages: ProviderMessage[] = [];
 
+		// API also returns other release variants for GTIN lookups, only use the first collection result
 		const collection = data.results.find((result) => result.wrapperType === 'collection') as Collection;
 		const tracks = data.results.filter((result) =>
 			// skip bonus items (e.g. booklets or videos)
-			result.wrapperType === 'track' && result.kind === 'song'
+			result.wrapperType === 'track' && result.kind === 'song' && result.collectionId === collection.collectionId
 		) as Track[];
+
+		// warn about results which belong to a different collection
+		const skippedResults = data.results.filter((result) => result.collectionId !== collection.collectionId);
+		if (skippedResults.length) {
+			const uniqueSkippedIds = [...new Set(skippedResults.map((result) => result.collectionId))];
+			const skippedUrls = uniqueSkippedIds.map((id) =>
+				this.cleanViewUrl(skippedResults.find((result) => result.collectionId === id)!.collectionViewUrl)
+			);
+			messages.push(this.generateMessage(
+				`API also returned ${
+					pluralWithCount(skippedUrls.length, 'other result, which was skipped', 'other results, which were skipped')
+				}: ${skippedUrls.join(', ')}`,
+				'warning',
+			));
+		}
 
 		const linkTypes: LinkType[] = [];
 		if (collection.collectionPrice) {
