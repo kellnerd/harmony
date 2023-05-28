@@ -5,6 +5,7 @@ import type {
 	CountryCode,
 	GTIN,
 	HarmonyRelease,
+	MessageType,
 	ProviderMessage,
 	RawReleaseOptions,
 	RawResult,
@@ -128,6 +129,14 @@ export abstract class MetadataProvider<RawRelease> {
 	/** Checks whether the provider supports the given URL for releases. */
 	supportsReleaseUrl(url: URL): boolean {
 		return this.supportedUrls.test(url);
+	}
+
+	protected generateMessage(text: string, type: MessageType = 'info'): ProviderMessage {
+		return {
+			provider: this.name,
+			text,
+			type,
+		};
 	}
 
 	protected generateReleaseInfo({ id, lookupInfo, messages = [], options }: {

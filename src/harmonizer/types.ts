@@ -143,10 +143,12 @@ export type ProviderInfo = {
 	apiUrl?: URL;
 };
 
+export type MessageType = 'debug' | 'info' | 'warning'; // errors will be thrown
+
 export type ProviderMessage = {
 	provider?: ProviderName;
 	text: string;
-	type: 'debug' | 'info' | 'warning'; // errors will be thrown
+	type: MessageType;
 };
 
 export type ReleaseInfo = {
