@@ -38,6 +38,7 @@ export function Release({ release }: { release: HarmonyRelease }) {
 											{' '}(<a href={provider.apiUrl.href} target='_blank'>API</a>)
 										</>
 									)}
+									{provider.processingTime && ` [${provider.processingTime.toFixed(0)} ms]`}
 								</li>
 							))}
 						</ul>
@@ -45,7 +46,7 @@ export function Release({ release }: { release: HarmonyRelease }) {
 				</tr>
 				<tr>
 					<th>Release date</th>
-					<td>{formatPartialDate(release.releaseDate) || '[unknown]'}</td>
+					<td>{formatPartialDate(release.releaseDate ?? {}) || '[unknown]'}</td>
 				</tr>
 				{release.labels && (
 					<tr>

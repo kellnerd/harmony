@@ -141,6 +141,8 @@ export type ProviderInfo = {
 	id: string;
 	url: URL;
 	apiUrl?: URL;
+	/** Processing time of the provider in milliseconds, filled automatically. */
+	processingTime?: number;
 };
 
 export type MessageType = 'debug' | 'info' | 'warning'; // errors will be thrown
