@@ -83,26 +83,23 @@ export abstract class MetadataProvider<RawRelease> {
 	}
 
 	/** Looks up the release which is identified by the given provider ID. */
-	async getReleaseById(id: string, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
-		const startTime = performance.now();
+	getReleaseById(id: string, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
 		const rawOptions = options as RawReleaseOptions;
 		rawOptions.lookup = { method: 'id', value: id };
 
-		const rawRelease = await this.getRawRelease(rawOptions);
-		const release = await this.convertRawRelease(rawRelease, rawOptions);
-
-		// store the elapsed time for each provider info record (just in case), although there should be only one
-		const elapsedTime = performance.now() - startTime;
-		release.info.providers.forEach((providerInfo) => providerInfo.processingTime = elapsedTime);
-
-		return this.withExcludedRegions(release);
+		return this.processReleaseLookup(rawOptions);
 	}
 
 	/** Looks up the release which is identified by the given GTIN/barcode. */
-	async getReleaseByGTIN(gtin: GTIN, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
-		const startTime = performance.now();
+	getReleaseByGTIN(gtin: GTIN, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
 		const rawOptions = options as RawReleaseOptions;
 		rawOptions.lookup = { method: 'gtin', value: gtin.toString() };
+
+		return this.processReleaseLookup(rawOptions);
+	}
+
+	private async processReleaseLookup(rawOptions: RawReleaseOptions): Promise<HarmonyRelease> {
+		const startTime = performance.now();
 
 		const rawRelease = await this.getRawRelease(rawOptions);
 		const release = await this.convertRawRelease(rawRelease, rawOptions);
