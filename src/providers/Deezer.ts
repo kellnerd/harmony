@@ -45,7 +45,7 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 	readonly apiBaseUrl = 'https://api.deezer.com';
 
 	constructReleaseUrl(id: string): URL {
-		return new URL(id, 'https://www.deezer.com/album');
+		return new URL(id, 'https://www.deezer.com/album/');
 	}
 
 	constructReleaseApiUrl({ lookup }: RawReleaseOptions): URL | undefined {
