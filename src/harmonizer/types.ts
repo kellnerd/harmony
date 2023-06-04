@@ -125,7 +125,7 @@ export type ReleaseLookupInfo = {
 export type ProviderName = string;
 
 /** Mapping from the provider's name to the release returned by that provider. */
-export type ProviderReleaseMapping = Record<ProviderName, HarmonyRelease | undefined>;
+export type ProviderReleaseMapping = Record<ProviderName, HarmonyRelease | Error>;
 
 export type ImmutableTrackProperty = typeof immutableTrackProperties[number];
 
@@ -145,11 +145,12 @@ export type ProviderInfo = {
 	processingTime?: number;
 };
 
-export type MessageType = 'debug' | 'info' | 'warning'; // errors will be thrown
+export type MessageType = 'debug' | 'info' | 'warning' | 'error';
 
 export type ProviderMessage = {
 	provider?: ProviderName;
 	text: string;
+	/** Providers should throw errors instead of creating messages of type 'error'. */
 	type: MessageType;
 };
 

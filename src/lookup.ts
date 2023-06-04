@@ -28,9 +28,17 @@ export function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<Har
 export async function getProviderReleaseMapping(gtin: GTIN, options?: ReleaseOptions): Promise<ProviderReleaseMapping> {
 	const releasePromises = providers.map((provider) => provider.getReleaseByGTIN(gtin, options));
 	const releaseResults = await Promise.allSettled(releasePromises);
-	const releases = releaseResults.map((result) => result.status === 'fulfilled' ? result.value : undefined);
+	const releasesOrErrors: Array<HarmonyRelease | Error> = releaseResults.map((result) => {
+		if (result.status === 'fulfilled') {
+			return result.value;
+		} else if (result.reason instanceof Error) {
+			return result.reason;
+		} else {
+			return Error(result.reason);
+		}
+	});
 
-	return zipObject(providerNames, releases);
+	return zipObject(providerNames, releasesOrErrors);
 }
 
 /**

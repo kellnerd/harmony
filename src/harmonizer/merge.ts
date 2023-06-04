@@ -5,6 +5,7 @@ import type {
 	HarmonyRelease,
 	ImmutableTrackProperty,
 	PreferenceProperty,
+	ProviderMessage,
 	ProviderName,
 	ProviderPreferences,
 	ProviderReleaseMapping,
@@ -21,14 +22,20 @@ export function mergeRelease(
 	preferences: ProviderPreferences | ProviderName[] = {},
 ): HarmonyRelease | undefined {
 	const availableProviders: ProviderName[] = Object.entries(releaseMap)
-		.filter(([_providerName, release]) => release)
-		.map(([providerName, _release]) => providerName);
+		.filter(([_providerName, releaseOrError]) => !(releaseOrError instanceof Error))
+		.map(([providerName]) => providerName);
 
 	if (availableProviders.length === 0) {
 		return;
-	} else if (availableProviders.length === 1) {
-		return releaseMap[availableProviders[0]];
 	}
+
+	const errorMessages: ProviderMessage[] = Object.entries(releaseMap)
+		.filter(([_providerName, releaseOrError]) => releaseOrError instanceof Error)
+		.map(([providerName, error]) => ({
+			provider: providerName,
+			text: (error as Error).message,
+			type: 'error',
+		}));
 
 	// create an empty merge target
 	const mergedRelease: HarmonyRelease = {
@@ -38,7 +45,7 @@ export function mergeRelease(
 		media: [],
 		info: {
 			providers: [],
-			messages: [],
+			messages: errorMessages,
 			sourceMap: {},
 		},
 	};
@@ -65,7 +72,7 @@ export function mergeRelease(
 
 	// Phase 1: Copy properties without specific provider preferences
 	for (const providerName of availableProviders) {
-		const sourceRelease = releaseMap[providerName]!;
+		const sourceRelease = releaseMap[providerName] as HarmonyRelease;
 
 		// copy missing properties into the merge target and keep track of their sources
 		missingReleaseProperties.forEach((property) => {
@@ -135,7 +142,7 @@ export function mergeRelease(
 		orderByPreference(availableProviders, preferredProviders);
 
 		for (const providerName of availableProviders) {
-			const sourceRelease = releaseMap[providerName]!;
+			const sourceRelease = releaseMap[providerName] as HarmonyRelease;
 
 			if (isTrackProperty(property)) {
 				mergedRelease.media.forEach((medium, mediumIndex) => {
