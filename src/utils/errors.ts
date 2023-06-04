@@ -4,7 +4,7 @@ export class LookupError extends CustomError {}
 
 export class ProviderError extends LookupError {
 	constructor(readonly providerName: string, message: string) {
-		super(`${providerName}: ${message}`);
+		super(message);
 	}
 }
 
