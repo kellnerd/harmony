@@ -1,6 +1,7 @@
 import { mergeRelease } from './harmonizer/merge.ts';
 import { providerNames, providerPreferences, providers } from './providers.ts';
 import { LookupError } from './utils/errors.ts';
+import { ensureValidGTIN } from './utils/gtin.ts';
 import { formatLanguageConfidence, formatScriptFrequency } from './utils/locale.ts';
 import { detectScripts, scriptCodes } from './utils/script.ts';
 import { francAll } from 'franc';
@@ -26,6 +27,8 @@ export function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<Har
  * Looks up the given GTIN with each provider.
  */
 export async function getProviderReleaseMapping(gtin: GTIN, options?: ReleaseOptions): Promise<ProviderReleaseMapping> {
+	ensureValidGTIN(gtin);
+
 	const releasePromises = providers.map((provider) => provider.getReleaseByGTIN(gtin, options));
 	const releaseResults = await Promise.allSettled(releasePromises);
 	const releasesOrErrors: Array<HarmonyRelease | Error> = releaseResults.map((result) => {

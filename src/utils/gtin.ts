@@ -13,21 +13,38 @@ function checksum(gtin: string) {
 		.reduce((checksum, digit, index) => (checksum + digit * ((length - index) % 2 ? 1 : 3)), 0);
 }
 
-/** Checks whether the given GTIN has an accepted format/length and a valid check digit. */
-export function isValidGTIN(gtin: GTIN): boolean {
+/** Asserts that the given GTIN has an accepted format/length and a valid check digit. */
+export function ensureValidGTIN(gtin: GTIN): void {
 	gtin = gtin.toString();
 
-	if (!gtinFormat.test(gtin) || !gtinLengths.includes(gtin.length)) {
-		return false;
+	if (!gtinFormat.test(gtin)) {
+		throw new TypeError(`GTIN '${gtin}' contains invalid non-numeric characters`);
+	}
+
+	if (!gtinLengths.includes(gtin.length)) {
+		throw new TypeError(`GTIN '${gtin}' has an invalid length`);
 	}
 
 	// the checksum of the whole code (including the check digit) has to be a multiple of 10
-	return checksum(gtin) % 10 === 0;
+	if (checksum(gtin) % 10 !== 0) {
+		throw new TypeError(`Checksum of GTIN '${gtin}' is invalid`);
+	}
+}
+
+/** Checks whether the given GTIN has an accepted format/length and a valid check digit. */
+export function isValidGTIN(gtin: GTIN): boolean {
+	try {
+		ensureValidGTIN(gtin);
+	} catch {
+		return false;
+	}
+
+	return true;
 }
 
 /**
  * Calculates the check digit of the given GTIN, regardless of its length.
- * The check digit at the last position can be present or filled with an arbitrary placeholder.
+ * The check digit at the last position has to be present or filled with an arbitrary placeholder.
  */
 export function checkDigit(gtin: GTIN) {
 	// replace check digit or placeholder with zero, which has no effect on the checksum
