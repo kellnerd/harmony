@@ -65,7 +65,7 @@ export default function Page({ data }: PageProps<Data>) {
 				</div>
 				<button type='submit'>Lookup</button>
 			</form>
-			{errors.map((error) => <p class='error'>{error.message}</p>)}
+			{errors.map((error) => <div class='message error'><p>{error.message}</p></div>)}
 			{release && <Release release={release} />}
 			{release && <ReleaseSeeder release={release} />}
 		</>

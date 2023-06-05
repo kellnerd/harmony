@@ -49,6 +49,42 @@ div.message {
 div.message > p {
 	margin: 0.2em 0;
 }
+div.message > p::before {
+	padding-right: 0.3em;
+}
+
+div.message span.provider {
+	font-weight: bold;
+	padding-right: 0.3em;
+}
+
+div.message.debug {
+	background-color: #eae9fc;
+	color: #1f1cc2;
+}
+div.message.info {
+	background-color: #e7effd;
+	color: #0e4ecc;
+}
+div.message.warning {
+	background-color: #fff2e8;
+	color: #ea6100;
+}
+div.message.error {
+	background-color: #ffe7e7;
+	color: #de0604;
+}
+
+div.message.debug > p::before {
+	content: '⚙';
+}
+div.message.info > p::before {
+	content: '🛈';
+}
+div.message.warning > p::before,
+div.message.error > p::before {
+	content: '⚠';
+}
 
 /* RegionList.tsx */
 
