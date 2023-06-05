@@ -95,7 +95,7 @@ function detectLanguageAndScript(release: HarmonyRelease): void {
 
 		const formattedList = guessedLanguages
 			.map(([code, confidence]) => ({ code, confidence }))
-			.filter(({ confidence }) => confidence > 0.3)
+			.filter(({ confidence }) => confidence > 0.1)
 			.map(formatLanguageConfidence);
 		release.info.messages.push({
 			type: 'debug',
