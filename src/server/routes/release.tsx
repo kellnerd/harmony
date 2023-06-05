@@ -49,6 +49,7 @@ export default function Page({ data }: PageProps<Data>) {
 		<>
 			<Head>
 				<title>{release?.title ?? 'Release Lookup'} &ndash; Harmony</title>
+				<link rel='stylesheet' href='harmony.css' />
 			</Head>
 			<h2>Release Lookup</h2>
 			<form>

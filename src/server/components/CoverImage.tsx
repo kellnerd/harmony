@@ -7,10 +7,11 @@ export function CoverImage({ artwork }: { artwork: Artwork }) {
 	}
 
 	return (
-		<div class='cover-image'>
+		<figure class='cover-image'>
 			<a href={artwork.url.href} target='_blank'>
 				<img src={artwork.thumbUrl?.href ?? artwork.url.href} alt={description} title={description} />
 			</a>
-		</div>
+			<figcaption>{artwork.url.hostname} &ndash; {description}</figcaption>
+		</figure>
 	);
 }

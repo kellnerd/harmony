@@ -1,0 +1,75 @@
+body {
+	font-family: sans-serif;
+}
+
+label + input {
+	margin-left: 0.5em;
+}
+
+/* tables */
+
+table {
+	margin: 1em 0;
+}
+
+tbody > tr:nth-child(odd) {
+	background-color: #efefef;
+}
+tbody > tr:nth-child(even) {
+	background-color: #f8f8f8;
+}
+
+td, th {
+	padding: 0.1em 0.2em;
+}
+
+td ul {
+	margin: 0;
+	padding-left: 1em;
+	list-style: square;
+}
+
+/* ISRC.tsx */
+
+code.isrc > span:not(:last-child)::after {
+	content: '-';
+}
+
+/* MessageBox.tsx */
+
+div.message {
+	background-color: #e3e4e8;
+	color: #414a63;
+	margin: 0.5em;
+	padding: 0.2em 0.5em;
+	border-radius: 5px;
+	width: fit-content;
+}
+
+div.message > p {
+	margin: 0.2em 0;
+}
+
+/* RegionList.tsx */
+
+div.region-list > button {
+	margin: 0 0.3em;
+}
+span.region-count {
+	margin-left: 1em;
+}
+
+/* Release.tsx */
+
+h2.release-title {
+	margin-bottom: 0;
+}
+p.release-artist {
+	margin-top: 0;
+}
+
+@media screen and (min-width: 46rem) {
+	table.release-info {
+		max-width: 45rem;
+	}
+}

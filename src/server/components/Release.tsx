@@ -4,6 +4,7 @@ import { MessageBox } from './MessageBox.tsx';
 import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import RegionList from '../islands/RegionList.tsx';
+
 import { determineReleaseEventCountries } from '../../MusicBrainz/releaseCountries.ts';
 import { formatPartialDate } from '../../utils/date.ts';
 import { formatLanguageConfidence, formatScriptFrequency, regionName } from '../../utils/locale.ts';
@@ -20,12 +21,12 @@ export function Release({ release }: { release: HarmonyRelease }) {
 
 	return (
 		<div class='release'>
-			<h2>{release.title}</h2>
-			<p>
+			<h2 class='release-title'>{release.title}</h2>
+			<p class='release-artist'>
 				by <ArtistCredit artists={release.artists} />
 			</p>
 			{info.messages.map((message) => <MessageBox message={message} />)}
-			<table>
+			<table class='release-info'>
 				<tr>
 					<th>Providers</th>
 					<td>
