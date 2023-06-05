@@ -4,6 +4,7 @@
 		"jsxImportSource": "preact"
 	},
 	"importMap": "../../imports.json",
+	"lock": false,
 	"tasks": {
 		"start": "deno run -A --watch=static/,routes/ dev.ts"
 	}
