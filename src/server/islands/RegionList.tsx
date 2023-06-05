@@ -27,10 +27,12 @@ export default function RegionList({ regions }: { regions: CountryCode[] }) {
 						{' '}
 					</>
 				))}
-			({pluralWithCount(regions.length, 'region')})
-			<Button onClick={() => setExpanded(!isExpanded)}>
-				{isExpanded ? 'Collapse' : 'Expand'}
-			</Button>
+			<span class='region-count'>({pluralWithCount(regions.length, 'region')})</span>
+			{regions.length > 0 && (
+				<Button onClick={() => setExpanded(!isExpanded)}>
+					{isExpanded ? 'Collapse' : 'Expand'}
+				</Button>
+			)}
 		</div>
 	);
 }
