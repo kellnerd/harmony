@@ -2,10 +2,6 @@ body {
 	font-family: sans-serif;
 }
 
-label + input {
-	margin-left: 0.5em;
-}
-
 /* tables */
 
 table {
@@ -27,6 +23,30 @@ td ul {
 	margin: 0;
 	padding-left: 1em;
 	list-style: square;
+}
+
+/* InputWithOverlay.tsx */
+
+div.input-with-overlay {
+	position: relative;
+	display: inline-block;
+	margin: 0.2em 0.4em;
+}
+
+div.input-with-overlay > div.overlay {
+	position: absolute;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	padding-left: 0.3rem;
+	pointer-events: none;
+}
+
+div.input-with-overlay > input {
+	padding: 0.3rem;
+	padding-left: 2rem;
+	box-sizing: border-box;
+	width: 25em;
 }
 
 /* ISRC.tsx */
