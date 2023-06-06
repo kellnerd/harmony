@@ -226,7 +226,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 		const query = apiUrl.searchParams;
 
 		for (const region of preferredRegions) {
-			query.set('country', region);
+			query.set('country', region.toLowerCase());
 			apiUrl.search = query.toString();
 
 			const data = await this.fetchJSON(apiUrl) as Result<T>;
