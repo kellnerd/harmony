@@ -1,5 +1,24 @@
+:root {
+	--input-padding: 0.3rem;
+}
+
 body {
 	font-family: sans-serif;
+}
+
+.center {
+	text-align: center;
+}
+
+/* forms */
+
+input {
+	padding: var(--input-padding);
+	box-sizing: border-box;
+}
+
+input[type=text] {
+	width: 25em;
 }
 
 /* tables */
@@ -38,15 +57,12 @@ div.input-with-overlay > div.overlay {
 	height: 100%;
 	display: flex;
 	align-items: center;
-	padding-left: 0.3rem;
+	padding-left: var(--input-padding);
 	pointer-events: none;
 }
 
 div.input-with-overlay > input {
-	padding: 0.3rem;
 	padding-left: 2rem;
-	box-sizing: border-box;
-	width: 25em;
 }
 
 /* ISRC.tsx */

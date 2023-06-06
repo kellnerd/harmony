@@ -54,7 +54,7 @@ export default function Page({ data }: PageProps<Data>) {
 				<title>{release?.title ?? 'Release Lookup'} &ndash; Harmony</title>
 				<link rel='stylesheet' href='harmony.css' />
 			</Head>
-			<h2>Release Lookup</h2>
+			<h2 class='center'>Release Lookup</h2>
 			<ReleaseLookup gtin={gtin} externalUrl={externalUrl}/>
 			{errors.map((error) => <MessageBox message={{ text: error.message, type: 'error' }} />)}
 			{release && <Release release={release} />}

@@ -1,3 +1,6 @@
+import InputWithOverlay from './InputWithOverlay.tsx';
+import IconDatabaseImport from 'tabler-icons/database-import.tsx';
+
 import { createReleaseSeed, targetUrl } from '../../MusicBrainz/seeding.ts';
 import { preferArray } from 'utils/array/scalar.js';
 
@@ -11,7 +14,9 @@ export function ReleaseSeeder({ release }: { release: HarmonyRelease }) {
 			{Object.entries(seed).flatMap(([key, valueOrValues]) => {
 				return preferArray(valueOrValues).map((value) => <input type='hidden' name={key} value={value} />);
 			})}
-			<button type='submit'>Import into MusicBrainz</button>
+			<InputWithOverlay type='submit' value='Import into MusicBrainz'>
+				<IconDatabaseImport />
+			</InputWithOverlay>
 		</form>
 	);
 }
