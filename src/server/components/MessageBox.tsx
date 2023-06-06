@@ -1,3 +1,4 @@
+import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import IconAlertTriangle from 'tabler-icons/alert-triangle.tsx';
 import IconBug from 'tabler-icons/bug.tsx';
 import IconInfoCircle from 'tabler-icons/info-circle.tsx';
@@ -17,7 +18,7 @@ export function MessageBox({ message }: { message: ProviderMessage }) {
 		<div class={['message', message.type].join(' ')}>
 			{icons[message.type]}
 			{message.provider && <span class='provider'>{message.provider}:</span>}
-			{message.text}
+			<TextWithLineBreaks lines={message.text.split('\n')} />
 		</div>
 	);
 }

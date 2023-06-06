@@ -96,9 +96,9 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 				this.cleanViewUrl(skippedResults.find((result) => result.collectionId === id)!.collectionViewUrl)
 			);
 			messages.push(this.generateMessage(
-				`API also returned ${
+				`The API also returned ${
 					pluralWithCount(skippedUrls.length, 'other result, which was skipped', 'other results, which were skipped')
-				}: ${skippedUrls.join(', ')}`,
+				}:\n${skippedUrls.join('\n')}`,
 				'warning',
 			));
 		}
