@@ -21,11 +21,11 @@ export function Release({ release }: { release: HarmonyRelease }) {
 
 	return (
 		<div class='release'>
+			{info.messages.map((message) => <MessageBox message={message} />)}
 			<h2 class='release-title'>{release.title}</h2>
 			<p class='release-artist'>
 				by <ArtistCredit artists={release.artists} />
 			</p>
-			{info.messages.map((message) => <MessageBox message={message} />)}
 			<table class='release-info'>
 				<tr>
 					<th>Providers</th>

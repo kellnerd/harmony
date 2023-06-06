@@ -81,7 +81,6 @@ div.message {
 	margin: 0.5em;
 	padding: 0.3em 0.5em;
 	border-radius: 5px;
-	width: fit-content;
 }
 
 div.message svg.icon {
