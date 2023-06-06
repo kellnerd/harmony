@@ -38,29 +38,30 @@ code.isrc > span:not(:last-child)::after {
 /* MessageBox.tsx */
 
 div.message {
+	display: flex;
+	align-items: center;
 	background-color: #e3e4e8;
 	color: #414a63;
 	margin: 0.5em;
-	padding: 0.2em 0.5em;
+	padding: 0.3em 0.5em;
 	border-radius: 5px;
 	width: fit-content;
 }
 
-div.message > p {
-	margin: 0.2em 0;
-}
-div.message > p::before {
-	padding-right: 0.3em;
+div.message svg.icon {
+	height: 1em;
+	width: 1em;
+	margin-right: 0.3em;
 }
 
 div.message span.provider {
 	font-weight: bold;
-	padding-right: 0.3em;
+	margin-right: 0.3em;
 }
 
 div.message.debug {
-	background-color: #eae9fc;
-	color: #1f1cc2;
+	background-color: #eaf8ec;
+	color: #329c3b;
 }
 div.message.info {
 	background-color: #e7effd;
@@ -73,17 +74,6 @@ div.message.warning {
 div.message.error {
 	background-color: #ffe7e7;
 	color: #de0604;
-}
-
-div.message.debug > p::before {
-	content: '⚙';
-}
-div.message.info > p::before {
-	content: '🛈';
-}
-div.message.warning > p::before,
-div.message.error > p::before {
-	content: '⚠';
 }
 
 /* RegionList.tsx */

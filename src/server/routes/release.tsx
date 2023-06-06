@@ -1,5 +1,7 @@
+import { MessageBox } from '../components/MessageBox.tsx';
 import { Release } from '../components/Release.tsx';
 import { ReleaseSeeder } from '../components/ReleaseSeeder.tsx';
+
 import { getMergedReleaseByGTIN, getMergedReleaseByUrl } from '../../lookup.ts';
 import { Head } from 'fresh/runtime.ts';
 import { Handlers, PageProps } from 'fresh/server.ts';
@@ -65,7 +67,7 @@ export default function Page({ data }: PageProps<Data>) {
 				</div>
 				<button type='submit'>Lookup</button>
 			</form>
-			{errors.map((error) => <div class='message error'><p>{error.message}</p></div>)}
+			{errors.map((error) => <MessageBox message={{ text: error.message, type: 'error' }} />)}
 			{release && <Release release={release} />}
 			{release && <ReleaseSeeder release={release} />}
 		</>
