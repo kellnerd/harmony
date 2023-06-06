@@ -1,5 +1,6 @@
 import { MessageBox } from '../components/MessageBox.tsx';
 import { Release } from '../components/Release.tsx';
+import ReleaseLookup from '../components/ReleaseLookup.tsx';
 import { ReleaseSeeder } from '../components/ReleaseSeeder.tsx';
 
 import { getMergedReleaseByGTIN, getMergedReleaseByUrl } from '../../lookup.ts';
@@ -54,19 +55,7 @@ export default function Page({ data }: PageProps<Data>) {
 				<link rel='stylesheet' href='harmony.css' />
 			</Head>
 			<h2>Release Lookup</h2>
-			<form>
-				<div>
-					<label for='gtin-input'>
-						<abbr title='Global Trade Item Number'>GTIN</abbr>:
-					</label>
-					<input type='text' name='gtin' id='gtin-input' value={gtin ?? ''} />
-				</div>
-				<div>
-					<label for='url-input'>URL:</label>
-					<input type='text' name='url' id='url-input' value={externalUrl ?? ''} />
-				</div>
-				<button type='submit'>Lookup</button>
-			</form>
+			<ReleaseLookup gtin={gtin} externalUrl={externalUrl}/>
 			{errors.map((error) => <MessageBox message={{ text: error.message, type: 'error' }} />)}
 			{release && <Release release={release} />}
 			{release && <ReleaseSeeder release={release} />}
