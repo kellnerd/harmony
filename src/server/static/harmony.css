@@ -49,14 +49,13 @@ div.message {
 }
 
 div.message svg.icon {
-	height: 1em;
-	width: 1em;
+	min-width: fit-content;
 	margin-right: 0.3em;
 }
 
 div.message span.provider {
 	font-weight: bold;
-	margin-right: 0.3em;
+	margin-right: 0.5em;
 }
 
 div.message.debug {
