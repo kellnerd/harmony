@@ -23,7 +23,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '(itunes|music).apple.com',
-		pathname: String.raw`/:country(\w{2})?/album/:blurb?/:id(\d+)`,
+		pathname: String.raw`/:region(\w{2})?/album/:blurb?/:id(\d+)`,
 	});
 
 	readonly launchDate: PartialDate = {
@@ -194,6 +194,11 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 			thumbUrl: new URL(url.replace('100x100bb', '250x250bb')),
 			types,
 		};
+	}
+
+	extractReleaseRegion(url: URL): CountryCode {
+		// URLs without specified region implicitly query the US iTunes store
+		return super.extractReleaseRegion(url) ?? 'US';
 	}
 
 	extractGTINFromUrl(url: string): GTIN | undefined {

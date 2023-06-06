@@ -48,6 +48,7 @@ export abstract class MetadataProvider<RawRelease> {
 	/**
 	 * URL pattern used to check supported domains, match release URLs and extract the ID from the URL.
 	 * The pathname has to contain a named group `id`, e.g. `/release/:id`.
+	 * Optionally the pathname can also contain a named group `region` which will be used to extract the preferred region.
 	 */
 	abstract readonly supportedUrls: URLPattern;
 
@@ -68,12 +69,21 @@ export abstract class MetadataProvider<RawRelease> {
 	abstract constructReleaseApiUrl(options: RawReleaseOptions): URL | undefined;
 
 	/** Looks up the release which is identified by the given URL, GTIN/barcode or provider ID. */
-	getRelease(urlOrGtinOrId: URL | GTIN | string, options?: ReleaseOptions): Promise<HarmonyRelease> {
+	getRelease(urlOrGtinOrId: URL | GTIN | string, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
 		if (urlOrGtinOrId instanceof URL) {
 			const id = this.extractReleaseId(urlOrGtinOrId);
 			if (id === undefined) {
 				throw new ProviderError(this.name, `Could not extract ID from ${urlOrGtinOrId}`);
 			}
+
+			// prefer region of the given release URL over the standard preferences
+			const region = this.extractReleaseRegion(urlOrGtinOrId);
+			if (region) {
+				// create a deep copy, we don't want to manipulate the caller's options
+				options = { ...options };
+				options.regions = [region];
+			}
+
 			return this.getReleaseById(id, options);
 		} else if (typeof urlOrGtinOrId === 'string' && !/^\d{12,14}$/.test(urlOrGtinOrId)) {
 			return this.getReleaseById(urlOrGtinOrId, options);
@@ -126,6 +136,12 @@ export abstract class MetadataProvider<RawRelease> {
 	/** Extracts the ID from a release URL. */
 	extractReleaseId(url: URL): string | undefined {
 		return this.supportedUrls.exec(url)?.pathname.groups.id;
+	}
+
+	/** Extracts the region from a release URL (if present). */
+	extractReleaseRegion(url: URL): CountryCode | undefined {
+		// do not return an empty string in case the group was declared as optional and is missing from the result
+		return this.supportedUrls.exec(url)?.pathname.groups.region || undefined;
 	}
 
 	/** Checks whether the provider supports the domain of the given URL. */
