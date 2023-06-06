@@ -175,6 +175,7 @@ export abstract class MetadataProvider<RawRelease> {
 			providers: [{
 				name: this.name,
 				id,
+				region: lookupInfo.region,
 				url: this.constructReleaseUrl(id, lookupInfo.region),
 				apiUrl: this.constructReleaseApiUrl(options),
 			}],

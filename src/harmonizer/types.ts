@@ -139,6 +139,7 @@ export type ProviderPreferences = Partial<Record<PreferenceProperty, ProviderNam
 export type ProviderInfo = {
 	name: ProviderName;
 	id: string;
+	region?: CountryCode;
 	url: URL;
 	apiUrl?: URL;
 	/** Processing time of the provider in milliseconds, filled automatically. */
