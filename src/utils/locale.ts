@@ -1,21 +1,13 @@
 import type { ScriptFrequency } from './script.ts';
 import type { CountryCode, Language } from '../harmonizer/types.ts';
 
-const languageNames = new Intl.DisplayNames('en', {
-	type: 'language',
-	languageDisplay: 'standard',
-});
-
-const regionNames = new Intl.DisplayNames('en', {
-	type: 'region',
-});
-
-const scriptNames = new Intl.DisplayNames('en', {
-	type: 'script',
-});
+let languageNames, regionNames, scriptNames: Intl.DisplayNames;
 
 /** Gets the English display name for the region of a country code. */
 export function regionName(code: CountryCode) {
+	regionNames ??= new Intl.DisplayNames('en', {
+		type: 'region',
+	});
 	code = code.toUpperCase();
 
 	// handle special codes which are used by MusicBrainz
@@ -27,6 +19,11 @@ export function regionName(code: CountryCode) {
 
 /** Formats a language's code and its optional confidence for display. */
 export function formatLanguageConfidence({ code, confidence }: Language): string {
+	languageNames ??= new Intl.DisplayNames('en', {
+		type: 'language',
+		languageDisplay: 'standard',
+	});
+
 	let formattedLanguage = languageNames.of(code)!;
 
 	if (confidence) {
@@ -38,6 +35,10 @@ export function formatLanguageConfidence({ code, confidence }: Language): string
 
 /** Formats a script's code and frequency for display. */
 export function formatScriptFrequency({ code, frequency }: ScriptFrequency): string {
+	scriptNames ??= new Intl.DisplayNames('en', {
+		type: 'script',
+	});
+
 	return `${scriptNames.of(code)} (${percentage(frequency)}%)`;
 }
 
