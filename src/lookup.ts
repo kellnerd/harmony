@@ -4,7 +4,6 @@ import { LookupError } from './utils/errors.ts';
 import { ensureValidGTIN } from './utils/gtin.ts';
 import { formatLanguageConfidence, formatScriptFrequency } from './utils/locale.ts';
 import { detectScripts, scriptCodes } from './utils/script.ts';
-import { francAll } from 'franc';
 import lande from 'lande';
 import { zipObject } from 'utils/object/zipObject.js';
 
