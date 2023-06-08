@@ -13,7 +13,7 @@
 	"importMap": "./imports.json",
 	"tasks": {
 		"cli": "deno run --allow-net src/cli.ts",
-		"start": "deno run -A --watch=src/server/static/,src/server/routes/ src/server/dev.ts",
-		"test": "deno run --allow-net --watch src/test.ts"
+		"dev": "deno run -A --watch=src/server/static/,src/server/routes/ src/server/dev.ts",
+		"server": "DENO_DEPLOYMENT_ID=$(git rev-parse HEAD) deno run -A src/server/main.ts"
 	}
 }
