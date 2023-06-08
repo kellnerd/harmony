@@ -8,6 +8,7 @@ import { Head } from 'fresh/runtime.ts';
 import { Handlers, PageProps } from 'fresh/server.ts';
 
 import type { GTIN, HarmonyRelease, ReleaseOptions } from '../../harmonizer/types.ts';
+import type { ProviderError } from '../../utils/errors.ts';
 
 type Data = {
 	errors: Error[];
@@ -37,7 +38,9 @@ export const handler: Handlers<Data> = {
 				release = await getMergedReleaseByUrl(new URL(externalUrl), options);
 			}
 		} catch (error) {
-			if (error instanceof Error) {
+			if (error instanceof AggregateError) {
+				errors.push(error, ...error.errors);
+			} else if (error instanceof Error) {
 				errors.push(error);
 			}
 		}
@@ -55,8 +58,10 @@ export default function Page({ data }: PageProps<Data>) {
 				<link rel='stylesheet' href='harmony.css' />
 			</Head>
 			<h2 class='center'>Release Lookup</h2>
-			<ReleaseLookup gtin={gtin} externalUrl={externalUrl}/>
-			{errors.map((error) => <MessageBox message={{ text: error.message, type: 'error' }} />)}
+			<ReleaseLookup gtin={gtin} externalUrl={externalUrl} />
+			{errors.map((error) => (
+				<MessageBox message={{ provider: (error as ProviderError).providerName, text: error.message, type: 'error' }} />
+			))}
 			{release && <Release release={release} />}
 			{release && <ReleaseSeeder release={release} />}
 		</>

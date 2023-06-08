@@ -1,4 +1,5 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
+import { ProviderError } from '../utils/errors.ts';
 
 import type {
 	CountryCode,
@@ -20,22 +21,26 @@ import type {
 export function mergeRelease(
 	releaseMap: ProviderReleaseMapping,
 	preferences: ProviderPreferences | ProviderName[] = {},
-): HarmonyRelease | undefined {
+): HarmonyRelease {
 	const availableProviders: ProviderName[] = Object.entries(releaseMap)
 		.filter(([_providerName, releaseOrError]) => !(releaseOrError instanceof Error))
 		.map(([providerName]) => providerName);
 
+	const providerErrors = Object.entries(releaseMap)
+		.filter(([_providerName, releaseOrError]) => releaseOrError instanceof Error) as [ProviderName, Error][];
+
 	if (availableProviders.length === 0) {
-		return;
+		throw new AggregateError(
+			providerErrors.map(([providerName, error]) => new ProviderError(providerName, error.message)),
+			'No provider returned a release',
+		);
 	}
 
-	const errorMessages: ProviderMessage[] = Object.entries(releaseMap)
-		.filter(([_providerName, releaseOrError]) => releaseOrError instanceof Error)
-		.map(([providerName, error]) => ({
-			provider: providerName,
-			text: (error as Error).message,
-			type: 'error',
-		}));
+	const errorMessages: ProviderMessage[] = providerErrors.map(([providerName, error]) => ({
+		provider: providerName,
+		text: error.message,
+		type: 'error',
+	}));
 
 	// create an empty merge target
 	const mergedRelease: HarmonyRelease = {

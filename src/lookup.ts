@@ -49,11 +49,11 @@ export async function getProviderReleaseMapping(gtin: GTIN, options?: ReleaseOpt
 export async function getMergedReleaseByGTIN(
 	gtin: GTIN,
 	options?: ReleaseOptions,
-): Promise<HarmonyRelease | undefined> {
+): Promise<HarmonyRelease> {
 	const releaseMap = await getProviderReleaseMapping(gtin, options);
 	const release = mergeRelease(releaseMap, providerPreferences);
 
-	if (release) detectLanguageAndScript(release);
+	detectLanguageAndScript(release);
 
 	return release;
 }
@@ -62,7 +62,7 @@ export async function getMergedReleaseByGTIN(
  * Looks up the given URL with the first matching provider.
  * Then tries to find that release on other providers (by GTIN) and merges the resulting data.
  */
-export async function getMergedReleaseByUrl(url: URL, options: ReleaseOptions = {}): Promise<HarmonyRelease | undefined> {
+export async function getMergedReleaseByUrl(url: URL, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
 	const release = await getReleaseByUrl(url, options);
 
 	if (release.gtin) {
