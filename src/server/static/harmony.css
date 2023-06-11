@@ -1,9 +1,18 @@
 :root {
 	--input-padding: 0.3rem;
+	--heading-margin-bottom: 1rem;
 }
 
 body {
 	font-family: sans-serif;
+}
+
+h1 {
+	margin-bottom: var(--heading-margin-bottom);
+}
+
+h1 + p.subtitle {
+	margin-top: calc(-1 * var(--heading-margin-bottom));
 }
 
 .center {
