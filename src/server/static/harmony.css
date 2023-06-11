@@ -5,6 +5,14 @@
 
 body {
 	font-family: sans-serif;
+	display: flex;
+	flex-direction: column;
+	margin: 0 1em;
+	min-height: 100vh;
+}
+main {
+	/* push everything after the main content (i.e. the footer) to the bottom of the viewport */
+	flex-grow: 1;
 }
 
 h1 {

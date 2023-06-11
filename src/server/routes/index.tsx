@@ -1,3 +1,4 @@
+import Footer from '../components/Footer.tsx';
 import { MessageBox } from '../components/MessageBox.tsx';
 import ReleaseLookup from '../components/ReleaseLookup.tsx';
 
@@ -15,9 +16,12 @@ export default function Home() {
 				<h1>Harmony</h1>
 				<p class='subtitle'>Music Metadata Aggregator and MusicBrainz Importer</p>
 			</header>
-			<MessageBox message={{ text: `Supported providers: ${providerNames.join(', ')}`, type: 'info' }} />
-			<h2 class='center'>Release Lookup</h2>
-			<ReleaseLookup formAction='release' />
+			<main>
+				<MessageBox message={{ text: `Supported providers: ${providerNames.join(', ')}`, type: 'info' }} />
+				<h2 class='center'>Release Lookup</h2>
+				<ReleaseLookup formAction='release' />
+			</main>
+			<Footer />
 		</>
 	);
 }

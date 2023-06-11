@@ -1,3 +1,4 @@
+import Footer from '../components/Footer.tsx';
 import { MessageBox } from '../components/MessageBox.tsx';
 import { Release } from '../components/Release.tsx';
 import ReleaseLookup from '../components/ReleaseLookup.tsx';
@@ -57,13 +58,22 @@ export default function Page({ data }: PageProps<Data>) {
 				<title>{release?.title ?? 'Release Lookup'} &ndash; Harmony</title>
 				<link rel='stylesheet' href='harmony.css' />
 			</Head>
-			<h2 class='center'>Release Lookup</h2>
-			<ReleaseLookup gtin={gtin} externalUrl={externalUrl} />
-			{errors.map((error) => (
-				<MessageBox message={{ provider: (error as ProviderError).providerName, text: error.message, type: 'error' }} />
-			))}
-			{release && <Release release={release} />}
-			{release && <ReleaseSeeder release={release} />}
+			<main>
+				<h2 class='center'>Release Lookup</h2>
+				<ReleaseLookup gtin={gtin} externalUrl={externalUrl} />
+				{errors.map((error) => (
+					<MessageBox
+						message={{
+							provider: (error as ProviderError).providerName,
+							text: error.message,
+							type: 'error',
+						}}
+					/>
+				))}
+				{release && <Release release={release} />}
+				{release && <ReleaseSeeder release={release} />}
+			</main>
+			<Footer />
 		</>
 	);
 }
