@@ -23,7 +23,7 @@ if (args._.length === 1) {
 		withSeparateMedia: args['multi-disc'],
 	};
 
-	let release: HarmonyRelease | undefined;
+	let release: HarmonyRelease;
 
 	if (specifier instanceof URL) {
 		release = await getReleaseByUrl(specifier, releaseOptions);
@@ -31,11 +31,11 @@ if (args._.length === 1) {
 		release = await getMergedReleaseByGTIN(specifier, releaseOptions);
 	}
 
-	if (args.seed && release) {
+	if (args.seed) {
 		console.log(createReleaseSeed(release));
 	} else {
 		console.log(JSON.stringify(release));
 	}
 } else {
-	console.info('Usage: deno task cli <barcode | url> [--isrc] [--multi-disc]');
+	console.info('Usage: deno task cli <barcode | url> [--isrc] [--multi-disc] [--seed]');
 }
