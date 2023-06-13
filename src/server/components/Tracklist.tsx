@@ -1,6 +1,6 @@
 import { ArtistCredit } from './ArtistCredit.tsx';
 import { ISRC } from './ISRC.tsx';
-import { plural } from '../../utils/plural.ts';
+import { pluralWithCount } from '../../utils/plural.ts';
 import { flagEmoji } from '../../utils/regions.ts';
 import { formatDuration } from '../../utils/time.ts';
 
@@ -16,7 +16,8 @@ export function Tracklist({ medium, showTitle = false }: Props) {
 		<table class='tracklist'>
 			{showTitle && (
 				<caption>
-					{medium.format ?? 'Medium'} {medium.number}{medium.title && `: ${medium.title}`}
+					{medium.format ?? 'Medium'} {medium.number}
+					{medium.title && `: ${medium.title}`}
 				</caption>
 			)}
 			<thead>
@@ -42,7 +43,9 @@ export function Tracklist({ medium, showTitle = false }: Props) {
 						</td>
 						{regions && (
 							<td>
-								<abbr title={regions.map(flagEmoji).join(' ')}>{regions.length}</abbr> {plural(regions.length, 'region')}
+								<span class='label'>
+									<abbr title={regions.map(flagEmoji).join(' ')}>{pluralWithCount(regions.length, 'region')}</abbr>
+								</span>
 							</td>
 						)}
 					</tr>

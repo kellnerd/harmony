@@ -1,6 +1,8 @@
 :root {
 	--input-padding: 0.3rem;
 	--heading-margin-bottom: 1rem;
+	--color-dark: #414a63;
+	--color-light: #e3e4e8;
 }
 
 body {
@@ -25,6 +27,23 @@ h1 + p.subtitle {
 
 .center {
 	text-align: center;
+}
+
+a.label, span.label {
+	display: inline-flex;
+	align-items: center;
+	margin-left: 0.4em;
+	padding: 0.4em;
+	border-radius: 0.2em;
+	font-size: 0.8em;
+	line-height: 0.8em;
+	white-space: nowrap;
+	background-color: var(--color-dark);
+	color: #ffffff;
+}
+a.label {
+	text-decoration: none;
+	background-color: #209cee;
 }
 
 /* forms */
@@ -93,8 +112,8 @@ code.isrc > span:not(:last-child)::after {
 div.message {
 	display: flex;
 	align-items: center;
-	background-color: #e3e4e8;
-	color: #414a63;
+	background-color: var(--color-light);
+	color: var(--color-dark);
 	margin: 0.5em;
 	padding: 0.3em 0.5em;
 	border-radius: 5px;
@@ -131,9 +150,6 @@ div.message.error {
 
 div.region-list > button {
 	margin: 0 0.3em;
-}
-span.region-count {
-	margin-left: 1em;
 }
 
 /* Release.tsx */
