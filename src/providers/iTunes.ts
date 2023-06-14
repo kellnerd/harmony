@@ -118,6 +118,13 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 
 		if (!gtin) {
 			messages.push(this.generateMessage('Failed to extract GTIN from artwork URL', 'warning'));
+		} else if (lookupInfo.method === 'gtin' && gtin !== lookupInfo.value) {
+			messages.push(this.generateMessage(
+				`Extracted GTIN ${gtin} (from artwork URL) does not match the looked up value ${lookupInfo.value}`,
+				'error',
+			));
+		} else {
+			messages.push(this.generateMessage(`Successfully extracted GTIN ${gtin} from artwork URL`));
 		}
 
 		return {
