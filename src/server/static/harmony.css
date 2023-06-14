@@ -29,10 +29,17 @@ h1 + p.subtitle {
 	text-align: center;
 }
 
+.ml-1 {
+	margin-left: 0.25em;
+}
+
+.ml-2 {
+	margin-left: 0.5em;
+}
+
 a.label, span.label {
 	display: inline-flex;
 	align-items: center;
-	margin-left: 0.4em;
 	padding: 0.4em;
 	border-radius: 0.2em;
 	font-size: 0.8em;

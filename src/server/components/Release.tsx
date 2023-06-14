@@ -34,8 +34,8 @@ export function Release({ release }: { release: HarmonyRelease }) {
 							{info.providers.map((provider) => (
 								<li>
 									{provider.name}: <a href={provider.url.href} target='_blank'>{provider.id}</a>
-									{provider.apiUrl && <a class='label' href={provider.apiUrl.href} target='_blank'>API</a>}
-									{provider.processingTime && <span class='label'>{provider.processingTime.toFixed(0)} ms</span>}
+									{provider.apiUrl && <a class='label ml-2' href={provider.apiUrl.href} target='_blank'>API</a>}
+									{provider.processingTime && <span class='label ml-2'>{provider.processingTime.toFixed(0)} ms</span>}
 								</li>
 							))}
 						</ul>
@@ -73,7 +73,7 @@ export function Release({ release }: { release: HarmonyRelease }) {
 							{release.externalLinks.map((link) => (
 								<li>
 									<a href={link.url.href}>{link.url.hostname}</a>
-									{link.types?.map((type) => <span class='label'>{type}</span>)}
+									{link.types?.map((type) => <span class='label ml-1'>{type}</span>)}
 								</li>
 							))}
 						</ul>
