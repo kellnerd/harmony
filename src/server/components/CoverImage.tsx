@@ -11,7 +11,11 @@ export function CoverImage({ artwork }: { artwork: Artwork }) {
 			<a href={artwork.url.href} target='_blank'>
 				<img src={artwork.thumbUrl?.href ?? artwork.url.href} alt={description} title={description} />
 			</a>
-			<figcaption>{artwork.url.hostname} &ndash; {description}</figcaption>
+			<figcaption>
+				{artwork.comment}
+				{artwork.types?.map((type) => <span class='label'>Type: {type}</span>)}
+				<span class='label'>Source: {artwork.url.hostname}</span>
+			</figcaption>
 		</figure>
 	);
 }

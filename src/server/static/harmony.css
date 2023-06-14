@@ -80,6 +80,19 @@ td ul {
 	list-style: square;
 }
 
+/* CoverImage.tsx */
+
+figure.cover-image {
+	width: min-content;
+}
+
+figure.cover-image > figcaption {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25em;
+	justify-content: center;
+}
+
 /* InputWithOverlay.tsx */
 
 div.input-with-overlay {
