@@ -12,3 +12,10 @@ export type FunctionSpec<T extends (...args: any) => any> = Array<[
 	...params: Parameters<T>,
 	expected: ReturnType<T>,
 ]>;
+
+/** Test specification with tuples of description, parameters and expected error message for the function to test. */
+export type ThrowSpec<T extends (...args: any) => any> = Array<[
+	description: string,
+	...params: Parameters<T>,
+	messageIncludes: string,
+]>;
