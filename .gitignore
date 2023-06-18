@@ -1,9 +1,3 @@
-# NPM
-node_modules/
-
-# compiled JS modules and generated type declarations
-lib/
-
 # IDE configuration files
 .vscode/
 
