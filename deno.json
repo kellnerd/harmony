@@ -4,11 +4,9 @@
 		"jsxImportSource": "preact"
 	},
 	"fmt": {
-		"options": {
-			"lineWidth": 120,
-			"singleQuote": true,
-			"useTabs": true
-		}
+		"lineWidth": 120,
+		"singleQuote": true,
+		"useTabs": true
 	},
 	"imports": {
 		"fresh/": "https://deno.land/x/fresh@1.2.0/",
