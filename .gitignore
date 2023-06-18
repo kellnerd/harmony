@@ -3,3 +3,6 @@
 
 # Deno
 deno.lock
+
+# dotenv environment variable files
+.env
