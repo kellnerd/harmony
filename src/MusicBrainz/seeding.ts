@@ -77,6 +77,7 @@ export function convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditS
 	};
 }
 
+// deno-lint-ignore no-unused-vars
 function convertLinkType(linkType: LinkType, url?: URL): UrlLinkTypeId | undefined {
 	switch (linkType) {
 		case 'free streaming':
