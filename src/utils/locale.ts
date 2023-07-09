@@ -1,7 +1,7 @@
 import type { ScriptFrequency } from './script.ts';
 import type { CountryCode, Language } from '../harmonizer/types.ts';
 
-let languageNames, regionNames, scriptNames: Intl.DisplayNames;
+let languageNames: Intl.DisplayNames, regionNames: Intl.DisplayNames, scriptNames: Intl.DisplayNames;
 
 /** Gets the English display name for the region of a country code. */
 export function regionName(code: CountryCode) {
