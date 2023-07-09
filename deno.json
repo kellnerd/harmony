@@ -5,6 +5,7 @@
 	},
 	"fmt": {
 		"lineWidth": 120,
+		"proseWrap": "preserve",
 		"singleQuote": true,
 		"useTabs": true
 	},
