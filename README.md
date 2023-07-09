@@ -33,3 +33,16 @@ deno task cli
 
 [Deno]: https://deno.com/runtime
 [fresh]: https://fresh.deno.dev/
+
+## Contributing
+
+Your contributions are welcome, be it code, documentation or feedback.
+
+If you want to contribute a bigger feature, please open a discussion first to be sure that your idea will be accepted.
+
+Before submitting your changes, please make sure that they are properly formatted and pass the linting rules:
+
+```sh
+deno fmt --check
+deno lint
+```
