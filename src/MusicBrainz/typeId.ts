@@ -62,6 +62,7 @@ export const secondaryTypeIds = {
 	'Compilation': 1,
 	'Demo': 10,
 	'DJ-mix': 8,
+	'Field recording': 12,
 	'Interview': 4,
 	'Live': 6,
 	'Mixtape/Street': 9,
