@@ -247,7 +247,8 @@ export function getSourceImage(url: string) {
 	imageUrl.pathname = imageUrl.pathname.replace(/^\/image\/thumb\//, '/us/r1000/063/');
 
 	const pathComponents = imageUrl.pathname.split('/');
-	if (pathComponents.length === 12) {
+	const penultimate = pathComponents[pathComponents.length - 2];
+	if (penultimate === 'source' || /\.(jpe?g|png|tiff?)$/.test(penultimate)) {
 		// drop trailing path component which did the image conversion
 		imageUrl.pathname = pathComponents.slice(0, -1).join('/');
 	}
