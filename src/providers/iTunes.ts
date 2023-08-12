@@ -189,18 +189,8 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 	}
 
 	private processImage(url: string, types?: ArtworkType[]): Artwork {
-		// transform image URL to point to the source image in its original resolution
-		const imageUrl = new URL(url);
-		imageUrl.hostname = 'a1.mzstatic.com';
-		imageUrl.pathname = imageUrl.pathname.replace(/^\/image\/thumb\//, '/us/r1000/063/');
-		const pathComponents = imageUrl.pathname.split('/');
-		if (pathComponents.length === 12) {
-			// drop trailing path component which did the image conversion
-			imageUrl.pathname = pathComponents.slice(0, -1).join('/');
-		}
-
 		return {
-			url: imageUrl,
+			url: getSourceImage(url),
 			thumbUrl: new URL(url.replace('100x100bb', '250x250bb')),
 			types,
 		};
@@ -248,6 +238,21 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 
 		throw new ResponseError(this.name, 'API returned no results', apiUrl!);
 	}
+}
+
+/** Transform Apple image URL to point to the source image in its original resolution. */ 
+export function getSourceImage(url: string) {
+	const imageUrl = new URL(url);
+	imageUrl.hostname = 'a1.mzstatic.com';
+	imageUrl.pathname = imageUrl.pathname.replace(/^\/image\/thumb\//, '/us/r1000/063/');
+
+	const pathComponents = imageUrl.pathname.split('/');
+	if (pathComponents.length === 12) {
+		// drop trailing path component which did the image conversion
+		imageUrl.pathname = pathComponents.slice(0, -1).join('/');
+	}
+
+	return imageUrl;
 }
 
 type Result<T> = {
