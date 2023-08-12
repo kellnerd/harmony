@@ -256,7 +256,7 @@ export function getSourceImage(url: string) {
 	return imageUrl;
 }
 
-type Result<T> = {
+export type Result<T> = {
 	resultCount: number;
 	results: Array<T>;
 	/** Custom property to remember the successfully queried region of the API. */
@@ -265,7 +265,18 @@ type Result<T> = {
 
 type ReleaseResult = Result<Collection | Track>;
 
-type Collection = {
+export type Artist = {
+	wrapperType: 'artist';
+	artistType: 'Artist';
+	artistName: string;
+	artistLinkUrl: string;
+	artistId: number;
+	amgArtistId: number;
+	primaryGenreName: string;
+	primaryGenreId: number;
+};
+
+export type Collection = {
 	wrapperType: 'collection';
 	collectionType: 'Album';
 	artistId: number;
@@ -289,7 +300,7 @@ type Collection = {
 	primaryGenreName: string;
 };
 
-type Track = {
+export type Track = {
 	wrapperType: 'track';
 	kind: Kind;
 	artistId: number;
