@@ -18,6 +18,8 @@ import type {
 	RawResult,
 } from '../harmonizer/types.ts';
 
+// See https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI
+
 export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 	readonly name = 'iTunes';
 
@@ -46,6 +48,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 		const lookupUrl = new URL('lookup', this.apiBaseUrl);
 		const query = new URLSearchParams({
 			entity: 'song', // include tracks of the release in the response
+			limit: '200', // number of returned entities (default: 50; maximum: 200)
 		});
 
 		if (lookup.method === 'gtin') {
