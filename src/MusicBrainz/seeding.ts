@@ -31,8 +31,6 @@ export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 		packaging: release.packaging,
 		mediums: release.media.map((medium) => ({
 			format: medium.format,
-			// Unknown field: mediums.0.position ...despite documentation for it
-			// position: medium.number,
 			name: medium.title,
 			track: medium.tracklist.map((track) => ({
 				name: track.title,
@@ -195,11 +193,6 @@ type ReleaseSeed =
 			Partial<{
 				/** Any valid medium format name. The possible values are the names of the medium formats, in English (see the documentation). */
 				format: string;
-				/**
-				 * The position of this medium in the list of mediums.
-				 * If omitted, it will be inferred from the order of all mediums passed in (which is normally what you want).
-				 */
-				position: number;
 				/** The name of the medium (for example “Live & Unreleased”). */
 				name: string;
 
