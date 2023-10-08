@@ -31,8 +31,8 @@ There is also a small command line app which can be used for testing:
 deno task cli
 ```
 
-[Deno]: https://deno.com/runtime
-[fresh]: https://fresh.deno.dev/
+[Deno]: https://deno.com
+[fresh]: https://fresh.deno.dev
 
 ## Contributing
 
