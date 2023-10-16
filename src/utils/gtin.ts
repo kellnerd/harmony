@@ -52,3 +52,18 @@ export function checkDigit(gtin: GTIN) {
 
 	return (10 - checksum(gtin) % 10) % 10;
 }
+
+/**
+ * Compares two GTINs and returns whether they are identical.
+ * Unless `strict` mode is enabled, leading zeros are ignored.
+ */
+export function isEqualGTIN(a: GTIN, b: GTIN, {strict = false} = {}): boolean {
+	a = a.toString();
+	b = b.toString();
+	
+	if (strict) {
+		return a === b;
+	} else {
+		return Number(a) === Number(b);
+	}
+}
