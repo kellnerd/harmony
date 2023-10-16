@@ -1,7 +1,7 @@
 import { DurationPrecision, MetadataProvider } from './abstract.ts';
 import { parseISODateTime, PartialDate } from '../utils/date.ts';
 import { ResponseError } from '../utils/errors.ts';
-import { isValidGTIN } from '../utils/gtin.ts';
+import { isEqualGTIN, isValidGTIN } from '../utils/gtin.ts';
 import { pluralWithCount } from '../utils/plural.ts';
 
 import type {
@@ -121,7 +121,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 
 		if (!gtin) {
 			messages.push(this.generateMessage('Failed to extract GTIN from artwork URL', 'warning'));
-		} else if (lookupInfo.method === 'gtin' && gtin !== lookupInfo.value) {
+		} else if (lookupInfo.method === 'gtin' && !isEqualGTIN(gtin, lookupInfo.value)) {
 			messages.push(this.generateMessage(
 				`Extracted GTIN ${gtin} (from artwork URL) does not match the looked up value ${lookupInfo.value}`,
 				'error',
