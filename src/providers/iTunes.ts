@@ -202,7 +202,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 	}
 
 	extractGTINFromUrl(url: string): GTIN | undefined {
-		const gtinCandidate = url.match(/\b\d{12,14}\b/)?.[0];
+		const gtinCandidate = url.match(/(?<!\d)\d{12,14}(?!\d)/)?.[0];
 		if (gtinCandidate && isValidGTIN(gtinCandidate)) {
 			return gtinCandidate;
 		}
