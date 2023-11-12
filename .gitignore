@@ -4,5 +4,8 @@
 # Deno
 deno.lock
 
+# Fresh build directory
+_fresh/
+
 # dotenv environment variable files
 .env

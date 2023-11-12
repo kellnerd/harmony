@@ -7,7 +7,7 @@
 Most modules of this TypeScript codebase use web standards and should be able to run in modern browsers and other JavaScript runtimes.
 Only the [fresh] server app and the CLI were written specifically for [Deno].
 
-The following instructions assume that you have Deno 1.33 or later installed.
+The following instructions assume that you have Deno 1.35 or later installed.
 
 You can start a local development server with the following command:
 
