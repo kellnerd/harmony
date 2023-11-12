@@ -240,7 +240,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 	}
 }
 
-/** Transform Apple image URL to point to the source image in its original resolution. */ 
+/** Transform Apple image URL to point to the source image in its original resolution. */
 export function getSourceImage(url: string) {
 	const imageUrl = new URL(url);
 	imageUrl.hostname = 'a1.mzstatic.com';

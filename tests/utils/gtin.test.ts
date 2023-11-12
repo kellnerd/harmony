@@ -91,7 +91,7 @@ describe('GTIN comparison', () => {
 			assertFalse(isEqualGTIN(a, b, { strict: true }));
 		});
 	});
-	
+
 	notEqualCases.forEach(([description, a, b]) => {
 		it(`classifies ${description} as not equal`, () => {
 			assertFalse(isEqualGTIN(a, b));
