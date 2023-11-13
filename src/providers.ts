@@ -1,16 +1,17 @@
 import DeezerProvider from './providers/Deezer.ts';
 import iTunesProvider from './providers/iTunes.ts';
 
+import { SnapStorage } from 'snap-storage';
+
 import type { ProviderPreferences } from './harmonizer/types.ts';
 import type { MetadataProvider } from './providers/abstract.ts';
 
-const cacheName = 'providers-v1';
-const cache = await caches.open(cacheName);
+const snaps = new SnapStorage();
 
 export const providers: MetadataProvider<unknown>[] = [
 	DeezerProvider,
 	iTunesProvider,
-].map((Provider) => new Provider({ cache }));
+].map((Provider) => new Provider({ snaps }));
 
 export const providerNames = providers.map((provider) => provider.name);
 

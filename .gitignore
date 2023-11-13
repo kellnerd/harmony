@@ -9,3 +9,7 @@ _fresh/
 
 # dotenv environment variable files
 .env
+
+# Harmony snapshots
+snaps.db
+snaps/

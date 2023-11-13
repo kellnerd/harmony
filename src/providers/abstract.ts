@@ -14,6 +14,7 @@ import type {
 	ReleaseOptions,
 } from '../harmonizer/types.ts';
 import type { PartialDate } from '../utils/date.ts';
+import type { SnapStorage } from 'snap-storage';
 import type { MaybePromise } from 'utils/types.d.ts';
 
 export type ProviderOptions = Partial<{
@@ -21,8 +22,8 @@ export type ProviderOptions = Partial<{
 	rateLimitInterval: number | null;
 	/** Maximum number of requests within the interval. */
 	concurrentRequests: number;
-	/** Cache which will be used for requests (optional). */
-	cache: Cache;
+	/** Storage which will be used to cache requests (optional). */
+	snaps: SnapStorage;
 }>;
 
 /**
@@ -33,9 +34,9 @@ export abstract class MetadataProvider<RawRelease> {
 	constructor({
 		rateLimitInterval = null,
 		concurrentRequests = 1,
-		cache,
+		snaps,
 	}: ProviderOptions = {}) {
-		this.cache = cache;
+		this.snaps = snaps;
 
 		if (rateLimitInterval && rateLimitInterval > 0) {
 			this.fetch = rateLimit(fetch, rateLimitInterval, concurrentRequests);
@@ -197,28 +198,26 @@ export abstract class MetadataProvider<RawRelease> {
 		return release;
 	}
 
-	protected cache: Cache | undefined;
+	protected snaps: SnapStorage | undefined;
 
 	protected fetch = fetch;
 
-	protected async fetchJSON(input: RequestInfo | URL, init?: RequestInit) {
-		let response: Response | undefined;
+	protected async fetchJSON(input: string | URL, init?: RequestInit) {
+		let response: Response;
 
-		try {
-			response = await this.cache?.match(input);
-		} catch (error) {
-			console.warn(this.name, 'cache match error:', error instanceof Error ? error.message : error);
-		}
-
-		if (!response) {
+		if (this.snaps) {
+			const snap = await this.snaps.cache(input, {
+				fetch: this.fetch,
+				requestInit: init,
+				policy: {
+					maxAge: 60 * 60 * 24, // 24 hours
+				},
+			});
+			response = snap.content;
+			console.debug(snap.isFresh ? 'Fetched' : 'Cached', new Date(snap.timestamp * 1000), input.toString());
+		} else {
 			response = await this.fetch(input, init);
 			console.debug('Fetched:', input.toString());
-
-			if (this.cache && response.ok) {
-				this.cache.put(input, response.clone());
-			}
-		} else {
-			console.debug('Cached:', input.toString());
 		}
 
 		return response.json();
