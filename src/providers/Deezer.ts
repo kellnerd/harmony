@@ -1,4 +1,4 @@
-import { DurationPrecision, MetadataProvider, ProviderOptions, ReleaseLookup } from './abstract.ts';
+import { DurationPrecision, ExtractRelease, MetadataProvider, ProviderOptions, ReleaseLookup } from './abstract.ts';
 import { availableRegions } from './regions/Deezer.ts';
 import { parseHyphenatedDate, PartialDate } from '../utils/date.ts';
 import { ResponseError } from '../utils/errors.ts';
@@ -31,6 +31,8 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 	});
 
 	readonly availableRegions = availableRegions;
+
+	readonly releaseLookup = DeezerReleaseLookup;
 
 	readonly launchDate: PartialDate = {
 		year: 2007,
@@ -224,7 +226,11 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 	}
 }
 
-export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider> {
+// TODO: Why does this sometimes evaluate to `Release` and sometimes to `never`!?
+type Test = ExtractRelease<DeezerProvider>;
+
+// We have to specify the second generic parameter `Release` because of the above "bug"
+export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'www.deezer.com',

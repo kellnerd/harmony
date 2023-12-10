@@ -28,6 +28,8 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 		pathname: String.raw`/:region(\w{2})?/album/:blurb?/:id(\d+)`,
 	});
 
+	readonly releaseLookup = iTunesReleaseLookup;
+
 	readonly launchDate: PartialDate = {
 		year: 2003,
 		month: 4,
@@ -240,7 +242,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 	}
 }
 
-export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider> {
+export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseResult> {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '(itunes|music).apple.com',

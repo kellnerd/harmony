@@ -53,6 +53,8 @@ export abstract class MetadataProvider<RawRelease> {
 	 */
 	abstract readonly supportedUrls: URLPattern;
 
+	abstract readonly releaseLookup: ReleaseLookupConstructor<RawRelease>;
+
 	/** Country codes of regions in which the provider offers its services (optional). */
 	readonly availableRegions: CountryCode[] = [];
 
@@ -226,7 +228,9 @@ export abstract class MetadataProvider<RawRelease> {
 
 type AnyProvider = MetadataProvider<any>;
 
-type ExtractRelease<Provider extends AnyProvider> = Provider extends MetadataProvider<infer Release> ? Release: never;
+export type ExtractRelease<Provider extends AnyProvider> = Provider extends MetadataProvider<infer Release> ? Release : never;
+
+type ReleaseLookupConstructor<RawRelease> = new (...args: any[]) => ReleaseLookup<MetadataProvider<RawRelease>>;
 
 export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = ExtractRelease<Provider>> {
 	constructor(
