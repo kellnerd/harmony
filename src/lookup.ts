@@ -28,7 +28,7 @@ export function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<Har
 export async function getProviderReleaseMapping(gtin: GTIN, options?: ReleaseOptions): Promise<ProviderReleaseMapping> {
 	ensureValidGTIN(gtin);
 
-	const releasePromises = providers.map((provider) => provider.getReleaseByGTIN(gtin, options));
+	const releasePromises = providers.map((provider) => provider.getRelease(gtin, options));
 	const releaseResults = await Promise.allSettled(releasePromises);
 	const releasesOrErrors: Array<HarmonyRelease | Error> = releaseResults.map((result) => {
 		if (result.status === 'fulfilled') {
