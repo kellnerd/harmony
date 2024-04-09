@@ -14,7 +14,6 @@ import type {
 	HarmonyRelease,
 	LinkType,
 	ProviderMessage,
-	RawReleaseOptions,
 	RawResult,
 } from '../harmonizer/types.ts';
 
@@ -76,7 +75,8 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 		return new URL([region.toLowerCase(), 'album', id].join('/'), 'https://music.apple.com');
 	}
 
-	constructReleaseApiUrl({ lookup }: RawReleaseOptions): URL | undefined {
+	constructReleaseApiUrl(): URL {
+		const { lookup } = this.options;
 		const lookupUrl = new URL('lookup', this.provider.apiBaseUrl);
 		const query = new URLSearchParams({
 			entity: 'song', // include tracks of the release in the response
@@ -97,14 +97,14 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 		return lookupUrl;
 	}
 
-	protected async getRawRelease(options: RawReleaseOptions): Promise<RawResult<ReleaseResult>> {
-		const apiUrl = this.constructReleaseApiUrl(options)!;
-		const data = await this.provider.query(apiUrl, options?.regions) as ReleaseResult;
+	protected async getRawRelease(): Promise<RawResult<ReleaseResult>> {
+		const apiUrl = this.constructReleaseApiUrl();
+		const data = await this.provider.query(apiUrl, this.options.regions) as ReleaseResult;
 
 		return {
 			data,
 			lookupInfo: {
-				...options.lookup,
+				...this.options.lookup,
 				region: data.region, // the region which has actually been used successfully
 			},
 		};
@@ -112,7 +112,6 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 
 	protected convertRawRelease(
 		{ data, lookupInfo }: RawResult<ReleaseResult>,
-		options: RawReleaseOptions,
 	): HarmonyRelease {
 		const messages: ProviderMessage[] = [];
 
@@ -176,7 +175,7 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 			packaging: 'None',
 			images: [this.processImage(collection.artworkUrl100, ['front'])],
 			copyright: collection.copyright,
-			info: this.generateReleaseInfo({ id: collection.collectionId.toString(), lookupInfo, messages, options }),
+			info: this.generateReleaseInfo({ id: collection.collectionId.toString(), lookupInfo, messages }),
 		};
 	}
 

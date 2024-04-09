@@ -8,7 +8,6 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	HarmonyTrack,
-	RawReleaseOptions,
 	RawResult,
 } from '../harmonizer/types.ts';
 
@@ -72,20 +71,21 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 		return new URL(id, 'https://www.deezer.com/album/');
 	}
 
-	constructReleaseApiUrl({ lookup }: RawReleaseOptions): URL | undefined {
+	constructReleaseApiUrl(): URL {
+		const { lookup } = this.options;
 		if (lookup.method === 'gtin') {
 			return new URL(`album/upc:${lookup.value}`, this.provider.apiBaseUrl);
-		} else if (lookup.method === 'id') {
+		} else /* if (lookup.method === 'id') */ {
 			return new URL(`album/${lookup.value}`, this.provider.apiBaseUrl);
 		}
 	}
 
-	protected async getRawRelease(options: RawReleaseOptions): Promise<RawResult<Release>> {
-		const apiUrl = this.constructReleaseApiUrl(options)!;
+	protected async getRawRelease(): Promise<RawResult<Release>> {
+		const apiUrl = this.constructReleaseApiUrl();
 
 		return {
 			data: await this.provider.query(apiUrl),
-			lookupInfo: options.lookup,
+			lookupInfo: this.options.lookup,
 		};
 	}
 
@@ -108,12 +108,11 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 
 	protected async convertRawRelease(
 		{ data: rawRelease, lookupInfo }: RawResult<Release>,
-		options: RawReleaseOptions,
 	): Promise<HarmonyRelease> {
 		const id = rawRelease.id.toString();
-		const needToFetchIndividualTracks = options.withAllTrackArtists || options.withAvailability || false;
+		const needToFetchIndividualTracks = this.options.withAllTrackArtists || this.options.withAvailability || false;
 		const needToFetchDetailedTracklist = !needToFetchIndividualTracks &&
-			(options.withSeparateMedia || options.withISRC || false);
+			(this.options.withSeparateMedia || this.options.withISRC || false);
 
 		let rawTracklist: Array<ReleaseTrack | TracklistItem | Track>;
 		let media: HarmonyMedium[];
@@ -163,7 +162,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 				types: ['front'],
 			}],
 			availableIn: this.determineAvailability(media),
-			info: this.generateReleaseInfo({ id, lookupInfo, options }),
+			info: this.generateReleaseInfo({ id, lookupInfo }),
 		};
 	}
 
