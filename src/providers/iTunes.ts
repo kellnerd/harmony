@@ -212,10 +212,10 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 		return media;
 	}
 
-	private convertRawArtist(name: string, url: string): ArtistCreditName {
+	private convertRawArtist(name: string, url?: string): ArtistCreditName {
 		return {
 			name,
-			externalLink: this.cleanViewUrl(url),
+			externalLink: url ? this.cleanViewUrl(url) : undefined,
 		};
 	}
 
@@ -294,7 +294,8 @@ export type Collection = {
 	artistName: string;
 	collectionName: string;
 	collectionCensoredName: string;
-	artistViewUrl: string;
+	// Various artists have no URL
+	artistViewUrl?: string;
 	collectionViewUrl: string;
 	artworkUrl60: string;
 	artworkUrl100: string;
