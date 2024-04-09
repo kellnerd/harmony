@@ -18,6 +18,8 @@ type Data = {
 	externalUrl: string | null;
 };
 
+const DEV = !Deno.env.get('DENO_DEPLOYMENT_ID');
+
 export const handler: Handlers<Data> = {
 	async GET(req, ctx) {
 		const url = new URL(req.url);
@@ -39,6 +41,10 @@ export const handler: Handlers<Data> = {
 				release = await getMergedReleaseByUrl(new URL(externalUrl), options);
 			}
 		} catch (error) {
+			if (DEV) {
+				// Show more details during development.
+				throw error;
+			}
 			if (error instanceof AggregateError) {
 				errors.push(error, ...error.errors);
 			} else if (error instanceof Error) {
