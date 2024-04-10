@@ -108,6 +108,7 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 	protected convertRawRelease(data: ReleaseResult): HarmonyRelease {
 		// API also returns other release variants for GTIN lookups, only use the first collection result
 		const collection = data.results.find((result) => result.wrapperType === 'collection') as Collection;
+		this.id = collection.collectionId.toString();
 		const tracks = data.results.filter((result) =>
 			// skip bonus items (e.g. booklets or videos)
 			result.wrapperType === 'track' && result.kind === 'song' && result.collectionId === collection.collectionId
@@ -167,7 +168,7 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 			packaging: 'None',
 			images: [this.processImage(collection.artworkUrl100, ['front'])],
 			copyright: collection.copyright,
-			info: this.generateReleaseInfo({ id: collection.collectionId.toString() }),
+			info: this.generateReleaseInfo(),
 		};
 	}
 

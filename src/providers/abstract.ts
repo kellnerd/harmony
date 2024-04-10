@@ -152,6 +152,9 @@ export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = E
 	/** Release lookup options. */
 	protected options: RawReleaseOptions;
 
+	/** Provider ID of the currently looked up release (initially undefined). */
+	protected id: string | undefined;
+
 	/** Constructs a canonical release URL for the given provider ID (and optional region). */
 	abstract constructReleaseUrl(id: string, region?: CountryCode): URL;
 
@@ -208,17 +211,18 @@ export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = E
 
 	private messages: ProviderMessage[] = [];
 
-	protected generateReleaseInfo({ id }: {
-		id: string;
-	}): ReleaseInfo {
+	protected generateReleaseInfo(): ReleaseInfo {
 		const { region } = this.options.lookup;
+		if (!this.id) {
+			throw new ProviderError(this.provider.name, 'Release info can only be generated with a defined provider ID');
+		}
 
 		return {
 			providers: [{
 				name: this.provider.name,
-				id,
+				id: this.id,
 				region: region,
-				url: this.constructReleaseUrl(id, region),
+				url: this.constructReleaseUrl(this.id, region),
 				apiUrl: this.constructReleaseApiUrl(),
 			}],
 			messages: this.messages,

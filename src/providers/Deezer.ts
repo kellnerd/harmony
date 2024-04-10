@@ -97,7 +97,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 	}
 
 	protected async convertRawRelease(rawRelease: Release): Promise<HarmonyRelease> {
-		const id = rawRelease.id.toString();
+		this.id = rawRelease.id.toString();
 		const needToFetchIndividualTracks = this.options.withAllTrackArtists || this.options.withAvailability || false;
 		const needToFetchDetailedTracklist = !needToFetchIndividualTracks &&
 			(this.options.withSeparateMedia || this.options.withISRC || false);
@@ -106,7 +106,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 		let media: HarmonyMedium[];
 
 		if (needToFetchDetailedTracklist) {
-			rawTracklist = await this.getRawTracklist(id);
+			rawTracklist = await this.getRawTracklist(this.id);
 		} else {
 			rawTracklist = rawRelease.tracks.data;
 
@@ -150,7 +150,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 				types: ['front'],
 			}],
 			availableIn: this.determineAvailability(media),
-			info: this.generateReleaseInfo({ id }),
+			info: this.generateReleaseInfo(),
 		};
 	}
 
