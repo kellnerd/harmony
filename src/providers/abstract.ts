@@ -105,9 +105,13 @@ type AnyProvider = MetadataProvider<unknown>;
 export type ExtractRelease<Provider extends AnyProvider> = Provider extends MetadataProvider<infer Release> ? Release
 	: never;
 
-// TODO: The following type with ctor params causes issues because provider subclasses have additional methods.
-// type ReleaseLookupConstructor<Provider extends AnyProvider> = new (...args: ConstructorParameters<typeof ReleaseLookup<Provider>>) => ReleaseLookup<Provider>;
-type ReleaseLookupConstructor<RawRelease> = new (...args: any[]) => ReleaseLookup<MetadataProvider<RawRelease>>;
+type ReleaseLookupConstructor<RawRelease> = new (
+	// It is probably impossible to specify the correct provider subclass here.
+	// deno-lint-ignore no-explicit-any
+	provider: any,
+	urlOrGtinOrId: URL | GTIN | string,
+	options: ReleaseOptions,
+) => ReleaseLookup<MetadataProvider<RawRelease>>;
 
 export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = ExtractRelease<Provider>> {
 	/** Looks up the release which is identified by the given URL, GTIN/barcode or provider ID. */
