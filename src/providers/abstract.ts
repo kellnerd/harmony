@@ -74,14 +74,6 @@ export abstract class MetadataProvider<RawRelease> {
 		return new URLPattern({ hostname: this.supportedUrls.hostname }).test(url);
 	}
 
-	generateMessage(text: string, type: MessageType = 'info'): ProviderMessage {
-		return {
-			provider: this.name,
-			text,
-			type,
-		};
-	}
-
 	protected snaps: SnapStorage | undefined;
 
 	protected fetch = fetch;
@@ -110,7 +102,8 @@ export abstract class MetadataProvider<RawRelease> {
 
 type AnyProvider = MetadataProvider<unknown>;
 
-export type ExtractRelease<Provider extends AnyProvider> = Provider extends MetadataProvider<infer Release> ? Release : never;
+export type ExtractRelease<Provider extends AnyProvider> = Provider extends MetadataProvider<infer Release> ? Release
+	: never;
 
 // TODO: The following type with ctor params causes issues because provider subclasses have additional methods.
 // type ReleaseLookupConstructor<Provider extends AnyProvider> = new (...args: ConstructorParameters<typeof ReleaseLookup<Provider>>) => ReleaseLookup<Provider>;
@@ -204,9 +197,19 @@ export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = E
 		return this.supportedUrls.test(url);
 	}
 
-	protected generateReleaseInfo({ id, messages = [] }: {
+	/** Adds a message to the generated release info. */
+	protected addMessage(text: string, type: MessageType = 'info'): void {
+		this.messages.push({
+			provider: this.provider.name,
+			text,
+			type,
+		});
+	}
+
+	private messages: ProviderMessage[] = [];
+
+	protected generateReleaseInfo({ id }: {
 		id: string;
-		messages?: ProviderMessage[];
 	}): ReleaseInfo {
 		const { region } = this.options.lookup;
 
@@ -218,7 +221,7 @@ export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = E
 				url: this.constructReleaseUrl(id, region),
 				apiUrl: this.constructReleaseApiUrl(),
 			}],
-			messages,
+			messages: this.messages,
 		};
 	}
 

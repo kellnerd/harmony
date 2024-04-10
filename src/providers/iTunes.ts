@@ -13,7 +13,6 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	LinkType,
-	ProviderMessage,
 } from '../harmonizer/types.ts';
 
 // See https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI
@@ -107,8 +106,6 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 	}
 
 	protected convertRawRelease(data: ReleaseResult): HarmonyRelease {
-		const messages: ProviderMessage[] = [];
-
 		// API also returns other release variants for GTIN lookups, only use the first collection result
 		const collection = data.results.find((result) => result.wrapperType === 'collection') as Collection;
 		const tracks = data.results.filter((result) =>
@@ -123,12 +120,12 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 			const skippedUrls = uniqueSkippedIds.map((id) =>
 				this.cleanViewUrl(skippedResults.find((result) => result.collectionId === id)!.collectionViewUrl)
 			);
-			messages.push(this.provider.generateMessage(
+			this.addMessage(
 				`The API also returned ${
 					pluralWithCount(skippedUrls.length, 'other result, which was skipped', 'other results, which were skipped')
 				}:\n${skippedUrls.join('\n')}`,
 				'warning',
-			));
+			);
 		}
 
 		const linkTypes: LinkType[] = [];
@@ -146,14 +143,14 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 
 		const { lookup } = this.options;
 		if (!gtin) {
-			messages.push(this.provider.generateMessage('Failed to extract GTIN from artwork URL', 'warning'));
+			this.addMessage('Failed to extract GTIN from artwork URL', 'warning');
 		} else if (lookup.method === 'gtin' && !isEqualGTIN(gtin, lookup.value)) {
-			messages.push(this.provider.generateMessage(
+			this.addMessage(
 				`Extracted GTIN ${gtin} (from artwork URL) does not match the looked up value ${lookup.value}`,
 				'error',
-			));
+			);
 		} else {
-			messages.push(this.provider.generateMessage(`Successfully extracted GTIN ${gtin} from artwork URL`));
+			this.addMessage(`Successfully extracted GTIN ${gtin} from artwork URL`);
 		}
 
 		return {
@@ -170,7 +167,7 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 			packaging: 'None',
 			images: [this.processImage(collection.artworkUrl100, ['front'])],
 			copyright: collection.copyright,
-			info: this.generateReleaseInfo({ id: collection.collectionId.toString(), messages }),
+			info: this.generateReleaseInfo({ id: collection.collectionId.toString() }),
 		};
 	}
 
