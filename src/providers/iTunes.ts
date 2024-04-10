@@ -14,7 +14,6 @@ import type {
 	HarmonyRelease,
 	LinkType,
 	ProviderMessage,
-	RawResult,
 } from '../harmonizer/types.ts';
 
 // See https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI
@@ -97,22 +96,17 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 		return lookupUrl;
 	}
 
-	protected async getRawRelease(): Promise<RawResult<ReleaseResult>> {
+	protected async getRawRelease(): Promise<ReleaseResult> {
 		const apiUrl = this.constructReleaseApiUrl();
 		const data = await this.provider.query(apiUrl, this.options.regions) as ReleaseResult;
 
-		return {
-			data,
-			lookupInfo: {
-				...this.options.lookup,
-				region: data.region, // the region which has actually been used successfully
-			},
-		};
+		// Overwrite optional property with the actually used region (in order to build the accurate API URL).
+		this.options.lookup.region = data.region;
+
+		return data;
 	}
 
-	protected convertRawRelease(
-		{ data, lookupInfo }: RawResult<ReleaseResult>,
-	): HarmonyRelease {
+	protected convertRawRelease(data: ReleaseResult): HarmonyRelease {
 		const messages: ProviderMessage[] = [];
 
 		// API also returns other release variants for GTIN lookups, only use the first collection result
@@ -150,11 +144,12 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 		const releaseUrl = this.cleanViewUrl(collection.collectionViewUrl);
 		const gtin = this.extractGTINFromUrl(collection.artworkUrl100);
 
+		const { lookup } = this.options;
 		if (!gtin) {
 			messages.push(this.provider.generateMessage('Failed to extract GTIN from artwork URL', 'warning'));
-		} else if (lookupInfo.method === 'gtin' && !isEqualGTIN(gtin, lookupInfo.value)) {
+		} else if (lookup.method === 'gtin' && !isEqualGTIN(gtin, lookup.value)) {
 			messages.push(this.provider.generateMessage(
-				`Extracted GTIN ${gtin} (from artwork URL) does not match the looked up value ${lookupInfo.value}`,
+				`Extracted GTIN ${gtin} (from artwork URL) does not match the looked up value ${lookup.value}`,
 				'error',
 			));
 		} else {
@@ -175,7 +170,7 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 			packaging: 'None',
 			images: [this.processImage(collection.artworkUrl100, ['front'])],
 			copyright: collection.copyright,
-			info: this.generateReleaseInfo({ id: collection.collectionId.toString(), lookupInfo, messages }),
+			info: this.generateReleaseInfo({ id: collection.collectionId.toString(), messages }),
 		};
 	}
 

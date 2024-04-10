@@ -3,13 +3,7 @@ import { availableRegions } from './regions/Deezer.ts';
 import { parseHyphenatedDate, PartialDate } from '../utils/date.ts';
 import { ResponseError } from '../utils/errors.ts';
 
-import type {
-	ArtistCreditName,
-	HarmonyMedium,
-	HarmonyRelease,
-	HarmonyTrack,
-	RawResult,
-} from '../harmonizer/types.ts';
+import type { ArtistCreditName, HarmonyMedium, HarmonyRelease, HarmonyTrack } from '../harmonizer/types.ts';
 
 // See https://developers.deezer.com/api
 
@@ -80,13 +74,9 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 		}
 	}
 
-	protected async getRawRelease(): Promise<RawResult<Release>> {
+	protected getRawRelease(): Promise<Release> {
 		const apiUrl = this.constructReleaseApiUrl();
-
-		return {
-			data: await this.provider.query(apiUrl),
-			lookupInfo: this.options.lookup,
-		};
+		return this.provider.query(apiUrl);
 	}
 
 	private async getRawTracklist(albumId: string): Promise<TracklistItem[]> {
@@ -106,9 +96,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 		return this.provider.query(new URL(`track/${trackId}`, this.provider.apiBaseUrl));
 	}
 
-	protected async convertRawRelease(
-		{ data: rawRelease, lookupInfo }: RawResult<Release>,
-	): Promise<HarmonyRelease> {
+	protected async convertRawRelease(rawRelease: Release): Promise<HarmonyRelease> {
 		const id = rawRelease.id.toString();
 		const needToFetchIndividualTracks = this.options.withAllTrackArtists || this.options.withAvailability || false;
 		const needToFetchDetailedTracklist = !needToFetchIndividualTracks &&
@@ -162,7 +150,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 				types: ['front'],
 			}],
 			availableIn: this.determineAvailability(media),
-			info: this.generateReleaseInfo({ id, lookupInfo }),
+			info: this.generateReleaseInfo({ id }),
 		};
 	}
 

@@ -8,9 +8,7 @@ import type {
 	MessageType,
 	ProviderMessage,
 	RawReleaseOptions,
-	RawResult,
 	ReleaseInfo,
-	ReleaseLookupInfo,
 	ReleaseOptions,
 } from '../harmonizer/types.ts';
 import type { PartialDate } from '../utils/date.ts';
@@ -185,12 +183,10 @@ export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = E
 	 * Loads the raw release data for the specified lookup options.
 	 * This method is only used internally and guaranteed to be called with either a GTIN or a provider ID.
 	 */
-	protected abstract getRawRelease(): Promise<RawResult<RawRelease>>;
+	protected abstract getRawRelease(): Promise<RawRelease>;
 
 	/** Converts the given provider-specific raw release metadata into a common representation. */
-	protected abstract convertRawRelease(
-		rawResult: RawResult<RawRelease>,
-	): MaybePromise<HarmonyRelease>;
+	protected abstract convertRawRelease(rawRelease: RawRelease): MaybePromise<HarmonyRelease>;
 
 	/** Extracts the ID from a release URL. */
 	extractReleaseId(url: URL): string | undefined {
@@ -208,20 +204,18 @@ export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = E
 		return this.supportedUrls.test(url);
 	}
 
-	protected generateReleaseInfo({ id, lookupInfo, messages = [] }: {
+	protected generateReleaseInfo({ id, messages = [] }: {
 		id: string;
-		lookupInfo: ReleaseLookupInfo;
 		messages?: ProviderMessage[];
 	}): ReleaseInfo {
-		// overwrite optional property with the actually used region (in order to build the accurate API URL)
-		this.options.lookup.region = lookupInfo.region;
+		const { region } = this.options.lookup;
 
 		return {
 			providers: [{
 				name: this.provider.name,
 				id,
-				region: lookupInfo.region,
-				url: this.constructReleaseUrl(id, lookupInfo.region),
+				region: region,
+				url: this.constructReleaseUrl(id, region),
 				apiUrl: this.constructReleaseApiUrl(),
 			}],
 			messages,

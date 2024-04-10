@@ -163,8 +163,3 @@ export type ReleaseInfo = {
 	/** Mapping from release/track properties to the used provider for these properties. */
 	sourceMap?: Partial<Record<PreferenceProperty, ProviderName>>;
 };
-
-export type RawResult<T> = {
-	data: T;
-	lookupInfo: ReleaseLookupInfo;
-};
