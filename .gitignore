@@ -13,3 +13,6 @@ _fresh/
 # Harmony snapshots
 snaps.db
 snaps/
+
+# Temporary files
+local/
