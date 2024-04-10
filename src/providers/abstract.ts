@@ -131,6 +131,7 @@ export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = E
 			// Prefer region of the given release URL over the standard preferences.
 			const region = this.extractReleaseRegion(urlOrGtinOrId);
 			if (region) {
+				this.lookup.region = region;
 				this.options.regions = [region];
 			}
 		} else if (typeof urlOrGtinOrId === 'string' && !/^\d{12,14}$/.test(urlOrGtinOrId)) { // ID
