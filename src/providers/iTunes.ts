@@ -58,7 +58,7 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 			}
 		}
 
-		throw new ResponseError(this.name, 'API returned no results', apiUrl!);
+		throw new ResponseError(this.name, 'API returned no results', apiUrl);
 	}
 }
 
