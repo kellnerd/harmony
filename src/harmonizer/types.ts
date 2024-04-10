@@ -103,22 +103,26 @@ export type Language = {
 /** ISO 3166-1 alpha-2 two letter country code. */
 export type CountryCode = string;
 
+/** Release lookup options. */
 export type ReleaseOptions = Partial<{
 	withSeparateMedia: boolean;
 	withAllTrackArtists: boolean;
 	withISRC: boolean;
 	withAvailability: boolean;
+	/**
+	 * Ordered list of regions for which the lookup should be tried until it succeeds.
+	 * Only used by providers which have region-specific API endpoints or pages.
+	 */
 	regions?: CountryCode[];
 }>;
 
-export type RawReleaseOptions = ReleaseOptions & {
-	/** Details about the currently used lookup method, filled automatically. */
-	lookup: ReleaseLookupInfo;
-};
-
-export type ReleaseLookupInfo = {
+/** Parameters to lookup a release. */
+export type ReleaseLookupParameters = {
+	/** Lookup method, can be by GTIN or provider ID. */
 	method: 'gtin' | 'id';
+	/** Lookup value, meaning depends on the lookup method. */
 	value: string;
+	/** Release region which was specified with the lookup method. */
 	region?: CountryCode;
 };
 

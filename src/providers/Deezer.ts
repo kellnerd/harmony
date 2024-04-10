@@ -66,11 +66,10 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 	}
 
 	constructReleaseApiUrl(): URL {
-		const { lookup } = this.options;
-		if (lookup.method === 'gtin') {
-			return new URL(`album/upc:${lookup.value}`, this.provider.apiBaseUrl);
-		} else /* if (lookup.method === 'id') */ {
-			return new URL(`album/${lookup.value}`, this.provider.apiBaseUrl);
+		if (this.lookup.method === 'gtin') {
+			return new URL(`album/upc:${this.lookup.value}`, this.provider.apiBaseUrl);
+		} else { // if (this.lookup.method === 'id')
+			return new URL(`album/${this.lookup.value}`, this.provider.apiBaseUrl);
 		}
 	}
 

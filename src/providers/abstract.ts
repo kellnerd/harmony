@@ -7,8 +7,8 @@ import type {
 	HarmonyRelease,
 	MessageType,
 	ProviderMessage,
-	RawReleaseOptions,
 	ReleaseInfo,
+	ReleaseLookupParameters,
 	ReleaseOptions,
 } from '../harmonizer/types.ts';
 import type { PartialDate } from '../utils/date.ts';
@@ -119,16 +119,14 @@ export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = E
 		// Use the provider's generally supported URLs if none have been specified for releases.
 		this.supportedUrls ??= provider.supportedUrls;
 		// Create a deep copy, we don't want to manipulate the caller's options.
-		this.options = {
-			...options,
-			lookup: { method: 'id', value: '' },
-		};
+		this.options = { ...options };
+		this.lookup = { method: 'id', value: '' };
 		if (urlOrGtinOrId instanceof URL) {
 			const id = this.extractReleaseId(urlOrGtinOrId);
 			if (id === undefined) {
 				throw new ProviderError(this.provider.name, `Could not extract ID from ${urlOrGtinOrId}`);
 			}
-			this.options.lookup.value = id;
+			this.lookup.value = id;
 
 			// Prefer region of the given release URL over the standard preferences.
 			const region = this.extractReleaseRegion(urlOrGtinOrId);
@@ -136,9 +134,9 @@ export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = E
 				this.options.regions = [region];
 			}
 		} else if (typeof urlOrGtinOrId === 'string' && !/^\d{12,14}$/.test(urlOrGtinOrId)) { // ID
-			this.options.lookup.value = urlOrGtinOrId;
+			this.lookup.value = urlOrGtinOrId;
 		} else { // number or string with 12 to 14 digits, most likely a GTIN
-			this.options.lookup = { method: 'gtin', value: urlOrGtinOrId.toString() };
+			this.lookup = { method: 'gtin', value: urlOrGtinOrId.toString() };
 		}
 	}
 
@@ -149,8 +147,11 @@ export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = E
 	 */
 	protected supportedUrls: URLPattern;
 
+	/** Parameters which are used for the current release lookup. */
+	protected lookup: ReleaseLookupParameters;
+
 	/** Release lookup options. */
-	protected options: RawReleaseOptions;
+	protected options: ReleaseOptions;
 
 	/** Provider ID of the currently looked up release (initially undefined). */
 	protected id: string | undefined;
@@ -212,7 +213,6 @@ export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = E
 	private messages: ProviderMessage[] = [];
 
 	protected generateReleaseInfo(): ReleaseInfo {
-		const { region } = this.options.lookup;
 		if (!this.id) {
 			throw new ProviderError(this.provider.name, 'Release info can only be generated with a defined provider ID');
 		}
@@ -221,8 +221,8 @@ export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = E
 			providers: [{
 				name: this.provider.name,
 				id: this.id,
-				region: region,
-				url: this.constructReleaseUrl(this.id, region),
+				region: this.lookup.region,
+				url: this.constructReleaseUrl(this.id, this.lookup.region),
 				apiUrl: this.constructReleaseApiUrl(),
 			}],
 			messages: this.messages,

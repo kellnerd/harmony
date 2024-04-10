@@ -74,21 +74,21 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 	}
 
 	constructReleaseApiUrl(): URL {
-		const { lookup } = this.options;
+		const { method, value, region } = this.lookup;
 		const lookupUrl = new URL('lookup', this.provider.apiBaseUrl);
 		const query = new URLSearchParams({
 			entity: 'song', // include tracks of the release in the response
 			limit: '200', // number of returned entities (default: 50; maximum: 200)
 		});
 
-		if (lookup.method === 'gtin') {
-			query.append('upc', lookup.value);
-		} else if (lookup.method === 'id') {
-			query.append('id', lookup.value);
+		if (method === 'gtin') {
+			query.append('upc', value);
+		} else if (method === 'id') {
+			query.append('id', value);
 		}
 
-		if (lookup.region) {
-			query.append('country', lookup.region.toLowerCase());
+		if (region) {
+			query.append('country', region.toLowerCase());
 		}
 
 		lookupUrl.search = query.toString();
@@ -100,7 +100,7 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 		const data = await this.provider.query(apiUrl, this.options.regions) as ReleaseResult;
 
 		// Overwrite optional property with the actually used region (in order to build the accurate API URL).
-		this.options.lookup.region = data.region;
+		this.lookup.region = data.region;
 
 		return data;
 	}
@@ -142,12 +142,11 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 		const releaseUrl = this.cleanViewUrl(collection.collectionViewUrl);
 		const gtin = this.extractGTINFromUrl(collection.artworkUrl100);
 
-		const { lookup } = this.options;
 		if (!gtin) {
 			this.addMessage('Failed to extract GTIN from artwork URL', 'warning');
-		} else if (lookup.method === 'gtin' && !isEqualGTIN(gtin, lookup.value)) {
+		} else if (this.lookup.method === 'gtin' && !isEqualGTIN(gtin, this.lookup.value)) {
 			this.addMessage(
-				`Extracted GTIN ${gtin} (from artwork URL) does not match the looked up value ${lookup.value}`,
+				`Extracted GTIN ${gtin} (from artwork URL) does not match the looked up value ${this.lookup.value}`,
 				'error',
 			);
 		} else {
