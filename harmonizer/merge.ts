@@ -1,5 +1,5 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
-import { ProviderError } from '../utils/errors.ts';
+import { ProviderError } from '@/utils/errors.ts';
 
 import type {
 	CountryCode,

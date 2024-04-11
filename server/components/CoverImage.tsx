@@ -1,4 +1,4 @@
-import type { Artwork } from '../../harmonizer/types.ts';
+import type { Artwork } from '@/harmonizer/types.ts';
 
 export function CoverImage({ artwork }: { artwork: Artwork }) {
 	let description = artwork.types?.join(' + ') ?? 'cover';

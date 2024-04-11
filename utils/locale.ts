@@ -1,5 +1,5 @@
 import type { ScriptFrequency } from './script.ts';
-import type { CountryCode, Language } from '../harmonizer/types.ts';
+import type { CountryCode, Language } from '@/harmonizer/types.ts';
 
 let languageNames: Intl.DisplayNames, regionNames: Intl.DisplayNames, scriptNames: Intl.DisplayNames;
 

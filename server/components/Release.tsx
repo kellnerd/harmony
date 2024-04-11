@@ -3,14 +3,14 @@ import { CoverImage } from './CoverImage.tsx';
 import { MessageBox } from './MessageBox.tsx';
 import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
-import RegionList from '../islands/RegionList.tsx';
+import RegionList from '@/server/islands/RegionList.tsx';
 
-import { determineReleaseEventCountries } from '../../musicbrainz/release_countries.ts';
-import { formatPartialDate } from '../../utils/date.ts';
-import { formatLanguageConfidence, formatScriptFrequency, regionName } from '../../utils/locale.ts';
-import { flagEmoji } from '../../utils/regions.ts';
+import { determineReleaseEventCountries } from '@/musicbrainz/release_countries.ts';
+import { formatPartialDate } from '@/utils/date.ts';
+import { formatLanguageConfidence, formatScriptFrequency, regionName } from '@/utils/locale.ts';
+import { flagEmoji } from '@/utils/regions.ts';
 
-import type { HarmonyRelease } from '../../harmonizer/types.ts';
+import type { HarmonyRelease } from '@/harmonizer/types.ts';
 
 export function Release({ release }: { release: HarmonyRelease }) {
 	const regions = release.availableIn;

@@ -3,7 +3,7 @@ import IconAlertTriangle from 'tabler-icons/alert-triangle.tsx';
 import IconBug from 'tabler-icons/bug.tsx';
 import IconInfoCircle from 'tabler-icons/info-circle.tsx';
 
-import type { MessageType, ProviderMessage } from '../../harmonizer/types.ts';
+import type { MessageType, ProviderMessage } from '@/harmonizer/types.ts';
 import type { JSX } from 'preact';
 
 const icons: Record<MessageType, JSX.Element> = {

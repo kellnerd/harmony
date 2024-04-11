@@ -4,9 +4,9 @@ import { preferArray } from 'utils/array/scalar.js';
 import { flatten } from 'utils/object/flatten.js';
 
 import type { Packaging, ReleaseGroupType, ReleaseStatus, UrlLinkTypeId } from './type_id.ts';
-import type { ArtistCreditName, CountryCode, HarmonyRelease, LinkType, ReleaseInfo } from '../harmonizer/types.ts';
-import type { PartialDate } from '../utils/date.ts';
-import type { ScriptCode } from '../utils/script.ts';
+import type { ArtistCreditName, CountryCode, HarmonyRelease, LinkType, ReleaseInfo } from '@/harmonizer/types.ts';
+import type { PartialDate } from '@/utils/date.ts';
+import type { ScriptCode } from '@/utils/script.ts';
 import type { FormDataRecord, MaybeArray } from 'utils/types.d.ts';
 
 export const targetUrl = new URL('/release/add', 'https://musicbrainz.org');

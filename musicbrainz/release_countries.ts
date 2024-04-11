@@ -1,4 +1,4 @@
-import type { CountryCode, HarmonyRelease } from '../harmonizer/types.ts';
+import type { CountryCode, HarmonyRelease } from '@/harmonizer/types.ts';
 
 export function determineReleaseEventCountries(release: HarmonyRelease, maxEvents = 10): CountryCode[] | undefined {
 	if (!release.availableIn) {

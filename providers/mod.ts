@@ -3,7 +3,7 @@ import iTunesProvider from './iTunes/mod.ts';
 
 import { SnapStorage } from 'snap-storage';
 
-import type { ProviderPreferences } from '../harmonizer/types.ts';
+import type { ProviderPreferences } from '@/harmonizer/types.ts';
 import type { MetadataProvider } from './base.ts';
 
 const snaps = new SnapStorage();

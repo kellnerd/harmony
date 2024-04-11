@@ -3,7 +3,7 @@ import IconBarcode from 'tabler-icons/barcode.tsx';
 import IconSearch from 'tabler-icons/search.tsx';
 import IconWorldWww from 'tabler-icons/world-www.tsx';
 
-import type { GTIN } from '../../harmonizer/types.ts';
+import type { GTIN } from '@/harmonizer/types.ts';
 
 export default function ReleaseLookup({ gtin, externalUrl, formAction = '' }: {
 	gtin?: GTIN | null;

@@ -1,4 +1,4 @@
-import type { ArtistCreditName } from '../../harmonizer/types.ts';
+import type { ArtistCreditName } from '@/harmonizer/types.ts';
 
 export function ArtistCredit({ artists }: { artists: ArtistCreditName[] }) {
 	return (

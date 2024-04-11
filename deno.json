@@ -10,6 +10,7 @@
 		"useTabs": true
 	},
 	"imports": {
+		"@/": "./",
 		"$fresh/": "https://deno.land/x/fresh@1.5.4/",
 		"fresh/": "https://deno.land/x/fresh@1.5.4/",
 		"lande": "https://esm.sh/lande@1.0.10",

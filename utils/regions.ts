@@ -1,4 +1,4 @@
-import type { CountryCode } from '../harmonizer/types.ts';
+import type { CountryCode } from '@/harmonizer/types.ts';
 
 /** Converts a country code into an Unicode regional indicator symbol (flag emoji). */
 export function flagEmoji(code: CountryCode) {

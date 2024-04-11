@@ -1,10 +1,10 @@
 import { ArtistCredit } from './ArtistCredit.tsx';
 import { ISRC } from './ISRC.tsx';
-import { pluralWithCount } from '../../utils/plural.ts';
-import { flagEmoji } from '../../utils/regions.ts';
-import { formatDuration } from '../../utils/time.ts';
+import { pluralWithCount } from '@/utils/plural.ts';
+import { flagEmoji } from '@/utils/regions.ts';
+import { formatDuration } from '@/utils/time.ts';
 
-import type { HarmonyMedium } from '../../harmonizer/types.ts';
+import type { HarmonyMedium } from '@/harmonizer/types.ts';
 
 type Props = {
 	medium: HarmonyMedium;

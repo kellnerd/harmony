@@ -1,4 +1,4 @@
-import type { CountryCode } from '../../harmonizer/types.ts';
+import type { CountryCode } from '@/harmonizer/types.ts';
 
 export type Artist = {
 	wrapperType: 'artist';

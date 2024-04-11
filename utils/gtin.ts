@@ -1,4 +1,4 @@
-import type { GTIN } from '../harmonizer/types.ts';
+import type { GTIN } from '@/harmonizer/types.ts';
 
 const gtinFormat = /^\d+$/;
 const gtinLengths = [8, 12, 13, 14];

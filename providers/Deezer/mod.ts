@@ -1,10 +1,10 @@
 import { availableRegions } from './regions.ts';
-import { DurationPrecision, MetadataProvider, ProviderOptions, ReleaseLookup } from '../base.ts';
-import { parseHyphenatedDate, PartialDate } from '../../utils/date.ts';
-import { ResponseError } from '../../utils/errors.ts';
+import { DurationPrecision, MetadataProvider, ProviderOptions, ReleaseLookup } from '@/providers/base.ts';
+import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
+import { ResponseError } from '@/utils/errors.ts';
 
 import type { ApiError, MinimalArtist, Release, ReleaseTrack, Response, Track, TracklistItem } from './api_types.ts';
-import type { ArtistCreditName, HarmonyMedium, HarmonyRelease, HarmonyTrack } from '../../harmonizer/types.ts';
+import type { ArtistCreditName, HarmonyMedium, HarmonyRelease, HarmonyTrack } from '@/harmonizer/types.ts';
 
 // See https://developers.deezer.com/api
 

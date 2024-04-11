@@ -1,15 +1,15 @@
-import Footer from '../components/Footer.tsx';
-import { MessageBox } from '../components/MessageBox.tsx';
-import { Release } from '../components/Release.tsx';
-import ReleaseLookup from '../components/ReleaseLookup.tsx';
-import { ReleaseSeeder } from '../components/ReleaseSeeder.tsx';
+import Footer from '@/server/components/Footer.tsx';
+import { MessageBox } from '@/server/components/MessageBox.tsx';
+import { Release } from '@/server/components/Release.tsx';
+import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
+import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
 
-import { getMergedReleaseByGTIN, getMergedReleaseByUrl } from '../../lookup.ts';
+import { getMergedReleaseByGTIN, getMergedReleaseByUrl } from '@/lookup.ts';
 import { Head } from 'fresh/runtime.ts';
 import { Handlers, PageProps } from 'fresh/server.ts';
 
-import type { GTIN, HarmonyRelease, ReleaseOptions } from '../../harmonizer/types.ts';
-import type { ProviderError } from '../../utils/errors.ts';
+import type { GTIN, HarmonyRelease, ReleaseOptions } from '@/harmonizer/types.ts';
+import type { ProviderError } from '@/utils/errors.ts';
 
 type Data = {
 	errors: Error[];

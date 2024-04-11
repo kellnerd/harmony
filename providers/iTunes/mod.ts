@@ -1,8 +1,8 @@
-import { DurationPrecision, MetadataProvider, ReleaseLookup } from '../base.ts';
-import { parseISODateTime, PartialDate } from '../../utils/date.ts';
-import { ResponseError } from '../../utils/errors.ts';
-import { isEqualGTIN, isValidGTIN } from '../../utils/gtin.ts';
-import { pluralWithCount } from '../../utils/plural.ts';
+import { DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { parseISODateTime, PartialDate } from '@/utils/date.ts';
+import { ResponseError } from '@/utils/errors.ts';
+import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
+import { pluralWithCount } from '@/utils/plural.ts';
 
 import type { Collection, ReleaseResult, Result, Track } from './api_types.ts';
 import type {
@@ -14,7 +14,7 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	LinkType,
-} from '../../harmonizer/types.ts';
+} from '@/harmonizer/types.ts';
 
 // See https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI
 

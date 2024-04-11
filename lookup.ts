@@ -1,13 +1,13 @@
-import { mergeRelease } from './harmonizer/merge.ts';
-import { providerNames, providerPreferences, providers } from './providers/mod.ts';
-import { LookupError } from './utils/errors.ts';
-import { ensureValidGTIN } from './utils/gtin.ts';
-import { formatLanguageConfidence, formatScriptFrequency } from './utils/locale.ts';
-import { detectScripts, scriptCodes } from './utils/script.ts';
+import { mergeRelease } from '@/harmonizer/merge.ts';
+import { providerNames, providerPreferences, providers } from '@/providers/mod.ts';
+import { LookupError } from '@/utils/errors.ts';
+import { ensureValidGTIN } from '@/utils/gtin.ts';
+import { formatLanguageConfidence, formatScriptFrequency } from '@/utils/locale.ts';
+import { detectScripts, scriptCodes } from '@/utils/script.ts';
 import lande from 'lande';
 import { zipObject } from 'utils/object/zipObject.js';
 
-import type { GTIN, HarmonyRelease, ProviderReleaseMapping, ReleaseOptions } from './harmonizer/types.ts';
+import type { GTIN, HarmonyRelease, ProviderReleaseMapping, ReleaseOptions } from '@/harmonizer/types.ts';
 
 /**
  * Looks up the given URL with the first matching provider.

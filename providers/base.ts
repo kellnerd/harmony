@@ -1,4 +1,4 @@
-import { ProviderError } from '../utils/errors.ts';
+import { ProviderError } from '@/utils/errors.ts';
 import { rateLimit } from 'utils/async/rateLimit.js';
 
 import type {
@@ -10,8 +10,8 @@ import type {
 	ReleaseInfo,
 	ReleaseLookupParameters,
 	ReleaseOptions,
-} from '../harmonizer/types.ts';
-import type { PartialDate } from '../utils/date.ts';
+} from '@/harmonizer/types.ts';
+import type { PartialDate } from '@/utils/date.ts';
 import type { SnapStorage } from 'snap-storage';
 import type { MaybePromise } from 'utils/types.d.ts';
 

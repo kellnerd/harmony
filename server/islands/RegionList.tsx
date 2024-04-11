@@ -1,10 +1,10 @@
-import { Button } from '../components/Button.tsx';
-import { regionName } from '../../utils/locale.ts';
-import { pluralWithCount } from '../../utils/plural.ts';
-import { flagEmoji } from '../../utils/regions.ts';
+import { Button } from '@/server/components/Button.tsx';
+import { regionName } from '@/utils/locale.ts';
+import { pluralWithCount } from '@/utils/plural.ts';
+import { flagEmoji } from '@/utils/regions.ts';
 import { useState } from 'preact/hooks';
 
-import type { CountryCode } from '../../harmonizer/types.ts';
+import type { CountryCode } from '@/harmonizer/types.ts';
 
 export default function RegionList({ regions }: { regions: CountryCode[] }) {
 	const [isExpanded, setExpanded] = useState(false);
