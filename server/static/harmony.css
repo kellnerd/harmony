@@ -81,6 +81,11 @@ td, th {
 	padding: 0.1em 0.2em;
 }
 
+td.numeric {
+	text-align: right;
+	font-variant: tabular-nums;
+}
+
 td ul {
 	margin: 0;
 	padding-left: 1em;

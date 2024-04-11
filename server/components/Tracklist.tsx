@@ -34,10 +34,10 @@ export function Tracklist({ medium, showTitle = false }: Props) {
 				const regions = track.availableIn;
 				return (
 					<tr>
-						<td>{track.number}</td>
+						<td class='numeric'>{track.number}</td>
 						<td>{track.title}</td>
 						<td>{track.artists && <ArtistCredit artists={track.artists} />}</td>
-						<td>{formatDuration(track.duration)}</td>
+						<td class='numeric'>{formatDuration(track.duration, { showMs: true })}</td>
 						<td>
 							{track.isrc && <ISRC code={track.isrc} />}
 						</td>
