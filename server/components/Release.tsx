@@ -5,7 +5,7 @@ import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import RegionList from '../islands/RegionList.tsx';
 
-import { determineReleaseEventCountries } from '../../MusicBrainz/releaseCountries.ts';
+import { determineReleaseEventCountries } from '../../musicbrainz/release_countries.ts';
 import { formatPartialDate } from '../../utils/date.ts';
 import { formatLanguageConfidence, formatScriptFrequency, regionName } from '../../utils/locale.ts';
 import { flagEmoji } from '../../utils/regions.ts';

@@ -25,10 +25,10 @@
 		"utils/": "https://deno.land/x/es_utils@v0.1.3/"
 	},
 	"tasks": {
-		"cli": "deno run --allow-net src/cli.ts",
-		"dev": "deno run -A --watch=src/server/static/,src/server/routes/ src/server/dev.ts",
-		"build": "deno run -A src/server/dev.ts build",
-		"server": "DENO_DEPLOYMENT_ID=$(git rev-parse HEAD) deno run -A src/server/main.ts"
+		"cli": "deno run --allow-net cli.ts",
+		"dev": "deno run -A --watch=server/static/,server/routes/ server/dev.ts",
+		"build": "deno run -A server/dev.ts build",
+		"server": "DENO_DEPLOYMENT_ID=$(git rev-parse HEAD) deno run -A server/main.ts"
 	},
 	"lint": {
 		"rules": {

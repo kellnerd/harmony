@@ -1,9 +1,9 @@
-import { checkDigit, ensureValidGTIN, isEqualGTIN, isValidGTIN } from '../../src/utils/gtin.ts';
+import { checkDigit, ensureValidGTIN, isEqualGTIN, isValidGTIN } from './gtin.ts';
 
 import { assert, assertFalse, assertStrictEquals, assertThrows } from 'std/testing/asserts.ts';
 import { describe, it } from 'std/testing/bdd.ts';
 
-import type { FunctionSpec, ParameterSpec, ThrowSpec } from '../spec.ts';
+import type { FunctionSpec, ParameterSpec, ThrowSpec } from './test_spec.ts';
 
 describe('GTIN validator', () => {
 	const passingCases: ParameterSpec<typeof isValidGTIN> = [

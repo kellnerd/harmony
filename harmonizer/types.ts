@@ -1,6 +1,6 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
 
-import type { Packaging, ReleaseStatus } from '../MusicBrainz/typeId.ts';
+import type { Packaging, ReleaseStatus } from '../musicbrainz/type_id.ts';
 import type { PartialDate } from '../utils/date.ts';
 import type { ScriptFrequency } from '../utils/script.ts';
 

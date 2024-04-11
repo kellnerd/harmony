@@ -19,7 +19,7 @@ You can now open http://localhost:8000 in your browser to view the landing page.
 Try doing some code changes and see how the page automatically reloads.
 
 For a production server you should set the `PORT` environment variable to your preferred port and `DENO_DEPLOYMENT_ID` to the current git revision.
-Alternatively you can run the [predefined task](deno.json) which automatically sets `DENO_DEPLOYMENT_ID` and runs `src/server/main.ts` with all permissions:
+Alternatively you can run the [predefined task](deno.json) which automatically sets `DENO_DEPLOYMENT_ID` and runs `server/main.ts` with all permissions:
 
 ```sh
 deno task server

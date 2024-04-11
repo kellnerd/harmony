@@ -1,5 +1,5 @@
 import { getMergedReleaseByGTIN, getReleaseByUrl } from './lookup.ts';
-import { createReleaseSeed } from './MusicBrainz/seeding.ts';
+import { createReleaseSeed } from './musicbrainz/seeding.ts';
 import { parse } from 'std/flags/mod.ts';
 
 import type { GTIN, HarmonyRelease } from './harmonizer/types.ts';

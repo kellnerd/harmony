@@ -1,7 +1,7 @@
 import InputWithOverlay from './InputWithOverlay.tsx';
 import IconDatabaseImport from 'tabler-icons/database-import.tsx';
 
-import { createReleaseSeed, targetUrl } from '../../MusicBrainz/seeding.ts';
+import { createReleaseSeed, targetUrl } from '../../musicbrainz/seeding.ts';
 import { preferArray } from 'utils/array/scalar.js';
 
 import type { HarmonyRelease } from '../../harmonizer/types.ts';
