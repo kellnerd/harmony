@@ -18,7 +18,7 @@ import type {
 
 // See https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI
 
-export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
+export default class iTunesProvider extends MetadataProvider {
 	readonly name = 'iTunes';
 
 	readonly supportedUrls = new URLPattern({

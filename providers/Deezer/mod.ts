@@ -1,5 +1,5 @@
 import { availableRegions } from './regions.ts';
-import { DurationPrecision, ExtractRelease, MetadataProvider, ProviderOptions, ReleaseLookup } from '../base.ts';
+import { DurationPrecision, MetadataProvider, ProviderOptions, ReleaseLookup } from '../base.ts';
 import { parseHyphenatedDate, PartialDate } from '../../utils/date.ts';
 import { ResponseError } from '../../utils/errors.ts';
 
@@ -8,7 +8,7 @@ import type { ArtistCreditName, HarmonyMedium, HarmonyRelease, HarmonyTrack } fr
 
 // See https://developers.deezer.com/api
 
-export default class DeezerProvider extends MetadataProvider<Release> {
+export default class DeezerProvider extends MetadataProvider {
 	constructor(options: ProviderOptions = {}) {
 		super({
 			rateLimitInterval: 5000,
@@ -50,11 +50,6 @@ export default class DeezerProvider extends MetadataProvider<Release> {
 	}
 }
 
-// TODO: Why does this sometimes evaluate to `Release` and sometimes to `never`!?
-type TestRelease = ExtractRelease<DeezerProvider>;
-type TestLookup = ReleaseLookup<DeezerProvider>;
-
-// We have to specify the second generic parameter `Release` because of the above "bug"
 export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> {
 	readonly supportedUrls = new URLPattern({
 		hostname: 'www.deezer.com',

@@ -8,7 +8,7 @@ import type { MetadataProvider } from './base.ts';
 
 const snaps = new SnapStorage();
 
-export const providers: MetadataProvider<unknown>[] = [
+export const providers: MetadataProvider[] = [
 	DeezerProvider,
 	iTunesProvider,
 ].map((Provider) => new Provider({ snaps }));
@@ -23,7 +23,7 @@ export const providerPreferences: ProviderPreferences = {
 };
 
 /** Returns a list of provider names sorted by the value of the given numeric property (descending). */
-function sortProvidersByQuality(property: NumericKeys<MetadataProvider<unknown>>): string[] {
+function sortProvidersByQuality(property: NumericKeys<MetadataProvider>): string[] {
 	return providers
 		.map((provider) => ({
 			name: provider.name,

@@ -28,7 +28,7 @@ export type ProviderOptions = Partial<{
  * Abstract metadata provider which looks up releases from a specific source.
  * Converts the raw metadata into a common representation.
  */
-export abstract class MetadataProvider<RawRelease> {
+export abstract class MetadataProvider {
 	constructor({
 		rateLimitInterval = null,
 		concurrentRequests = 1,
@@ -51,7 +51,7 @@ export abstract class MetadataProvider<RawRelease> {
 	 */
 	abstract readonly supportedUrls: URLPattern;
 
-	abstract readonly releaseLookup: ReleaseLookupConstructor<RawRelease>;
+	abstract readonly releaseLookup: ReleaseLookupConstructor;
 
 	/** Country codes of regions in which the provider offers its services (optional). */
 	readonly availableRegions: CountryCode[] = [];
@@ -100,20 +100,15 @@ export abstract class MetadataProvider<RawRelease> {
 	}
 }
 
-type AnyProvider = MetadataProvider<unknown>;
-
-export type ExtractRelease<Provider extends AnyProvider> = Provider extends MetadataProvider<infer Release> ? Release
-	: never;
-
-type ReleaseLookupConstructor<RawRelease> = new (
+type ReleaseLookupConstructor = new (
 	// It is probably impossible to specify the correct provider subclass here.
 	// deno-lint-ignore no-explicit-any
 	provider: any,
 	urlOrGtinOrId: URL | GTIN | string,
 	options: ReleaseOptions,
-) => ReleaseLookup<MetadataProvider<RawRelease>>;
+) => ReleaseLookup<MetadataProvider, unknown>;
 
-export abstract class ReleaseLookup<Provider extends AnyProvider, RawRelease = ExtractRelease<Provider>> {
+export abstract class ReleaseLookup<Provider extends MetadataProvider, RawRelease> {
 	/** Looks up the release which is identified by the given URL, GTIN/barcode or provider ID. */
 	constructor(
 		protected provider: Provider,
