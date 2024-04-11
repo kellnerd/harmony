@@ -1,7 +1,6 @@
-export default function Footer() {
-	const revision = Deno.env.get('DENO_DEPLOYMENT_ID');
-	const codeUrl = Deno.env.get('HARMONY_CODE_URL') || 'https://github.com/kellnerd/harmony';
+import { codeUrl, revision } from '@/server/config.ts';
 
+export default function Footer() {
 	return (
 		<footer class='center'>
 			<p>

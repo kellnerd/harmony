@@ -5,6 +5,7 @@ import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
 import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
 
 import { getMergedReleaseByGTIN, getMergedReleaseByUrl } from '@/lookup.ts';
+import { isDevServer } from '@/server/config.ts';
 import { Head } from 'fresh/runtime.ts';
 import { Handlers, PageProps } from 'fresh/server.ts';
 
@@ -17,8 +18,6 @@ type Data = {
 	gtin: GTIN | null;
 	externalUrl: string | null;
 };
-
-const DEV = !Deno.env.get('DENO_DEPLOYMENT_ID');
 
 export const handler: Handlers<Data> = {
 	async GET(req, ctx) {
@@ -41,7 +40,7 @@ export const handler: Handlers<Data> = {
 				release = await getMergedReleaseByUrl(new URL(externalUrl), options);
 			}
 		} catch (error) {
-			if (DEV) {
+			if (isDevServer) {
 				// Show more details during development.
 				throw error;
 			}
