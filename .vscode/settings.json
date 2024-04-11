@@ -1,0 +1,32 @@
+{
+	"cSpell.words": [
+		"Audiobook",
+		"Bandcamp",
+		"Brainz",
+		"deezer",
+		"Deezer",
+		"Deno",
+		"Discogs",
+		"gtin",
+		"GTIN",
+		"isrc",
+		"ISRC",
+		"itunes",
+		"lande",
+		"mbid",
+		"MBID",
+		"millis",
+		"mzstatic",
+		"preact",
+		"runtimes",
+		"smartradio",
+		"streamable",
+		"tabler",
+		"tracklist"
+	],
+	"deno.enable": true,
+	"deno.lint": true,
+	"[typescript]": {
+		"editor.defaultFormatter": "denoland.vscode-deno"
+	}
+}
