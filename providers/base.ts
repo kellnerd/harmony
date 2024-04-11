@@ -12,7 +12,7 @@ import type {
 	ReleaseOptions,
 } from '@/harmonizer/types.ts';
 import type { PartialDate } from '@/utils/date.ts';
-import type { SnapStorage } from 'snap-storage';
+import type { Snapshot, SnapStorage } from 'snap-storage';
 import type { MaybePromise } from 'utils/types.d.ts';
 
 export type ProviderOptions = Partial<{
@@ -78,25 +78,36 @@ export abstract class MetadataProvider {
 
 	protected fetch = fetch;
 
-	protected async fetchJSON(input: string | URL, init?: RequestInit) {
-		let response: Response;
+	protected async fetchSnapshot(input: string | URL, init?: RequestInit): Promise<Snapshot<Response>> {
+		let snapshot: Snapshot<Response>;
 
 		if (this.snaps) {
-			const snap = await this.snaps.cache(input, {
+			snapshot = await this.snaps.cache(input, {
 				fetch: this.fetch,
 				requestInit: init,
 				policy: {
 					maxAge: 60 * 60 * 24, // 24 hours
 				},
 			});
-			response = snap.content;
-			console.debug(snap.isFresh ? 'Fetched' : 'Cached', new Date(snap.timestamp * 1000), input.toString());
 		} else {
-			response = await this.fetch(input, init);
-			console.debug('Fetched:', input.toString());
+			snapshot = {
+				content: await this.fetch(input, init),
+				timestamp: Math.floor(Date.now() / 1000),
+				isFresh: true,
+				// Dummy data, not relevant in this context.
+				contentHash: '',
+				path: '',
+			};
 		}
 
-		return response.json();
+		return snapshot;
+	}
+
+	protected async fetchJSON(input: string | URL, init?: RequestInit) {
+		const snapshot = await this.fetchSnapshot(input, init);
+		const json = await snapshot.content.json();
+
+		return json;
 	}
 }
 
