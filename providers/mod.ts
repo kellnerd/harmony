@@ -1,10 +1,10 @@
-import DeezerProvider from './providers/Deezer.ts';
-import iTunesProvider from './providers/iTunes.ts';
+import DeezerProvider from './Deezer/mod.ts';
+import iTunesProvider from './iTunes/mod.ts';
 
 import { SnapStorage } from 'snap-storage';
 
-import type { ProviderPreferences } from './harmonizer/types.ts';
-import type { MetadataProvider } from './providers/abstract.ts';
+import type { ProviderPreferences } from '../harmonizer/types.ts';
+import type { MetadataProvider } from './base.ts';
 
 const snaps = new SnapStorage();
 

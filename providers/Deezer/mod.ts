@@ -1,9 +1,9 @@
-import { DurationPrecision, ExtractRelease, MetadataProvider, ProviderOptions, ReleaseLookup } from './abstract.ts';
-import { availableRegions } from './regions/Deezer.ts';
-import { parseHyphenatedDate, PartialDate } from '../utils/date.ts';
-import { ResponseError } from '../utils/errors.ts';
+import { availableRegions } from './regions.ts';
+import { DurationPrecision, ExtractRelease, MetadataProvider, ProviderOptions, ReleaseLookup } from '../base.ts';
+import { parseHyphenatedDate, PartialDate } from '../../utils/date.ts';
+import { ResponseError } from '../../utils/errors.ts';
 
-import type { ArtistCreditName, HarmonyMedium, HarmonyRelease, HarmonyTrack } from '../harmonizer/types.ts';
+import type { ArtistCreditName, HarmonyMedium, HarmonyRelease, HarmonyTrack } from '../../harmonizer/types.ts';
 
 // See https://developers.deezer.com/api
 
@@ -55,7 +55,6 @@ type TestLookup = ReleaseLookup<DeezerProvider>;
 
 // We have to specify the second generic parameter `Release` because of the above "bug"
 export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> {
-
 	readonly supportedUrls = new URLPattern({
 		hostname: 'www.deezer.com',
 		pathname: String.raw`/:region(\w{2})?/album/:id(\d+)`,
@@ -83,7 +82,9 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 		let nextPageQuery: string | undefined = `album/${albumId}/tracks`;
 
 		while (nextPageQuery) {
-			const response: Response<TracklistItem> = await this.provider.query(new URL(nextPageQuery, this.provider.apiBaseUrl));
+			const response: Response<TracklistItem> = await this.provider.query(
+				new URL(nextPageQuery, this.provider.apiBaseUrl),
+			);
 			tracklist.push(...response.data);
 			nextPageQuery = response.next;
 		}

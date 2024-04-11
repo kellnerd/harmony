@@ -1,8 +1,8 @@
-import { DurationPrecision, MetadataProvider, ReleaseLookup } from './abstract.ts';
-import { parseISODateTime, PartialDate } from '../utils/date.ts';
-import { ResponseError } from '../utils/errors.ts';
-import { isEqualGTIN, isValidGTIN } from '../utils/gtin.ts';
-import { pluralWithCount } from '../utils/plural.ts';
+import { DurationPrecision, MetadataProvider, ReleaseLookup } from '../base.ts';
+import { parseISODateTime, PartialDate } from '../../utils/date.ts';
+import { ResponseError } from '../../utils/errors.ts';
+import { isEqualGTIN, isValidGTIN } from '../../utils/gtin.ts';
+import { pluralWithCount } from '../../utils/plural.ts';
 
 import type {
 	ArtistCreditName,
@@ -13,7 +13,7 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	LinkType,
-} from '../harmonizer/types.ts';
+} from '../../harmonizer/types.ts';
 
 // See https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI
 
@@ -63,7 +63,6 @@ export default class iTunesProvider extends MetadataProvider<ReleaseResult> {
 }
 
 export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseResult> {
-
 	readonly supportedUrls = new URLPattern({
 		hostname: '(itunes|music).apple.com',
 		pathname: String.raw`/:region(\w{2})?/album/:blurb?/:id(\d+)`,

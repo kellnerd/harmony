@@ -2,7 +2,7 @@ import Footer from '../components/Footer.tsx';
 import { MessageBox } from '../components/MessageBox.tsx';
 import ReleaseLookup from '../components/ReleaseLookup.tsx';
 
-import { providerNames } from '../../providers.ts';
+import { providerNames } from '../../providers/mod.ts';
 
 export default function Home() {
 	return (

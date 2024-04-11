@@ -1,5 +1,5 @@
 import { mergeRelease } from './harmonizer/merge.ts';
-import { providerNames, providerPreferences, providers } from './providers.ts';
+import { providerNames, providerPreferences, providers } from './providers/mod.ts';
 import { LookupError } from './utils/errors.ts';
 import { ensureValidGTIN } from './utils/gtin.ts';
 import { formatLanguageConfidence, formatScriptFrequency } from './utils/locale.ts';
