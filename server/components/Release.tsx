@@ -9,6 +9,7 @@ import { determineReleaseEventCountries } from '@/musicbrainz/release_countries.
 import { formatPartialDate } from '@/utils/date.ts';
 import { formatLanguageConfidence, formatScriptFrequency, regionName } from '@/utils/locale.ts';
 import { flagEmoji } from '@/utils/regions.ts';
+import { formatTimestampAsISOString } from '@/utils/time.ts';
 
 import type { HarmonyRelease } from '@/harmonizer/types.ts';
 
@@ -35,6 +36,9 @@ export function Release({ release }: { release: HarmonyRelease }) {
 								<li>
 									{provider.name}: <a href={provider.url.href} target='_blank'>{provider.id}</a>
 									{provider.apiUrl && <a class='label ml-2' href={provider.apiUrl.href} target='_blank'>API</a>}
+									{provider.cacheTime && (
+										<span class='label ml-2'>Cached: {formatTimestampAsISOString(provider.cacheTime)}</span>
+									)}
 									{provider.processingTime && <span class='label ml-2'>{provider.processingTime.toFixed(0)} ms</span>}
 								</li>
 							))}

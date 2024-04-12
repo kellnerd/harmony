@@ -30,3 +30,7 @@ export function formatDuration(ms: number, {
 
 	return duration;
 }
+
+export function formatTimestampAsISOString(unixSeconds: number): string {
+	return new Date(unixSeconds * 1000).toISOString();
+}
