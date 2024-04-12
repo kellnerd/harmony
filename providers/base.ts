@@ -272,6 +272,8 @@ export type CacheEntry<Content> = {
 	timestamp: number;
 	/** Indicates that the cache entry has been created by the returning method. */
 	isFresh: boolean;
+	/** Successfully queried region of the API. */
+	region?: CountryCode;
 };
 
 export enum DurationPrecision {

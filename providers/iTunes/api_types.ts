@@ -1,5 +1,3 @@
-import type { CountryCode } from '@/harmonizer/types.ts';
-
 export type Artist = {
 	wrapperType: 'artist';
 	artistType: 'Artist';
@@ -89,8 +87,6 @@ export type Kind =
 export type Result<T> = {
 	resultCount: number;
 	results: Array<T>;
-	/** Custom property to remember the successfully queried region of the API. */
-	region: CountryCode;
 };
 
 export type ReleaseResult = Result<Collection | Track>;

@@ -54,7 +54,7 @@ export default class iTunesProvider extends MetadataProvider {
 
 			const cacheEntry = await this.fetchJSON<Data>(apiUrl);
 			if (cacheEntry.content.resultCount) {
-				cacheEntry.content.region = region;
+				cacheEntry.region = region;
 				return cacheEntry;
 			}
 		}
@@ -97,10 +97,10 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 
 	protected async getRawRelease(): Promise<ReleaseResult> {
 		const apiUrl = this.constructReleaseApiUrl();
-		const { content, timestamp } = await this.provider.query<ReleaseResult>(apiUrl, this.options.regions);
+		const { content, timestamp, region } = await this.provider.query<ReleaseResult>(apiUrl, this.options.regions);
 
 		// Overwrite optional property with the actually used region (in order to build the accurate API URL).
-		this.lookup.region = content.region;
+		this.lookup.region = region;
 		this.cacheTime = timestamp;
 
 		return content;
