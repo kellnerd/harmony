@@ -103,11 +103,15 @@ export abstract class MetadataProvider {
 		return snapshot;
 	}
 
-	protected async fetchJSON(input: string | URL, init?: RequestInit) {
+	protected async fetchJSON<Content>(input: string | URL, init?: RequestInit): Promise<CacheEntry<Content>> {
 		const snapshot = await this.fetchSnapshot(input, init);
 		const json = await snapshot.content.json();
 
-		return json;
+		return {
+			content: json,
+			timestamp: snapshot.timestamp,
+			isFresh: snapshot.isFresh ?? false,
+		};
 	}
 }
 
@@ -166,6 +170,9 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 
 	/** Provider ID of the currently looked up release (initially undefined). */
 	protected id: string | undefined;
+
+	/** Date and time when the (last piece of) provider data was cached (in seconds since the UNIX epoch). */
+	protected cacheTime: number | undefined;
 
 	/** Constructs a canonical release URL for the given provider ID (and optional region). */
 	abstract constructReleaseUrl(id: string, region?: CountryCode): URL;
@@ -235,6 +242,7 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 				region: this.lookup.region,
 				url: this.constructReleaseUrl(this.id, this.lookup.region),
 				apiUrl: this.constructReleaseApiUrl(),
+				cacheTime: this.cacheTime,
 			}],
 			messages: this.messages,
 		};
@@ -255,6 +263,16 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 		return release;
 	}
 }
+
+/** Cache entry for a requested piece of data. */
+export type CacheEntry<Content> = {
+	/** Cached content. */
+	content: Content;
+	/** Creation date and time in seconds since the UNIX epoch. */
+	timestamp: number;
+	/** Indicates that the cache entry has been created by the returning method. */
+	isFresh: boolean;
+};
 
 export enum DurationPrecision {
 	SECONDS,

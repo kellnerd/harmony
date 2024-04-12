@@ -1,4 +1,4 @@
-import { DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
@@ -40,7 +40,7 @@ export default class iTunesProvider extends MetadataProvider {
 
 	readonly apiBaseUrl = 'https://itunes.apple.com';
 
-	async query<T>(apiUrl: URL, preferredRegions?: CountryCode[]) {
+	async query<Data extends Result<unknown>>(apiUrl: URL, preferredRegions?: CountryCode[]): Promise<CacheEntry<Data>> {
 		if (!preferredRegions?.length) {
 			// use the default region of the API (which would also be used if none was specified)
 			preferredRegions = ['US'];
@@ -52,10 +52,10 @@ export default class iTunesProvider extends MetadataProvider {
 			query.set('country', region.toLowerCase());
 			apiUrl.search = query.toString();
 
-			const data = await this.fetchJSON(apiUrl) as Result<T>;
-			if (data.resultCount) {
-				data.region = region;
-				return data;
+			const cacheEntry = await this.fetchJSON<Data>(apiUrl);
+			if (cacheEntry.content.resultCount) {
+				cacheEntry.content.region = region;
+				return cacheEntry;
 			}
 		}
 
@@ -97,12 +97,13 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 
 	protected async getRawRelease(): Promise<ReleaseResult> {
 		const apiUrl = this.constructReleaseApiUrl();
-		const data = await this.provider.query(apiUrl, this.options.regions) as ReleaseResult;
+		const { content, timestamp } = await this.provider.query<ReleaseResult>(apiUrl, this.options.regions);
 
 		// Overwrite optional property with the actually used region (in order to build the accurate API URL).
-		this.lookup.region = data.region;
+		this.lookup.region = content.region;
+		this.cacheTime = timestamp;
 
-		return data;
+		return content;
 	}
 
 	protected convertRawRelease(data: ReleaseResult): HarmonyRelease {

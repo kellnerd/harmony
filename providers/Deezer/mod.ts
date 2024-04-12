@@ -1,9 +1,9 @@
 import { availableRegions } from './regions.ts';
-import { DurationPrecision, MetadataProvider, ProviderOptions, ReleaseLookup } from '@/providers/base.ts';
+import { CacheEntry, DurationPrecision, MetadataProvider, ProviderOptions, ReleaseLookup } from '@/providers/base.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 
-import type { ApiError, MinimalArtist, Release, ReleaseTrack, Response, Track, TracklistItem } from './api_types.ts';
+import type { ApiError, MinimalArtist, Release, ReleaseTrack, Result, Track, TracklistItem } from './api_types.ts';
 import type { ArtistCreditName, HarmonyMedium, HarmonyRelease, HarmonyTrack } from '@/harmonizer/types.ts';
 
 // See https://developers.deezer.com/api
@@ -40,13 +40,14 @@ export default class DeezerProvider extends MetadataProvider {
 
 	readonly apiBaseUrl = 'https://api.deezer.com';
 
-	async query(apiUrl: URL) {
-		const data = await this.fetchJSON(apiUrl);
+	async query<Data>(apiUrl: URL): Promise<CacheEntry<Data>> {
+		const cacheEntry = await this.fetchJSON<Data>(apiUrl);
+		const { error } = cacheEntry.content as { error?: ApiError };
 
-		if (data.error) {
-			throw new DeezerResponseError(data.error, apiUrl);
+		if (error) {
+			throw new DeezerResponseError(error, apiUrl);
 		}
-		return data;
+		return cacheEntry;
 	}
 }
 
@@ -68,9 +69,12 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 		}
 	}
 
-	protected getRawRelease(): Promise<Release> {
+	protected async getRawRelease(): Promise<Release> {
 		const apiUrl = this.constructReleaseApiUrl();
-		return this.provider.query(apiUrl);
+		const { content: release, timestamp } = await this.provider.query<Release>(apiUrl);
+		this.cacheTime = timestamp;
+
+		return release;
 	}
 
 	private async getRawTracklist(albumId: string): Promise<TracklistItem[]> {
@@ -78,18 +82,23 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 		let nextPageQuery: string | undefined = `album/${albumId}/tracks`;
 
 		while (nextPageQuery) {
-			const response: Response<TracklistItem> = await this.provider.query(
+			const { content, timestamp }: CacheEntry<Result<TracklistItem>> = await this.provider.query(
 				new URL(nextPageQuery, this.provider.apiBaseUrl),
 			);
-			tracklist.push(...response.data);
-			nextPageQuery = response.next;
+			tracklist.push(...content.data);
+			nextPageQuery = content.next;
+			this.cacheTime = timestamp;
 		}
 
 		return tracklist;
 	}
 
-	protected getRawTrackById(trackId: string): Promise<Track> {
-		return this.provider.query(new URL(`track/${trackId}`, this.provider.apiBaseUrl));
+	protected async getRawTrackById(trackId: string): Promise<Track> {
+		const { content: track, timestamp } = await this.provider.query<Track>(
+			new URL(`track/${trackId}`, this.provider.apiBaseUrl),
+		);
+		this.cacheTime = timestamp;
+		return track;
 	}
 
 	protected async convertRawRelease(rawRelease: Release): Promise<HarmonyRelease> {

@@ -148,7 +148,7 @@ export type ErrorType =
 	| 'DataException'
 	| 'IndividualAccountChangedNotAllowedException';
 
-export type Response<T> = {
+export type Result<T> = {
 	data: T[];
 	total: number;
 	prev?: string;

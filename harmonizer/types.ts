@@ -148,6 +148,8 @@ export type ProviderInfo = {
 	apiUrl?: URL;
 	/** Processing time of the provider in milliseconds, filled automatically. */
 	processingTime?: number;
+	/** Date and time when the (last piece of) provider data was cached (in seconds since the UNIX epoch). */
+	cacheTime?: number;
 };
 
 export type MessageType = 'debug' | 'info' | 'warning' | 'error';
