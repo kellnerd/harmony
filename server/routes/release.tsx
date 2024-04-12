@@ -5,6 +5,7 @@ import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
 import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
 
 import { getMergedReleaseByGTIN, getMergedReleaseByUrl } from '@/lookup.ts';
+import { assertCountryCode } from '@/utils/regions.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
 
@@ -13,14 +14,16 @@ import type { ProviderError } from '@/utils/errors.ts';
 
 export default defineRoute(async (req, ctx) => {
 	const url = new URL(req.url);
-	const gtin = url.searchParams.get('gtin');
-	const externalUrl = url.searchParams.get('url'); // TODO: handle multiple values
+	const { searchParams } = url;
+	const gtin = searchParams.get('gtin');
+	const externalUrl = searchParams.get('url'); // TODO: handle multiple values
+	const regions = searchParams.getAll('region');
 
 	const errors: Error[] = [];
 	const options: ReleaseOptions = {
 		withSeparateMedia: true,
 		withAllTrackArtists: true,
-		regions: ['GB', 'US', 'DE', 'JP'],
+		regions: regions.length ? regions : ['GB', 'US', 'DE', 'JP'],
 	};
 
 	// Only set seeder URL (used for permalinks) in production servers.
@@ -28,6 +31,9 @@ export default defineRoute(async (req, ctx) => {
 
 	let release: HarmonyRelease | undefined;
 	try {
+		for (const countryCode of options.regions!) {
+			assertCountryCode(countryCode);
+		}
 		if (gtin) {
 			release = await getMergedReleaseByGTIN(gtin, options);
 		} else if (externalUrl) {
@@ -36,7 +42,7 @@ export default defineRoute(async (req, ctx) => {
 	} catch (error) {
 		if (ctx.config.dev) {
 			// Show more details during development.
-			throw error;
+			console.error(error);
 		}
 		if (error instanceof AggregateError) {
 			errors.push(error, ...error.errors);
