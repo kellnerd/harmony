@@ -5,9 +5,8 @@ export default function Footer() {
 		<footer class='center'>
 			<p>
 				<small>
-					&copy; 2023-2024 David Kellner &bull; <a href={codeUrl}>Source</a> &bull; <a href={supportUrl}>Support</a>
-					{' '}
-					&bull; Revision
+					&copy; 2023-2024 David Kellner &bull; <a href={codeUrl.href}>Source</a> &bull;{' '}
+					<a href={supportUrl.href}>Support</a> &bull; Revision
 				</small>{' '}
 				<code>{revision ?? 'unknown'}</code>
 			</p>
