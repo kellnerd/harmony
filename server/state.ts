@@ -1,5 +1,6 @@
 import type { ReleaseInfo } from '@/harmonizer/types.ts';
 import { isDefined } from '@/utils/predicate.ts';
+import { simplifyName } from 'utils/string/simplify.js';
 
 export function createReleasePermalink(info: ReleaseInfo, baseUrl: URL): URL {
 	const providersLookedUpByGtin = info.providers.filter((provider) => provider.lookup.method === 'gtin');
@@ -14,7 +15,7 @@ export function createReleasePermalink(info: ReleaseInfo, baseUrl: URL): URL {
 		state.append('gtin', providersLookedUpByGtin[0].lookup.value);
 		// Add all enabled providers which were looked up by GTIN (with empty provider ID value).
 		for (const provider of providersLookedUpByGtin) {
-			state.append(provider.name, '');
+			state.append(simplifyName(provider.name), '');
 		}
 	}
 	// If a region has been used for lookup, it should be the same for all providers.
