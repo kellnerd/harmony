@@ -1,13 +1,14 @@
 import { mergeRelease } from '@/harmonizer/merge.ts';
-import { providerNames, providerPreferences, providers } from '@/providers/mod.ts';
+import { allProviderSimpleNames, providerMap, providerPreferences, providers } from '@/providers/mod.ts';
 import { LookupError } from '@/utils/errors.ts';
 import { ensureValidGTIN } from '@/utils/gtin.ts';
 import { formatLanguageConfidence, formatScriptFrequency } from '@/utils/locale.ts';
+import { isDefined } from '@/utils/predicate.ts';
 import { detectScripts, scriptCodes } from '@/utils/script.ts';
 import lande from 'lande';
 import { zipObject } from 'utils/object/zipObject.js';
 
-import type { GTIN, HarmonyRelease, ProviderReleaseMapping, ReleaseOptions } from '@/harmonizer/types.ts';
+import type { GTIN, HarmonyRelease, ProviderName, ProviderReleaseMapping, ReleaseOptions } from '@/harmonizer/types.ts';
 
 /**
  * Looks up the given URL with the first matching provider.
@@ -23,12 +24,25 @@ export function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<Har
 }
 
 /**
- * Looks up the given GTIN with each provider.
+ * Looks up the given GTIN with each requested provider.
+ *
+ * Uses all supported providers by default.
  */
-export async function getProviderReleaseMapping(gtin: GTIN, options?: ReleaseOptions): Promise<ProviderReleaseMapping> {
+export function getProviderReleaseMapping(gtin: GTIN, options?: ReleaseOptions): Promise<ProviderReleaseMapping> {
 	ensureValidGTIN(gtin);
 
-	const releasePromises = providers.map((provider) => provider.getRelease(gtin, options));
+	const requestedProviders = Array.from(options?.providers ?? allProviderSimpleNames)
+		.map((simpleName) => providerMap[simpleName]).filter(isDefined);
+	const requestedProviderNames = requestedProviders.map((provider) => provider.name);
+	const releasePromises = requestedProviders.map((provider) => provider.getRelease(gtin, options));
+
+	return makeProviderReleaseMapping(requestedProviderNames, releasePromises);
+}
+
+async function makeProviderReleaseMapping(
+	usedProviderNames: ProviderName[],
+	releasePromises: Promise<HarmonyRelease>[],
+): Promise<ProviderReleaseMapping> {
 	const releaseResults = await Promise.allSettled(releasePromises);
 	const releasesOrErrors: Array<HarmonyRelease | Error> = releaseResults.map((result) => {
 		if (result.status === 'fulfilled') {
@@ -40,7 +54,7 @@ export async function getProviderReleaseMapping(gtin: GTIN, options?: ReleaseOpt
 		}
 	});
 
-	return zipObject(providerNames, releasesOrErrors);
+	return zipObject(usedProviderNames, releasesOrErrors);
 }
 
 /**

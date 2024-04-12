@@ -114,6 +114,8 @@ export type ReleaseOptions = Partial<{
 	 * Only used by providers which have region-specific API endpoints or pages.
 	 */
 	regions: CountryCode[];
+	/** Simplified names of the providers which should (additionally) be used. */
+	providers: Set<string>;
 }>;
 
 /** Parameters to lookup a release. */
