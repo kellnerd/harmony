@@ -5,6 +5,7 @@ import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
 import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
 
 import { getMergedReleaseByGTIN, getMergedReleaseByUrl } from '@/lookup.ts';
+import { allProviderSimpleNames } from '@/providers/mod.ts';
 import { assertCountryCode } from '@/utils/regions.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
@@ -19,11 +20,19 @@ export default defineRoute(async (req, ctx) => {
 	const externalUrl = searchParams.get('url'); // TODO: handle multiple values
 	const regions = searchParams.getAll('region');
 
+	const requestedProviders = new Set<string>();
+	for (const [name, value] of searchParams) {
+		if (allProviderSimpleNames.has(name)) {
+			requestedProviders.add(name);
+		}
+	}
+
 	const errors: Error[] = [];
 	const options: ReleaseOptions = {
 		withSeparateMedia: true,
 		withAllTrackArtists: true,
 		regions: regions.length ? regions : ['GB', 'US', 'DE', 'JP'],
+		providers: requestedProviders.size ? requestedProviders : undefined,
 	};
 
 	// Only set seeder URL (used for permalinks) in production servers.
