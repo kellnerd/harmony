@@ -239,9 +239,9 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 			providers: [{
 				name: this.provider.name,
 				id: this.id,
-				region: this.lookup.region,
 				url: this.constructReleaseUrl(this.id, this.lookup.region),
 				apiUrl: this.constructReleaseApiUrl(),
+				lookup: this.lookup,
 				cacheTime: this.cacheTime,
 			}],
 			messages: this.messages,

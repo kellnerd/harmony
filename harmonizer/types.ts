@@ -142,10 +142,14 @@ export type ProviderPreferences = Partial<Record<PreferenceProperty, ProviderNam
 
 export type ProviderInfo = {
 	name: ProviderName;
+	/** Provider ID of the entity. */
 	id: string;
-	region?: CountryCode;
+	/** Provider URL of the entity. */
 	url: URL;
+	/** Provider API URL of the entity, if applicable. */
 	apiUrl?: URL;
+	/** Parameters which were used to look up the entity. */
+	lookup: ReleaseLookupParameters;
 	/** Processing time of the provider in milliseconds, filled automatically. */
 	processingTime?: number;
 	/** Date and time when the (last piece of) provider data was cached (in seconds since the UNIX epoch). */

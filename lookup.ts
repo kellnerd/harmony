@@ -66,7 +66,7 @@ export async function getMergedReleaseByUrl(url: URL, options: ReleaseOptions = 
 	const release = await getReleaseByUrl(url, options);
 
 	if (release.gtin) {
-		const usedRegion = release.info.providers[0]?.region;
+		const usedRegion = release.info.providers[0]?.lookup.region;
 		if (usedRegion) {
 			// create a deep copy, we don't want to manipulate the caller's options
 			options = { ...options };
