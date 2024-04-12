@@ -41,7 +41,7 @@ export abstract class MetadataProvider {
 		}
 	}
 
-	/** Display name of the metadata source. */
+	/** Display name of the metadata source, has to be unique. */
 	abstract readonly name: string;
 
 	/**
