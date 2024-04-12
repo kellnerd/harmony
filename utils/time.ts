@@ -32,5 +32,5 @@ export function formatDuration(ms: number, {
 }
 
 export function formatTimestampAsISOString(unixSeconds: number): string {
-	return new Date(unixSeconds * 1000).toISOString();
+	return new Date(unixSeconds * 1000).toISOString().replace('.000', '');
 }
