@@ -1,3 +1,5 @@
+import { createReleasePermalink } from '@/server/state.ts';
+import { codeUrl } from '@/server/config.ts';
 import { determineReleaseEventCountries } from './release_countries.ts';
 import { urlTypeIds } from './type_id.ts';
 import { preferArray } from 'utils/array/scalar.js';
@@ -11,7 +13,7 @@ import type { FormDataRecord, MaybeArray } from 'utils/types.d.ts';
 
 export const targetUrl = new URL('/release/add', 'https://musicbrainz.org');
 
-export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
+export function createReleaseSeed(release: HarmonyRelease, seederUrl?: URL): FormDataRecord {
 	const countries = preferArray(determineReleaseEventCountries(release));
 
 	const seed: ReleaseSeed = {
@@ -52,7 +54,7 @@ export function createReleaseSeed(release: HarmonyRelease): FormDataRecord {
 				})
 		),
 		annotation: buildAnnotation(release),
-		edit_note: buildEditNote(release.info),
+		edit_note: buildEditNote(release.info, seederUrl),
 	};
 
 	return flatten(seed);
@@ -104,14 +106,15 @@ function buildAnnotation(release: HarmonyRelease): string {
 	return lines.join('\n');
 }
 
-function buildEditNote(info: ReleaseInfo): string {
+function buildEditNote(info: ReleaseInfo, seederUrl?: URL): string {
 	const lines = info.providers.map(({ name, url, apiUrl }) => {
 		let line = `* ${name}: ${url}`;
 		if (apiUrl) line += ` (API: ${apiUrl})`;
 		return line;
 	});
 
-	lines.unshift('Imported with Harmony, using data from:');
+	const sourceUrl = seederUrl ? createReleasePermalink(info, seederUrl) : codeUrl;
+	lines.unshift(`Imported with Harmony (${sourceUrl}), using data from:`);
 
 	return lines.join('\n');
 }
