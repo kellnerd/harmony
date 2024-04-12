@@ -5,14 +5,13 @@ import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
 import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
 
 import { getMergedReleaseByGTIN, getMergedReleaseByUrl } from '@/lookup.ts';
-import { isDevServer } from '@/server/config.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
 
 import type { HarmonyRelease, ReleaseOptions } from '@/harmonizer/types.ts';
 import type { ProviderError } from '@/utils/errors.ts';
 
-export default defineRoute(async (req) => {
+export default defineRoute(async (req, ctx) => {
 	const url = new URL(req.url);
 	const gtin = url.searchParams.get('gtin');
 	const externalUrl = url.searchParams.get('url'); // TODO: handle multiple values
@@ -32,7 +31,7 @@ export default defineRoute(async (req) => {
 			release = await getMergedReleaseByUrl(new URL(externalUrl), options);
 		}
 	} catch (error) {
-		if (isDevServer) {
+		if (ctx.config.dev) {
 			// Show more details during development.
 			throw error;
 		}

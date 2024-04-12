@@ -6,6 +6,3 @@ export const supportUrl = Deno.env.get('HARMONY_SUPPORT_URL') || new URL('issues
 
 /** Current git revision. */
 export const revision = Deno.env.get('DENO_DEPLOYMENT_ID');
-
-/** Indicates whether the current server runs in development mode. */
-export const isDevServer = !revision;
