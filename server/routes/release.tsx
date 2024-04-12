@@ -23,6 +23,9 @@ export default defineRoute(async (req, ctx) => {
 		regions: ['GB', 'US', 'DE', 'JP'],
 	};
 
+	// Only set seeder URL (used for permalinks) in production servers.
+	const seederUrl = ctx.config.dev ? undefined : url;
+
 	let release: HarmonyRelease | undefined;
 	try {
 		if (gtin) {
@@ -60,7 +63,7 @@ export default defineRoute(async (req, ctx) => {
 					/>
 				))}
 				{release && <Release release={release} />}
-				{release && <ReleaseSeeder release={release} />}
+				{release && <ReleaseSeeder release={release} seederUrl={seederUrl} />}
 			</main>
 			<Footer />
 		</>
