@@ -130,6 +130,8 @@ export type ReleaseLookupParameters = {
 
 export type ProviderName = string;
 
+export type ProviderNameAndId = [string, string];
+
 /** Mapping from the provider's name to the release returned by that provider. */
 export type ProviderReleaseMapping = Record<ProviderName, HarmonyRelease | Error>;
 
