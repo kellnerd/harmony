@@ -13,7 +13,6 @@ import type {
 	GTIN,
 	HarmonyRelease,
 	ProviderMessage,
-	ProviderName,
 	ProviderNameAndId,
 	ProviderPreferences,
 	ProviderReleaseMapping,
@@ -151,8 +150,19 @@ export class CombinedReleaseLookup {
 	}
 
 	/** Finalizes all queued lookup requests and returns the provider release mapping. */
-	getProviderReleaseMapping(): Promise<ProviderReleaseMapping> {
-		return makeProviderReleaseMapping(Array.from(this.queuedProviderNames), this.queuedReleases);
+	async getProviderReleaseMapping(): Promise<ProviderReleaseMapping> {
+		const releaseResults = await Promise.allSettled(this.queuedReleases);
+		const releasesOrErrors: Array<HarmonyRelease | Error> = releaseResults.map((result) => {
+			if (result.status === 'fulfilled') {
+				return result.value;
+			} else if (result.reason instanceof Error) {
+				return result.reason;
+			} else {
+				return Error(result.reason);
+			}
+		});
+
+		return zipObject(Array.from(this.queuedProviderNames), releasesOrErrors);
 	}
 
 	/** Ensures that all requested providers have been looked up and returns the provider release mapping. */
@@ -232,24 +242,6 @@ export function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<Har
 	}
 
 	return matchingProvider.getRelease(url, options);
-}
-
-async function makeProviderReleaseMapping(
-	usedProviderNames: ProviderName[],
-	promisedReleases: Promise<HarmonyRelease>[],
-): Promise<ProviderReleaseMapping> {
-	const releaseResults = await Promise.allSettled(promisedReleases);
-	const releasesOrErrors: Array<HarmonyRelease | Error> = releaseResults.map((result) => {
-		if (result.status === 'fulfilled') {
-			return result.value;
-		} else if (result.reason instanceof Error) {
-			return result.reason;
-		} else {
-			return Error(result.reason);
-		}
-	});
-
-	return zipObject(usedProviderNames, releasesOrErrors);
 }
 
 /**
