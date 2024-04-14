@@ -45,7 +45,8 @@ export abstract class MetadataProvider {
 	abstract readonly name: string;
 
 	/**
-	 * URL pattern used to check supported domains, match release URLs and extract the ID from the URL.
+	 * URL pattern used to check supported domains, match entity URLs and extract the ID from the URL.
+	 *
 	 * The pathname has to contain a named group `id`, e.g. `/release/:id`.
 	 * Optionally the pathname can also contain a named group `region` which will be used to extract the preferred region.
 	 */
@@ -159,8 +160,11 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 
 	/**
 	 * URL pattern used to check supported domains, match release URLs and extract the ID from the URL.
+	 *
 	 * The pathname has to contain a named group `id`, e.g. `/release/:id`.
 	 * Optionally the pathname can also contain a named group `region` which will be used to extract the preferred region.
+	 *
+	 * Falls back to {@linkcode MetadataProvider.supportedUrls} if not specified.
 	 */
 	protected supportedUrls: URLPattern;
 

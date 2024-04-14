@@ -64,11 +64,6 @@ export default class iTunesProvider extends MetadataProvider {
 }
 
 export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseResult> {
-	readonly supportedUrls = new URLPattern({
-		hostname: '(itunes|music).apple.com',
-		pathname: String.raw`/:region(\w{2})?/album/:blurb?/:id(\d+)`,
-	});
-
 	constructReleaseUrl(id: string, region: CountryCode = 'US'): URL {
 		return new URL([region.toLowerCase(), 'album', id].join('/'), 'https://music.apple.com');
 	}

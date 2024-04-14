@@ -52,11 +52,6 @@ export default class DeezerProvider extends MetadataProvider {
 }
 
 export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> {
-	readonly supportedUrls = new URLPattern({
-		hostname: 'www.deezer.com',
-		pathname: String.raw`/:region(\w{2})?/album/:id(\d+)`,
-	});
-
 	constructReleaseUrl(id: string): URL {
 		return new URL(id, 'https://www.deezer.com/album/');
 	}
