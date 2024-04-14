@@ -1,7 +1,7 @@
 import { mergeRelease } from '@/harmonizer/merge.ts';
 import { allProviderSimpleNames, providerMap, providerPreferences, providers } from '@/providers/mod.ts';
 import { LookupError } from '@/utils/errors.ts';
-import { ensureValidGTIN } from '@/utils/gtin.ts';
+import { ensureValidGTIN, isEqualGTIN } from '@/utils/gtin.ts';
 import { formatLanguageConfidence, formatScriptFrequency } from '@/utils/locale.ts';
 import { isDefined } from '@/utils/predicate.ts';
 import { detectScripts, scriptCodes } from '@/utils/script.ts';
@@ -30,104 +30,130 @@ export type ReleaseLookupParameters = {
 };
 
 /**
- * Looks up a release for each of the given lookup parameters.
+ * Performs a combined lookup of a release with each of the given lookup parameters.
  *
- * Supports GTIN, provider IDs and URLs as input.
+ * Supports GTIN (has to be unique), provider IDs and URLs as input.
  * Each provider can only be used once, IDs will be used before URLs and GTIN.
  *
  * All remaining supported providers will be used for GTIN lookups, unless only specific providers have been requested.
- * GTIN lookups are only possible if the GTIN is available, that is:
- * - GTIN has been specified as lookup parameter.
- * - GTIN could be extracted from the (first available) result of another lookup.
+ * GTIN lookups are only possible if the GTIN is available of course.
  */
-export async function lookupRelease(lookup: ReleaseLookupParameters, options?: ReleaseOptions) {
-	// Use all supported providers if no specific ones were requested.
-	// Providers for which we have an ID or URL will not be looked up by GTIN.
-	const gtinLookupProviders = new Set(options?.providers ?? allProviderSimpleNames);
-	const promisedReleases: Promise<HarmonyRelease>[] = [];
-	const usedProviderNames = new Set<string>();
-	const messages: ProviderMessage[] = [];
+export class CombinedReleaseLookup {
+	constructor(lookup: ReleaseLookupParameters, private options?: ReleaseOptions) {
+		this.gtinLookupProviders = new Set(options?.providers ?? allProviderSimpleNames);
 
-	if (lookup.providerIds?.length) {
-		for (const [providerSimpleName, id] of lookup.providerIds) {
+		if (lookup.providerIds?.length) {
+			for (const [providerSimpleName, id] of lookup.providerIds) {
+				this.addProviderId(providerSimpleName, id);
+			}
+		}
+		if (lookup.urls?.length) {
+			for (const url of lookup.urls) {
+				this.addProviderUrl(url);
+			}
+		}
+		if (this.gtinLookupProviders.size && lookup.gtin) {
+			this.setGTIN(lookup.gtin);
+		}
+	}
+
+	addProviderId(providerSimpleName: string, id: string): boolean {
+		const provider = providerMap[providerSimpleName];
+		if (provider) {
+			const providerName = provider.name;
+			if (this.queuedProviderNames.has(providerName)) {
+				this.messages.push({
+					type: 'error',
+					text: `Provider ${providerName} can only be used once per lookup, ignoring ID '${id}'`,
+				});
+				return false;
+			} else {
+				this.queuedReleases.push(provider.getRelease(id, this.options));
+				this.queuedProviderNames.add(providerName);
+				this.gtinLookupProviders.delete(providerSimpleName);
+				return true;
+			}
+		} else {
+			this.messages.push({
+				type: 'error',
+				text: `There is no provider with the simplified name ${providerSimpleName}`,
+			});
+			return false;
+		}
+	}
+
+	private addProviderUrl(url: URL): boolean {
+		const provider = providers.find((provider) => provider.supportsDomain(url));
+		if (provider) {
+			const providerName = provider.name;
+			if (this.queuedProviderNames.has(providerName)) {
+				this.messages.push({
+					type: 'error',
+					text: `Provider ${providerName} can only be used once per lookup, ignoring ${url}`,
+				});
+				return false;
+			} else {
+				this.queuedReleases.push(provider.getRelease(url, this.options));
+				this.queuedProviderNames.add(providerName);
+				this.gtinLookupProviders.delete(simplifyName(providerName));
+				return true;
+			}
+		} else {
+			this.messages.push({
+				type: 'error',
+				text: `No provider supports ${url}`,
+			});
+			return false;
+		}
+	}
+
+	setGTIN(gtin: GTIN): boolean {
+		// If the GTIN is already set, trying to change it is considered an error.
+		if (this.gtin) {
+			if (isEqualGTIN(gtin, this.gtin)) return true;
+			this.messages.push({
+				type: 'error',
+				text: `Different GTIN '${gtin}' can not be combined with the current lookup`,
+			});
+			return false;
+		}
+
+		try {
+			ensureValidGTIN(gtin);
+		} catch (error) {
+			this.messages.push({
+				type: 'error',
+				text: error.message,
+			});
+			return false;
+		}
+		this.gtin = gtin.toString();
+
+		for (const providerSimpleName of this.gtinLookupProviders) {
 			const provider = providerMap[providerSimpleName];
 			if (provider) {
 				const providerName = provider.name;
-				if (usedProviderNames.has(providerName)) {
-					messages.push({
-						type: 'error',
-						text: `Provider ${providerName} can only be used once per lookup, ignoring ID '${id}'`,
-					});
-				} else {
-					promisedReleases.push(provider.getRelease(id, options));
-					usedProviderNames.add(providerName);
-					gtinLookupProviders.delete(providerSimpleName);
-				}
+				this.queuedReleases.push(provider.getRelease(['gtin', this.gtin], this.options));
+				this.queuedProviderNames.add(providerName);
 			} else {
-				messages.push({
+				this.messages.push({
 					type: 'error',
 					text: `There is no provider with the simplified name ${providerSimpleName}`,
 				});
 			}
 		}
+		return true;
 	}
 
-	if (lookup.urls?.length) {
-		for (const url of lookup.urls) {
-			const provider = providers.find((provider) => provider.supportsDomain(url));
-			if (provider) {
-				const providerName = provider.name;
-				if (usedProviderNames.has(providerName)) {
-					messages.push({
-						type: 'error',
-						text: `Provider ${providerName} can only be used once per lookup, ignoring ${url}`,
-					});
-				} else {
-					promisedReleases.push(provider.getRelease(url, options));
-					usedProviderNames.add(providerName);
-					gtinLookupProviders.delete(simplifyName(providerName));
-				}
-			} else {
-				messages.push({
-					type: 'error',
-					text: `No provider supports ${url}`,
-				});
-			}
-		}
+	getProviderReleaseMapping(): Promise<ProviderReleaseMapping> {
+		return makeProviderReleaseMapping(Array.from(this.queuedProviderNames), this.queuedReleases);
 	}
 
-	if (gtinLookupProviders.size) {
-		let { gtin } = lookup;
-		if (!gtin) {
-			const firstAvailableRelease = await Promise.any(promisedReleases);
-			gtin = firstAvailableRelease.gtin;
-		}
-		if (gtin) {
-			for (const providerSimpleName of gtinLookupProviders) {
-				const provider = providerMap[providerSimpleName];
-				if (provider) {
-					const providerName = provider.name;
-					promisedReleases.push(provider.getRelease(['gtin', gtin.toString()], options));
-					usedProviderNames.add(providerName);
-				} else {
-					messages.push({
-						type: 'error',
-						text: `There is no provider with the simplified name ${providerSimpleName}`,
-					});
-				}
-			}
-		} else {
-			messages.push({
-				type: 'warning',
-				text: 'Lookups by GTIN were skipped because no GTIN was available',
-			});
-		}
-	}
-
-	return {
-		result: await makeProviderReleaseMapping(Array.from(usedProviderNames), promisedReleases),
-		messages,
-	};
+	private gtin: string | undefined;
+	private gtinLookupProviders: Set<string>;
+	private queuedReleases: Promise<HarmonyRelease>[] = [];
+	private queuedProviderNames = new Set<string>();
+	messages: ProviderMessage[] = [];
 }
 
 /**
