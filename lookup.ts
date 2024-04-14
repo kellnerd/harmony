@@ -1,5 +1,5 @@
 import { mergeRelease } from '@/harmonizer/merge.ts';
-import { allProviderSimpleNames, providerMap, providerPreferences, providers } from '@/providers/mod.ts';
+import { allProviders, allProviderSimpleNames, defaultProviderPreferences, providerMap } from '@/providers/mod.ts';
 import { LookupError } from '@/utils/errors.ts';
 import { ensureValidGTIN, isEqualGTIN } from '@/utils/gtin.ts';
 import { formatLanguageConfidence, formatScriptFrequency } from '@/utils/locale.ts';
@@ -87,7 +87,7 @@ export class CombinedReleaseLookup {
 
 	/** Initiates a new lookup by provider URL and adds it to the combined lookup. */
 	queueLookupByUrl(url: URL): boolean {
-		const provider = providers.find((provider) => provider.supportsDomain(url));
+		const provider = allProviders.find((provider) => provider.supportsDomain(url));
 		if (provider) {
 			const providerName = provider.name;
 			if (this.queuedProviderNames.has(providerName)) {
@@ -235,7 +235,7 @@ export class CombinedReleaseLookup {
  * Looks up the given URL with the first matching provider.
  */
 export function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<HarmonyRelease> {
-	const matchingProvider = providers.find((provider) => provider.supportsDomain(url));
+	const matchingProvider = allProviders.find((provider) => provider.supportsDomain(url));
 
 	if (!matchingProvider) {
 		throw new LookupError(`No provider supports ${url}`);
@@ -252,7 +252,7 @@ export function getMergedReleaseByGTIN(
 	options?: ReleaseOptions,
 ): Promise<HarmonyRelease> {
 	const lookup = new CombinedReleaseLookup({ gtin }, options);
-	return lookup.getMergedRelease(providerPreferences);
+	return lookup.getMergedRelease(defaultProviderPreferences);
 }
 
 /**
@@ -261,7 +261,7 @@ export function getMergedReleaseByGTIN(
  */
 export function getMergedReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<HarmonyRelease> {
 	const lookup = new CombinedReleaseLookup({ urls: [url] }, options);
-	return lookup.getMergedRelease(providerPreferences);
+	return lookup.getMergedRelease(defaultProviderPreferences);
 }
 
 function detectLanguageAndScript(release: HarmonyRelease): void {

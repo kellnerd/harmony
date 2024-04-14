@@ -5,7 +5,7 @@ import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
 import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
 
 import { CombinedReleaseLookup } from '@/lookup.ts';
-import { allProviderSimpleNames, providerPreferences } from '@/providers/mod.ts';
+import { allProviderSimpleNames, defaultProviderPreferences } from '@/providers/mod.ts';
 import { assertCountryCode } from '@/utils/regions.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
@@ -53,7 +53,7 @@ export default defineRoute(async (req, ctx) => {
 				providerIds,
 				urls: externalUrls.map((url) => new URL(url)),
 			}, options);
-			release = await lookup.getMergedRelease(providerPreferences);
+			release = await lookup.getMergedRelease(defaultProviderPreferences);
 		}
 	} catch (error) {
 		if (ctx.config.dev) {

@@ -11,13 +11,13 @@ import type { MetadataProvider } from './base.ts';
 const snaps = new SnapStorage();
 
 /** All supported (and enabled) providers. */
-export const providers: MetadataProvider[] = [
+export const allProviders: MetadataProvider[] = [
 	DeezerProvider,
 	iTunesProvider,
 ].map((Provider) => new Provider({ snaps }));
 
 /** Display names of all supported providers. */
-export const allProviderNames = providers.map((provider) => provider.name);
+export const allProviderNames = allProviders.map((provider) => provider.name);
 
 /** Simplified names of all supported providers. */
 export const allProviderSimpleNames = new Set(allProviderNames.map((name) => simplifyName(name)));
@@ -29,10 +29,11 @@ assert(
 
 /** Maps simplified provider names to their metadata providers. */
 export const providerMap: Record<string, MetadataProvider | undefined> = Object.fromEntries(
-	providers.map((provider) => [simplifyName(provider.name), provider]),
+	allProviders.map((provider) => [simplifyName(provider.name), provider]),
 );
 
-export const providerPreferences: ProviderPreferences = {
+/** Recommended default preferences which sort providers by quality. */
+export const defaultProviderPreferences: ProviderPreferences = {
 	// get track durations from the provider with the highest precision
 	duration: sortProvidersByQuality('durationPrecision'),
 	// get cover art from the provider with the highest quality (currently: image resolution)
@@ -41,7 +42,7 @@ export const providerPreferences: ProviderPreferences = {
 
 /** Returns a list of provider names sorted by the value of the given numeric property (descending). */
 function sortProvidersByQuality(property: NumericKeys<MetadataProvider>): string[] {
-	return providers
+	return allProviders
 		.map((provider) => ({
 			name: provider.name,
 			quality: provider[property],
