@@ -63,6 +63,9 @@ input {
 input[type=text] {
 	width: 25em;
 }
+input#region-input {
+	width: 14em;
+}
 
 /* tables */
 

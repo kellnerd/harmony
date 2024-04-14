@@ -17,9 +17,10 @@ import type { ProviderError } from '@/utils/errors.ts';
 export default defineRoute(async (req, ctx) => {
 	const url = new URL(req.url);
 	const { searchParams } = url;
-	const gtin = searchParams.get('gtin');
+	const gtin = searchParams.get('gtin') ?? undefined;
 	const externalUrls = searchParams.getAll('url').filter(isNotEmpty);
-	const regions = searchParams.getAll('region');
+	// Also accept comma-separated regions from HTML form for convenience.
+	const regions = searchParams.getAll('region').filter(isNotEmpty).flatMap((value) => value.split(','));
 
 	const requestedProviders = new Set<string>();
 	const providerIds: ProviderNameAndId[] = [];
@@ -50,7 +51,7 @@ export default defineRoute(async (req, ctx) => {
 		}
 		if (gtin || providerIds.length || externalUrls.length) {
 			const lookup = new CombinedReleaseLookup({
-				gtin: gtin ?? undefined,
+				gtin,
 				providerIds,
 				urls: externalUrls.map((url) => new URL(url)),
 			}, options);
@@ -75,7 +76,7 @@ export default defineRoute(async (req, ctx) => {
 			</Head>
 			<main>
 				<h2 class='center'>Release Lookup</h2>
-				<ReleaseLookup gtin={gtin} externalUrl={externalUrls[0]} />
+				<ReleaseLookup gtin={gtin} externalUrl={externalUrls[0]} regions={options.regions} />
 				{errors.map((error) => (
 					<MessageBox
 						message={{
