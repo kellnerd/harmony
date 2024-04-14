@@ -45,20 +45,21 @@ export class CombinedReleaseLookup {
 
 		if (lookup.providerIds?.length) {
 			for (const [providerSimpleName, id] of lookup.providerIds) {
-				this.addProviderId(providerSimpleName, id);
+				this.queueLookupById(providerSimpleName, id);
 			}
 		}
 		if (lookup.urls?.length) {
 			for (const url of lookup.urls) {
-				this.addProviderUrl(url);
+				this.queueLookupByUrl(url);
 			}
 		}
 		if (this.gtinLookupProviders.size && lookup.gtin) {
-			this.setGTIN(lookup.gtin);
+			this.queueLookupsByGTIN(lookup.gtin);
 		}
 	}
 
-	addProviderId(providerSimpleName: string, id: string): boolean {
+	/** Initiates a new lookup by provider ID and adds it to the combined lookup. */
+	queueLookupById(providerSimpleName: string, id: string): boolean {
 		const provider = providerMap[providerSimpleName];
 		if (provider) {
 			const providerName = provider.name;
@@ -83,7 +84,8 @@ export class CombinedReleaseLookup {
 		}
 	}
 
-	private addProviderUrl(url: URL): boolean {
+	/** Initiates a new lookup by provider URL and adds it to the combined lookup. */
+	private queueLookupByUrl(url: URL): boolean {
 		const provider = providers.find((provider) => provider.supportsDomain(url));
 		if (provider) {
 			const providerName = provider.name;
@@ -108,7 +110,8 @@ export class CombinedReleaseLookup {
 		}
 	}
 
-	setGTIN(gtin: GTIN): boolean {
+	/** Initiates new lookups by GTIN (for the remaining providers) and adds them to the combined lookup. */
+	queueLookupsByGTIN(gtin: GTIN): boolean {
 		// If the GTIN is already set, trying to change it is considered an error.
 		if (this.gtin) {
 			if (isEqualGTIN(gtin, this.gtin)) return true;
@@ -133,9 +136,8 @@ export class CombinedReleaseLookup {
 		for (const providerSimpleName of this.gtinLookupProviders) {
 			const provider = providerMap[providerSimpleName];
 			if (provider) {
-				const providerName = provider.name;
 				this.queuedReleases.push(provider.getRelease(['gtin', this.gtin], this.options));
-				this.queuedProviderNames.add(providerName);
+				this.queuedProviderNames.add(provider.name);
 			} else {
 				this.messages.push({
 					type: 'error',
@@ -164,8 +166,8 @@ export class CombinedReleaseLookup {
 
 			switch (uniqueGtinValues.size) {
 				case 1:
-					// Set GTIN, which queues new lookups, and get updated release mapping.
-					if (this.setGTIN(gtinCandidates[0])) {
+					// Queue new lookups and get the updated release mapping.
+					if (this.queueLookupsByGTIN(gtinCandidates[0])) {
 						releaseMap = await this.getProviderReleaseMapping();
 					}
 					break;
