@@ -85,7 +85,7 @@ export class CombinedReleaseLookup {
 	}
 
 	/** Initiates a new lookup by provider URL and adds it to the combined lookup. */
-	private queueLookupByUrl(url: URL): boolean {
+	queueLookupByUrl(url: URL): boolean {
 		const provider = providers.find((provider) => provider.supportsDomain(url));
 		if (provider) {
 			const providerName = provider.name;
