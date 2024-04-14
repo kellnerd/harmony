@@ -4,13 +4,14 @@ import { simplifyName } from 'utils/string/simplify.js';
 
 export function createReleasePermalink(info: ReleaseInfo, baseUrl: URL): URL {
 	const providersLookedUpByGtin = info.providers.filter((provider) => provider.lookup.method === 'gtin');
-	const providersLookedUpByUrl = info.providers.filter((provider) => provider.lookup.method === 'id');
+	const providersLookedUpById = info.providers.filter((provider) => provider.lookup.method === 'id');
 	const usedRegion = info.providers.map((provider) => provider.lookup.region).find(isDefined);
 	const cacheTimestamps = info.providers.map((provider) => provider.cacheTime).filter(isDefined);
 
-	// Add provider URLs for all providers which were looked up by URL.
-	// TODO: Support lookup by `provider=id` pairs to get shorter permalinks.
-	const state = new URLSearchParams(providersLookedUpByUrl.map((provider) => ['url', provider.url.href]));
+	// Add provider IDs for all providers which were looked up by ID or URL.
+	const state = new URLSearchParams(
+		providersLookedUpById.map((provider) => [simplifyName(provider.name), provider.id]),
+	);
 	if (providersLookedUpByGtin.length) {
 		state.append('gtin', providersLookedUpByGtin[0].lookup.value);
 		// Add all enabled providers which were looked up by GTIN (with empty provider ID value).
