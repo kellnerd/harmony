@@ -40,7 +40,9 @@ export type ReleaseLookupParameters = {
  * GTIN lookups are only possible if the GTIN is available of course.
  */
 export class CombinedReleaseLookup {
-	constructor(lookup: ReleaseLookupParameters, private options?: ReleaseOptions) {
+	constructor(lookup: ReleaseLookupParameters, options?: ReleaseOptions) {
+		// Create a deep copy, we don't want to manipulate the caller's options later on.
+		this.options = { ...options };
 		this.gtinLookupProviders = new Set(options?.providers ?? allProviderSimpleNames);
 
 		if (lookup.providerIds?.length) {
@@ -159,8 +161,15 @@ export class CombinedReleaseLookup {
 
 		// We might still have providers left for which we have not done a lookup because the GTIN was not available.
 		if (this.gtinLookupProviders.size && !this.gtin) {
-			// Obtain GTIN candidates from the already completed lookups.
 			const releases = Object.values(releaseMap).filter(isNotError);
+
+			// Prefer already used regions of the completed release lookups over the standard preferences.
+			const usedRegions = releases.map((release) => release.info.providers[0].lookup.region).filter(isDefined);
+			if (usedRegions.length) {
+				this.options.regions = [...usedRegions, ...(this.options.regions ?? [])];
+			}
+
+			// Obtain GTIN candidates from the already completed release lookups.
 			const gtinCandidates = releases.map((release) => release.gtin).filter(isDefined);
 			const uniqueGtinValues = new Set(gtinCandidates.map(Number));
 
@@ -202,10 +211,13 @@ export class CombinedReleaseLookup {
 		return release;
 	}
 
+	private options: ReleaseOptions;
 	private gtin: string | undefined;
 	private gtinLookupProviders: Set<string>;
 	private queuedReleases: Promise<HarmonyRelease>[] = [];
 	private queuedProviderNames = new Set<string>();
+
+	/** Warnings and errors from the combined lookup process. */
 	messages: ProviderMessage[] = [];
 }
 
