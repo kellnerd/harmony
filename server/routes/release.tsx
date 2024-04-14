@@ -6,6 +6,7 @@ import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
 
 import { CombinedReleaseLookup } from '@/lookup.ts';
 import { allProviderSimpleNames, defaultProviderPreferences } from '@/providers/mod.ts';
+import { isNotEmpty } from '@/utils/predicate.ts';
 import { assertCountryCode } from '@/utils/regions.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
@@ -17,7 +18,7 @@ export default defineRoute(async (req, ctx) => {
 	const url = new URL(req.url);
 	const { searchParams } = url;
 	const gtin = searchParams.get('gtin');
-	const externalUrls = searchParams.getAll('url');
+	const externalUrls = searchParams.getAll('url').filter(isNotEmpty);
 	const regions = searchParams.getAll('region');
 
 	const requestedProviders = new Set<string>();
