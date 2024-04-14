@@ -107,7 +107,7 @@ export async function lookupRelease(lookup: ReleaseLookupParameters, options?: R
 				const provider = providerMap[providerSimpleName];
 				if (provider) {
 					const providerName = provider.name;
-					promisedReleases.push(provider.getRelease(gtin, options));
+					promisedReleases.push(provider.getRelease(['gtin', gtin.toString()], options));
 					usedProviderNames.add(providerName);
 				} else {
 					messages.push({
@@ -154,7 +154,7 @@ export function getProviderReleaseMapping(gtin: GTIN, options?: ReleaseOptions):
 	const requestedProviders = Array.from(options?.providers ?? allProviderSimpleNames)
 		.map((simpleName) => providerMap[simpleName]).filter(isDefined);
 	const requestedProviderNames = requestedProviders.map((provider) => provider.name);
-	const releasePromises = requestedProviders.map((provider) => provider.getRelease(gtin, options));
+	const releasePromises = requestedProviders.map((provider) => provider.getRelease(['gtin', gtin.toString()], options));
 
 	return makeProviderReleaseMapping(requestedProviderNames, releasePromises);
 }

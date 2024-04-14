@@ -118,15 +118,27 @@ export type ReleaseOptions = Partial<{
 	providers: Set<string>;
 }>;
 
+/** Methods which can be used to lookup a release. */
+export type ReleaseLookupMethod = 'gtin' | 'id';
+
 /** Parameters to lookup a release. */
 export type ReleaseLookupParameters = {
 	/** Lookup method, can be by GTIN or provider ID. */
-	method: 'gtin' | 'id';
+	method: ReleaseLookupMethod;
 	/** Lookup value, meaning depends on the lookup method. */
 	value: string;
 	/** Release region which was specified with the lookup method. */
 	region?: CountryCode;
 };
+
+/**
+ * Release specifier, which can be one of the following:
+ * - Provider URL
+ * - Provider ID (string)
+ * - GTIN (number)
+ * - Pair of release lookup method and value
+ */
+export type ReleaseSpecifier = URL | string | number | [ReleaseLookupMethod, string];
 
 export type ProviderName = string;
 

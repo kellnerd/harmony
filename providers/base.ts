@@ -3,13 +3,13 @@ import { rateLimit } from 'utils/async/rateLimit.js';
 
 import type {
 	CountryCode,
-	GTIN,
 	HarmonyRelease,
 	MessageType,
 	ProviderMessage,
 	ReleaseInfo,
 	ReleaseLookupParameters,
 	ReleaseOptions,
+	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
 import type { PartialDate } from '@/utils/date.ts';
 import type { Snapshot, SnapStorage } from 'snap-storage';
@@ -63,9 +63,9 @@ export abstract class MetadataProvider {
 	/** Uses the median image height in pixels as the basic metric. */
 	abstract readonly artworkQuality: number;
 
-	/** Looks up the release which is identified by the given URL, GTIN/barcode or provider ID. */
-	getRelease(urlOrGtinOrId: URL | GTIN | string, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
-		const lookup = new this.releaseLookup(this, urlOrGtinOrId, options);
+	/** Looks up the release which is identified by the given specifier (URL, GTIN/barcode or provider ID). */
+	getRelease(specifier: ReleaseSpecifier, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
+		const lookup = new this.releaseLookup(this, specifier, options);
 		return lookup.getRelease();
 	}
 
@@ -119,15 +119,15 @@ type ReleaseLookupConstructor = new (
 	// It is probably impossible to specify the correct provider subclass here.
 	// deno-lint-ignore no-explicit-any
 	provider: any,
-	urlOrGtinOrId: URL | GTIN | string,
+	specifier: ReleaseSpecifier,
 	options: ReleaseOptions,
 ) => ReleaseLookup<MetadataProvider, unknown>;
 
 export abstract class ReleaseLookup<Provider extends MetadataProvider, RawRelease> {
-	/** Looks up the release which is identified by the given URL, GTIN/barcode or provider ID. */
+	/** Initializes the release lookup for the given release specifier. */
 	constructor(
 		protected provider: Provider,
-		urlOrGtinOrId: URL | GTIN | string,
+		specifier: ReleaseSpecifier,
 		options: ReleaseOptions = {},
 	) {
 		// Use the provider's generally supported URLs if none have been specified for releases.
@@ -135,23 +135,25 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 		// Create a deep copy, we don't want to manipulate the caller's options.
 		this.options = { ...options };
 		this.lookup = { method: 'id', value: '' };
-		if (urlOrGtinOrId instanceof URL) {
-			const id = this.extractReleaseId(urlOrGtinOrId);
+		if (specifier instanceof URL) {
+			const id = this.extractReleaseId(specifier);
 			if (id === undefined) {
-				throw new ProviderError(this.provider.name, `Could not extract ID from ${urlOrGtinOrId}`);
+				throw new ProviderError(this.provider.name, `Could not extract ID from ${specifier}`);
 			}
 			this.lookup.value = id;
 
 			// Prefer region of the given release URL over the standard preferences.
-			const region = this.extractReleaseRegion(urlOrGtinOrId);
+			const region = this.extractReleaseRegion(specifier);
 			if (region) {
 				this.lookup.region = region;
 				this.options.regions = [region];
 			}
-		} else if (typeof urlOrGtinOrId === 'string' && !/^\d{12,14}$/.test(urlOrGtinOrId)) { // ID
-			this.lookup.value = urlOrGtinOrId;
-		} else { // number or string with 12 to 14 digits, most likely a GTIN
-			this.lookup = { method: 'gtin', value: urlOrGtinOrId.toString() };
+		} else if (typeof specifier === 'string') { // ID
+			this.lookup.value = specifier;
+		} else if (typeof specifier === 'number') { // GTIN
+			this.lookup = { method: 'gtin', value: specifier.toString() };
+		} else {
+			this.lookup = { method: specifier[0], value: specifier[1] };
 		}
 	}
 
