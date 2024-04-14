@@ -146,10 +146,52 @@ export class CombinedReleaseLookup {
 		return true;
 	}
 
+	/** Finalizes all queued lookup requests and returns the provider release mapping. */
 	getProviderReleaseMapping(): Promise<ProviderReleaseMapping> {
 		return makeProviderReleaseMapping(Array.from(this.queuedProviderNames), this.queuedReleases);
 	}
 
+	/** Ensures that all requested providers have been looked up and returns the provider release mapping. */
+	async getCompleteProviderReleaseMapping(): Promise<ProviderReleaseMapping> {
+		let releaseMap = await this.getProviderReleaseMapping();
+
+		// We might still have providers left for which we have not done a lookup because the GTIN was not available.
+		if (this.gtinLookupProviders.size && !this.gtin) {
+			// Obtain GTIN candidates from the already completed lookups.
+			const gtinCandidates = Object.values(releaseMap).map((releaseOrError) => {
+				if (releaseOrError instanceof Error) return undefined;
+				return releaseOrError.gtin;
+			}).filter(isDefined);
+			const uniqueGtinValues = new Set(gtinCandidates.map(Number));
+
+			switch (uniqueGtinValues.size) {
+				case 1:
+					// Set GTIN, which queues new lookups, and get updated release mapping.
+					if (this.setGTIN(gtinCandidates[0])) {
+						releaseMap = await this.getProviderReleaseMapping();
+					}
+					break;
+				case 0: {
+					const skippedProviders = Array.from(this.gtinLookupProviders)
+						.map((simpleName) => providerMap[simpleName]?.name ?? simpleName);
+					this.messages.push({
+						type: 'info',
+						text: `GTIN is unknown, lookups for the following providers were skipped: ${skippedProviders.join(', ')}`,
+					});
+					break;
+				}
+				default:
+					this.messages.push({
+						type: 'error',
+						text: `Providers have returned multiple different GTIN: ${gtinCandidates.join(', ')}`,
+					});
+			}
+		}
+
+		return releaseMap;
+	}
+
+	/** Ensures that all requested providers have been looked up and returns the combined release. */
 	async getMergedRelease(providerPreferences: ProviderPreferences): Promise<HarmonyRelease> {
 		const releaseMap = await this.getProviderReleaseMapping();
 		const release = mergeRelease(releaseMap, providerPreferences);
