@@ -234,22 +234,6 @@ export function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<Har
 	return matchingProvider.getRelease(url, options);
 }
 
-/**
- * Looks up the given GTIN with each requested provider.
- *
- * Uses all supported providers by default.
- */
-export function getProviderReleaseMapping(gtin: GTIN, options?: ReleaseOptions): Promise<ProviderReleaseMapping> {
-	ensureValidGTIN(gtin);
-
-	const requestedProviders = Array.from(options?.providers ?? allProviderSimpleNames)
-		.map((simpleName) => providerMap[simpleName]).filter(isDefined);
-	const requestedProviderNames = requestedProviders.map((provider) => provider.name);
-	const releasePromises = requestedProviders.map((provider) => provider.getRelease(['gtin', gtin.toString()], options));
-
-	return makeProviderReleaseMapping(requestedProviderNames, releasePromises);
-}
-
 async function makeProviderReleaseMapping(
 	usedProviderNames: ProviderName[],
 	promisedReleases: Promise<HarmonyRelease>[],
@@ -271,39 +255,21 @@ async function makeProviderReleaseMapping(
 /**
  * Looks up the given GTIN with each provider and merges the resulting releases into one.
  */
-export async function getMergedReleaseByGTIN(
+export function getMergedReleaseByGTIN(
 	gtin: GTIN,
 	options?: ReleaseOptions,
 ): Promise<HarmonyRelease> {
-	const releaseMap = await getProviderReleaseMapping(gtin, options);
-	const release = mergeRelease(releaseMap, providerPreferences);
-
-	detectLanguageAndScript(release);
-
-	return release;
+	const lookup = new CombinedReleaseLookup({ gtin }, options);
+	return lookup.getMergedRelease(providerPreferences);
 }
 
 /**
  * Looks up the given URL with the first matching provider.
  * Then tries to find that release on other providers (by GTIN) and merges the resulting data.
  */
-export async function getMergedReleaseByUrl(url: URL, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
-	const release = await getReleaseByUrl(url, options);
-
-	if (release.gtin) {
-		const usedRegion = release.info.providers[0]?.lookup.region;
-		if (usedRegion) {
-			// create a deep copy, we don't want to manipulate the caller's options
-			options = { ...options };
-			// prefer already used region of the first provider over the standard preferences
-			options.regions = [usedRegion, ...(options.regions ?? [])];
-		}
-
-		return getMergedReleaseByGTIN(release.gtin, options);
-	} else {
-		detectLanguageAndScript(release);
-		return release;
-	}
+export function getMergedReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<HarmonyRelease> {
+	const lookup = new CombinedReleaseLookup({ urls: [url] }, options);
+	return lookup.getMergedRelease(providerPreferences);
 }
 
 function detectLanguageAndScript(release: HarmonyRelease): void {
