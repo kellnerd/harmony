@@ -3,7 +3,7 @@ import { allProviderSimpleNames, providerMap, providerPreferences, providers } f
 import { LookupError } from '@/utils/errors.ts';
 import { ensureValidGTIN, isEqualGTIN } from '@/utils/gtin.ts';
 import { formatLanguageConfidence, formatScriptFrequency } from '@/utils/locale.ts';
-import { isDefined } from '@/utils/predicate.ts';
+import { isDefined, isNotError } from '@/utils/predicate.ts';
 import { detectScripts, scriptCodes } from '@/utils/script.ts';
 import lande from 'lande';
 import { zipObject } from 'utils/object/zipObject.js';
@@ -158,10 +158,8 @@ export class CombinedReleaseLookup {
 		// We might still have providers left for which we have not done a lookup because the GTIN was not available.
 		if (this.gtinLookupProviders.size && !this.gtin) {
 			// Obtain GTIN candidates from the already completed lookups.
-			const gtinCandidates = Object.values(releaseMap).map((releaseOrError) => {
-				if (releaseOrError instanceof Error) return undefined;
-				return releaseOrError.gtin;
-			}).filter(isDefined);
+			const releases = Object.values(releaseMap).filter(isNotError);
+			const gtinCandidates = releases.map((release) => release.gtin).filter(isDefined);
 			const uniqueGtinValues = new Set(gtinCandidates.map(Number));
 
 			switch (uniqueGtinValues.size) {
