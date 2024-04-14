@@ -15,7 +15,6 @@ export default function ReleaseLookup({ gtin, externalUrl, formAction = '' }: {
 			<InputWithOverlay type='text' name='gtin' id='gtin-input' value={gtin ?? ''} placeholder='GTIN/EAN/UPC (Barcode)'>
 				<IconBarcode />
 			</InputWithOverlay>
-			<strong>or</strong>
 			<InputWithOverlay type='text' name='url' id='url-input' value={externalUrl ?? ''} placeholder='Provider URL'>
 				<IconWorldWww />
 			</InputWithOverlay>
