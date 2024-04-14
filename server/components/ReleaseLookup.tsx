@@ -1,7 +1,7 @@
 import InputWithOverlay from './InputWithOverlay.tsx';
 import IconBarcode from 'tabler-icons/barcode.tsx';
-import IconMapPin from 'tabler-icons/map-pin.tsx';
 import IconSearch from 'tabler-icons/search.tsx';
+import IconWorldPin from 'tabler-icons/world-pin.tsx';
 import IconWorldWww from 'tabler-icons/world-www.tsx';
 
 import type { GTIN } from '@/harmonizer/types.ts';
@@ -21,7 +21,7 @@ export default function ReleaseLookup({ gtin = '', externalUrl = '', regions = [
 				<IconWorldWww />
 			</InputWithOverlay>
 			<InputWithOverlay name='region' id='region-input' value={regions.join(',')} placeholder='Region (Country Code)'>
-				<IconMapPin />
+				<IconWorldPin />
 			</InputWithOverlay>
 			<InputWithOverlay type='submit' value='Lookup'>
 				<IconSearch />
