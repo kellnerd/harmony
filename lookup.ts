@@ -15,6 +15,7 @@ import type {
 	ProviderMessage,
 	ProviderName,
 	ProviderNameAndId,
+	ProviderPreferences,
 	ProviderReleaseMapping,
 	ReleaseOptions,
 } from '@/harmonizer/types.ts';
@@ -147,6 +148,16 @@ export class CombinedReleaseLookup {
 
 	getProviderReleaseMapping(): Promise<ProviderReleaseMapping> {
 		return makeProviderReleaseMapping(Array.from(this.queuedProviderNames), this.queuedReleases);
+	}
+
+	async getMergedRelease(providerPreferences: ProviderPreferences): Promise<HarmonyRelease> {
+		const releaseMap = await this.getProviderReleaseMapping();
+		const release = mergeRelease(releaseMap, providerPreferences);
+		// Prepend error and warning messages of the combined lookup.
+		release.info.messages.unshift(...this.messages);
+		detectLanguageAndScript(release);
+
+		return release;
 	}
 
 	private gtin: string | undefined;
