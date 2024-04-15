@@ -22,11 +22,11 @@ import type {
 /** Parameters which can be used to lookup a release. */
 export type ReleaseLookupParameters = {
 	/** GTIN of the release. */
-	gtin?: GTIN;
+	gtin: GTIN | undefined;
 	/** Pairs of simplified provider names and provider IDs. */
-	providerIds?: ProviderNameAndId[];
+	providerIds: ProviderNameAndId[];
 	/** Provider URLs. */
-	urls?: URL[];
+	urls: URL[];
 };
 
 /**
@@ -39,7 +39,7 @@ export type ReleaseLookupParameters = {
  * GTIN lookups are only possible if the GTIN is available of course.
  */
 export class CombinedReleaseLookup {
-	constructor(lookup: ReleaseLookupParameters, options?: ReleaseOptions) {
+	constructor(lookup: Partial<ReleaseLookupParameters>, options?: ReleaseOptions) {
 		// Create a deep copy, we don't want to manipulate the caller's options later on.
 		this.options = { ...options };
 		this.gtinLookupProviders = new Set(options?.providers ?? allProviderSimpleNames);

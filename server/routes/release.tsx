@@ -5,56 +5,32 @@ import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
 import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
 
 import { CombinedReleaseLookup } from '@/lookup.ts';
-import { allProviderSimpleNames, defaultProviderPreferences } from '@/providers/mod.ts';
-import { isNotEmpty } from '@/utils/predicate.ts';
-import { assertCountryCode } from '@/utils/regions.ts';
+import { defaultProviderPreferences } from '@/providers/mod.ts';
+import { extractReleaseLookupState } from '@/server/state.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
 
-import type { HarmonyRelease, ProviderNameAndId, ReleaseOptions } from '@/harmonizer/types.ts';
+import type { HarmonyRelease, ReleaseOptions } from '@/harmonizer/types.ts';
 import type { ProviderError } from '@/utils/errors.ts';
 
 export default defineRoute(async (req, ctx) => {
-	const url = new URL(req.url);
-	const { searchParams } = url;
-	const gtin = searchParams.get('gtin') ?? undefined;
-	const externalUrls = searchParams.getAll('url').filter(isNotEmpty);
-	// Also accept comma-separated regions from HTML form for convenience.
-	const regions = searchParams.getAll('region').filter(isNotEmpty).flatMap((value) => value.toUpperCase().split(','));
+	const routeUrl = new URL(req.url);
+	// Only set seeder URL (used for permalinks) in production servers.
+	const seederUrl = ctx.config.dev ? undefined : routeUrl;
 
-	const requestedProviders = new Set<string>();
-	const providerIds: ProviderNameAndId[] = [];
-	for (const [name, value] of searchParams) {
-		if (allProviderSimpleNames.has(name)) {
-			requestedProviders.add(name);
-			if (value) {
-				providerIds.push([name, value]);
-			}
-		}
-	}
-
-	const errors: Error[] = [];
+	const { gtin, urls, regions, providerIds, providers } = extractReleaseLookupState(routeUrl);
 	const options: ReleaseOptions = {
 		withSeparateMedia: true,
 		withAllTrackArtists: true,
-		regions: new Set(regions.length ? regions : ['GB', 'US', 'DE', 'JP']),
-		providers: requestedProviders.size ? requestedProviders : undefined,
+		regions,
+		providers,
 	};
 
-	// Only set seeder URL (used for permalinks) in production servers.
-	const seederUrl = ctx.config.dev ? undefined : url;
-
+	const errors: Error[] = [];
 	let release: HarmonyRelease | undefined;
 	try {
-		for (const countryCode of options.regions!) {
-			assertCountryCode(countryCode);
-		}
-		if (gtin || providerIds.length || externalUrls.length) {
-			const lookup = new CombinedReleaseLookup({
-				gtin,
-				providerIds,
-				urls: externalUrls.map((url) => new URL(url)),
-			}, options);
+		if (gtin || providerIds.length || urls.length) {
+			const lookup = new CombinedReleaseLookup({ gtin, providerIds, urls }, options);
 			release = await lookup.getMergedRelease(defaultProviderPreferences);
 		}
 	} catch (error) {
@@ -76,7 +52,7 @@ export default defineRoute(async (req, ctx) => {
 			</Head>
 			<main>
 				<h2 class='center'>Release Lookup</h2>
-				<ReleaseLookup gtin={gtin} externalUrl={externalUrls[0]} regions={Array.from(options.regions!)} />
+				<ReleaseLookup gtin={gtin} externalUrl={urls[0]?.href} regions={[...(regions ?? [])]} />
 				{errors.map((error) => (
 					<MessageBox
 						message={{
