@@ -27,7 +27,7 @@ export default class iTunesProvider extends MetadataProvider {
 		pathname: String.raw`/:region(\w{2})?/album/:blurb?/:id(\d+)`,
 	});
 
-	readonly availableRegions = availableRegions;
+	readonly availableRegions = new Set(availableRegions);
 
 	readonly releaseLookup = iTunesReleaseLookup;
 

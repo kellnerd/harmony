@@ -55,7 +55,7 @@ export abstract class MetadataProvider {
 	abstract readonly releaseLookup: ReleaseLookupConstructor;
 
 	/** Country codes of regions in which the provider offers its services (optional). */
-	readonly availableRegions: CountryCode[] = [];
+	readonly availableRegions?: Set<CountryCode>;
 
 	readonly launchDate: PartialDate = {};
 
@@ -137,9 +137,9 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 		this.options = { ...options };
 
 		// Intersect preferred regions with available regions (if defined for the provider).
-		const availableRegions = new Set(this.provider.availableRegions);
+		const availableRegions = this.provider.availableRegions;
 		const preferredRegions = Array.from(this.options.regions ?? []);
-		if (availableRegions.size && preferredRegions.length) {
+		if (availableRegions?.size && preferredRegions.length) {
 			this.options.regions = new Set(preferredRegions.filter((region) => availableRegions.has(region)));
 		}
 
@@ -265,10 +265,10 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 	/** Determines excluded regions of the release (if available regions have been specified for the provider). */
 	private withExcludedRegions(release: HarmonyRelease): HarmonyRelease {
 		const availableRegions = this.provider.availableRegions;
-		if (availableRegions.length && release.availableIn) {
+		if (availableRegions?.size && release.availableIn) {
 			if (release.availableIn.length) {
 				const releaseAvailability = new Set(release.availableIn);
-				release.excludedFrom = availableRegions.filter((region) => !releaseAvailability.has(region));
+				release.excludedFrom = [...availableRegions].filter((region) => !releaseAvailability.has(region));
 			} else {
 				release.excludedFrom = [...availableRegions];
 			}

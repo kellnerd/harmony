@@ -24,7 +24,7 @@ export default class DeezerProvider extends MetadataProvider {
 		pathname: String.raw`/:region(\w{2})?/album/:id(\d+)`,
 	});
 
-	readonly availableRegions = availableRegions;
+	readonly availableRegions = new Set(availableRegions);
 
 	readonly releaseLookup = DeezerReleaseLookup;
 
@@ -217,12 +217,15 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 	}
 
 	private determineAvailability(media: HarmonyMedium[]): string[] | undefined {
-		const trackAvailabilities = media.flatMap((medium) => medium.tracklist)
-			.map((track) => new Set(track.availableIn));
+		const tracks = media.flatMap((medium) => medium.tracklist);
+		const lastTrack = tracks.pop();
 
-		// calculate the intersection of all tracks' availabilities with Deezer's availability
-		return this.provider.availableRegions.filter((country) =>
-			trackAvailabilities.every((availability) => availability?.has(country))
+		// Calculate the intersection of all tracks' availabilities with Deezer's availability.
+		// Iterate over any of the usually smaller sets of track regions (here: last track) instead of Deezer's full set.
+		const otherTrackAvailabilities = tracks.map((track) => new Set(track.availableIn));
+		return lastTrack?.availableIn?.filter((region) =>
+			otherTrackAvailabilities.every((availability) => availability.has(region)) &&
+			this.provider.availableRegions.has(region)
 		);
 	}
 }
