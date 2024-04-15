@@ -1,3 +1,4 @@
+import { availableRegions } from './regions.ts';
 import { CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
@@ -25,6 +26,8 @@ export default class iTunesProvider extends MetadataProvider {
 		hostname: '(itunes|music).apple.com',
 		pathname: String.raw`/:region(\w{2})?/album/:blurb?/:id(\d+)`,
 	});
+
+	readonly availableRegions = availableRegions;
 
 	readonly releaseLookup = iTunesReleaseLookup;
 
