@@ -40,10 +40,13 @@ export default class iTunesProvider extends MetadataProvider {
 
 	readonly apiBaseUrl = 'https://itunes.apple.com';
 
-	async query<Data extends Result<unknown>>(apiUrl: URL, preferredRegions?: CountryCode[]): Promise<CacheEntry<Data>> {
-		if (!preferredRegions?.length) {
+	async query<Data extends Result<unknown>>(
+		apiUrl: URL,
+		preferredRegions?: Set<CountryCode>,
+	): Promise<CacheEntry<Data>> {
+		if (!preferredRegions?.size) {
 			// use the default region of the API (which would also be used if none was specified)
-			preferredRegions = ['US'];
+			preferredRegions = new Set(['US']);
 		}
 
 		const query = apiUrl.searchParams;

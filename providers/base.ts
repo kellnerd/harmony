@@ -147,7 +147,7 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 			const region = this.extractReleaseRegion(specifier);
 			if (region) {
 				this.lookup.region = region;
-				this.options.regions = [region];
+				this.options.regions = new Set([region]);
 			}
 		} else if (typeof specifier === 'string') { // ID
 			this.lookup.value = specifier;

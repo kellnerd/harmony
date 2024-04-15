@@ -113,7 +113,7 @@ export type ReleaseOptions = Partial<{
 	 * Ordered list of regions for which the lookup should be tried until it succeeds.
 	 * Only used by providers which have region-specific API endpoints or pages.
 	 */
-	regions: CountryCode[];
+	regions: Set<CountryCode>;
 	/** Simplified names of the providers which should (additionally) be used. */
 	providers: Set<string>;
 }>;

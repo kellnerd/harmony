@@ -176,7 +176,7 @@ export class CombinedReleaseLookup {
 			// Prefer already used regions of the completed release lookups over the standard preferences.
 			const usedRegions = releases.map((release) => release.info.providers[0].lookup.region).filter(isDefined);
 			if (usedRegions.length) {
-				this.options.regions = [...usedRegions, ...(this.options.regions ?? [])];
+				this.options.regions = new Set([...usedRegions, ...(this.options.regions ?? [])]);
 			}
 
 			// Obtain GTIN candidates from the already completed release lookups.

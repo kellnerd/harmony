@@ -37,7 +37,7 @@ export default defineRoute(async (req, ctx) => {
 	const options: ReleaseOptions = {
 		withSeparateMedia: true,
 		withAllTrackArtists: true,
-		regions: regions.length ? regions : ['GB', 'US', 'DE', 'JP'],
+		regions: new Set(regions.length ? regions : ['GB', 'US', 'DE', 'JP']),
 		providers: requestedProviders.size ? requestedProviders : undefined,
 	};
 
@@ -76,7 +76,7 @@ export default defineRoute(async (req, ctx) => {
 			</Head>
 			<main>
 				<h2 class='center'>Release Lookup</h2>
-				<ReleaseLookup gtin={gtin} externalUrl={externalUrls[0]} regions={options.regions} />
+				<ReleaseLookup gtin={gtin} externalUrl={externalUrls[0]} regions={Array.from(options.regions!)} />
 				{errors.map((error) => (
 					<MessageBox
 						message={{
