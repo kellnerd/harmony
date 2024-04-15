@@ -51,7 +51,6 @@ function sortProvidersByQuality(property: NumericKeys<MetadataProvider>): string
 		.map((provider) => provider.name);
 }
 
-// https://stackoverflow.com/a/73025031
 type NumericKeys<T> = {
-	[K in keyof T]: T[K] extends number ? K : never;
+	[K in keyof T]-?: T[K] extends number ? K : never;
 }[keyof T];
