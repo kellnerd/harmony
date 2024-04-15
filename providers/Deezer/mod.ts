@@ -98,9 +98,10 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 
 	protected async convertRawRelease(rawRelease: Release): Promise<HarmonyRelease> {
 		this.id = rawRelease.id.toString();
+		const incompleteTracklist = rawRelease.nb_tracks > rawRelease.tracks.data.length;
 		const needToFetchIndividualTracks = this.options.withAllTrackArtists || this.options.withAvailability || false;
-		const needToFetchDetailedTracklist = !needToFetchIndividualTracks &&
-			(this.options.withSeparateMedia || this.options.withISRC || false);
+		const needToFetchDetailedTracklist = incompleteTracklist ||
+			(!needToFetchIndividualTracks && (this.options.withSeparateMedia || this.options.withISRC || false));
 
 		let rawTracklist: Array<ReleaseTrack | TracklistItem | Track>;
 		let media: HarmonyMedium[];
@@ -109,11 +110,11 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 			rawTracklist = await this.getRawTracklist(this.id);
 		} else {
 			rawTracklist = rawRelease.tracks.data;
+		}
 
-			if (needToFetchIndividualTracks) {
-				// replace minimal tracklist with all available details for each track
-				rawTracklist = await Promise.all(rawTracklist.map((track) => this.getRawTrackById(track.id.toString())));
-			}
+		if (needToFetchIndividualTracks) {
+			// replace minimal tracklist with all available details for each track
+			rawTracklist = await Promise.all(rawTracklist.map((track) => this.getRawTrackById(track.id.toString())));
 		}
 
 		if (needToFetchDetailedTracklist || needToFetchIndividualTracks) {
