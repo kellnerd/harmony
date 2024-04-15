@@ -135,6 +135,14 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 		this.supportedUrls ??= provider.supportedUrls;
 		// Create a deep copy, we don't want to manipulate the caller's options.
 		this.options = { ...options };
+
+		// Intersect preferred regions with available regions (if defined for the provider).
+		const availableRegions = new Set(this.provider.availableRegions);
+		const preferredRegions = Array.from(this.options.regions ?? []);
+		if (availableRegions.size && preferredRegions.length) {
+			this.options.regions = new Set(preferredRegions.filter((region) => availableRegions.has(region)));
+		}
+
 		this.lookup = { method: 'id', value: '' };
 		if (specifier instanceof URL) {
 			const id = this.extractReleaseId(specifier);
