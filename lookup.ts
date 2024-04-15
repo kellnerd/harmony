@@ -173,10 +173,28 @@ export class CombinedReleaseLookup {
 		if (this.gtinLookupProviders.size && !this.gtin) {
 			const releases = Object.values(releaseMap).filter(isNotError);
 
-			// Prefer already used regions of the completed release lookups over the standard preferences.
+			// Use already used or available regions of the completed release lookups instead of the standard preferences.
 			const usedRegions = releases.map((release) => release.info.providers[0].lookup.region).filter(isDefined);
 			if (usedRegions.length) {
-				this.options.regions = new Set([...usedRegions, ...(this.options.regions ?? [])]);
+				this.options.regions = new Set(usedRegions);
+			} else {
+				const availableRegions = new Set(releases.flatMap((release) => release.availableIn ?? []));
+				if (availableRegions.size) {
+					// Remove all preferred regions where the release is unlikely to be available.
+					if (this.options.regions?.size) {
+						const availablePreferredRegions = new Set(this.options.regions);
+						for (const region of availablePreferredRegions) {
+							if (!availableRegions.has(region)) {
+								availablePreferredRegions.delete(region);
+							}
+						}
+						this.options.regions = availablePreferredRegions;
+					}
+					// Use available regions if no (available) preferred regions remain.
+					if (!this.options.regions?.size) {
+						this.options.regions = availableRegions;
+					}
+				}
 			}
 
 			// Obtain GTIN candidates from the already completed release lookups.
