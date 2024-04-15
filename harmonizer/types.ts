@@ -100,7 +100,7 @@ export type Language = {
 	confidence?: number;
 };
 
-/** ISO 3166-1 alpha-2 two letter country code. */
+/** ISO 3166-1 alpha-2 two letter country code (upper case). */
 export type CountryCode = string;
 
 /** Release lookup options. */

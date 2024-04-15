@@ -224,8 +224,8 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 
 	/** Extracts the region from a release URL (if present). */
 	extractReleaseRegion(url: URL): CountryCode | undefined {
-		// do not return an empty string in case the group was declared as optional and is missing from the result
-		return this.supportedUrls.exec(url)?.pathname.groups.region || undefined;
+		// Do not return an empty string in case the group was declared as optional and is missing from the result.
+		return this.supportedUrls.exec(url)?.pathname.groups.region?.toUpperCase() || undefined;
 	}
 
 	/** Checks whether the provider supports the given URL for releases. */

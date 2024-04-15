@@ -20,7 +20,7 @@ export default defineRoute(async (req, ctx) => {
 	const gtin = searchParams.get('gtin') ?? undefined;
 	const externalUrls = searchParams.getAll('url').filter(isNotEmpty);
 	// Also accept comma-separated regions from HTML form for convenience.
-	const regions = searchParams.getAll('region').filter(isNotEmpty).flatMap((value) => value.split(','));
+	const regions = searchParams.getAll('region').filter(isNotEmpty).flatMap((value) => value.toUpperCase().split(','));
 
 	const requestedProviders = new Set<string>();
 	const providerIds: ProviderNameAndId[] = [];
