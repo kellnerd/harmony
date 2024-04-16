@@ -1,6 +1,6 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
 
-import type { Packaging, ReleaseStatus } from '../musicbrainz/type_id.ts';
+import type { ReleasePackaging, ReleaseStatus } from '@kellnerd/musicbrainz/data/release';
 import type { PartialDate } from '../utils/date.ts';
 import type { ScriptFrequency } from '../utils/script.ts';
 
@@ -15,7 +15,7 @@ export type HarmonyRelease = {
 	status?: ReleaseStatus;
 	releaseDate?: PartialDate;
 	labels?: Label[];
-	packaging?: Packaging;
+	packaging?: ReleasePackaging;
 	images?: Artwork[];
 	copyright?: string;
 	availableIn?: CountryCode[];
