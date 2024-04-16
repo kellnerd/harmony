@@ -48,7 +48,6 @@ export const defaultRegions = ['GB', 'US', 'DE', 'JP'];
  * Extracts all release state (parameters and options) from the given lookup URL.
  *
  * Parses and validates all form parameters and permalink parameters.
- * @todo Handle `ts` snapshot timestamp parameter.
  */
 export function extractReleaseLookupState(lookupUrl: URL): ReleaseLookupParameters & ReleaseOptions {
 	const { searchParams } = lookupUrl;
@@ -82,11 +81,15 @@ export function extractReleaseLookupState(lookupUrl: URL): ReleaseLookupParamete
 		}
 	}
 
+	const ts = searchParams.get('ts') ?? '';
+	const snapshotMaxTimestamp = ts !== '' ? parseInt(ts) : undefined;
+
 	return {
 		providers: requestedProviders.size ? requestedProviders : undefined,
 		regions: new Set(regions),
 		gtin,
 		urls,
 		providerIds,
+		snapshotMaxTimestamp,
 	};
 }

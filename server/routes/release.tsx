@@ -18,12 +18,13 @@ export default defineRoute(async (req, ctx) => {
 	// Only set seeder URL (used for permalinks) in production servers.
 	const seederUrl = ctx.config.dev ? undefined : routeUrl;
 
-	const { gtin, urls, regions, providerIds, providers } = extractReleaseLookupState(routeUrl);
+	const { gtin, urls, regions, providerIds, providers, snapshotMaxTimestamp } = extractReleaseLookupState(routeUrl);
 	const options: ReleaseOptions = {
 		withSeparateMedia: true,
 		withAllTrackArtists: true,
 		regions,
 		providers,
+		snapshotMaxTimestamp,
 	};
 
 	const errors: Error[] = [];
