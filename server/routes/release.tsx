@@ -10,26 +10,30 @@ import { extractReleaseLookupState } from '@/server/state.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
 
-import type { HarmonyRelease, ReleaseOptions } from '@/harmonizer/types.ts';
+import type { GTIN, HarmonyRelease, ReleaseOptions } from '@/harmonizer/types.ts';
 import type { ProviderError } from '@/utils/errors.ts';
 
 export default defineRoute(async (req, ctx) => {
 	const routeUrl = new URL(req.url);
 	// Only set seeder URL (used for permalinks) in production servers.
 	const seederUrl = ctx.config.dev ? undefined : routeUrl;
-
-	const { gtin, urls, regions, providerIds, providers, snapshotMaxTimestamp } = extractReleaseLookupState(routeUrl);
-	const options: ReleaseOptions = {
-		withSeparateMedia: true,
-		withAllTrackArtists: true,
-		regions,
-		providers,
-		snapshotMaxTimestamp,
-	};
-
 	const errors: Error[] = [];
 	let release: HarmonyRelease | undefined;
+	let gtinInput: GTIN = '', urlInput = '', regionsInput: string[] = [];
+
 	try {
+		const { gtin, urls, regions, providerIds, providers, snapshotMaxTimestamp } = extractReleaseLookupState(routeUrl);
+		const options: ReleaseOptions = {
+			withSeparateMedia: true,
+			withAllTrackArtists: true,
+			regions,
+			providers,
+			snapshotMaxTimestamp,
+		};
+		gtinInput = gtin ?? '';
+		urlInput = urls[0]?.href;
+		regionsInput = [...(regions ?? [])];
+
 		if (gtin || providerIds.length || urls.length) {
 			const lookup = new CombinedReleaseLookup({ gtin, providerIds, urls }, options);
 			release = await lookup.getMergedRelease(defaultProviderPreferences);
@@ -53,7 +57,7 @@ export default defineRoute(async (req, ctx) => {
 			</Head>
 			<main>
 				<h2 class='center'>Release Lookup</h2>
-				<ReleaseLookup gtin={gtin} externalUrl={urls[0]?.href} regions={[...(regions ?? [])]} />
+				<ReleaseLookup gtin={gtinInput} externalUrl={urlInput} regions={regionsInput} />
 				{errors.map((error) => (
 					<MessageBox
 						message={{
