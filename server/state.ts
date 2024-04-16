@@ -4,6 +4,7 @@ import { allProviderSimpleNames } from '@/providers/mod.ts';
 import { ensureValidGTIN } from '@/utils/gtin.ts';
 import { isDefined, isNotEmpty } from '@/utils/predicate.ts';
 import { assertCountryCode } from '@/utils/regions.ts';
+import { assertTimestamp } from '@/utils/time.ts';
 import { simplifyName } from 'utils/string/simplify.js';
 
 /**
@@ -81,8 +82,8 @@ export function extractReleaseLookupState(lookupUrl: URL): ReleaseLookupParamete
 		}
 	}
 
-	const ts = searchParams.get('ts') ?? '';
-	const snapshotMaxTimestamp = ts !== '' ? parseInt(ts) : undefined;
+	const snapshotMaxTimestamp = parseInt(searchParams.get('ts') ?? '');
+	assertTimestamp(snapshotMaxTimestamp);
 
 	return {
 		providers: requestedProviders.size ? requestedProviders : undefined,

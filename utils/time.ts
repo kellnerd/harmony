@@ -1,3 +1,5 @@
+import { assert } from 'std/testing/asserts.ts';
+
 export function formatDuration(ms: number, {
 	showMs = false,
 } = {}): string {
@@ -25,7 +27,7 @@ export function formatDuration(ms: number, {
 
 	ms %= 1000;
 	if (ms || showMs) {
-		duration += '.' + ms.toString().padStart(3, '0');
+		duration += '.' + ms.toFixed(0).padStart(3, '0');
 	}
 
 	return duration;
@@ -33,4 +35,9 @@ export function formatDuration(ms: number, {
 
 export function formatTimestampAsISOString(unixSeconds: number): string {
 	return new Date(unixSeconds * 1000).toISOString().replace('.000', '');
+}
+
+/** Asserts that the given number is a valid timestamp. */
+export function assertTimestamp(ts: number) {
+	assert(Number.isSafeInteger(ts) && ts >= 0, 'Timestamp has to be a non-negative integer');
 }
