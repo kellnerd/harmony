@@ -201,12 +201,13 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 
 		const rawRelease = await this.getRawRelease();
 		const release = await this.convertRawRelease(rawRelease);
+		this.withExcludedRegions(release);
 
 		// store the elapsed time for each provider info record (just in case), although there should be only one
 		const elapsedTime = performance.now() - startTime;
 		release.info.providers.forEach((providerInfo) => providerInfo.processingTime = elapsedTime);
 
-		return this.withExcludedRegions(release);
+		return release;
 	}
 
 	/**
