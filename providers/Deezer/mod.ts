@@ -40,8 +40,10 @@ export default class DeezerProvider extends MetadataProvider {
 
 	readonly apiBaseUrl = 'https://api.deezer.com';
 
-	async query<Data>(apiUrl: URL): Promise<CacheEntry<Data>> {
-		const cacheEntry = await this.fetchJSON<Data>(apiUrl);
+	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
+			policy: { maxTimestamp },
+		});
 		const { error } = cacheEntry.content as { error?: ApiError };
 
 		if (error) {
@@ -66,7 +68,10 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 
 	protected async getRawRelease(): Promise<Release> {
 		const apiUrl = this.constructReleaseApiUrl();
-		const { content: release, timestamp } = await this.provider.query<Release>(apiUrl);
+		const { content: release, timestamp } = await this.provider.query<Release>(
+			apiUrl,
+			this.options.snapshotMaxTimestamp,
+		);
 		this.cacheTime = timestamp;
 
 		return release;
@@ -79,6 +84,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 		while (nextPageQuery) {
 			const { content, timestamp }: CacheEntry<Result<TracklistItem>> = await this.provider.query(
 				new URL(nextPageQuery, this.provider.apiBaseUrl),
+				this.options.snapshotMaxTimestamp,
 			);
 			tracklist.push(...content.data);
 			nextPageQuery = content.next;
@@ -91,6 +97,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 	protected async getRawTrackById(trackId: string): Promise<Track> {
 		const { content: track, timestamp } = await this.provider.query<Track>(
 			new URL(`track/${trackId}`, this.provider.apiBaseUrl),
+			this.options.snapshotMaxTimestamp,
 		);
 		this.cacheTime = timestamp;
 		return track;

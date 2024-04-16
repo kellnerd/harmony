@@ -116,6 +116,8 @@ export type ReleaseOptions = Partial<{
 	regions: Set<CountryCode>;
 	/** Simplified names of the providers which should (additionally) be used. */
 	providers: Set<string>;
+	/** Lookup release using historical snapshots before the given Unix timestamp. */
+	snapshotMaxTimestamp: number;
 }>;
 
 /** Methods which can be used to lookup a release. */

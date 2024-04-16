@@ -46,6 +46,7 @@ export default class iTunesProvider extends MetadataProvider {
 	async query<Data extends Result<unknown>>(
 		apiUrl: URL,
 		preferredRegions?: Set<CountryCode>,
+		maxTimestamp?: number,
 	): Promise<CacheEntry<Data>> {
 		if (!preferredRegions?.size) {
 			// use the default region of the API (which would also be used if none was specified)
@@ -58,7 +59,9 @@ export default class iTunesProvider extends MetadataProvider {
 			query.set('country', region.toLowerCase());
 			apiUrl.search = query.toString();
 
-			const cacheEntry = await this.fetchJSON<Data>(apiUrl);
+			const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
+				policy: { maxTimestamp },
+			});
 			if (cacheEntry.content.resultCount) {
 				cacheEntry.region = region;
 				return cacheEntry;
@@ -98,7 +101,11 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 
 	protected async getRawRelease(): Promise<ReleaseResult> {
 		const apiUrl = this.constructReleaseApiUrl();
-		const { content, timestamp, region } = await this.provider.query<ReleaseResult>(apiUrl, this.options.regions);
+		const { content, timestamp, region } = await this.provider.query<ReleaseResult>(
+			apiUrl,
+			this.options.regions,
+			this.options.snapshotMaxTimestamp,
+		);
 
 		// Overwrite optional property with the actually used region (in order to build the accurate API URL).
 		this.lookup.region = region;
