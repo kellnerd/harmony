@@ -1,5 +1,14 @@
 import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
 import { Tooltip } from '@/server/components/Tooltip.tsx';
+import IconBrandDiscogs from '@/server/icons/BrandDiscogs.tsx';
+import IconBrandMetaBrainz from '@/server/icons/BrandMetaBrainz.tsx';
+import IconBrandMetaBrainzFilled from '@/server/icons/BrandMetaBrainzFilled.tsx';
+import IconBrandApple from 'tabler-icons/brand-apple.tsx';
+import IconBrandApplePodcast from 'tabler-icons/brand-apple-podcast.tsx';
+import IconBrandBandcamp from 'tabler-icons/brand-bandcamp.tsx';
+// new Deezer heart icon: #a238ff
+import IconBrandDeezer from 'tabler-icons/brand-deezer.tsx';
+import IconBrandSpotify from 'tabler-icons/brand-spotify.tsx';
 
 export default function Home() {
 	return (
@@ -22,6 +31,20 @@ export default function Home() {
 						</ol>
 					</Tooltip>
 				</h2>
+				<p class='center'>
+					<IconBrandMetaBrainz alt='Monochrome Brainz' />
+					<IconBrandMetaBrainzFilled alt='Monochrome Brainz' />
+					<IconBrandMetaBrainz color='#5aa854' alt='MetaBrainz' />
+					<IconBrandMetaBrainzFilled color='#5aa854' alt='MetaBrainz' />
+					<IconBrandMetaBrainz color='#ba478f' alt='MusicBrainz' />
+					<IconBrandMetaBrainzFilled color='#ba478f' alt='MusicBrainz' />
+					<IconBrandDeezer color='#00c7f2' />
+					<IconBrandApplePodcast color='#872ec4' />
+					<IconBrandApple color='#fc3c44' />
+					<IconBrandSpotify color='#1db954' />
+					<IconBrandBandcamp color='#1da0c3' />
+					<IconBrandDiscogs />
+				</p>
 				<ReleaseLookup formAction='release' />
 			</main>
 		</>
