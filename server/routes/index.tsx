@@ -8,7 +8,10 @@ export default function Home() {
 	return (
 		<>
 			<header class='center'>
-				<h1>Harmony</h1>
+				<h1>
+					<img src='/harmony-logo.svg' class='banner-logo' alt='Logo' />
+					<span>Harmony</span>
+				</h1>
 				<p class='subtitle'>Music Metadata Aggregator and MusicBrainz Importer</p>
 			</header>
 			<main>
