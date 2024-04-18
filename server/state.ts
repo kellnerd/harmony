@@ -82,8 +82,12 @@ export function extractReleaseLookupState(lookupUrl: URL): ReleaseLookupParamete
 		}
 	}
 
-	const snapshotMaxTimestamp = parseInt(searchParams.get('ts') ?? '');
-	assertTimestamp(snapshotMaxTimestamp);
+	const ts = searchParams.get('ts') ?? '';
+	let snapshotMaxTimestamp: number | undefined = undefined;
+	if (ts) {
+		snapshotMaxTimestamp = parseInt(ts);
+		assertTimestamp(snapshotMaxTimestamp);
+	}
 
 	return {
 		providers: requestedProviders.size ? requestedProviders : undefined,
