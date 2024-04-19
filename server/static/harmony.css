@@ -1,10 +1,30 @@
 :root {
 	--input-padding: 0.3rem;
-	--color-dark: #414a63;
-	--color-light: #e3e4e8;
+	--page-fill: #ffffff;
+	--text: #000000;
+	--theme-fill: #e3e4e8;
+	--theme-text: #414a63;
+	--badge-fill: #414a63;
+	--badge-text: #ffffff;
+	--odd-fill:#efefef;
+	--even-fill: #f8f8f8;
+	--link: #0066cc;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--page-fill: #222222;
+		--text: #ffffff;
+		--theme-fill: #414a63;
+		--theme-text: #e3e4e8;
+		--odd-fill: #333333;
+		--even-fill: #2a2a2a;
+	}
 }
 
 body {
+	background-color: var(--page-fill);
+	color: var(--text);
 	font-family: sans-serif;
 	display: flex;
 	flex-direction: column;
@@ -18,8 +38,8 @@ main {
 }
 
 header {
-	background-color: var(--color-light);
-	color: var(--color-dark);
+	background-color: var(--theme-fill);
+	color: var(--theme-text);
 	font-family: "Roboto", sans-serif;
 	padding: 1.5rem;
 }
@@ -52,6 +72,10 @@ h1 + p.subtitle {
 	margin-left: 0.5em;
 }
 
+a:link, a:visited {
+	color: var(--link);
+}
+
 a.label, span.label {
 	display: inline-flex;
 	align-items: center;
@@ -60,8 +84,8 @@ a.label, span.label {
 	font-size: 0.8em;
 	line-height: 0.8em;
 	white-space: nowrap;
-	background-color: var(--color-dark);
-	color: #ffffff;
+	background-color: var(--badge-fill);
+	color: var(--badge-text);
 }
 a.label {
 	text-decoration: none;
@@ -89,10 +113,10 @@ table {
 }
 
 tbody > tr:nth-child(odd) {
-	background-color: #efefef;
+	background-color: var(--odd-fill);
 }
 tbody > tr:nth-child(even) {
-	background-color: #f8f8f8;
+	background-color: var(--even-fill);
 }
 
 td, th {
@@ -126,6 +150,7 @@ figure.cover-image > figcaption {
 /* InputWithOverlay.tsx */
 
 div.input-with-overlay {
+	color: initial;
 	position: relative;
 	display: inline-block;
 	margin: 0.2em 0.4em;
@@ -155,8 +180,8 @@ code.isrc > span:not(:last-child)::after {
 div.message {
 	display: flex;
 	align-items: center;
-	background-color: var(--color-light);
-	color: var(--color-dark);
+	background-color: var(--theme-fill);
+	color: var(--theme-text);
 	margin: 0.5em;
 	padding: 0.3em 0.5em;
 	border-radius: 5px;
