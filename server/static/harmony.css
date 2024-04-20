@@ -2,8 +2,12 @@
 	--input-padding: 0.3rem;
 	--page-fill: #ffffff;
 	--text: #000000;
-	--theme-fill: #e3e4e8;
-	--theme-text: #414a63;
+	--brand-orange: #ffb92c;
+	--brand-red: #c45555;
+	--brand-dark: #323541;
+	--brand-light: #e3e4e8;
+	--theme-fill: var(--brand-light);
+	--theme-text: var(--brand-dark);
 	--badge-fill: #414a63;
 	--badge-text: #ffffff;
 	--odd-fill:#efefef;
@@ -15,8 +19,8 @@
 	:root {
 		--page-fill: #222222;
 		--text: #ffffff;
-		--theme-fill: #414a63;
-		--theme-text: #e3e4e8;
+		--theme-fill: var(--brand-dark);
+		--theme-text: var(--brand-light);
 		--odd-fill: #333333;
 		--even-fill: #2a2a2a;
 	}
