@@ -50,10 +50,12 @@ export default defineRoute(async (req, ctx) => {
 		}
 	}
 
+	const title = release?.title ?? 'Release Lookup';
 	return (
 		<>
 			<Head>
-				<title>{release?.title ?? 'Release Lookup'} &ndash; Harmony</title>
+				<title>{title} &ndash; Harmony</title>
+				<meta property='og:title' content={title} />
 			</Head>
 			<main>
 				<h2 class='center'>Release Lookup</h2>
