@@ -68,6 +68,13 @@ h1 + p.subtitle {
 	text-align: center;
 }
 
+ul.inline > li {
+	display: inline;
+}
+ul.inline > li:not(:last-child)::after {
+	content: " · ";
+}
+
 .ml-1 {
 	margin-left: 0.25em;
 }
