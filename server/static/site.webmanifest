@@ -1,0 +1,23 @@
+{
+	"name": "Harmony",
+	"short_name": "Harmony",
+	"icons": [
+		{
+			"src": "/harmony-logo-192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/harmony-logo-512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		},
+		{
+			"src": "/harmony-logo.svg",
+			"sizes": "any",
+			"type": "image/svg+xml"
+		}
+	],
+	"background_color": "#323541",
+	"theme_color": "#c45555"
+}
