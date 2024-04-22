@@ -7,6 +7,17 @@ export const supportUrl = getUrlFromEnv('HARMONY_SUPPORT_URL', new URL('issues',
 /** Current git revision. */
 export const revision = Deno.env.get('DENO_DEPLOYMENT_ID');
 
+/** Indicates whether the protocol of a client from the `X-Forwarded-Proto` proxy header should be used. */
+export const forwardProto = getBooleanFromEnv('FORWARD_PROTO');
+
+function getBooleanFromEnv(key: string): boolean {
+	let value: string | undefined;
+	if ('Deno' in self) {
+		value = Deno.env.get(key);
+	}
+	return value !== undefined && ['1', 'true', 'yes'].includes(value.toLowerCase());
+}
+
 function getUrlFromEnv(key: string, fallback: string | URL): URL {
 	let value: string | undefined;
 	if ('Deno' in self) {

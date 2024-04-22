@@ -14,15 +14,14 @@ import type { GTIN, HarmonyRelease, ReleaseOptions } from '@/harmonizer/types.ts
 import type { ProviderError } from '@/utils/errors.ts';
 
 export default defineRoute(async (req, ctx) => {
-	const routeUrl = new URL(req.url);
 	// Only set seeder URL (used for permalinks) in production servers.
-	const seederUrl = ctx.config.dev ? undefined : routeUrl;
+	const seederUrl = ctx.config.dev ? undefined : ctx.url;
 	const errors: Error[] = [];
 	let release: HarmonyRelease | undefined;
 	let gtinInput: GTIN = '', urlInput = '', regionsInput: string[] = [];
 
 	try {
-		const { gtin, urls, regions, providerIds, providers, snapshotMaxTimestamp } = extractReleaseLookupState(routeUrl);
+		const { gtin, urls, regions, providerIds, providers, snapshotMaxTimestamp } = extractReleaseLookupState(ctx.url);
 		const options: ReleaseOptions = {
 			withSeparateMedia: true,
 			withAllTrackArtists: true,

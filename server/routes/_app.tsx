@@ -1,8 +1,8 @@
 import { defineApp } from 'fresh/server.ts';
 
-export default defineApp((req, { Component }) => {
+export default defineApp((req, ctx) => {
 	// OpenGraph image URL must be absolute.
-	const logoUrl = new URL('/harmony-logo.svg', req.url);
+	const logoUrl = new URL('/harmony-logo.svg', ctx.url);
 
 	return (
 		<html lang='en'>
@@ -19,7 +19,7 @@ export default defineApp((req, { Component }) => {
 				<link rel='manifest' href='/site.webmanifest' />
 			</head>
 			<body>
-				<Component />
+				<ctx.Component />
 			</body>
 		</html>
 	);
