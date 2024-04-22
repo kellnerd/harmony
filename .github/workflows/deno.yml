@@ -1,18 +1,12 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-# This workflow will install Deno then run `deno lint` and `deno test`.
-# For more information see: https://github.com/denoland/setup-deno
-
 name: Deno
 
 on:
   push:
     branches: ["main"]
+    tags: ["v*"]
   pull_request:
     branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -41,3 +35,40 @@ jobs:
 
       - name: Run tests
         run: deno test -A
+
+  deploy:
+    if: startsWith(github.ref, 'refs/tags/v') && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    needs: test
+
+    env:
+      WORK_DIR: harmony
+
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v4
+        with:
+          path: ${{ env.WORK_DIR }}
+
+      - name: Deploy
+        uses: easingthemes/ssh-deploy@v5.0.3
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+          ARGS: "-cilrvz --delete"
+          SOURCE: ${{ env.WORK_DIR }}/
+          REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
+          REMOTE_PORT: ${{ secrets.DEPLOY_PORT || 22 }}
+          REMOTE_USER: ${{ secrets.DEPLOY_USER }}
+          TARGET: ${{ secrets.DEPLOY_TARGET }}
+          EXCLUDE: "/deno.lock, /snaps.db, /snaps/"
+          SCRIPT_BEFORE: |
+            set -e
+            ls -al "${{ secrets.DEPLOY_TARGET }}"
+          SCRIPT_AFTER: |
+            set -e
+            ls -al "${{ secrets.DEPLOY_TARGET }}"
+            cd "${{ secrets.DEPLOY_TARGET }}"
+            deno task build
+            if [[ -n "${{ secrets.DEPLOY_SERVICE }}" ]]; then
+              systemctl --user restart "${{ secrets.DEPLOY_SERVICE }}"
+            fi
