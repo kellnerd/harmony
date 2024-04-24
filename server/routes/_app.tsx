@@ -1,8 +1,12 @@
+import Footer from '@/server/components/Footer.tsx';
+import { NavigationBar } from '@/server/components/NavigationBar.tsx';
+
 import { defineApp } from 'fresh/server.ts';
 
 export default defineApp((req, ctx) => {
 	// OpenGraph image URL must be absolute.
 	const logoUrl = new URL('/harmony-logo.svg', ctx.url);
+	const isLandingPage = ctx.url.pathname === '/';
 
 	return (
 		<html lang='en'>
@@ -19,7 +23,9 @@ export default defineApp((req, ctx) => {
 				<link rel='manifest' href='/site.webmanifest' />
 			</head>
 			<body>
+				{!isLandingPage && <NavigationBar />}
 				<ctx.Component />
+				<Footer />
 			</body>
 		</html>
 	);

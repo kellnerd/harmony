@@ -1,4 +1,3 @@
-import Footer from '@/server/components/Footer.tsx';
 import { MessageBox } from '@/server/components/MessageBox.tsx';
 import { Release } from '@/server/components/Release.tsx';
 import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
@@ -81,7 +80,6 @@ export default defineRoute(async (req, ctx) => {
 					/>
 				)}
 			</main>
-			<Footer />
 		</>
 	);
 });

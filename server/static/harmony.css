@@ -8,6 +8,8 @@
 	--brand-light: #e3e4e8;
 	--theme-fill: var(--brand-light);
 	--theme-text: var(--brand-dark);
+	--nav-fill: #c3c4c8;
+	--nav-accent: var(--brand-red);
 	--badge-fill: #414a63;
 	--badge-text: #ffffff;
 	--odd-fill:#efefef;
@@ -21,6 +23,8 @@
 		--text: #ffffff;
 		--theme-fill: var(--brand-dark);
 		--theme-text: var(--brand-light);
+		--nav-fill: #525561;
+		--nav-accent: var(--brand-orange);
 		--odd-fill: #333333;
 		--even-fill: #2a2a2a;
 	}
@@ -223,6 +227,53 @@ div.message.warning {
 div.message.error {
 	background-color: #ffe7e7;
 	color: #de0604;
+}
+
+/** NavigationBar.tsx */
+
+nav {
+	background-color: var(--nav-fill);
+	color: var(--theme-text);
+}
+
+nav.sticky {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+}
+
+nav > ul {
+	list-style: none;
+	font-weight: bold;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	align-items: center;
+}
+
+nav > ul > li {
+	border-bottom: 3px solid transparent;
+}
+nav > ul > li:hover {
+	color: var(--nav-accent);
+	border-color: var(--nav-accent);
+}
+
+nav > ul > li > a {
+	height: 1.8rem;
+	padding: 0.5rem;
+	display: inline-flex;
+	align-items: center;
+}
+
+nav a:link, nav a:visited {
+	color: inherit;
+	text-decoration: none;
+}
+
+nav img.icon-logo {
+	height: 2rem;
+	margin-right: 0.3rem;
 }
 
 /* RegionList.tsx */
