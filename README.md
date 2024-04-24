@@ -47,3 +47,9 @@ deno fmt --check
 deno lint
 deno task check
 ```
+
+There is also a Deno task which combines the previous commands:
+
+```sh
+deno task ok
+```

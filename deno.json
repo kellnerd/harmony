@@ -27,6 +27,7 @@
 	},
 	"tasks": {
 		"check": "deno check server/fresh.gen.ts cli.ts",
+		"ok": "deno fmt --check && deno lint && deno task check",
 		"cli": "deno run --allow-net cli.ts",
 		"dev": "deno run -A --watch=server/static/,server/routes/ server/dev.ts",
 		"build": "deno run -A server/dev.ts build",
