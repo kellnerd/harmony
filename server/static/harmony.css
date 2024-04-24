@@ -8,7 +8,6 @@
 	--brand-light: #e3e4e8;
 	--theme-fill: var(--brand-light);
 	--theme-text: var(--brand-dark);
-	--nav-fill: #c3c4c8;
 	--nav-accent: var(--brand-red);
 	--badge-fill: #414a63;
 	--badge-text: #ffffff;
@@ -23,7 +22,6 @@
 		--text: #ffffff;
 		--theme-fill: var(--brand-dark);
 		--theme-text: var(--brand-light);
-		--nav-fill: #525561;
 		--nav-accent: var(--brand-orange);
 		--odd-fill: #333333;
 		--even-fill: #2a2a2a;
@@ -232,8 +230,9 @@ div.message.error {
 /** NavigationBar.tsx */
 
 nav {
-	background-color: var(--nav-fill);
+	background-color: var(--theme-fill);
 	color: var(--theme-text);
+	border-bottom: 1px solid var(--nav-accent);
 }
 
 nav.sticky {
