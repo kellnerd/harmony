@@ -10,6 +10,11 @@ export const musicbrainzBaseUrl = getUrlFromEnv('MUSICBRAINZ_URL', 'https://musi
 /** Current git revision. */
 export const revision = Deno.env.get('DENO_DEPLOYMENT_ID');
 
+/** Source code URL for the current git revision. */
+export const codeRevisionUrl = (revision && codeUrl.hostname === 'github.com')
+	? new URL(`tree/${revision}`, codeUrl)
+	: undefined;
+
 /** Indicates whether the protocol of a client from the `X-Forwarded-Proto` proxy header should be used. */
 export const forwardProto = getBooleanFromEnv('FORWARD_PROTO');
 
