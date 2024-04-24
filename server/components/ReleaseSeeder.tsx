@@ -6,12 +6,16 @@ import { preferArray } from 'utils/array/scalar.js';
 
 import type { HarmonyRelease } from '@/harmonizer/types.ts';
 
-export function ReleaseSeeder({ release, sourceUrl, targetUrl }: {
+export function ReleaseSeeder({ release, sourceUrl, targetUrl, projectUrl }: {
 	release: HarmonyRelease;
+	projectUrl: URL;
 	sourceUrl?: URL;
 	targetUrl: URL;
 }) {
-	const seed = createReleaseSeed(release, sourceUrl);
+	const seed = createReleaseSeed(release, {
+		projectUrl,
+		seederUrl: sourceUrl,
+	});
 
 	return (
 		<form action={targetUrl.href} method='post' target='_blank' name='release-seeder'>

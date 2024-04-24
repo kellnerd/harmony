@@ -1,5 +1,4 @@
 import { createReleasePermalink } from '@/server/state.ts';
-import { codeUrl } from '@/server/config.ts';
 import { determineReleaseEventCountries } from './release_countries.ts';
 import { urlTypeIds } from './type_id.ts';
 import { preferArray } from 'utils/array/scalar.js';
@@ -11,7 +10,14 @@ import type { PartialDate } from '@/utils/date.ts';
 import type { ScriptCode } from '@/utils/script.ts';
 import type { FormDataRecord, MaybeArray } from 'utils/types.d.ts';
 
-export function createReleaseSeed(release: HarmonyRelease, seederUrl?: URL): FormDataRecord {
+export interface ReleaseSeedOptions {
+	/** URL of the project which was used to seed the release, for edit notes. */
+	projectUrl: URL;
+	/** Base URL of the Harmony instance which was used to seed the release, for permalinks. */
+	seederUrl?: URL;
+}
+
+export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedOptions): FormDataRecord {
 	const countries = preferArray(determineReleaseEventCountries(release));
 
 	const seed: ReleaseSeed = {
@@ -52,7 +58,7 @@ export function createReleaseSeed(release: HarmonyRelease, seederUrl?: URL): For
 				})
 		),
 		annotation: buildAnnotation(release),
-		edit_note: buildEditNote(release.info, seederUrl),
+		edit_note: buildEditNote(release.info, options),
 	};
 
 	return flatten(seed);
@@ -104,14 +110,15 @@ function buildAnnotation(release: HarmonyRelease): string {
 	return lines.join('\n');
 }
 
-function buildEditNote(info: ReleaseInfo, seederUrl?: URL): string {
+function buildEditNote(info: ReleaseInfo, options: ReleaseSeedOptions): string {
 	const lines = info.providers.map(({ name, url, apiUrl }) => {
 		let line = `* ${name}: ${url}`;
 		if (apiUrl) line += ` (API: ${apiUrl})`;
 		return line;
 	});
 
-	const sourceUrl = seederUrl ? createReleasePermalink(info, seederUrl) : codeUrl;
+	const { projectUrl, seederUrl } = options;
+	const sourceUrl = seederUrl ? createReleasePermalink(info, seederUrl) : projectUrl;
 	lines.unshift(`Imported with Harmony (${sourceUrl}), using data from:`);
 
 	return lines.join('\n');

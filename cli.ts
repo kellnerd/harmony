@@ -32,7 +32,7 @@ if (args._.length === 1) {
 	}
 
 	if (args.seed) {
-		console.log(createReleaseSeed(release));
+		console.log(createReleaseSeed(release, { projectUrl: new URL('http://example.com') }));
 	} else {
 		console.log(JSON.stringify(release));
 	}

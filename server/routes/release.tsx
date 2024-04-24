@@ -6,7 +6,7 @@ import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
 
 import { CombinedReleaseLookup } from '@/lookup.ts';
 import { defaultProviderPreferences } from '@/providers/mod.ts';
-import { musicbrainzBaseUrl } from '@/server/config.ts';
+import { codeUrl, musicbrainzBaseUrl } from '@/server/config.ts';
 import { extractReleaseLookupState } from '@/server/state.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
@@ -72,7 +72,14 @@ export default defineRoute(async (req, ctx) => {
 					/>
 				))}
 				{release && <Release release={release} />}
-				{release && <ReleaseSeeder release={release} sourceUrl={seederSourceUrl} targetUrl={seederTargetUrl} />}
+				{release && (
+					<ReleaseSeeder
+						release={release}
+						projectUrl={codeUrl}
+						sourceUrl={seederSourceUrl}
+						targetUrl={seederTargetUrl}
+					/>
+				)}
 			</main>
 			<Footer />
 		</>
