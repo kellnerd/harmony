@@ -11,8 +11,6 @@ import type { PartialDate } from '@/utils/date.ts';
 import type { ScriptCode } from '@/utils/script.ts';
 import type { FormDataRecord, MaybeArray } from 'utils/types.d.ts';
 
-export const targetUrl = new URL('/release/add', 'https://musicbrainz.org');
-
 export function createReleaseSeed(release: HarmonyRelease, seederUrl?: URL): FormDataRecord {
 	const countries = preferArray(determineReleaseEventCountries(release));
 

@@ -1,13 +1,17 @@
 import InputWithOverlay from './InputWithOverlay.tsx';
 import IconDatabaseImport from 'tabler-icons/database-import.tsx';
 
-import { createReleaseSeed, targetUrl } from '@/musicbrainz/seeding.ts';
+import { createReleaseSeed } from '@/musicbrainz/seeding.ts';
 import { preferArray } from 'utils/array/scalar.js';
 
 import type { HarmonyRelease } from '@/harmonizer/types.ts';
 
-export function ReleaseSeeder({ release, seederUrl }: { release: HarmonyRelease; seederUrl?: URL }) {
-	const seed = createReleaseSeed(release, seederUrl);
+export function ReleaseSeeder({ release, sourceUrl, targetUrl }: {
+	release: HarmonyRelease;
+	sourceUrl?: URL;
+	targetUrl: URL;
+}) {
+	const seed = createReleaseSeed(release, sourceUrl);
 
 	return (
 		<form action={targetUrl.href} method='post' target='_blank' name='release-seeder'>

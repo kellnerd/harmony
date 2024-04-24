@@ -4,6 +4,9 @@ export const codeUrl = getUrlFromEnv('HARMONY_CODE_URL', 'https://github.com/kel
 /** User support URL. */
 export const supportUrl = getUrlFromEnv('HARMONY_SUPPORT_URL', new URL('issues', codeUrl));
 
+/** Base URL of the MusicBrainz server which should be used (for seeding and API requests). */
+export const musicbrainzBaseUrl = getUrlFromEnv('MUSICBRAINZ_URL', 'https://musicbrainz.org/');
+
 /** Current git revision. */
 export const revision = Deno.env.get('DENO_DEPLOYMENT_ID');
 
