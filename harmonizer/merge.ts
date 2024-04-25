@@ -1,8 +1,7 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
 import { ProviderError } from '@/utils/errors.ts';
-import { uniqueGtinSet } from '@/utils/gtin.ts';
-import { isDefined, isNotError } from '@/utils/predicate.ts';
-import { assert } from 'std/testing/asserts.ts';
+import { isNotError } from '@/utils/predicate.ts';
+import { AssertionError } from 'std/testing/asserts.ts';
 
 import type {
 	CountryCode,
@@ -179,20 +178,62 @@ export function mergeRelease(
 	return mergedRelease;
 }
 
+/** Returns pairs of unique values and providers which use this value for the given release property. */
+export function uniqueReleasePropertyValues<Value extends string | number>(
+	releaseMap: ProviderReleaseMapping,
+	propertyAccessor: (release: HarmonyRelease) => Value | undefined,
+): Array<[Value, ProviderName[]]> {
+	const uniqueValues = new Set<Value>();
+	const providersByUniqueValue: Partial<Record<Value, string[]>> = {};
+
+	for (const [providerName, release] of Object.entries(releaseMap)) {
+		if (release instanceof Error) continue;
+
+		const value = propertyAccessor(release);
+		if (value === undefined) continue;
+
+		if (uniqueValues.has(value)) {
+			providersByUniqueValue[value]!.push(providerName);
+		} else {
+			uniqueValues.add(value);
+			providersByUniqueValue[value] = [providerName];
+		}
+	}
+
+	return Object.entries(providersByUniqueValue) as Array<[Value, ProviderName[]]>;
+}
+
 /** Ensures that the given releases are compatible and can be merged. */
 function assertReleaseCompatibility(releaseMap: ProviderReleaseMapping) {
 	const releases = Object.values(releaseMap).filter(isNotError);
 	if (!releases.length) return;
 
-	const gtins = releases.map((release) => release.gtin).filter(isDefined);
-	assert(uniqueGtinSet(gtins).size <= 1, `Providers have returned multiple different GTIN: ${gtins.join(', ')}`);
+	assertUniquePropertyValue(
+		(release) => (release.gtin) ? Number(release.gtin) : undefined,
+		'Providers have returned multiple different GTIN',
+	);
 
 	// TODO: Support releases with the same total track count.
-	const mediumCounts = releases.map((release) => release.media.length);
-	assert(
-		new Set(mediumCounts).size === 1,
-		`Providers have returned a different number of media: ${mediumCounts.join(', ')}`,
+	assertUniquePropertyValue(
+		(release) => release.media.length,
+		'Providers have returned a different number of media',
 	);
+
+	function assertUniquePropertyValue<Value extends string | number>(
+		propertyAccessor: (release: HarmonyRelease) => Value | undefined,
+		errorDescription: string,
+	) {
+		const uniqueValues = uniqueReleasePropertyValues(releaseMap, propertyAccessor);
+		if (uniqueValues.length <= 1) return;
+
+		throw new AssertionError(
+			`${errorDescription}: ${
+				uniqueValues.map(
+					([value, providerNames]) => `${value} (${providerNames.join(', ')})`,
+				).join(', ')
+			}`,
+		);
+	}
 }
 
 /** Copies properties between records of the same type. Helper to prevent type errors. */
