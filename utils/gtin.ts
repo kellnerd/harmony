@@ -67,3 +67,8 @@ export function isEqualGTIN(a: GTIN, b: GTIN, { strict = false } = {}): boolean 
 		return Number(a) === Number(b);
 	}
 }
+
+/** Returns the numeric set of all unique GTIN. */
+export function uniqueGtinSet(gtins: GTIN[]): Set<number> {
+	return new Set(gtins.map(Number));
+}

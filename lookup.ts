@@ -1,7 +1,7 @@
 import { mergeRelease } from '@/harmonizer/merge.ts';
 import { allProviders, allProviderSimpleNames, defaultProviderPreferences, providerMap } from '@/providers/mod.ts';
 import { LookupError } from '@/utils/errors.ts';
-import { ensureValidGTIN, isEqualGTIN } from '@/utils/gtin.ts';
+import { ensureValidGTIN, isEqualGTIN, uniqueGtinSet } from '@/utils/gtin.ts';
 import { formatLanguageConfidence, formatScriptFrequency } from '@/utils/locale.ts';
 import { isDefined, isNotError } from '@/utils/predicate.ts';
 import { detectScripts, scriptCodes } from '@/utils/script.ts';
@@ -199,7 +199,7 @@ export class CombinedReleaseLookup {
 
 			// Obtain GTIN candidates from the already completed release lookups.
 			const gtinCandidates = releases.map((release) => release.gtin).filter(isDefined);
-			const uniqueGtinValues = new Set(gtinCandidates.map(Number));
+			const uniqueGtinValues = uniqueGtinSet(gtinCandidates);
 
 			switch (uniqueGtinValues.size) {
 				case 1:
