@@ -1,4 +1,4 @@
-import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
+import { Markdown } from './Markdown.tsx';
 import IconAlertTriangle from 'tabler-icons/alert-triangle.tsx';
 import IconBug from 'tabler-icons/bug.tsx';
 import IconInfoCircle from 'tabler-icons/info-circle.tsx';
@@ -18,7 +18,7 @@ export function MessageBox({ message }: { message: ProviderMessage }) {
 		<div class={['message', message.type].join(' ')}>
 			{icons[message.type]}
 			{message.provider && <span class='provider'>{message.provider}:</span>}
-			<TextWithLineBreaks lines={message.text.split('\n')} />
+			<Markdown content={message.text} />
 		</div>
 	);
 }

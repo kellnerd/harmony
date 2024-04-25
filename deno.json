@@ -11,6 +11,7 @@
 	},
 	"imports": {
 		"@/": "./",
+		"@deno/gfm": "jsr:@deno/gfm@^0.8.0",
 		"$fresh/": "https://deno.land/x/fresh@1.6.8/",
 		"fresh/": "https://deno.land/x/fresh@1.6.8/",
 		"lande": "https://esm.sh/lande@1.0.10",

@@ -211,6 +211,10 @@ div.message span.provider {
 	margin-right: 0.5em;
 }
 
+div.message p, div.message ul {
+	margin: 0;
+}
+
 div.message.debug {
 	background-color: #eaf8ec;
 	color: #329c3b;

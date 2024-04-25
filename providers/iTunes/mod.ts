@@ -133,7 +133,7 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 			this.addMessage(
 				`The API also returned ${
 					pluralWithCount(skippedUrls.length, 'other result, which was skipped', 'other results, which were skipped')
-				}:\n${skippedUrls.join('\n')}`,
+				}:\n- ${skippedUrls.join('\n- ')}`,
 				'warning',
 			);
 		}
