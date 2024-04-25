@@ -1,6 +1,7 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
 import { ProviderError } from '@/utils/errors.ts';
 import { isNotError } from '@/utils/predicate.ts';
+import { trackCountSummary } from '@/utils/tracklist.ts';
 import { AssertionError } from 'std/testing/asserts.ts';
 
 import type {
@@ -215,8 +216,8 @@ function assertReleaseCompatibility(releaseMap: ProviderReleaseMapping) {
 
 	// TODO: Support releases with the same total track count.
 	assertUniquePropertyValue(
-		(release) => release.media.length,
-		'Providers have returned a different number of media',
+		trackCountSummary,
+		'Providers have returned incompatible track lists',
 	);
 
 	function assertUniquePropertyValue<Value extends string | number>(
