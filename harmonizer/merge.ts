@@ -1,5 +1,8 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
 import { ProviderError } from '@/utils/errors.ts';
+import { uniqueGtinSet } from '@/utils/gtin.ts';
+import { isDefined, isNotError } from '@/utils/predicate.ts';
+import { assert } from 'std/testing/asserts.ts';
 
 import type {
 	CountryCode,
@@ -22,6 +25,8 @@ export function mergeRelease(
 	releaseMap: ProviderReleaseMapping,
 	preferences: ProviderPreferences | ProviderName[] = {},
 ): HarmonyRelease {
+	assertReleaseCompatibility(releaseMap);
+
 	const availableProviders: ProviderName[] = Object.entries(releaseMap)
 		.filter(([_providerName, releaseOrError]) => !(releaseOrError instanceof Error))
 		.map(([providerName]) => providerName);
@@ -172,6 +177,22 @@ export function mergeRelease(
 	});
 
 	return mergedRelease;
+}
+
+/** Ensures that the given releases are compatible and can be merged. */
+function assertReleaseCompatibility(releaseMap: ProviderReleaseMapping) {
+	const releases = Object.values(releaseMap).filter(isNotError);
+	if (!releases.length) return;
+
+	const gtins = releases.map((release) => release.gtin).filter(isDefined);
+	assert(uniqueGtinSet(gtins).size <= 1, `Providers have returned multiple different GTIN: ${gtins.join(', ')}`);
+
+	// TODO: Support releases with the same total track count.
+	const mediumCounts = releases.map((release) => release.media.length);
+	assert(
+		new Set(mediumCounts).size === 1,
+		`Providers have returned a different number of media: ${mediumCounts.join(', ')}`,
+	);
 }
 
 /** Copies properties between records of the same type. Helper to prevent type errors. */
