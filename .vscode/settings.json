@@ -16,6 +16,7 @@
 		"mbid",
 		"MBID",
 		"millis",
+		"musicbrainz",
 		"mzstatic",
 		"preact",
 		"runtimes",
@@ -27,6 +28,9 @@
 	"deno.enable": true,
 	"deno.lint": true,
 	"[typescript]": {
+		"editor.defaultFormatter": "denoland.vscode-deno"
+	},
+	"[typescriptreact]": {
 		"editor.defaultFormatter": "denoland.vscode-deno"
 	}
 }
