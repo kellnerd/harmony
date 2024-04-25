@@ -1,4 +1,4 @@
-import { codeRevisionUrl, codeUrl, revision, supportUrl } from '@/server/config.ts';
+import { codeRevisionUrl, codeUrl, shortRevision, supportUrl } from '@/server/config.ts';
 
 export default function Footer() {
 	return (
@@ -7,7 +7,7 @@ export default function Footer() {
 				<li>
 					Revision{' '}
 					<a href={codeRevisionUrl?.href}>
-						<code>{revision?.substring(0, 7) ?? 'unknown'}</code>
+						<code>{shortRevision}</code>
 					</a>
 				</li>
 				<li>
