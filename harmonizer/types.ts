@@ -8,6 +8,12 @@ import type { ScriptFrequency } from '../utils/script.ts';
 /** MusicBrainz entity types which Harmony supports. */
 export type HarmonyEntityType = Extract<EntityType, 'release' | 'artist'>;
 
+/** Entity which may have a an external link which can be resolved to its MBID. */
+export interface ResolvableEntity {
+	externalLink?: URL;
+	mbid?: string;
+}
+
 export type HarmonyRelease = {
 	title: string;
 	artists: ArtistCredit;
@@ -44,18 +50,16 @@ export type HarmonyTrack = {
 	availableIn?: CountryCode[];
 };
 
-export type ArtistCreditName = {
+export type ArtistCreditName = ResolvableEntity & {
 	name: string;
 	creditedName?: string;
-	externalLink?: URL;
 	joinPhrase?: string;
 };
 
 type ArtistCredit = ArtistCreditName[];
 
-export type Label = {
+export type Label = ResolvableEntity & {
 	name: string;
-	externalLink?: URL;
 	catalogNumber?: string;
 };
 

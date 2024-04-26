@@ -4,6 +4,7 @@ import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
 import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
 
 import { CombinedReleaseLookup } from '@/lookup.ts';
+import { resolveReleaseMbids } from '@/musicbrainz/mbid_mapping.ts';
 import { defaultProviderPreferences } from '@/providers/mod.ts';
 import { codeUrl, musicbrainzBaseUrl } from '@/server/config.ts';
 import { extractReleaseLookupState } from '@/server/state.ts';
@@ -38,6 +39,7 @@ export default defineRoute(async (req, ctx) => {
 		if (gtin || providerIds.length || urls.length) {
 			const lookup = new CombinedReleaseLookup({ gtin, providerIds, urls }, options);
 			release = await lookup.getMergedRelease(defaultProviderPreferences);
+			await resolveReleaseMbids(release);
 		}
 	} catch (error) {
 		if (ctx.config.dev) {

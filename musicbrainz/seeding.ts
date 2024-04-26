@@ -30,7 +30,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 		labels: release.labels?.map((label) => ({
 			name: label.name,
 			catalog_number: label.catalogNumber,
-			// mbid: resolveToMBID(label.externalLink), // TODO
+			mbid: label.mbid,
 		})),
 		status: release.status,
 		packaging: release.packaging,
@@ -72,7 +72,7 @@ export function convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditS
 
 			return {
 				artist: { name: artist.name },
-				// mbid: resolveToMBID(artist.externalLink), // TODO
+				mbid: artist.mbid,
 				name: artist.creditedName,
 				join_phrase: artist.joinPhrase ?? defaultJoinPhrase,
 			};
