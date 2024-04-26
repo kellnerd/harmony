@@ -1,5 +1,5 @@
 import { availableRegions } from './regions.ts';
-import { CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { CacheEntry, DurationPrecision, EntityId, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
@@ -24,8 +24,13 @@ export default class iTunesProvider extends MetadataProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '(itunes|music).apple.com',
-		pathname: String.raw`/:region(\w{2})?/album/:blurb?/:id(\d+)`,
+		pathname: String.raw`/:region(\w{2})?/:type(album|artist)/:blurb?/:id(\d+)`,
 	});
+
+	readonly entityTypeMap = {
+		artist: 'artist',
+		release: 'album',
+	};
 
 	readonly availableRegions = new Set(availableRegions);
 
@@ -43,14 +48,30 @@ export default class iTunesProvider extends MetadataProvider {
 
 	readonly apiBaseUrl = 'https://itunes.apple.com';
 
+	/** URLs without specified region implicitly query the US iTunes store. */
+	readonly defaultRegion: CountryCode = 'US';
+
+	constructUrl(entity: EntityId): URL {
+		const region = entity.region ?? this.defaultRegion;
+		return new URL([region.toLowerCase(), entity.type, entity.id].join('/'), 'https://music.apple.com');
+	}
+
+	extractEntityFromUrl(url: URL): EntityId | undefined {
+		const entity = super.extractEntityFromUrl(url);
+		if (entity && !entity.region) {
+			entity.region = this.defaultRegion;
+		}
+		return entity;
+	}
+
 	async query<Data extends Result<unknown>>(
 		apiUrl: URL,
 		preferredRegions?: Set<CountryCode>,
 		maxTimestamp?: number,
 	): Promise<CacheEntry<Data>> {
 		if (!preferredRegions?.size) {
-			// use the default region of the API (which would also be used if none was specified)
-			preferredRegions = new Set(['US']);
+			// Use the default region of the API (which would also be used if none was specified).
+			preferredRegions = new Set([this.defaultRegion]);
 		}
 
 		const query = apiUrl.searchParams;
@@ -73,10 +94,6 @@ export default class iTunesProvider extends MetadataProvider {
 }
 
 export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseResult> {
-	constructReleaseUrl(id: string, region: CountryCode = 'US'): URL {
-		return new URL([region.toLowerCase(), 'album', id].join('/'), 'https://music.apple.com');
-	}
-
 	constructReleaseApiUrl(): URL {
 		const { method, value, region } = this.lookup;
 		const lookupUrl = new URL('lookup', this.provider.apiBaseUrl);
@@ -228,11 +245,6 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 		};
 	}
 
-	extractReleaseRegion(url: URL): CountryCode {
-		// URLs without specified region implicitly query the US iTunes store
-		return super.extractReleaseRegion(url) ?? 'US';
-	}
-
 	extractGTINFromUrl(url: string): GTIN | undefined {
 		const gtinCandidate = url.match(/(?<!\d)\d{12,14}(?!\d)/)?.[0];
 		if (gtinCandidate && isValidGTIN(gtinCandidate)) {
@@ -242,6 +254,7 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 
 	private cleanViewUrl(viewUrl: string) {
 		// remove tracking(?) query parameters and blurb before ID
+		// TODO: Generate canonical URL using `extractEntityFromUrl` and `constructUrl`.
 		const url = new URL(viewUrl);
 		url.search = '';
 		url.pathname = url.pathname.replace(/(?<=\/(artist|album))\/[^/]+(?=\/\d+)/, '');

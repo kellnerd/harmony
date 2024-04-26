@@ -3,6 +3,7 @@ import { rateLimit } from 'utils/async/rateLimit.js';
 
 import type {
 	CountryCode,
+	HarmonyEntityType,
 	HarmonyRelease,
 	MessageType,
 	ProviderMessage,
@@ -23,6 +24,20 @@ export type ProviderOptions = Partial<{
 	/** Storage which will be used to cache requests (optional). */
 	snaps: SnapStorage;
 }>;
+
+/** Identifier for an entity from a {@linkcode MetadataProvider}. */
+export interface EntityId {
+	/** Entity type as it is called by the provider. */
+	type: string;
+	/** Provider ID, specific per entity type. */
+	id: string;
+	/**
+	 * Provider region where the entity is available.
+	 *
+	 * Only used by providers which have region-specific API endpoints or pages.
+	 */
+	region?: CountryCode;
+}
 
 /**
  * Abstract metadata provider which looks up releases from a specific source.
@@ -45,12 +60,17 @@ export abstract class MetadataProvider {
 	abstract readonly name: string;
 
 	/**
-	 * URL pattern used to check supported domains, match entity URLs and extract the ID from the URL.
+	 * URL pattern used to check supported domains, match entity URLs and extract entity type and ID from the URL.
 	 *
-	 * The pathname has to contain a named group `id`, e.g. `/release/:id`.
+	 * The pathname has to contain two named groups `type` and `id`, e.g. `/:type(artist|release)/:id`.
 	 * Optionally the pathname can also contain a named group `region` which will be used to extract the preferred region.
+	 *
+	 * If these groups are not contained in the pathname, {@linkcode extractEntityFromUrl} has to be overwritten.
 	 */
 	abstract readonly supportedUrls: URLPattern;
+
+	/** Maps MusicBrainz entity types to the corresponding entity types of the provider. */
+	abstract readonly entityTypeMap: Record<HarmonyEntityType, string>;
 
 	abstract readonly releaseLookup: ReleaseLookupConstructor;
 
@@ -74,6 +94,25 @@ export abstract class MetadataProvider {
 	supportsDomain(url: URL): boolean {
 		return new URLPattern({ hostname: this.supportedUrls.hostname }).test(url);
 	}
+
+	/** Extracts the entity type and ID from a supported URL. */
+	extractEntityFromUrl(url: URL): EntityId | undefined {
+		const groups = this.supportedUrls.exec(url)?.pathname.groups;
+		if (groups) {
+			const { type, id, region } = groups;
+			if (type && id) {
+				return {
+					type,
+					id,
+					// Do not return an empty string in case the group was declared as optional and is missing from the result.
+					region: region?.toUpperCase() || undefined,
+				};
+			}
+		}
+	}
+
+	/** Constructs a canonical entity URL for the given provider ID. */
+	abstract constructUrl(entity: EntityId): URL;
 
 	protected snaps: SnapStorage | undefined;
 
@@ -132,8 +171,6 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 		specifier: ReleaseSpecifier,
 		options: ReleaseOptions = {},
 	) {
-		// Use the provider's generally supported URLs if none have been specified for releases.
-		this.supportedUrls ??= provider.supportedUrls;
 		// Create a deep copy, we don't want to manipulate the caller's options.
 		this.options = { ...options };
 
@@ -144,38 +181,31 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 			this.options.regions = new Set(preferredRegions.filter((region) => availableRegions.has(region)));
 		}
 
-		this.lookup = { method: 'id', value: '' };
 		if (specifier instanceof URL) {
-			const id = this.extractReleaseId(specifier);
-			if (id === undefined) {
-				throw new ProviderError(this.provider.name, `Could not extract ID from ${specifier}`);
+			const entity = this.provider.extractEntityFromUrl(specifier);
+			if (!entity) {
+				throw new ProviderError(this.provider.name, `Could not extract entity from ${specifier}`);
 			}
-			this.lookup.value = id;
+
+			const releaseType = this.provider.entityTypeMap['release'];
+			if (entity.type !== releaseType) {
+				throw new ProviderError(this.provider.name, `${specifier} is not a release URL`);
+			}
+			this.lookup = { method: 'id', value: entity.id };
 
 			// Prefer region of the given release URL over the standard preferences.
-			const region = this.extractReleaseRegion(specifier);
-			if (region) {
-				this.lookup.region = region;
-				this.options.regions = new Set([region]);
+			if (entity.region) {
+				this.lookup.region = entity.region;
+				this.options.regions = new Set([entity.region]);
 			}
-		} else if (typeof specifier === 'string') { // ID
-			this.lookup.value = specifier;
-		} else if (typeof specifier === 'number') { // GTIN
+		} else if (typeof specifier === 'string') {
+			this.lookup = { method: 'id', value: specifier };
+		} else if (typeof specifier === 'number') {
 			this.lookup = { method: 'gtin', value: specifier.toString() };
 		} else {
 			this.lookup = { method: specifier[0], value: specifier[1] };
 		}
 	}
-
-	/**
-	 * URL pattern used to check supported domains, match release URLs and extract the ID from the URL.
-	 *
-	 * The pathname has to contain a named group `id`, e.g. `/release/:id`.
-	 * Optionally the pathname can also contain a named group `region` which will be used to extract the preferred region.
-	 *
-	 * Falls back to {@linkcode MetadataProvider.supportedUrls} if not specified.
-	 */
-	protected supportedUrls: URLPattern;
 
 	/** Parameters which are used for the current release lookup. */
 	protected lookup: ReleaseLookupParameters;
@@ -189,8 +219,15 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 	/** Date and time when the (last piece of) provider data was cached (in seconds since the UNIX epoch). */
 	protected cacheTime: number | undefined;
 
-	/** Constructs a canonical release URL for the given provider ID (and optional region). */
-	abstract constructReleaseUrl(id: string, region?: CountryCode): URL;
+	/**
+	 * Constructs a canonical release URL for the given provider ID (and optional region).
+	 *
+	 * This is implemented using {@linkcode MetadataProvider.constructUrl} by default.
+	 */
+	constructReleaseUrl(id: string, region?: CountryCode): URL {
+		const type = this.provider.entityTypeMap['release'];
+		return this.provider.constructUrl({ id, type, region });
+	}
 
 	/** Constructs an optional API URL for a release using the specified lookup options. */
 	abstract constructReleaseApiUrl(): URL | undefined;
@@ -218,22 +255,6 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 
 	/** Converts the given provider-specific raw release metadata into a common representation. */
 	protected abstract convertRawRelease(rawRelease: RawRelease): MaybePromise<HarmonyRelease>;
-
-	/** Extracts the ID from a release URL. */
-	extractReleaseId(url: URL): string | undefined {
-		return this.supportedUrls.exec(url)?.pathname.groups.id;
-	}
-
-	/** Extracts the region from a release URL (if present). */
-	extractReleaseRegion(url: URL): CountryCode | undefined {
-		// Do not return an empty string in case the group was declared as optional and is missing from the result.
-		return this.supportedUrls.exec(url)?.pathname.groups.region?.toUpperCase() || undefined;
-	}
-
-	/** Checks whether the provider supports the given URL for releases. */
-	supportsReleaseUrl(url: URL): boolean {
-		return this.supportedUrls.test(url);
-	}
 
 	/** Adds a message to the generated release info. */
 	protected addMessage(text: string, type: MessageType = 'info'): void {

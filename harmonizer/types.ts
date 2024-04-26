@@ -1,8 +1,12 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
 
+import type { EntityType } from '@kellnerd/musicbrainz';
 import type { ReleasePackaging, ReleaseStatus } from '@kellnerd/musicbrainz/data/release';
 import type { PartialDate } from '../utils/date.ts';
 import type { ScriptFrequency } from '../utils/script.ts';
+
+/** MusicBrainz entity types which Harmony supports. */
+export type HarmonyEntityType = Extract<EntityType, 'release' | 'artist'>;
 
 export type HarmonyRelease = {
 	title: string;

@@ -1,5 +1,12 @@
 import { availableRegions } from './regions.ts';
-import { CacheEntry, DurationPrecision, MetadataProvider, ProviderOptions, ReleaseLookup } from '@/providers/base.ts';
+import {
+	CacheEntry,
+	DurationPrecision,
+	EntityId,
+	MetadataProvider,
+	ProviderOptions,
+	ReleaseLookup,
+} from '@/providers/base.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { formatGtin } from '@/utils/gtin.ts';
@@ -29,8 +36,13 @@ export default class DeezerProvider extends MetadataProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'www.deezer.com',
-		pathname: String.raw`/:language(\w{2})?/album/:id(\d+)`,
+		pathname: String.raw`/:language(\w{2})?/:type(album|artist)/:id(\d+)`,
 	});
+
+	readonly entityTypeMap = {
+		artist: 'artist',
+		release: 'album',
+	};
 
 	readonly availableRegions = new Set(availableRegions);
 
@@ -47,6 +59,10 @@ export default class DeezerProvider extends MetadataProvider {
 	readonly artworkQuality = 1400;
 
 	readonly apiBaseUrl = 'https://api.deezer.com';
+
+	constructUrl(entity: EntityId): URL {
+		return new URL([entity.type, entity.id].join('/'), 'https://www.deezer.com');
+	}
 
 	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
 		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
@@ -69,10 +85,6 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 			// Deezer API only returns a result for a truncated GTIN.
 			this.lookup.value = formatGtin(this.lookup.value);
 		}
-	}
-
-	constructReleaseUrl(id: string): URL {
-		return new URL(id, 'https://www.deezer.com/album/');
 	}
 
 	constructReleaseApiUrl(): URL {
