@@ -2,9 +2,17 @@ import { availableRegions } from './regions.ts';
 import { CacheEntry, DurationPrecision, MetadataProvider, ProviderOptions, ReleaseLookup } from '@/providers/base.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
+import { formatGtin } from '@/utils/gtin.ts';
 
 import type { ApiError, MinimalArtist, Release, ReleaseTrack, Result, Track, TracklistItem } from './api_types.ts';
-import type { ArtistCreditName, HarmonyMedium, HarmonyRelease, HarmonyTrack } from '@/harmonizer/types.ts';
+import type {
+	ArtistCreditName,
+	HarmonyMedium,
+	HarmonyRelease,
+	HarmonyTrack,
+	ReleaseOptions,
+	ReleaseSpecifier,
+} from '@/harmonizer/types.ts';
 
 // See https://developers.deezer.com/api
 
@@ -54,6 +62,15 @@ export default class DeezerProvider extends MetadataProvider {
 }
 
 export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> {
+	constructor(provider: DeezerProvider, specifier: ReleaseSpecifier, options: ReleaseOptions = {}) {
+		super(provider, specifier, options);
+
+		if (this.lookup.method === 'gtin') {
+			// Deezer API only returns a result for a truncated GTIN.
+			this.lookup.value = formatGtin(this.lookup.value);
+		}
+	}
+
 	constructReleaseUrl(id: string): URL {
 		return new URL(id, 'https://www.deezer.com/album/');
 	}
