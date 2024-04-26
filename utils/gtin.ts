@@ -53,6 +53,12 @@ export function checkDigit(gtin: GTIN) {
 	return (10 - checksum(gtin) % 10) % 10;
 }
 
+/** Pads the given GTIN to the given length (with zeros) or truncates it. */
+export function formatGtin(gtin: GTIN, length = 0): string {
+	gtin = parseInt(gtin.toString(), 10);
+	return gtin.toFixed(0).padStart(length, '0');
+}
+
 /**
  * Compares two GTINs and returns whether they are identical.
  * Unless `strict` mode is enabled, leading zeros are ignored.

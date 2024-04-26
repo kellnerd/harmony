@@ -1,4 +1,4 @@
-import { checkDigit, ensureValidGTIN, isEqualGTIN, isValidGTIN } from './gtin.ts';
+import { checkDigit, ensureValidGTIN, formatGtin, isEqualGTIN, isValidGTIN } from './gtin.ts';
 
 import { assert, assertFalse, assertStrictEquals, assertThrows } from 'std/testing/asserts.ts';
 import { describe, it } from 'std/testing/bdd.ts';
@@ -52,6 +52,22 @@ describe('check digit calculation', () => {
 	cases.forEach(([description, input, expected]) => {
 		it(`works for ${description}`, () => {
 			assertStrictEquals(checkDigit(input), expected);
+		});
+	});
+});
+
+describe('GTIN formatter', () => {
+	const cases: FunctionSpec<typeof formatGtin> = [
+		['pads numeric UPC-12', 731453463127, 14, '00731453463127'],
+		['pads string UPC-12', '731453463127', 14, '00731453463127'],
+		['does not pad GTIN-14', '95135725845679', 14, '95135725845679'],
+		['truncates UPC-12 with leading zeros', '00603051912911', 0, '603051912911'],
+		['does not truncate GTIN-14', '95135725845679', 0, '95135725845679'],
+	];
+
+	cases.forEach(([description, input, length, expected]) => {
+		it(description, () => {
+			assertStrictEquals(formatGtin(input, length), expected);
 		});
 	});
 });
