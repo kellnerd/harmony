@@ -24,7 +24,8 @@
 		"smartradio",
 		"streamable",
 		"tabler",
-		"tracklist"
+		"tracklist",
+		"tralbum"
 	],
 	"deno.enable": true,
 	"deno.lint": true,
