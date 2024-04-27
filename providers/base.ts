@@ -129,10 +129,15 @@ export abstract class MetadataProvider {
 					maxAge: 60 * 60 * 24, // 24 hours
 					...options?.policy,
 				},
+				responseMutator: options?.responseMutator,
 			});
 		} else {
+			let response = await this.fetch(input, options?.requestInit);
+			if (options?.responseMutator) {
+				response = await options.responseMutator(response);
+			}
 			snapshot = {
-				content: await this.fetch(input, options?.requestInit),
+				content: response,
 				timestamp: Math.floor(Date.now() / 1000),
 				isFresh: true,
 				// Dummy data, not relevant in this context.
