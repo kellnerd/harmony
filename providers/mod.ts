@@ -1,3 +1,4 @@
+import BandcampProvider from './Bandcamp/mod.ts';
 import DeezerProvider from './Deezer/mod.ts';
 import iTunesProvider from './iTunes/mod.ts';
 
@@ -14,6 +15,7 @@ const snaps = new SnapStorage();
 export const allProviders: MetadataProvider[] = [
 	DeezerProvider,
 	iTunesProvider,
+	BandcampProvider,
 ].map((Provider) => new Provider({ snaps }));
 
 /** Display names of all supported providers. */

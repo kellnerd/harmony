@@ -1,5 +1,7 @@
-import type { HarmonyRelease } from '@/harmonizer/types.ts';
+import type { TrackInfo, TrAlbum } from './json_types.ts';
+import type { Artwork, ArtworkType, HarmonyRelease, HarmonyTrack, LinkType } from '@/harmonizer/types.ts';
 import { CacheEntry, DurationPrecision, type EntityId, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { parseISODateTime } from '@/utils/date.ts';
 import { ProviderError } from '@/utils/errors.ts';
 import { unescape } from 'std/html/mod.ts';
 
@@ -74,18 +76,18 @@ export default class BandcampProvider extends MetadataProvider {
 	}
 }
 
-export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Release> {
+export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, TrAlbum> {
 	constructReleaseApiUrl(): URL | undefined {
 		return undefined;
 	}
 
-	async getRawRelease(): Promise<Release> {
+	async getRawRelease(): Promise<TrAlbum> {
 		if (this.lookup.method === 'gtin') {
 			throw new ProviderError(this.provider.name, 'GTIN lookups are not supported');
 		}
 
 		const webUrl = this.constructReleaseUrl(this.lookup.value);
-		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<Release>(
+		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<TrAlbum>(
 			webUrl,
 			this.options.snapshotMaxTimestamp,
 		);
@@ -94,9 +96,59 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		return release;
 	}
 
-	convertRawRelease(rawRelease: Release): Promise<HarmonyRelease> {
-		throw new Error('Method not implemented.');
+	convertRawRelease(rawRelease: TrAlbum): HarmonyRelease {
+		const releaseUrl = new URL(rawRelease.url);
+		this.id = this.provider.extractEntityFromUrl(releaseUrl)!.id;
+
+		const linkTypes: LinkType[] = [];
+		if (rawRelease.current.minimum_price > 0) {
+			linkTypes.push('paid download');
+		} else {
+			linkTypes.push('free download');
+		}
+		if (rawRelease.trackinfo.every((track) => track.streaming)) {
+			linkTypes.push('free streaming');
+		}
+
+		const release: HarmonyRelease = {
+			title: rawRelease.current.title,
+			artists: [{
+				name: rawRelease.artist,
+				externalLink: this.provider.constructUrl({ type: 'artist', id: this.id }),
+			}],
+			gtin: rawRelease.current.upc,
+			releaseDate: parseISODateTime(rawRelease.current.release_date),
+			media: [{
+				format: 'Digital Media',
+				tracklist: rawRelease.trackinfo.map(this.convertRawTrack.bind(this)),
+			}],
+			status: 'Official',
+			packaging: 'None',
+			externalLinks: [{
+				url: releaseUrl,
+				types: linkTypes,
+			}],
+			images: [this.getArtwork(rawRelease.art_id, ['front'])],
+			info: this.generateReleaseInfo(),
+		};
+
+		return release;
+	}
+
+	convertRawTrack(rawTrack: TrackInfo): HarmonyTrack {
+		return {
+			number: rawTrack.track_num,
+			title: rawTrack.title,
+			duration: rawTrack.duration * 1000,
+		};
+	}
+
+	getArtwork(artworkId: number, types?: ArtworkType[]): Artwork {
+		const baseUrl = 'https://f4.bcbits.com/img/';
+		return {
+			url: new URL(`a${artworkId}_0.jpg`, baseUrl),
+			thumbUrl: new URL(`a${artworkId}_9.jpg`, baseUrl), // 210x210
+			types,
+		};
 	}
 }
-
-export type Release = {};
