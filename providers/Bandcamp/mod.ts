@@ -1,6 +1,7 @@
 import type { HarmonyRelease } from '@/harmonizer/types.ts';
 import { CacheEntry, DurationPrecision, type EntityId, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { ProviderError } from '@/utils/errors.ts';
+import { unescape } from 'std/html/mod.ts';
 
 export default class BandcampProvider extends MetadataProvider {
 	readonly name = 'Bandcamp';
@@ -63,9 +64,9 @@ export default class BandcampProvider extends MetadataProvider {
 			policy: { maxTimestamp },
 			responseMutator: async (response) => {
 				const html = await response.text();
-				const json = html.match(/data-tralbum="(.+)"/)?.[1];
+				const json = html.match(/data-tralbum="(.+?)"/)?.[1];
 				if (json) {
-					return new Response(json, response);
+					return new Response(unescape(json), response);
 				}
 				throw new ProviderError(this.name, 'Failed to extract embedded JSON');
 			},
@@ -78,8 +79,19 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		return undefined;
 	}
 
-	getRawRelease(): Promise<Release> {
-		throw new Error('Method not implemented.');
+	async getRawRelease(): Promise<Release> {
+		if (this.lookup.method === 'gtin') {
+			throw new ProviderError(this.provider.name, 'GTIN lookups are not supported');
+		}
+
+		const webUrl = this.constructReleaseUrl(this.lookup.value);
+		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<Release>(
+			webUrl,
+			this.options.snapshotMaxTimestamp,
+		);
+		this.cacheTime = timestamp;
+
+		return release;
 	}
 
 	convertRawRelease(rawRelease: Release): Promise<HarmonyRelease> {
