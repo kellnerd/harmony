@@ -1,5 +1,6 @@
 import type { HarmonyRelease } from '@/harmonizer/types.ts';
 import { CacheEntry, DurationPrecision, type EntityId, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { ProviderError } from '@/utils/errors.ts';
 
 export default class BandcampProvider extends MetadataProvider {
 	readonly name = 'Bandcamp';
@@ -57,8 +58,8 @@ export default class BandcampProvider extends MetadataProvider {
 		return new URL(['album', album].join('/'), artistUrl);
 	}
 
-	async extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
-		const snapshot = await this.fetchSnapshot(webUrl, {
+	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+		return this.fetchJSON<Data>(webUrl, {
 			policy: { maxTimestamp },
 			responseMutator: async (response) => {
 				const html = await response.text();
@@ -66,16 +67,9 @@ export default class BandcampProvider extends MetadataProvider {
 				if (json) {
 					return new Response(json, response);
 				}
-				throw new Error('Failed to extract embedded JSON');
+				throw new ProviderError(this.name, 'Failed to extract embedded JSON');
 			},
 		});
-		const json = await snapshot.content.json();
-
-		return {
-			content: json,
-			timestamp: snapshot.timestamp,
-			isFresh: snapshot.isFresh ?? false,
-		};
 	}
 }
 
