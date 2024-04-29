@@ -30,7 +30,7 @@
 	"tasks": {
 		"check": "deno check server/fresh.gen.ts cli.ts",
 		"ok": "deno fmt --check && deno lint && deno task check",
-		"cli": "deno run --allow-net cli.ts",
+		"cli": "deno run --allow-net --allow-read=. --allow-write=. cli.ts",
 		"dev": "deno run -A --watch=server/static/,server/routes/ server/dev.ts",
 		"build": "deno run -A server/dev.ts build",
 		"server": "DENO_DEPLOYMENT_ID=$(git rev-parse HEAD) deno run -A server/main.ts"
