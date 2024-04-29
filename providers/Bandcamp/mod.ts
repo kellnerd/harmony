@@ -156,7 +156,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, TrAlb
 
 	convertRawTrack(rawTrack: TrackInfo | PlayerTrack): HarmonyTrack {
 		return {
-			number: 'track_num' in rawTrack ? rawTrack.track_num : rawTrack.tracknum,
+			number: 'track_num' in rawTrack ? rawTrack.track_num : rawTrack.tracknum + 1,
 			title: rawTrack.title,
 			artists: rawTrack.artist ? [{ name: rawTrack.artist }] : undefined,
 			duration: rawTrack.duration * 1000,

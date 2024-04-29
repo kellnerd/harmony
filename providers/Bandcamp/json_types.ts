@@ -194,7 +194,7 @@ export interface PlayerTrack {
 	art_id: null;
 	/** Duration in seconds (floating point, also set for unreleased tracks). */
 	duration: number;
-	/** Number of the track. */
+	/** Number of the track (zero-based index). */
 	tracknum: number;
 	/** URL of the track page (also set for unreleased tracks, but 404s). */
 	title_link: string;
