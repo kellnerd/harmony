@@ -25,6 +25,7 @@ export const immutableReleaseProperties = [
 	'packaging',
 	'images', // TODO: make images combinable? combine if not only front covers?
 	'copyright',
+	'credits',
 ] as const;
 
 /** Track properties which have to be taken from one provider and can not be combined from data of multiple providers. */

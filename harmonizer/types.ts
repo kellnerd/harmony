@@ -27,6 +27,7 @@ export type HarmonyRelease = {
 	labels?: Label[];
 	packaging?: ReleasePackaging;
 	images?: Artwork[];
+	credits?: string;
 	copyright?: string;
 	availableIn?: CountryCode[];
 	excludedFrom?: CountryCode[];

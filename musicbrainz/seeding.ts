@@ -105,6 +105,9 @@ function buildAnnotation(release: HarmonyRelease): string {
 	if (release.copyright) {
 		lines.push(`Copyright: ${release.copyright}`);
 	}
+	if (release.credits) {
+		lines.push(`=== Credits from ${release.info.sourceMap?.credits!} ===`, release.credits);
+	}
 
 	return lines.join('\n');
 }
