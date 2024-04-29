@@ -100,7 +100,7 @@ export interface TrackInfo {
 	/** ID of the track. Same as {@linkcode id}. */
 	track_id: number;
 	/** Maps file formats to download URLs (`null` for unreleased tracks). */
-	file: Record<'mp3-128', string> | null;
+	file: FileUrls | null;
 	artist: null;
 	/** Title of the track. */
 	title: string;
@@ -144,19 +144,69 @@ export interface TrackInfo {
 	track_license_id: null;
 }
 
-interface ArtworkItem {
-	id: number;
-	/** File name of the image (basename without path and extension). */
-	file_name: string;
-	index: number;
-	/** Width of the image. */
-	image_id: number;
-	/** Width of the image. */
-	width: number;
-	/** Width of the image. */
-	height: number;
-	crc: number;
+export interface PlayerData {
+	band_enabled: 1;
+	/** URL of the artist/label page. */
+	band_url: string;
+	/** Title of the release. */
+	album_title: string;
+	album_art_id: number;
+	/** Name of the artist. */
+	artist: string;
+	/** Bandcamp subdomain (artist/label ID). */
+	subdomain: string;
+	/** ID of the release. */
+	album_id: number;
+	killed: null;
+	/** GMT date string when the release page was published. */
+	publish_date: string;
+	album_private: null;
+	featured_track_id: number;
+	/** URL of the release page. */
+	linkback: string;
+	linkback_action: 'buy';
+	subscriber_only: boolean;
+	/** Tracklist of the download release. Includes all durations! */
+	tracks: PlayerTrack[];
+	google_analytics_id: null;
+	exclusive_permitted_domains: string[];
+	exclusive_show_anywhere: 0;
+	no_exclusive_data: null;
+	is_preorder: 1;
+	/** Maps track IDs to stream info. */
+	stream_infos: Record<string, StreamInfo>;
+	/** URL of the download release cover (small). */
+	album_art: string;
+	/** URL of the download release cover (large). */
+	album_art_lg: string;
+	/** Available packages. Includes `quantity_sold` count! */
+	packages: Package[];
 }
+
+export interface PlayerTrack {
+	/** Name of the track(?) artist. */
+	artist: string;
+	/** Title of the track. */
+	title: string;
+	/** ID of the track. */
+	id: number;
+	encodings_id: number;
+	art_id: null;
+	/** Duration in seconds (floating point, also set for unreleased tracks). */
+	duration: number;
+	/** Number of the track. */
+	tracknum: number;
+	/** URL of the track page (also set for unreleased tracks, but 404s). */
+	title_link: string;
+	/** Maps file formats to download URLs (`null` for unreleased tracks). */
+	file: FileUrls | null;
+	/** Indicates whether the track can be streamed (can also be true` for unreleased tracks). */
+	track_streaming: boolean;
+	/** Indicates whether the track is included in the pre-order. */
+	preorder_download_track: boolean;
+}
+
+type FileUrls = Record<'mp3-128', string>;
 
 const releaseTypes = ['album', 'track'] as const;
 
@@ -238,7 +288,8 @@ interface Package {
 	new_date: string;
 	/** Number of copies which were produced of this package. */
 	edition_size: number;
-	quantity_sold: null;
+	/** Number of copies which were already sold. */
+	quantity_sold: number | null;
 	/** Number of copies which are still available. */
 	quantity_available: number;
 	quantity_limits: number;
@@ -268,14 +319,39 @@ interface Package {
 	is_cardable: boolean;
 }
 
+interface ArtworkItem {
+	id: number;
+	/** File name of the image (basename without path and extension). */
+	file_name: string;
+	index: number;
+	/** Width of the image. */
+	image_id: number;
+	/** Width of the image. */
+	width: number;
+	/** Width of the image. */
+	height: number;
+	crc: number;
+}
+
 interface PackageOrigin {
 	id: number;
-	quantity: null;
-	quantity_sold: null;
+	/** Number of copies which were initially available from this origin. */
+	quantity: number | null;
+	/** Number of copies which were already sold. */
+	quantity_sold: number | null;
+	/** Number of copies which are still available. */
 	quantity_available: number;
 	/** ID of the package. */
 	package_id: number;
 	option_id: 0;
+}
+
+interface StreamInfo {
+	encodings_id: number;
+	stream_type: 't'; // TODO
+	format: number;
+	file_id: number;
+	metadata_crc: null;
 }
 
 const packageTypes = {

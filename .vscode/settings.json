@@ -29,6 +29,7 @@
 		"tabler",
 		"trackinfo",
 		"tracklist",
+		"tracknum",
 		"tralbum"
 	],
 	"deno.enable": true,

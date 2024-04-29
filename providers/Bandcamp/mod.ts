@@ -1,4 +1,4 @@
-import type { TrackInfo, TrAlbum } from './json_types.ts';
+import type { PlayerData, PlayerTrack, TrackInfo, TrAlbum } from './json_types.ts';
 import type { Artwork, ArtworkType, HarmonyRelease, HarmonyTrack, LinkType } from '@/harmonizer/types.ts';
 import { CacheEntry, DurationPrecision, type EntityId, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { parseISODateTime } from '@/utils/date.ts';
@@ -62,15 +62,18 @@ export default class BandcampProvider extends MetadataProvider {
 	}
 
 	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+		const dataAttribute = webUrl.pathname.startsWith('/EmbeddedPlayer') ? 'player-data' : 'tralbum';
+		const dataExpression = new RegExp(`data-${dataAttribute}="(.+?)"`);
+
 		return this.fetchJSON<Data>(webUrl, {
 			policy: { maxTimestamp },
 			responseMutator: async (response) => {
 				const html = await response.text();
-				const json = html.match(/data-tralbum="(.+?)"/)?.[1];
+				const json = html.match(dataExpression)?.[1];
 				if (json) {
 					return new Response(unescape(json), response);
 				}
-				throw new ProviderError(this.name, 'Failed to extract embedded JSON');
+				throw new ProviderError(this.name, `Failed to extract embedded '${dataAttribute}' JSON`);
 			},
 		});
 	}
@@ -96,9 +99,16 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, TrAlb
 		return release;
 	}
 
-	convertRawRelease(rawRelease: TrAlbum): HarmonyRelease {
+	async convertRawRelease(rawRelease: TrAlbum): Promise<HarmonyRelease> {
 		const releaseUrl = new URL(rawRelease.url);
 		this.id = this.provider.extractEntityFromUrl(releaseUrl)!.id;
+
+		let tracks: Array<TrackInfo | PlayerTrack> = rawRelease.trackinfo;
+		if (rawRelease.is_preorder) {
+			// Fetch embedded player JSON which already has all track durations for pre-orders.
+			const embeddedPlayerRelease = await this.getEmbeddedPlayerRelease(rawRelease.id);
+			tracks = embeddedPlayerRelease.tracks;
+		}
 
 		const linkTypes: LinkType[] = [];
 		if (rawRelease.current.minimum_price > 0) {
@@ -128,7 +138,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, TrAlb
 			releaseDate: parseISODateTime(rawRelease.current.release_date),
 			media: [{
 				format: 'Digital Media',
-				tracklist: rawRelease.trackinfo.map(this.convertRawTrack.bind(this)),
+				tracklist: tracks.map(this.convertRawTrack.bind(this)),
 			}],
 			status: 'Official',
 			packaging: 'None',
@@ -144,10 +154,11 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, TrAlb
 		return release;
 	}
 
-	convertRawTrack(rawTrack: TrackInfo): HarmonyTrack {
+	convertRawTrack(rawTrack: TrackInfo | PlayerTrack): HarmonyTrack {
 		return {
-			number: rawTrack.track_num,
+			number: 'track_num' in rawTrack ? rawTrack.track_num : rawTrack.tracknum,
 			title: rawTrack.title,
+			artists: rawTrack.artist ? [{ name: rawTrack.artist }] : undefined,
 			duration: rawTrack.duration * 1000,
 		};
 	}
@@ -159,5 +170,15 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, TrAlb
 			thumbUrl: new URL(`a${artworkId}_9.jpg`, baseUrl), // 210x210
 			types,
 		};
+	}
+
+	async getEmbeddedPlayerRelease(albumId: number): Promise<PlayerData> {
+		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<PlayerData>(
+			new URL(`https://bandcamp.com/EmbeddedPlayer/album=${albumId}`),
+			this.options.snapshotMaxTimestamp,
+		);
+		this.cacheTime = timestamp;
+
+		return release;
 	}
 }
