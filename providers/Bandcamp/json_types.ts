@@ -79,7 +79,7 @@ interface TrAlbumCurrent {
 	/** GMT date string when the release is/was released. */
 	release_date: string;
 	/** UPC/EAN barcode of the download release. */
-	upc: string;
+	upc: string | null;
 	purchase_url: null;
 	purchase_title: null;
 	featured_track_id: number;

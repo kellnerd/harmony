@@ -134,7 +134,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, TrAlb
 				name: rawRelease.artist,
 				externalLink: this.provider.constructUrl({ type: 'artist', id: this.id }),
 			}],
-			gtin: rawRelease.current.upc,
+			gtin: rawRelease.current.upc ?? undefined,
 			releaseDate: parseISODateTime(rawRelease.current.release_date),
 			media: [{
 				format: 'Digital Media',
