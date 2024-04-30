@@ -18,7 +18,7 @@ export function Release({ release }: { release: HarmonyRelease }) {
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
 	const isMultiMedium = release.media.length > 1;
-	const { copyright, language, script, info } = release;
+	const { credits, copyright, language, script, info } = release;
 
 	return (
 		<div class='release'>
@@ -118,6 +118,14 @@ export function Release({ release }: { release: HarmonyRelease }) {
 						<th>Copyright</th>
 						<td>
 							<TextWithLineBreaks lines={copyright.split('\n')} />
+						</td>
+					</tr>
+				)}
+				{credits && (
+					<tr>
+						<th>Credits</th>
+						<td>
+							<TextWithLineBreaks lines={credits.split('\n')} />
 						</td>
 					</tr>
 				)}
