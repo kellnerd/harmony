@@ -52,7 +52,10 @@ export abstract class MetadataProvider {
 		this.snaps = snaps;
 
 		if (rateLimitInterval && rateLimitInterval > 0) {
-			this.fetch = rateLimit(fetch, rateLimitInterval, concurrentRequests);
+			this.fetch = rateLimit(fetch, {
+				interval: rateLimitInterval,
+				requestsPerInterval: concurrentRequests,
+			});
 		}
 	}
 
