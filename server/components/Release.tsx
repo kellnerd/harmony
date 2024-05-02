@@ -142,6 +142,16 @@ export function Release({ release }: { release: HarmonyRelease }) {
 						<td>{formatScriptFrequency(script)}</td>
 					</tr>
 				)}
+				{info.providers.length > 1 && (
+					<tr>
+						<th>Sources</th>
+						<td>
+							<ul>
+								{Object.entries(info.sourceMap!).map(([property, source]) => <li>{property}: {source}</li>)}
+							</ul>
+						</td>
+					</tr>
+				)}
 			</table>
 			{release.images?.map((artwork) => <CoverImage artwork={artwork} />)}
 			{release.media.map((medium) => <Tracklist medium={medium} showTitle={isMultiMedium} />)}
