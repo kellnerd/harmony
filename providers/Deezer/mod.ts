@@ -236,7 +236,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 
 		if ('contributors' in track) {
 			// all available details about this track have been fetched
-			result.artists = track.contributors.map(this.convertRawArtist);
+			result.artists = track.contributors.map(this.convertRawArtist.bind(this));
 			result.availableIn = track.available_countries;
 		} else {
 			result.artists = [this.convertRawArtist(track.artist)];
