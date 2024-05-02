@@ -232,9 +232,10 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 	}
 
 	private convertRawArtist(name: string, url?: string): ArtistCreditName {
+		const artistId = url ? this.provider.extractEntityFromUrl(new URL(url)) : undefined;
 		return {
 			name,
-			externalLink: url ? this.cleanViewUrl(url) : undefined,
+			externalIds: artistId ? this.provider.makeExternalIds(artistId) : undefined,
 		};
 	}
 

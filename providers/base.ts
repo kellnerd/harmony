@@ -5,6 +5,7 @@ import { simplifyName } from 'utils/string/simplify.js';
 import type {
 	CountryCode,
 	EntityId,
+	ExternalEntityId,
 	HarmonyEntityType,
 	HarmonyRelease,
 	MessageType,
@@ -119,6 +120,11 @@ export abstract class MetadataProvider {
 
 	/** Constructs a canonical entity URL for the given provider ID. */
 	abstract constructUrl(entity: EntityId): URL;
+
+	/** Creates external entity IDs from the given provider-specific IDs. */
+	makeExternalIds(...entityIds: EntityId[]): ExternalEntityId[] {
+		return entityIds.map((entityId) => ({ ...entityId, provider: this.simpleName }));
+	}
 
 	protected snaps: SnapStorage | undefined;
 
