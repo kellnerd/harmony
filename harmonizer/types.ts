@@ -31,8 +31,6 @@ export interface ExternalEntityId extends EntityId {
 /** Entity which may have external IDs which can be resolved to its MBID. */
 export interface ResolvableEntity {
 	externalIds?: ExternalEntityId[];
-	/** @deprecated Use {@linkcode externalIds} instead. */
-	externalLink?: URL;
 	mbid?: string;
 }
 

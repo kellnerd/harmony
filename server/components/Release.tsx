@@ -1,5 +1,6 @@
 import { ArtistCredit } from './ArtistCredit.tsx';
 import { CoverImage } from './CoverImage.tsx';
+import { LinkedEntity } from './LinkedEntity.tsx';
 import { MessageBox } from './MessageBox.tsx';
 import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
@@ -56,7 +57,7 @@ export function Release({ release }: { release: HarmonyRelease }) {
 							<ul>
 								{release.labels?.map((label) => (
 									<li>
-										<a href={label.externalLink?.href}>{label.name}</a>
+										<LinkedEntity entity={label} entityType='label' displayName={label.name} />
 										{label.catalogNumber}
 									</li>
 								))}
