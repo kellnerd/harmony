@@ -1,6 +1,6 @@
 import type { PlayerData, PlayerTrack, TrackInfo, TrAlbum } from './json_types.ts';
-import type { Artwork, ArtworkType, HarmonyRelease, HarmonyTrack, LinkType } from '@/harmonizer/types.ts';
-import { CacheEntry, DurationPrecision, type EntityId, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import type { Artwork, ArtworkType, EntityId, HarmonyRelease, HarmonyTrack, LinkType } from '@/harmonizer/types.ts';
+import { type CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { parseISODateTime } from '@/utils/date.ts';
 import { ProviderError } from '@/utils/errors.ts';
 import { unescape } from 'std/html/mod.ts';

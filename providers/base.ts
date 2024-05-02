@@ -3,6 +3,7 @@ import { rateLimit } from 'utils/async/rateLimit.js';
 
 import type {
 	CountryCode,
+	EntityId,
 	HarmonyEntityType,
 	HarmonyRelease,
 	MessageType,
@@ -31,20 +32,6 @@ export type ProviderOptions = Partial<{
 	/** Storage which will be used to cache requests (optional). */
 	snaps: SnapStorage;
 }>;
-
-/** Identifier for an entity from a {@linkcode MetadataProvider}. */
-export interface EntityId {
-	/** Entity type as it is called by the provider. */
-	type: string;
-	/** Provider ID, specific per entity type. */
-	id: string;
-	/**
-	 * Provider region where the entity is available.
-	 *
-	 * Only used by providers which have region-specific API endpoints or pages.
-	 */
-	region?: CountryCode;
-}
 
 /**
  * Abstract metadata provider which looks up releases from a specific source.

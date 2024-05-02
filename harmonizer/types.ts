@@ -8,8 +8,30 @@ import type { ScriptFrequency } from '../utils/script.ts';
 /** MusicBrainz entity types which Harmony supports. */
 export type HarmonyEntityType = Extract<EntityType, 'release' | 'artist'>;
 
-/** Entity which may have a an external link which can be resolved to its MBID. */
+/** Identifier for an entity from the current metadata provider. */
+export interface EntityId {
+	/** Entity type as it is called by the provider. */
+	type: string;
+	/** Provider ID, specific per entity type. */
+	id: string;
+	/**
+	 * Provider region where the entity is available.
+	 *
+	 * Only used by providers which have region-specific API endpoints or pages.
+	 */
+	region?: CountryCode;
+}
+
+/** External identifier for an entity from a specific metadata provider. */
+export interface ExternalEntityId extends EntityId {
+	/** Simplified name of the provider. */
+	provider: string;
+}
+
+/** Entity which may have external IDs which can be resolved to its MBID. */
 export interface ResolvableEntity {
+	externalIds?: ExternalEntityId[];
+	/** @deprecated Use {@linkcode externalIds} instead. */
 	externalLink?: URL;
 	mbid?: string;
 }

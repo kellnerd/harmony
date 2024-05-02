@@ -1,5 +1,5 @@
 import { availableRegions } from './regions.ts';
-import { CacheEntry, DurationPrecision, EntityId, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { type CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
@@ -11,6 +11,7 @@ import type {
 	Artwork,
 	ArtworkType,
 	CountryCode,
+	EntityId,
 	GTIN,
 	HarmonyMedium,
 	HarmonyRelease,

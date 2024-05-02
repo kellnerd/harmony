@@ -1,10 +1,9 @@
 import { availableRegions } from './regions.ts';
 import {
-	CacheEntry,
+	type CacheEntry,
 	DurationPrecision,
-	EntityId,
 	MetadataProvider,
-	ProviderOptions,
+	type ProviderOptions,
 	ReleaseLookup,
 } from '@/providers/base.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
@@ -14,6 +13,7 @@ import { formatGtin } from '@/utils/gtin.ts';
 import type { ApiError, MinimalArtist, Release, ReleaseTrack, Result, Track, TracklistItem } from './api_types.ts';
 import type {
 	ArtistCreditName,
+	EntityId,
 	HarmonyMedium,
 	HarmonyRelease,
 	HarmonyTrack,

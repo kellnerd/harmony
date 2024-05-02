@@ -6,7 +6,7 @@ import { SnapStorage } from 'snap-storage';
 import { assert } from 'std/testing/asserts.ts';
 import { simplifyName } from 'utils/string/simplify.js';
 
-import type { ProviderPreferences } from '@/harmonizer/types.ts';
+import type { ExternalEntityId, ProviderPreferences } from '@/harmonizer/types.ts';
 import type { MetadataProvider } from './base.ts';
 
 const snaps = new SnapStorage();
@@ -33,6 +33,16 @@ assert(
 export const providerMap: Record<string, MetadataProvider | undefined> = Object.fromEntries(
 	allProviders.map((provider) => [simplifyName(provider.name), provider]),
 );
+
+/** Constructs a canonical URL for the given external entity identifier. */
+export function constructEntityUrl(entityId: ExternalEntityId): URL {
+	const provider = providerMap[entityId.provider];
+	if (!provider) {
+		throw new Error(`There is no provider with the simplified name ${entityId.provider}`);
+	}
+
+	return provider.constructUrl(entityId);
+}
 
 /** Recommended default preferences which sort providers by quality. */
 export const defaultProviderPreferences: ProviderPreferences = {
