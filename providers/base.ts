@@ -21,6 +21,13 @@ export type ProviderOptions = Partial<{
 	rateLimitInterval: number | null;
 	/** Maximum number of requests within the interval. */
 	concurrentRequests: number;
+	/**
+	 * Maximum delay between the time a request is queued and its execution (in ms).
+	 *
+	 * Only used if rate limiting is enabled, i.e. a rate limiting interval is set.
+	 * Excess requests will be rejected immediately.
+	 */
+	requestMaxDelay: number;
 	/** Storage which will be used to cache requests (optional). */
 	snaps: SnapStorage;
 }>;
@@ -47,6 +54,7 @@ export abstract class MetadataProvider {
 	constructor({
 		rateLimitInterval = null,
 		concurrentRequests = 1,
+		requestMaxDelay = 30e3,
 		snaps,
 	}: ProviderOptions = {}) {
 		this.snaps = snaps;
@@ -55,6 +63,8 @@ export abstract class MetadataProvider {
 			this.fetch = rateLimit(fetch, {
 				interval: rateLimitInterval,
 				requestsPerInterval: concurrentRequests,
+				maxQueueSize: requestMaxDelay / rateLimitInterval,
+				queueFullError: 'Too many requests queued, please wait and try again',
 			});
 		}
 	}
