@@ -100,16 +100,16 @@ function convertLinkType(linkType: LinkType, url?: URL): UrlLinkTypeId | undefin
 }
 
 function buildAnnotation(release: HarmonyRelease): string {
-	const lines: string[] = [];
+	const sections: string[] = [];
 
 	if (release.copyright) {
-		lines.push(`Copyright: ${release.copyright}`);
+		sections.push(`Copyright: ${release.copyright}`);
 	}
 	if (release.credits) {
-		lines.push(`=== Credits from ${release.info.sourceMap?.credits!} ===`, release.credits);
+		sections.push(`=== Credits from ${release.info.sourceMap?.credits!} ===`, release.credits);
 	}
 
-	return lines.join('\n');
+	return sections.join('\n\n');
 }
 
 function buildEditNote(info: ReleaseInfo, options: ReleaseSeedOptions): string {
