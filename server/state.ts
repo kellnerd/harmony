@@ -5,7 +5,6 @@ import { ensureValidGTIN } from '@/utils/gtin.ts';
 import { isDefined, isNotEmpty } from '@/utils/predicate.ts';
 import { assertCountryCode } from '@/utils/regions.ts';
 import { assertTimestamp } from '@/utils/time.ts';
-import { simplifyName } from 'utils/string/simplify.js';
 
 /**
  * Creates a release lookup permalink for the given release info.
@@ -20,13 +19,13 @@ export function createReleasePermalink(info: ReleaseInfo, baseUrl: URL): URL {
 
 	// Add provider IDs for all providers which were looked up by ID or URL.
 	const state = new URLSearchParams(
-		providersLookedUpById.map((provider) => [simplifyName(provider.name), provider.id]),
+		providersLookedUpById.map((provider) => [provider.simpleName, provider.id]),
 	);
 	if (providersLookedUpByGtin.length) {
 		state.append('gtin', providersLookedUpByGtin[0].lookup.value);
 		// Add all enabled providers which were looked up by GTIN (with empty provider ID value).
 		for (const provider of providersLookedUpByGtin) {
-			state.append(simplifyName(provider.name), '');
+			state.append(provider.simpleName, '');
 		}
 	}
 	// If a region has been used for lookup, it should be the same for all providers.

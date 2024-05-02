@@ -1,5 +1,6 @@
 import { ProviderError } from '@/utils/errors.ts';
 import { rateLimit } from 'utils/async/rateLimit.js';
+import { simplifyName } from 'utils/string/simplify.js';
 
 import type {
 	CountryCode,
@@ -58,6 +59,11 @@ export abstract class MetadataProvider {
 
 	/** Display name of the metadata source, has to be unique. */
 	abstract readonly name: string;
+
+	/** Simplified name of the metadata source, has to be unique. */
+	get simpleName(): string {
+		return simplifyName(this.name);
+	}
 
 	/**
 	 * URL pattern used to check supported domains, match entity URLs and extract entity type and ID from the URL.
@@ -280,6 +286,7 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 		return {
 			providers: [{
 				name: this.provider.name,
+				simpleName: this.provider.simpleName,
 				id: this.id,
 				url: this.constructReleaseUrl(this.id, this.lookup.region),
 				apiUrl: this.constructReleaseApiUrl(),

@@ -190,7 +190,10 @@ export type PreferenceProperty = ImmutableReleaseProperty | ImmutableTrackProper
 export type ProviderPreferences = Partial<Record<PreferenceProperty, ProviderName[]>>;
 
 export type ProviderInfo = {
+	/** Display name of the provider. */
 	name: ProviderName;
+	/** Simplified name of the provider. */
+	simpleName: string;
 	/** Provider ID of the entity. */
 	id: string;
 	/** Provider URL of the entity. */

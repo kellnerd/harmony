@@ -4,7 +4,6 @@ import iTunesProvider from './iTunes/mod.ts';
 
 import { SnapStorage } from 'snap-storage';
 import { assert } from 'std/testing/asserts.ts';
-import { simplifyName } from 'utils/string/simplify.js';
 
 import type { ExternalEntityId, ProviderPreferences } from '@/harmonizer/types.ts';
 import type { MetadataProvider } from './base.ts';
@@ -22,7 +21,7 @@ export const allProviders: MetadataProvider[] = [
 export const allProviderNames = allProviders.map((provider) => provider.name);
 
 /** Simplified names of all supported providers. */
-export const allProviderSimpleNames = new Set(allProviderNames.map((name) => simplifyName(name)));
+export const allProviderSimpleNames = new Set(allProviders.map((provider) => provider.simpleName));
 
 assert(
 	allProviderSimpleNames.size === allProviderNames.length,
@@ -31,7 +30,7 @@ assert(
 
 /** Maps simplified provider names to their metadata providers. */
 export const providerMap: Record<string, MetadataProvider | undefined> = Object.fromEntries(
-	allProviders.map((provider) => [simplifyName(provider.name), provider]),
+	allProviders.map((provider) => [provider.simpleName, provider]),
 );
 
 /** Constructs a canonical URL for the given external entity identifier. */

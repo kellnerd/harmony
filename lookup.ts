@@ -7,7 +7,6 @@ import { isDefined, isNotError } from '@/utils/predicate.ts';
 import { detectScripts, scriptCodes } from '@/utils/script.ts';
 import lande from 'lande';
 import { zipObject } from 'utils/object/zipObject.js';
-import { simplifyName } from 'utils/string/simplify.js';
 
 import type {
 	GTIN,
@@ -99,7 +98,7 @@ export class CombinedReleaseLookup {
 			} else {
 				this.queuedReleases.push(provider.getRelease(url, this.options));
 				this.queuedProviderNames.add(providerName);
-				this.gtinLookupProviders.delete(simplifyName(providerName));
+				this.gtinLookupProviders.delete(provider.simpleName);
 				return true;
 			}
 		} else {
