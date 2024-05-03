@@ -103,6 +103,11 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, TrAlb
 		const releaseUrl = new URL(rawRelease.url);
 		this.id = this.provider.extractEntityFromUrl(releaseUrl)!.id;
 
+		// TODO: Handle label subdomains.
+		const artistUrl = new URL(rawRelease.url);
+		artistUrl.pathname = '';
+		const artistId = this.provider.extractEntityFromUrl(artistUrl)!;
+
 		let tracks: Array<TrackInfo | PlayerTrack> = rawRelease.trackinfo;
 		if (rawRelease.is_preorder) {
 			// Fetch embedded player JSON which already has all track durations for pre-orders.
@@ -132,7 +137,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, TrAlb
 			title: rawRelease.current.title,
 			artists: [{
 				name: rawRelease.artist,
-				externalIds: this.provider.makeExternalIds({ type: 'artist', id: this.id }),
+				externalIds: this.provider.makeExternalIds(artistId),
 			}],
 			gtin: rawRelease.current.upc ?? undefined,
 			releaseDate: parseISODateTime(rawRelease.current.release_date),
