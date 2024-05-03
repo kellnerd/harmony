@@ -14,6 +14,7 @@
 	--odd-fill:#efefef;
 	--even-fill: #f8f8f8;
 	--link: #0066cc;
+	--link-accent: var(--brand-red);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,6 +27,7 @@
 		--odd-fill: #333333;
 		--even-fill: #2a2a2a;
 		--link: #3399ff;
+		--link-accent: var(--brand-orange);
 	}
 }
 
@@ -88,6 +90,9 @@ ul.inline > li:not(:last-child)::after {
 
 a:link, a:visited {
 	color: var(--link);
+}
+a:hover {
+	color: var(--link-accent);
 }
 
 a.label, span.label {
@@ -194,6 +199,9 @@ code.isrc > span:not(:last-child)::after {
 span.entity-links > a {
 	text-decoration-style: dotted;
 	color: inherit;
+}
+span.entity-links > a:hover {
+	color: var(--link-accent);
 }
 
 /* MessageBox.tsx */
