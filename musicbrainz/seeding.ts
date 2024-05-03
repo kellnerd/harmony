@@ -47,7 +47,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 		language: release.language?.code,
 		script: release.script?.code,
 		urls: release.externalLinks.flatMap((link) =>
-			link.types
+			link.types?.length
 				? link.types.map((type) => ({
 					url: link.url.href,
 					link_type: convertLinkType(type, link.url),
