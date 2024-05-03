@@ -1,5 +1,5 @@
 import InputWithOverlay from './InputWithOverlay.tsx';
-import IconDatabaseImport from 'tabler-icons/database-import.tsx';
+import { SpriteIcon } from './SpriteIcon.tsx';
 
 import { createReleaseSeed } from '@/musicbrainz/seeding.ts';
 import { preferArray } from 'utils/array/scalar.js';
@@ -23,7 +23,7 @@ export function ReleaseSeeder({ release, sourceUrl, targetUrl, projectUrl }: {
 				return preferArray(valueOrValues).map((value) => <input type='hidden' name={key} value={value} />);
 			})}
 			<InputWithOverlay type='submit' value='Import into MusicBrainz'>
-				<IconDatabaseImport />
+				<SpriteIcon name='database-import' />
 			</InputWithOverlay>
 		</form>
 	);

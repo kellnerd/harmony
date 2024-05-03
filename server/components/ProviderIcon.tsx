@@ -1,29 +1,25 @@
-import IconBrandMetaBrainz from '@/server/icons/BrandMetaBrainz.tsx';
-import IconBrandApple from 'tabler-icons/brand-apple.tsx';
-import IconBrandBandcamp from 'tabler-icons/brand-bandcamp.tsx';
-import IconBrandDeezer from 'tabler-icons/brand-deezer.tsx';
-import IconPuzzle from 'tabler-icons/puzzle.tsx';
+import { SpriteIcon, type SpriteIconProps } from '@/server/components/SpriteIcon.tsx';
 
 import { simplifyName } from 'utils/string/simplify.js';
 
-type Icon = typeof IconPuzzle;
-
-type IconProps = Parameters<Icon>[0];
-
-const providerIconMap: Record<string, Icon> = {
-	bandcamp: IconBrandBandcamp,
-	deezer: IconBrandDeezer,
-	itunes: IconBrandApple,
-	musicbrainz: IconBrandMetaBrainz,
+const providerIconMap: Record<string, string> = {
+	bandcamp: 'brand-bandcamp',
+	deezer: 'brand-deezer',
+	itunes: 'brand-apple',
+	musicbrainz: 'brand-metabrainz',
 };
 
-export function ProviderIcon({ providerName, ...iconProps }: { providerName: string } & IconProps) {
+export type ProviderIconProps = Omit<SpriteIconProps, 'name'> & {
+	providerName: string;
+};
+
+export function ProviderIcon({ providerName, ...iconProps }: ProviderIconProps) {
 	const simpleName = simplifyName(providerName);
-	const icon = providerIconMap[simpleName] ?? IconPuzzle;
+	const iconName = providerIconMap[simpleName] ?? 'puzzle';
 
 	return (
 		<span class={simpleName} title={providerName}>
-			{icon({ ...iconProps })}
+			<SpriteIcon name={iconName} {...iconProps} />
 		</span>
 	);
 }

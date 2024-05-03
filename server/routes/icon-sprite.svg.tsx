@@ -3,9 +3,14 @@ import IconBrandApple from 'tabler-icons/brand-apple.tsx';
 import IconBrandBandcamp from 'tabler-icons/brand-bandcamp.tsx';
 import IconBrandDeezer from 'tabler-icons/brand-deezer.tsx';
 import IconAlertTriangle from 'tabler-icons/alert-triangle.tsx';
+import IconBarcode from 'tabler-icons/barcode.tsx';
 import IconBug from 'tabler-icons/bug.tsx';
+import IconDatabaseImport from 'tabler-icons/database-import.tsx';
 import IconInfoCircle from 'tabler-icons/info-circle.tsx';
 import IconPuzzle from 'tabler-icons/puzzle.tsx';
+import IconSearch from 'tabler-icons/search.tsx';
+import IconWorldPin from 'tabler-icons/world-pin.tsx';
+import IconWorldWww from 'tabler-icons/world-www.tsx';
 
 import type { Handlers } from 'fresh/server.ts';
 import type { JSX } from 'preact';
@@ -15,8 +20,15 @@ type Icon = typeof IconBrandMetaBrainz;
 
 const icons: Icon[] = [
 	IconAlertTriangle,
+	IconBarcode,
 	IconBug,
+	IconDatabaseImport,
 	IconInfoCircle,
+	IconSearch,
+	IconWorldPin,
+	IconWorldWww,
+
+	// Brand icons
 	IconBrandApple,
 	IconBrandBandcamp,
 	IconBrandDeezer,

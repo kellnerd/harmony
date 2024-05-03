@@ -1,8 +1,5 @@
 import InputWithOverlay from './InputWithOverlay.tsx';
-import IconBarcode from 'tabler-icons/barcode.tsx';
-import IconSearch from 'tabler-icons/search.tsx';
-import IconWorldPin from 'tabler-icons/world-pin.tsx';
-import IconWorldWww from 'tabler-icons/world-www.tsx';
+import { SpriteIcon } from './SpriteIcon.tsx';
 
 import type { GTIN } from '@/harmonizer/types.ts';
 
@@ -15,16 +12,16 @@ export default function ReleaseLookup({ gtin = '', externalUrl = '', regions = [
 	return (
 		<form action={formAction} class='center'>
 			<InputWithOverlay name='gtin' id='gtin-input' value={gtin} placeholder='GTIN/EAN/UPC (Barcode)'>
-				<IconBarcode />
+				<SpriteIcon name='barcode' />
 			</InputWithOverlay>
 			<InputWithOverlay name='url' id='url-input' value={externalUrl} placeholder='Provider URL'>
-				<IconWorldWww />
+				<SpriteIcon name='world-www' />
 			</InputWithOverlay>
 			<InputWithOverlay name='region' id='region-input' value={regions.join(',')} placeholder='Region (Country Code)'>
-				<IconWorldPin />
+				<SpriteIcon name='world-pin' />
 			</InputWithOverlay>
 			<InputWithOverlay type='submit' value='Lookup'>
-				<IconSearch />
+				<SpriteIcon name='search' />
 			</InputWithOverlay>
 		</form>
 	);
