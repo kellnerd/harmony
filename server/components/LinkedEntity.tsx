@@ -1,6 +1,8 @@
-import { ResolvableEntity } from '@/harmonizer/types.ts';
+import { ProviderIcon } from '@/server/components/ProviderIcon.tsx';
+
+import type { ResolvableEntity } from '@/harmonizer/types.ts';
 import { constructEntityUrl } from '@/providers/mod.ts';
-import { EntityType } from '@kellnerd/musicbrainz';
+import { type EntityType } from '@kellnerd/musicbrainz';
 import { join } from 'std/url/join.ts';
 
 export function LinkedEntity({ entity, entityType, displayName }: {
@@ -8,19 +10,21 @@ export function LinkedEntity({ entity, entityType, displayName }: {
 	entityType: EntityType;
 	displayName: string;
 }) {
-	const musicbrainzLink = entity.mbid ? join('https://musicbrainz.org/', entityType, entity.mbid).href : undefined;
-
 	return (
 		<span class='entity-links'>
 			{entity.externalIds?.map((entityId) => (
-				<>
-					<a class={entityId.provider} href={constructEntityUrl(entityId).href}>
-						{entityId.provider.charAt(0).toUpperCase()}
-					</a>
-					{' '}
-				</>
+				<a href={constructEntityUrl(entityId).href}>
+					<ProviderIcon providerName={entityId.provider} size={18} stroke={1.5} />
+				</a>
 			))}
-			<a class='musicbrainz' href={musicbrainzLink}>{displayName}</a>
+			{entity.mbid
+				? (
+					<a href={join('https://musicbrainz.org/', entityType, entity.mbid).href}>
+						<ProviderIcon providerName='musicbrainz' size={18} stroke={1.5} />
+						{displayName}
+					</a>
+				)
+				: displayName}
 		</span>
 	);
 }

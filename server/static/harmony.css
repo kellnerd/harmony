@@ -189,6 +189,13 @@ code.isrc > span:not(:last-child)::after {
 	content: '-';
 }
 
+/* LinkedEntity.tsx */
+
+span.entity-links > a {
+	text-decoration-style: dotted;
+	color: inherit;
+}
+
 /* MessageBox.tsx */
 
 div.message {
@@ -278,6 +285,12 @@ nav a:link, nav a:visited {
 nav img.icon-logo {
 	height: 2rem;
 	margin-right: 0.3rem;
+}
+
+/* ProviderIcon.tsx */
+
+span > svg.icon {
+	vertical-align: top;
 }
 
 /* RegionList.tsx */

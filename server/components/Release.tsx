@@ -2,6 +2,7 @@ import { ArtistCredit } from './ArtistCredit.tsx';
 import { CoverImage } from './CoverImage.tsx';
 import { LinkedEntity } from './LinkedEntity.tsx';
 import { MessageBox } from './MessageBox.tsx';
+import { ProviderIcon } from './ProviderIcon.tsx';
 import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import RegionList from '@/server/islands/RegionList.tsx';
@@ -35,6 +36,7 @@ export function Release({ release }: { release: HarmonyRelease }) {
 						<ul>
 							{info.providers.map((provider) => (
 								<li>
+									<ProviderIcon providerName={provider.name} size={20} stroke={1.5} />
 									{provider.name}: <a href={provider.url.href} target='_blank'>{provider.id}</a>
 									{provider.apiUrl && <a class='label ml-2' href={provider.apiUrl.href} target='_blank'>API</a>}
 									{provider.cacheTime && (
