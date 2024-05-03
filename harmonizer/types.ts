@@ -30,6 +30,7 @@ export interface ExternalEntityId extends EntityId {
 
 /** Entity which may have external IDs which can be resolved to its MBID. */
 export interface ResolvableEntity {
+	name: string;
 	externalIds?: ExternalEntityId[];
 	mbid?: string;
 }
@@ -72,7 +73,6 @@ export type HarmonyTrack = {
 };
 
 export type ArtistCreditName = ResolvableEntity & {
-	name: string;
 	creditedName?: string;
 	joinPhrase?: string;
 };
@@ -80,7 +80,6 @@ export type ArtistCreditName = ResolvableEntity & {
 type ArtistCredit = ArtistCreditName[];
 
 export type Label = ResolvableEntity & {
-	name: string;
 	catalogNumber?: string;
 };
 

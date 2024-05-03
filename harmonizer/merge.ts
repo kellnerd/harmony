@@ -1,18 +1,23 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
 import { ProviderError } from '@/utils/errors.ts';
 import { isNotError } from '@/utils/predicate.ts';
+import { similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
 import { AssertionError } from 'std/testing/asserts.ts';
 
 import type {
+	ArtistCreditName,
 	CountryCode,
+	ExternalEntityId,
 	HarmonyRelease,
 	ImmutableTrackProperty,
+	Label,
 	PreferenceProperty,
 	ProviderMessage,
 	ProviderName,
 	ProviderPreferences,
 	ProviderReleaseMapping,
+	ResolvableEntity,
 } from './types.ts';
 
 /**
@@ -176,7 +181,56 @@ export function mergeRelease(
 		}
 	});
 
+	// Phase 3: Merge properties which have a custom merge algorithm
+	const availableSourceReleases = availableProviders.map((providerName) => releaseMap[providerName] as HarmonyRelease);
+
+	// Combine external IDs of matching artist credits.
+	mergeArtistCredit(mergedRelease.artists, availableSourceReleases.map((release) => release.artists));
+	mergedRelease.media.forEach((medium, mediumIndex) => {
+		medium.tracklist.forEach((track, trackIndex) => {
+			if (track.artists) {
+				mergeArtistCredit(
+					track.artists,
+					availableSourceReleases.map((release) => release.media[mediumIndex].tracklist[trackIndex].artists),
+				);
+			}
+		});
+	});
+
+	// Combine external IDs of matching labels.
+	if (mergedRelease.labels) {
+		mergeLabels(mergedRelease.labels, availableSourceReleases.map((release) => release.labels));
+	}
+
 	return mergedRelease;
+}
+
+function mergeArtistCredit(target: ArtistCreditName[], sources: Array<ArtistCreditName[] | undefined>) {
+	mergeResolvableEntityArray(target, sources);
+}
+
+function mergeLabels(target: Label[], sources: Array<Label[] | undefined>) {
+	mergeResolvableEntityArray(target, sources);
+}
+
+/** Combines the external IDs of matching resolvable entities. */
+function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T[], sources: Array<T[] | undefined>) {
+	target.forEach((targetItem, index) => {
+		const externalIds = new Set<ExternalEntityId>();
+		for (const source of sources) {
+			if (!source || source.length !== target.length) continue;
+			const sourceItem = source[index];
+			if (
+				sourceItem.externalIds?.length &&
+				similarNames(sourceItem.name, targetItem.name)
+			) {
+				for (const artistId of sourceItem.externalIds) {
+					externalIds.add(artistId);
+				}
+			}
+		}
+		targetItem.externalIds = [...externalIds];
+	});
 }
 
 /** Returns pairs of unique values and providers which use this value for the given release property. */
