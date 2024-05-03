@@ -58,6 +58,7 @@ export async function resolveToMbid(
 			if (error instanceof ApiError) {
 				// Only writes to the context cache to indicate that further requests for this URL should be skipped.
 				setCachedMbid(entityId, '', contextCache);
+				console.debug('Resolving error for', externalUrl.href);
 				continue;
 			}
 			throw error;
@@ -67,6 +68,7 @@ export async function resolveToMbid(
 
 /** Resolves all external links for artists and labels of the given release to their MBIDs. */
 export async function resolveReleaseMbids(release: HarmonyRelease) {
+	const startTime = performance.now();
 	const { artists, labels, media } = release;
 	const contextCache = {};
 
@@ -81,6 +83,13 @@ export async function resolveReleaseMbids(release: HarmonyRelease) {
 			}
 		}
 	}
+
+	const elapsedTime = performance.now() - startTime;
+	const requestCount = Object.keys(contextCache).length;
+	release.info.messages.push({
+		type: 'debug',
+		text: `Resolving external IDs to MBIDs took ${elapsedTime.toFixed(0)} ms and ${requestCount} API requests`,
+	});
 }
 
 async function resolveMbidForEntity(
