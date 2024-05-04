@@ -125,7 +125,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, TrAlb
 			linkTypes.push('free streaming');
 		}
 
-		if (rawRelease.packages.length) {
+		if (rawRelease.packages?.length) {
 			const packageInfo = rawRelease.packages.map(({ title, type_name, edition_size, upc }) =>
 				`- **${title}**: ${type_name} (edition of ${edition_size}, GTIN: ${upc})`
 			);

@@ -4,9 +4,11 @@ export interface TrAlbum {
 	preorder_count: null;
 	hasAudio: boolean;
 	art_id: number;
-	packages: Package[];
+	/** Available physical packages of the release, if any. */
+	packages: Package[] | null;
 	defaultPrice: number;
-	freeDownloadPage: null; // TODO
+	/** URL to the download page of a free download release (`null` for paid downloads). */
+	freeDownloadPage: string | null;
 	FREE: 1;
 	PAID: 2;
 	/** Name of the artist. */
@@ -18,7 +20,7 @@ export interface TrAlbum {
 	last_subscription_item: null;
 	has_discounts: boolean;
 	is_bonus: null;
-	play_cap_data: null;
+	play_cap_data: PlayCapData | null;
 	client_id_sig: null;
 	is_purchased: null;
 	items_purchased: null;
@@ -101,18 +103,19 @@ export interface TrackInfo {
 	track_id: number;
 	/** Maps file formats to download URLs (`null` for unreleased tracks). */
 	file: FileUrls | null;
+	/** @todo Is this not `null` if the track artist is different from the release artist? */
 	artist: null;
 	/** Title of the track. */
 	title: string;
 	encodings_id: number;
-	license_type: 1;
+	license_type: 1; // TODO
 	private: null;
 	/** Number of the track. */
 	track_num: number;
 	/** Indicates whether the release can be pre-ordered. @todo Does this change upon release? */
-	album_preorder: true;
+	album_preorder: boolean;
 	/** Indicates whether the track is still unreleased. */
-	unreleased_track: false;
+	unreleased_track: boolean;
 	/** Relative URL to the track page (`null` for unreleased tracks). */
 	title_link: string | null;
 	/** Indicates whether the track has lyrics available (`null` for unreleased tracks). */
@@ -120,14 +123,16 @@ export interface TrackInfo {
 	/** Indicates whether info about the the track is available (`false` for unreleased tracks). */
 	has_info: boolean;
 	/** Indicates whether the track can be streamed (can also be `1` for unreleased tracks). */
-	streaming: 1; // = boolean?
+	streaming: 1; // = boolean `1 | null`?
 	is_downloadable: boolean | null;
 	has_free_download: null;
 	free_album_download: boolean;
 	/** Duration in seconds (floating point, `0.0` for unreleased tracks). */
 	duration: number;
+	/** Always `null` on release pages, even if lyrics exist on the track page. */
 	lyrics: null;
-	sizeof_lyrics: 0;
+	/** Size of the lyrics (in bytes). */
+	sizeof_lyrics: number;
 	is_draft: boolean;
 	video_source_type: null;
 	video_source_id: null;
@@ -144,8 +149,13 @@ export interface TrackInfo {
 	track_license_id: null;
 }
 
+interface PlayCapData {
+	streaming_limits_enabled: boolean;
+	streaming_limit: number;
+}
+
 export interface PlayerData {
-	band_enabled: 1;
+	band_enabled: 1; // = boolean `1 | null`?
 	/** URL of the artist/label page. */
 	band_url: string;
 	/** Title of the release. */
@@ -164,7 +174,7 @@ export interface PlayerData {
 	featured_track_id: number;
 	/** URL of the release page. */
 	linkback: string;
-	linkback_action: 'buy';
+	linkback_action: 'buy'; // TODO
 	subscriber_only: boolean;
 	/** Tracklist of the download release. Includes all durations! */
 	tracks: PlayerTrack[];
@@ -191,6 +201,7 @@ export interface PlayerTrack {
 	/** ID of the track. */
 	id: number;
 	encodings_id: number;
+	/** @todo Is this used for track art? */
 	art_id: null;
 	/** Duration in seconds (floating point, also set for unreleased tracks). */
 	duration: number;
@@ -229,7 +240,7 @@ interface Package {
 	/** First part of the {@linkcode description}. */
 	desc_pt1: string;
 	/** Remainder of the {@linkcode description}. */
-	desc_pt2: string;
+	desc_pt2: string | null;
 	new_desc_format: 1;
 	grid_index: 0;
 	private: null;
@@ -249,14 +260,14 @@ interface Package {
 	live_event_image_color_two: null;
 	sku: '';
 	/** UPC/EAN barcode of the package. */
-	upc: string;
+	upc: string | null;
 	/** ID of the band (artist). */
 	band_id: number;
 	/** ID of the selling band (artist). */
 	selling_band_id: number;
 	label: null;
-	/** Currency of the {@linkcode price}. */
-	currency: 'EUR';
+	/** Currency of the {@linkcode price} as a three letter code, e.g. `EUR`. */
+	currency: string;
 	country: null;
 	tax_rate: null;
 	options_title: null;
@@ -269,7 +280,7 @@ interface Package {
 	download_type: 'a'; // TODO
 	/** ID of the release. */
 	download_id: number;
-	download_is_preorder: 1;
+	download_is_preorder: 1 | null;
 	/** GMT date string when the download is/was released. */
 	download_release_date: string;
 	/** Title of the release. */
@@ -282,7 +293,8 @@ interface Package {
 	download_art_id: number;
 	/** Name of the artist. */
 	download_artist: string;
-	fulfillment_days: 2;
+	/** Number of days within which the package will be shipped. */
+	fulfillment_days: number;
 	release_date: null;
 	/** GMT date string when the package was created on Bandcamp? @todo */
 	new_date: string;
@@ -293,12 +305,14 @@ interface Package {
 	/** Number of copies which are still available. */
 	quantity_available: number;
 	quantity_limits: number;
+	/** Bandcamp shows a warning when only few copies are remaining. */
 	quantity_warning: boolean;
 	/** ID of the release. */
 	album_id: number;
 	/** Title of the release. */
 	album_title: string;
-	album_artist: null;
+	/** Name of the artist. Can be `null` if it is the same as the Bandcamp account? */
+	album_artist: string | null;
 	album_private: null;
 	/** GMT date string when the release page was published. */
 	album_publish_date: string;
@@ -324,11 +338,10 @@ interface ArtworkItem {
 	/** File name of the image (basename without path and extension). */
 	file_name: string;
 	index: number;
-	/** Width of the image. */
 	image_id: number;
 	/** Width of the image. */
 	width: number;
-	/** Width of the image. */
+	/** Height of the image. */
 	height: number;
 	crc: number;
 }
@@ -356,6 +369,8 @@ interface StreamInfo {
 
 const packageTypes = {
 	1: 'Compact Disc (CD)',
+	2: 'Vinyl LP',
+	3: 'Cassette',
 	15: '2 x Vinyl LP',
 } as const;
 
