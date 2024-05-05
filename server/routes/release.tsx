@@ -12,7 +12,7 @@ import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
 
 import type { GTIN, HarmonyRelease, ReleaseOptions } from '@/harmonizer/types.ts';
-import type { ProviderError } from '@/utils/errors.ts';
+import { LookupError, type ProviderError } from '@/utils/errors.ts';
 
 const seederTargetUrl = new URL('release/add', musicbrainzBaseUrl);
 
@@ -42,14 +42,17 @@ export default defineRoute(async (req, ctx) => {
 			await resolveReleaseMbids(release);
 		}
 	} catch (error) {
-		if (ctx.config.dev) {
-			// Show more details during development.
-			console.error(error);
-		}
 		if (error instanceof AggregateError) {
 			errors.push(error, ...error.errors);
 		} else if (error instanceof Error) {
 			errors.push(error);
+		}
+		for (const error of errors) {
+			// Log details for all unexpected errors (caused by bugs or wrong user inputs).
+			// Skip our own error classes and redundant `AggregateError` wrappers (their errors will be handled one by one).
+			if (!(error instanceof LookupError || error instanceof AggregateError)) {
+				console.error(error);
+			}
 		}
 	}
 
