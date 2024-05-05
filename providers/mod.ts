@@ -3,7 +3,7 @@ import DeezerProvider from './Deezer/mod.ts';
 import iTunesProvider from './iTunes/mod.ts';
 
 import { SnapStorage } from 'snap-storage';
-import { assert } from 'std/testing/asserts.ts';
+import { assert } from 'std/assert/assert.ts';
 
 import type { ExternalEntityId, ProviderPreferences } from '@/harmonizer/types.ts';
 import type { MetadataProvider } from './base.ts';

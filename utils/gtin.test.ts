@@ -1,6 +1,9 @@
 import { checkDigit, ensureValidGTIN, formatGtin, isEqualGTIN, isValidGTIN } from './gtin.ts';
 
-import { assert, assertFalse, assertStrictEquals, assertThrows } from 'std/testing/asserts.ts';
+import { assert } from 'std/assert/assert.ts';
+import { assertFalse } from 'std/assert/assert_false.ts';
+import { assertStrictEquals } from 'std/assert/assert_strict_equals.ts';
+import { assertThrows } from 'std/assert/assert_throws.ts';
 import { describe, it } from 'std/testing/bdd.ts';
 
 import type { FunctionSpec, ParameterSpec, ThrowSpec } from './test_spec.ts';

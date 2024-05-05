@@ -1,4 +1,4 @@
-import { assert } from 'std/testing/asserts.ts';
+import { assert } from 'std/assert/assert.ts';
 import type { CountryCode } from '@/harmonizer/types.ts';
 
 /** Converts a country code into an Unicode regional indicator symbol (flag emoji). */
@@ -14,5 +14,5 @@ export function flagEmoji(code: CountryCode) {
 
 /** Asserts tht the given country code has the correct format. */
 export function assertCountryCode(code: CountryCode) {
-	assert(code.length === 2, `'${code}' is not a valid ISO 3166-1 alpha-2 country codes with two letters`);
+	assert(code.length === 2, `'${code}' is not a valid ISO 3166-1 alpha-2 country code with two letters`);
 }

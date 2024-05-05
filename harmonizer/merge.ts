@@ -2,7 +2,7 @@ import { immutableReleaseProperties, immutableTrackProperties } from './properti
 import { isNotError } from '@/utils/predicate.ts';
 import { similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
-import { AssertionError } from 'std/testing/asserts.ts';
+import { assert } from 'std/assert/assert.ts';
 
 import type {
 	ArtistCreditName,
@@ -278,9 +278,8 @@ function assertReleaseCompatibility(releaseMap: ProviderReleaseMapping) {
 		errorDescription: string,
 	) {
 		const uniqueValues = uniqueReleasePropertyValues(releaseMap, propertyAccessor);
-		if (uniqueValues.length <= 1) return;
-
-		throw new AssertionError(
+		assert(
+			uniqueValues.length <= 1,
 			`${errorDescription}: ${
 				uniqueValues.map(
 					([value, providerNames]) => `${value} (${providerNames.join(', ')})`,
