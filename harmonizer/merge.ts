@@ -1,5 +1,4 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
-import { ProviderError } from '@/utils/errors.ts';
 import { isNotError } from '@/utils/predicate.ts';
 import { similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
@@ -41,7 +40,7 @@ export function mergeRelease(
 
 	if (availableProviders.length === 0) {
 		throw new AggregateError(
-			providerErrors.map(([providerName, error]) => new ProviderError(providerName, error.message)),
+			providerErrors.map(([_providerName, error]) => error),
 			'No provider returned a release',
 		);
 	}
