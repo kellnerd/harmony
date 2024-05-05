@@ -1,10 +1,20 @@
 import type { AlbumPage, PlayerData, PlayerTrack, TrackInfo } from './json_types.ts';
-import type { Artwork, ArtworkType, EntityId, HarmonyRelease, HarmonyTrack, LinkType } from '@/harmonizer/types.ts';
+import type {
+	ArtistCreditName,
+	Artwork,
+	ArtworkType,
+	EntityId,
+	HarmonyRelease,
+	HarmonyTrack,
+	Label,
+	LinkType,
+} from '@/harmonizer/types.ts';
 import { type CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { parseISODateTime } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { extractDataAttribute, extractMetadataTag } from '@/utils/html.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
+import { similarNames } from '@/utils/similarity.ts';
 
 export default class BandcampProvider extends MetadataProvider {
 	readonly name = 'Bandcamp';
@@ -129,10 +139,23 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		const releaseUrl = new URL(rawRelease.url);
 		this.id = this.provider.extractEntityFromUrl(releaseUrl)!.id;
 
-		// TODO: Handle label subdomains.
+		// The "band" can be the artist or a label.
+		const bandName = albumPage.band.name;
 		const bandUrl = new URL(rawRelease.url);
 		bandUrl.pathname = '';
 		const bandId = this.provider.extractEntityFromUrl(bandUrl)!;
+
+		// Treat band as artist if the names are similar, otherwise as label.
+		const artist: ArtistCreditName = { name: rawRelease.artist };
+		let label: Label | undefined = undefined;
+		if (similarNames(artist.name, bandName)) {
+			artist.externalIds = this.provider.makeExternalIds(bandId);
+		} else {
+			label = {
+				name: bandName,
+				externalIds: this.provider.makeExternalIds(bandId),
+			};
+		}
 
 		let tracks: Array<TrackInfo | PlayerTrack> = rawRelease.trackinfo;
 		if (rawRelease.is_preorder) {
@@ -174,10 +197,8 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 
 		const release: HarmonyRelease = {
 			title: rawRelease.current.title,
-			artists: [{
-				name: rawRelease.artist,
-				externalIds: this.provider.makeExternalIds(bandId),
-			}],
+			artists: [artist],
+			labels: label ? [label] : undefined,
 			gtin: rawRelease.current.upc ?? undefined,
 			releaseDate: parseISODateTime(rawRelease.current.release_date),
 			media: [{
