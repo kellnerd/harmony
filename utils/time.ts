@@ -1,8 +1,10 @@
 import { assert } from 'std/assert/assert.ts';
 
-export function formatDuration(ms: number, {
+export function formatDuration(ms: number | undefined, {
 	showMs = false,
-} = {}): string {
+} = {}): string | undefined {
+	if (ms === undefined) return;
+
 	const timeComponents: number[] = [];
 
 	const seconds = Math.floor(ms / 1000);

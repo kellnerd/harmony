@@ -67,9 +67,9 @@ export type HarmonyMedium = {
 export type HarmonyTrack = {
 	title: string;
 	artists?: ArtistCredit;
-	number: number | string;
+	number?: number | string;
 	/** Track duration in milliseconds. */
-	duration: number;
+	duration?: number;
 	isrc?: string;
 	availableIn?: CountryCode[];
 };

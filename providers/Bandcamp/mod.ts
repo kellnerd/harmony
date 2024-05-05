@@ -3,7 +3,8 @@ import type { Artwork, ArtworkType, EntityId, HarmonyRelease, HarmonyTrack, Link
 import { type CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { parseISODateTime } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
-import { extractDataAttribute } from '@/utils/html.ts';
+import { extractDataAttribute, extractMetadataTag } from '@/utils/html.ts';
+import { pluralWithCount } from '@/utils/plural.ts';
 
 export default class BandcampProvider extends MetadataProvider {
 	readonly name = 'Bandcamp';
@@ -85,6 +86,11 @@ export default class BandcampProvider extends MetadataProvider {
 						throw new ResponseError(this.name, `Failed to extract embedded JSON`, webUrl);
 					}
 
+					const description = extractMetadataTag(html, 'og:description');
+					if (description) {
+						jsonEntries.push(['og:description', `"${description}"`]);
+					}
+
 					const json = `{${jsonEntries.map(([key, value]) => `"${key}":${value}`).join(',')}}`;
 					return new Response(json, response);
 				}
@@ -129,6 +135,19 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			const embeddedPlayerRelease = await this.getEmbeddedPlayerRelease(rawRelease.id);
 			tracks = embeddedPlayerRelease.tracks;
 		}
+		const tracklist = tracks.map(this.convertRawTrack.bind(this));
+
+		const realTrackCount = albumPage['og:description'].match(/(\d+) track/i)?.[1];
+		if (realTrackCount) {
+			const hiddenTrackCount = parseInt(realTrackCount) - tracks.length;
+			if (hiddenTrackCount) {
+				tracklist.push(...new Array<HarmonyTrack>(hiddenTrackCount).fill({ title: '[unknown]' }));
+				this.addMessage(
+					`${pluralWithCount(hiddenTrackCount, 'track is', 'tracks are')} hidden and only available with the download`,
+					'warning',
+				);
+			}
+		}
 
 		const linkTypes: LinkType[] = [];
 		if (rawRelease.current.minimum_price > 0) {
@@ -158,7 +177,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			releaseDate: parseISODateTime(rawRelease.current.release_date),
 			media: [{
 				format: 'Digital Media',
-				tracklist: tracks.map(this.convertRawTrack.bind(this)),
+				tracklist,
 			}],
 			status: 'Official',
 			packaging: 'None',

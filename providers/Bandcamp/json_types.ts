@@ -1,5 +1,8 @@
 export interface AlbumPage {
+	/** Information about the release. */
 	tralbum: TrAlbum;
+	/** OpenGraph description, contains the number of tracks (including hidden tracks). */
+	'og:description': string;
 }
 
 interface TrAlbum {

@@ -40,7 +40,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 			track: medium.tracklist.map((track) => ({
 				name: track.title,
 				artist_credit: convertArtistCredit(track.artists),
-				number: track.number.toString(),
+				number: track.number?.toString(),
 				length: track.duration,
 			})),
 		})),
