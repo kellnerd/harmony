@@ -1,6 +1,17 @@
 export interface AlbumPage {
 	/** Information about the release. */
 	tralbum: TrAlbum;
+	/** Information about the band account (artist/label). */
+	band: {
+		id: number;
+		/** Name of the account. */
+		name: string;
+		fan_email: null;
+		account_id: number;
+		facebook_like_enabled: 1;
+		has_discounts: boolean;
+		image_id: number;
+	};
 	/** OpenGraph description, contains the number of tracks (including hidden tracks). */
 	'og:description': string;
 }
@@ -268,9 +279,9 @@ interface Package {
 	sku: '';
 	/** UPC/EAN barcode of the package. */
 	upc: string | null;
-	/** ID of the band (artist). */
+	/** ID of the band (artist/label). */
 	band_id: number;
-	/** ID of the selling band (artist). */
+	/** ID of the selling band (artist/label). */
 	selling_band_id: number;
 	label: null;
 	/** Currency of the {@linkcode price} as a three letter code, e.g. `EUR`. */

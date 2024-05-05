@@ -86,6 +86,11 @@ export default class BandcampProvider extends MetadataProvider {
 						throw new ResponseError(this.name, `Failed to extract embedded JSON`, webUrl);
 					}
 
+					const band = extractDataAttribute(html, 'band');
+					if (band) {
+						jsonEntries.push(['band', band]);
+					}
+
 					const description = extractMetadataTag(html, 'og:description');
 					if (description) {
 						jsonEntries.push(['og:description', `"${description}"`]);
@@ -125,9 +130,9 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		this.id = this.provider.extractEntityFromUrl(releaseUrl)!.id;
 
 		// TODO: Handle label subdomains.
-		const artistUrl = new URL(rawRelease.url);
-		artistUrl.pathname = '';
-		const artistId = this.provider.extractEntityFromUrl(artistUrl)!;
+		const bandUrl = new URL(rawRelease.url);
+		bandUrl.pathname = '';
+		const bandId = this.provider.extractEntityFromUrl(bandUrl)!;
 
 		let tracks: Array<TrackInfo | PlayerTrack> = rawRelease.trackinfo;
 		if (rawRelease.is_preorder) {
@@ -171,7 +176,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			title: rawRelease.current.title,
 			artists: [{
 				name: rawRelease.artist,
-				externalIds: this.provider.makeExternalIds(artistId),
+				externalIds: this.provider.makeExternalIds(bandId),
 			}],
 			gtin: rawRelease.current.upc ?? undefined,
 			releaseDate: parseISODateTime(rawRelease.current.release_date),
