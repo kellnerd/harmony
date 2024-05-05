@@ -1,8 +1,8 @@
-import type { PlayerData, PlayerTrack, TrackInfo, TrAlbum } from './json_types.ts';
+import type { AlbumPage, PlayerData, PlayerTrack, TrackInfo } from './json_types.ts';
 import type { Artwork, ArtworkType, EntityId, HarmonyRelease, HarmonyTrack, LinkType } from '@/harmonizer/types.ts';
 import { type CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { parseISODateTime } from '@/utils/date.ts';
-import { ProviderError } from '@/utils/errors.ts';
+import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { unescape } from 'std/html/mod.ts';
 
 export default class BandcampProvider extends MetadataProvider {
@@ -62,35 +62,49 @@ export default class BandcampProvider extends MetadataProvider {
 	}
 
 	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
-		const dataAttribute = webUrl.pathname.startsWith('/EmbeddedPlayer') ? 'player-data' : 'tralbum';
-		const dataExpression = new RegExp(`data-${dataAttribute}="(.+?)"`);
-
 		return this.fetchJSON<Data>(webUrl, {
 			policy: { maxTimestamp },
 			responseMutator: async (response) => {
+				const isEmbeddedPlayer = webUrl.pathname.startsWith('/EmbeddedPlayer');
 				const html = await response.text();
-				const json = html.match(dataExpression)?.[1];
-				if (json) {
-					return new Response(unescape(json), response);
+
+				if (isEmbeddedPlayer) {
+					const json = html.match(/data-player-data="(.+?)"/)?.[1];
+					if (json) {
+						return new Response(unescape(json), response);
+					} else {
+						throw new ResponseError(this.name, `Failed to extract embedded player JSON`, webUrl);
+					}
+				} else {
+					const jsonEntries: [string, string][] = [];
+
+					const tralbum = html.match(/data-tralbum="(.+?)"/)?.[1];
+					if (tralbum) {
+						jsonEntries.push(['tralbum', unescape(tralbum)]);
+					} else {
+						throw new ResponseError(this.name, `Failed to extract embedded JSON`, webUrl);
+					}
+
+					const json = `{${jsonEntries.map(([key, value]) => `"${key}":${value}`).join(',')}}`;
+					return new Response(json, response);
 				}
-				throw new ProviderError(this.name, `Failed to extract embedded '${dataAttribute}' JSON`);
 			},
 		});
 	}
 }
 
-export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, TrAlbum> {
+export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, AlbumPage> {
 	constructReleaseApiUrl(): URL | undefined {
 		return undefined;
 	}
 
-	async getRawRelease(): Promise<TrAlbum> {
+	async getRawRelease(): Promise<AlbumPage> {
 		if (this.lookup.method === 'gtin') {
 			throw new ProviderError(this.provider.name, 'GTIN lookups are not supported');
 		}
 
 		const webUrl = this.constructReleaseUrl(this.lookup.value);
-		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<TrAlbum>(
+		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<AlbumPage>(
 			webUrl,
 			this.options.snapshotMaxTimestamp,
 		);
@@ -99,7 +113,8 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, TrAlb
 		return release;
 	}
 
-	async convertRawRelease(rawRelease: TrAlbum): Promise<HarmonyRelease> {
+	async convertRawRelease(albumPage: AlbumPage): Promise<HarmonyRelease> {
+		const { tralbum: rawRelease } = albumPage;
 		const releaseUrl = new URL(rawRelease.url);
 		this.id = this.provider.extractEntityFromUrl(releaseUrl)!.id;
 

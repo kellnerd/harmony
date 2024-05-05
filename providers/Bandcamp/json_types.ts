@@ -1,4 +1,8 @@
-export interface TrAlbum {
+export interface AlbumPage {
+	tralbum: TrAlbum;
+}
+
+interface TrAlbum {
 	'for the curious': 'https://bandcamp.com/help/audio_basics#steal https://bandcamp.com/terms_of_use';
 	current: TrAlbumCurrent;
 	preorder_count: null;
@@ -174,15 +178,15 @@ export interface PlayerData {
 	featured_track_id: number;
 	/** URL of the release page. */
 	linkback: string;
-	linkback_action: 'buy'; // TODO
+	linkback_action: 'buy' | 'download'; // TODO
 	subscriber_only: boolean;
 	/** Tracklist of the download release. Includes all durations! */
 	tracks: PlayerTrack[];
 	google_analytics_id: null;
 	exclusive_permitted_domains: string[];
-	exclusive_show_anywhere: 0;
-	no_exclusive_data: null;
-	is_preorder: 1;
+	exclusive_show_anywhere: 0 | null;
+	no_exclusive_data: 1 | null;
+	is_preorder: 1 | null;
 	/** Maps track IDs to stream info. */
 	stream_infos: Record<string, StreamInfo>;
 	/** URL of the download release cover (small). */
@@ -368,10 +372,12 @@ interface StreamInfo {
 }
 
 const packageTypes = {
+	0: 'Other',
 	1: 'Compact Disc (CD)',
 	2: 'Vinyl LP',
 	3: 'Cassette',
 	15: '2 x Vinyl LP',
+	16: '7" Vinyl',
 } as const;
 
 type PackageType = typeof packageTypes[keyof typeof packageTypes];
