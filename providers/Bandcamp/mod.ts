@@ -3,7 +3,7 @@ import type { Artwork, ArtworkType, EntityId, HarmonyRelease, HarmonyTrack, Link
 import { type CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { parseISODateTime } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
-import { unescape } from 'std/html/mod.ts';
+import { extractDataAttribute } from '@/utils/html.ts';
 
 export default class BandcampProvider extends MetadataProvider {
 	readonly name = 'Bandcamp';
@@ -69,18 +69,18 @@ export default class BandcampProvider extends MetadataProvider {
 				const html = await response.text();
 
 				if (isEmbeddedPlayer) {
-					const json = html.match(/data-player-data="(.+?)"/)?.[1];
-					if (json) {
-						return new Response(unescape(json), response);
+					const playerData = extractDataAttribute(html, 'player-data');
+					if (playerData) {
+						return new Response(playerData, response);
 					} else {
 						throw new ResponseError(this.name, `Failed to extract embedded player JSON`, webUrl);
 					}
 				} else {
 					const jsonEntries: [string, string][] = [];
 
-					const tralbum = html.match(/data-tralbum="(.+?)"/)?.[1];
+					const tralbum = extractDataAttribute(html, 'tralbum');
 					if (tralbum) {
-						jsonEntries.push(['tralbum', unescape(tralbum)]);
+						jsonEntries.push(['tralbum', tralbum]);
 					} else {
 						throw new ResponseError(this.name, `Failed to extract embedded JSON`, webUrl);
 					}
