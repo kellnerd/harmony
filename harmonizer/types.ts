@@ -20,6 +20,8 @@ export interface EntityId {
 	 * Only used by providers which have region-specific API endpoints or pages.
 	 */
 	region?: CountryCode;
+	/** Preserved slug from the original entity URL. */
+	slug?: string;
 }
 
 /** External identifier for an entity from a specific metadata provider. */

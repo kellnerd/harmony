@@ -70,7 +70,9 @@ export abstract class MetadataProvider {
 	 * URL pattern used to check supported domains, match entity URLs and extract entity type and ID from the URL.
 	 *
 	 * The pathname has to contain two named groups `type` and `id`, e.g. `/:type(artist|release)/:id`.
-	 * Optionally the pathname can also contain a named group `region` which will be used to extract the preferred region.
+	 * Optionally the pathname can also contain the following named groups which will be extracted:
+	 * - `region`: preferred region
+	 * - `slug`: slug which can be used to reconstruct the original canonical URL
 	 *
 	 * If these groups are not contained in the pathname, {@linkcode extractEntityFromUrl} has to be overwritten.
 	 */
@@ -106,13 +108,14 @@ export abstract class MetadataProvider {
 	extractEntityFromUrl(url: URL): EntityId | undefined {
 		const groups = this.supportedUrls.exec(url)?.pathname.groups;
 		if (groups) {
-			const { type, id, region } = groups;
+			const { type, id, region, slug } = groups;
 			if (type && id) {
 				return {
 					type,
 					id,
 					// Do not return an empty string in case the group was declared as optional and is missing from the result.
 					region: region?.toUpperCase() || undefined,
+					slug,
 				};
 			}
 		}
