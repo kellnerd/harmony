@@ -38,8 +38,7 @@
 	"lint": {
 		"rules": {
 			"tags": ["fresh", "recommended"]
-		},
-		"exclude": ["**/template.ts"]
+		}
 	},
 	"exclude": ["**/_fresh/*"]
 }

@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-unused-vars
 /**
  * Template for a new provider implementation.
  *
@@ -6,8 +7,8 @@
  * Complex provider entity type definitions should be defined in a separate module.
  */
 
-import type { HarmonyRelease } from '@/harmonizer/types.ts';
-import { DurationPrecision, type EntityId, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import type { EntityId, HarmonyRelease } from '@/harmonizer/types.ts';
+import { DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 
 export default class TemplateProvider extends MetadataProvider {
 	readonly name = '';
@@ -48,4 +49,4 @@ export class TemplateReleaseLookup extends ReleaseLookup<TemplateProvider, Relea
 }
 
 // Type of raw release data from the provider (for example an API result).
-export type Release = {};
+export type Release = unknown;
