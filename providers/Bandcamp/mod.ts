@@ -93,12 +93,14 @@ export default class BandcampProvider extends MetadataProvider {
 					if (tralbum) {
 						jsonEntries.push(['tralbum', tralbum]);
 					} else {
-						throw new ResponseError(this.name, `Failed to extract embedded JSON`, webUrl);
+						throw new ResponseError(this.name, `Failed to extract embedded 'tralbum' JSON`, webUrl);
 					}
 
 					const band = extractDataAttribute(html, 'band');
 					if (band) {
 						jsonEntries.push(['band', band]);
+					} else {
+						throw new ResponseError(this.name, `Failed to extract embedded 'band' JSON`, webUrl);
 					}
 
 					const description = extractMetadataTag(html, 'og:description');
@@ -165,7 +167,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		}
 		const tracklist = tracks.map(this.convertRawTrack.bind(this));
 
-		const realTrackCount = albumPage['og:description'].match(/(\d+) track/i)?.[1];
+		const realTrackCount = albumPage['og:description']?.match(/(\d+) track/i)?.[1];
 		if (realTrackCount) {
 			const hiddenTrackCount = parseInt(realTrackCount) - tracks.length;
 			if (hiddenTrackCount) {

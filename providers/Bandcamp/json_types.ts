@@ -2,18 +2,20 @@ export interface AlbumPage {
 	/** Information about the release. */
 	tralbum: TrAlbum;
 	/** Information about the band account (artist/label). */
-	band: {
-		id: number;
-		/** Name of the account. */
-		name: string;
-		fan_email: null;
-		account_id: number;
-		facebook_like_enabled: 1;
-		has_discounts: boolean;
-		image_id: number;
-	};
+	band: Band;
 	/** OpenGraph description, contains the number of tracks (including hidden tracks). */
-	'og:description': string;
+	'og:description'?: string;
+}
+
+interface Band {
+	id: number;
+	/** Name of the band account. */
+	name: string;
+	fan_email: null;
+	account_id: number;
+	facebook_like_enabled: 1;
+	has_discounts: boolean;
+	image_id: number;
 }
 
 interface TrAlbum {
