@@ -10,8 +10,10 @@ export const musicbrainzBaseUrl = getUrlFromEnv('MUSICBRAINZ_URL', 'https://musi
 /** Current git revision. */
 export const revision = Deno.env.get('DENO_DEPLOYMENT_ID');
 
-/** Current git revision (shortened) or "unknown". */
-export const shortRevision = revision?.substring(0, 7) ?? 'unknown';
+/** Current git revision, shortened if it is a hash, or "unknown". */
+export const shortRevision = revision
+	? (/^[0-9a-f]+$/.test(revision) ? revision.substring(0, 7) : revision)
+	: 'unknown';
 
 /** Source code URL for the current git revision. */
 export const codeRevisionUrl = (revision && codeUrl.hostname === 'github.com')

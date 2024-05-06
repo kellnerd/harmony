@@ -18,7 +18,7 @@ deno task dev
 You can now open the logged URL in your browser to view the landing page.
 Try doing some code changes and see how the page automatically reloads.
 
-For a production server you should set the `PORT` environment variable to your preferred port and `DENO_DEPLOYMENT_ID` to the current git revision.
+For a production server you should set the `PORT` environment variable to your preferred port and `DENO_DEPLOYMENT_ID` to the current git revision (commit hash or tag name).
 Alternatively you can run the [predefined task](deno.json) which automatically sets `DENO_DEPLOYMENT_ID` and runs `server/main.ts` with all permissions:
 
 ```sh
