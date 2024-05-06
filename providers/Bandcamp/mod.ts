@@ -142,7 +142,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		const bandId = this.provider.extractEntityFromUrl(bandUrl)!;
 
 		// Treat band as artist if the names are similar, otherwise as label.
-		const artist: ArtistCreditName = { name: rawRelease.artist };
+		const artist = this.makeArtistCreditName(rawRelease.artist);
 		let label: Label | undefined = undefined;
 		if (similarNames(artist.name, bandName)) {
 			artist.externalIds = this.provider.makeExternalIds(bandId);
@@ -219,8 +219,15 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		return {
 			number: 'track_num' in rawTrack ? rawTrack.track_num : rawTrack.tracknum + 1,
 			title: rawTrack.title,
-			artists: rawTrack.artist ? [{ name: rawTrack.artist }] : undefined,
+			artists: rawTrack.artist ? [this.makeArtistCreditName(rawTrack.artist)] : undefined,
 			duration: rawTrack.duration * 1000,
+		};
+	}
+
+	makeArtistCreditName(artist: string): ArtistCreditName {
+		return {
+			name: artist,
+			creditedName: artist,
 		};
 	}
 

@@ -248,6 +248,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 	private convertRawArtist(artist: MinimalArtist): ArtistCreditName {
 		return {
 			name: artist.name,
+			creditedName: artist.name,
 			externalIds: this.provider.makeExternalIds({ type: 'artist', id: artist.id.toString() }),
 		};
 	}

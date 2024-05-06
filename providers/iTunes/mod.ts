@@ -235,6 +235,7 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 		const artistId = url ? this.provider.extractEntityFromUrl(new URL(url)) : undefined;
 		return {
 			name,
+			creditedName: name,
 			externalIds: artistId ? this.provider.makeExternalIds(artistId) : undefined,
 		};
 	}
