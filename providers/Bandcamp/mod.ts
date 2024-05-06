@@ -87,28 +87,22 @@ export default class BandcampProvider extends MetadataProvider {
 						throw new ResponseError(this.name, `Failed to extract embedded player JSON`, webUrl);
 					}
 				} else {
-					const jsonEntries: [string, string][] = [];
-
-					const tralbum = extractDataAttribute(html, 'tralbum');
-					if (tralbum) {
-						jsonEntries.push(['tralbum', tralbum]);
-					} else {
-						throw new ResponseError(this.name, `Failed to extract embedded 'tralbum' JSON`, webUrl);
-					}
-
-					const band = extractDataAttribute(html, 'band');
-					if (band) {
-						jsonEntries.push(['band', band]);
-					} else {
-						throw new ResponseError(this.name, `Failed to extract embedded 'band' JSON`, webUrl);
-					}
+					const dataAttributeKeys = ['tralbum', 'band'];
+					const jsonEntries: [string, string][] = dataAttributeKeys.map((key) => {
+						const serializedValue = extractDataAttribute(html, key);
+						if (serializedValue) {
+							return [key, serializedValue];
+						} else {
+							throw new ResponseError(this.name, `Failed to extract embedded '${key}' JSON`, webUrl);
+						}
+					});
 
 					const description = extractMetadataTag(html, 'og:description');
 					if (description) {
 						jsonEntries.push(['og:description', `"${description}"`]);
 					}
 
-					const json = `{${jsonEntries.map(([key, value]) => `"${key}":${value}`).join(',')}}`;
+					const json = `{${jsonEntries.map(([key, serializedValue]) => `"${key}":${serializedValue}`).join(',')}}`;
 					return new Response(json, response);
 				}
 			},
