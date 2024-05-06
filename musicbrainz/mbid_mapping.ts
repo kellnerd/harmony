@@ -3,6 +3,7 @@ import type { RelatableEntityType } from '@kellnerd/musicbrainz/data/entity';
 import type { ExternalEntityId, HarmonyRelease, ResolvableEntity } from '@/harmonizer/types.ts';
 import { MB } from '@/musicbrainz/api_client.ts';
 import { constructEntityUrl } from '@/providers/mod.ts';
+import { isDevServer } from '@/server/config.ts';
 
 /**
  * Resolves external IDs for a MusicBrainz entity to its MBID.
@@ -115,8 +116,8 @@ function resolveMbidsForMultipleEntities(
 	);
 }
 
-// Use session storage or local storage as cache.
-const cache = sessionStorage;
+// Use persistent local storage in development (watch mode) when the server frequently restarts.
+const cache = isDevServer ? localStorage : sessionStorage;
 const cacheKeySeparator = ':';
 const mbidCachePrefix = 'mbid';
 

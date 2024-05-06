@@ -23,6 +23,9 @@ export const codeRevisionUrl = (revision && codeUrl.hostname === 'github.com')
 /** Indicates whether the protocol of a client from the `X-Forwarded-Proto` proxy header should be used. */
 export const forwardProto = getBooleanFromEnv('FORWARD_PROTO');
 
+/** Indicates whether the current server runs in development mode. */
+export const isDevServer = !revision;
+
 function getFromEnv(key: string): string | undefined {
 	if ('Deno' in self) {
 		return Deno.env.get(key);
