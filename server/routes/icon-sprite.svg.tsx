@@ -2,6 +2,7 @@ import IconBrandMetaBrainz from '@/server/icons/BrandMetaBrainz.tsx';
 import IconBrandApple from 'tabler-icons/brand-apple.tsx';
 import IconBrandBandcamp from 'tabler-icons/brand-bandcamp.tsx';
 import IconBrandDeezer from 'tabler-icons/brand-deezer.tsx';
+import IconBrandGit from 'tabler-icons/brand-git.tsx';
 import IconAlertTriangle from 'tabler-icons/alert-triangle.tsx';
 import IconBarcode from 'tabler-icons/barcode.tsx';
 import IconBug from 'tabler-icons/bug.tsx';
@@ -32,6 +33,7 @@ const icons: Icon[] = [
 	IconBrandApple,
 	IconBrandBandcamp,
 	IconBrandDeezer,
+	IconBrandGit,
 	IconBrandMetaBrainz,
 	IconPuzzle,
 ];
