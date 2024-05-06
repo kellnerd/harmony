@@ -8,7 +8,7 @@ export const supportUrl = getUrlFromEnv('HARMONY_SUPPORT_URL', new URL('issues',
 export const musicbrainzBaseUrl = getUrlFromEnv('MUSICBRAINZ_URL', 'https://musicbrainz.org/');
 
 /** Current git revision. */
-export const revision = Deno.env.get('DENO_DEPLOYMENT_ID');
+export const revision = getFromEnv('DENO_DEPLOYMENT_ID');
 
 /** Current git revision, shortened if it is a hash, or "unknown". */
 export const shortRevision = revision
@@ -23,18 +23,17 @@ export const codeRevisionUrl = (revision && codeUrl.hostname === 'github.com')
 /** Indicates whether the protocol of a client from the `X-Forwarded-Proto` proxy header should be used. */
 export const forwardProto = getBooleanFromEnv('FORWARD_PROTO');
 
-function getBooleanFromEnv(key: string): boolean {
-	let value: string | undefined;
+function getFromEnv(key: string): string | undefined {
 	if ('Deno' in self) {
-		value = Deno.env.get(key);
+		return Deno.env.get(key);
 	}
+}
+
+function getBooleanFromEnv(key: string): boolean {
+	const value = getFromEnv(key);
 	return value !== undefined && ['1', 'true', 'yes'].includes(value.toLowerCase());
 }
 
 function getUrlFromEnv(key: string, fallback: string | URL): URL {
-	let value: string | undefined;
-	if ('Deno' in self) {
-		value = Deno.env.get(key);
-	}
-	return new URL(value || fallback);
+	return new URL(getFromEnv(key) || fallback);
 }
