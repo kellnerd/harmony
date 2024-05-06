@@ -7,4 +7,5 @@ export const MB = new MusicBrainzClient({
 		version: shortRevision,
 		contact: codeUrl.href,
 	},
+	maxQueueSize: 30,
 });
