@@ -183,7 +183,7 @@ export type ImmutableTrackProperty = typeof immutableTrackProperties[number];
 
 export type ImmutableReleaseProperty = typeof immutableReleaseProperties[number];
 
-export type PreferenceProperty = ImmutableReleaseProperty | ImmutableTrackProperty;
+export type PreferenceProperty = ImmutableReleaseProperty | ImmutableTrackProperty | 'externalId';
 
 /** Mapping from release/track properties to lists of preferred providers for these properties. */
 export type ProviderPreferences = Partial<Record<PreferenceProperty, ProviderName[]>>;

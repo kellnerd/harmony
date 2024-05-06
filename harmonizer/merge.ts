@@ -148,8 +148,8 @@ export function mergeRelease(
 
 	// Phase 2: Copy individual properties from their preferred providers
 	(Object.entries(preferences) as [PreferenceProperty, ProviderName[]][]).forEach(([property, preferredProviders]) => {
-		if (property === 'media') {
-			// already handled during the initial merge phase
+		if (property === 'media' || property === 'externalId') {
+			// handled during phase 1 and phase 3
 			return;
 		}
 
@@ -181,6 +181,9 @@ export function mergeRelease(
 	});
 
 	// Phase 3: Merge properties which have a custom merge algorithm
+	if (preferences.externalId) {
+		orderByPreference(availableProviders, preferences.externalId);
+	}
 	const availableSourceReleases = availableProviders.map((providerName) => releaseMap[providerName] as HarmonyRelease);
 
 	// Combine external IDs of matching artist credits.

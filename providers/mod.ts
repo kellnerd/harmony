@@ -49,6 +49,8 @@ export const defaultProviderPreferences: ProviderPreferences = {
 	duration: sortProvidersByQuality('durationPrecision'),
 	// get cover art from the provider with the highest quality (currently: image resolution)
 	images: sortProvidersByQuality('artworkQuality'),
+	// use region-specific external URLs last (TODO: derive this from provider properties)
+	externalId: ['Deezer', 'Bandcamp', 'iTunes'],
 };
 
 /** Returns a list of provider names sorted by the value of the given numeric property (descending). */
