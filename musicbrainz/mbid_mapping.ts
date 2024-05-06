@@ -22,18 +22,19 @@ export async function resolveToMbid(
 	if (!entityIds.length) return;
 
 	// First check the caches for each entity ID.
+	const uncachedIds: ExternalEntityId[] = [];
 	for (const entityId of entityIds) {
 		const mbid = getCachedMbid(entityId, contextCache);
 		if (mbid) {
 			return mbid;
-		} else if (mbid === '') {
+		} else if (mbid !== '') {
 			// Empty MBID is used by the context cache to indicate that further requests should be skipped.
-			return;
+			uncachedIds.push(entityId);
 		}
 	}
 
 	// If the MBID is not cached, try to lookup canonical entity URLs with the MB API.
-	for (const entityId of entityIds) {
+	for (const entityId of uncachedIds) {
 		const externalUrl = constructEntityUrl(entityId);
 		try {
 			const result = await MB.browseUrl(externalUrl, {
