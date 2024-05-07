@@ -1,4 +1,5 @@
 import BandcampProvider from './Bandcamp/mod.ts';
+import BeatportProvider from './Beatport/mod.ts';
 import DeezerProvider from './Deezer/mod.ts';
 import iTunesProvider from './iTunes/mod.ts';
 
@@ -15,6 +16,7 @@ export const allProviders: MetadataProvider[] = [
 	DeezerProvider,
 	iTunesProvider,
 	BandcampProvider,
+	BeatportProvider,
 ].map((Provider) => new Provider({ snaps }));
 
 /** Display names of all supported providers. */
@@ -50,7 +52,7 @@ export const defaultProviderPreferences: ProviderPreferences = {
 	// get cover art from the provider with the highest quality (currently: image resolution)
 	images: sortProvidersByQuality('artworkQuality'),
 	// use region-specific external URLs last (TODO: derive this from provider properties)
-	externalId: ['Deezer', 'Bandcamp', 'iTunes'],
+	externalId: ['Deezer', 'Bandcamp', 'Beatport', 'iTunes'],
 };
 
 /** Returns a list of provider names sorted by the value of the given numeric property (descending). */
