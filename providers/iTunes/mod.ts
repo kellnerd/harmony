@@ -223,7 +223,7 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 			medium.tracklist.push({
 				number: track.trackNumber,
 				title,
-				duration: track.trackTimeMillis,
+				length: track.trackTimeMillis,
 				artists: [this.convertRawArtist(track.artistName, track.artistViewUrl)],
 			});
 		});

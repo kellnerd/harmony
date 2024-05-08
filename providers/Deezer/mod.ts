@@ -225,7 +225,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 		const result: HarmonyTrack = {
 			number: index + 1,
 			title: track.title,
-			duration: track.duration * 1000,
+			length: track.duration * 1000,
 		};
 
 		if ('isrc' in track) {

@@ -220,7 +220,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			number: 'track_num' in rawTrack ? rawTrack.track_num : rawTrack.tracknum + 1,
 			title: rawTrack.title,
 			artists: rawTrack.artist ? [this.makeArtistCreditName(rawTrack.artist)] : undefined,
-			duration: rawTrack.duration * 1000,
+			length: rawTrack.duration * 1000,
 		};
 	}
 

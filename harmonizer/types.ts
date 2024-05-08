@@ -68,8 +68,8 @@ export type HarmonyTrack = {
 	title: string;
 	artists?: ArtistCredit;
 	number?: number | string;
-	/** Track duration in milliseconds. */
-	duration?: number;
+	/** Track length in milliseconds. */
+	length?: number;
 	isrc?: string;
 	availableIn?: CountryCode[];
 };

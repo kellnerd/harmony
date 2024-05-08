@@ -31,5 +31,5 @@ export const immutableReleaseProperties = [
 /** Track properties which have to be taken from one provider and can not be combined from data of multiple providers. */
 export const immutableTrackProperties = [
 	'isrc',
-	'duration',
+	'length',
 ] as const;

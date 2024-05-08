@@ -25,7 +25,7 @@ export function Tracklist({ medium, showTitle = false }: Props) {
 					<th>Track</th>
 					<th>Title</th>
 					<th>Artists</th>
-					<th>Duration</th>
+					<th>Length</th>
 					<th>ISRC</th>
 					{medium.tracklist.some((track) => track.availableIn) && <th>Availability</th>}
 				</tr>
@@ -37,7 +37,7 @@ export function Tracklist({ medium, showTitle = false }: Props) {
 						<td class='numeric'>{track.number}</td>
 						<td>{track.title}</td>
 						<td>{track.artists && <ArtistCredit artists={track.artists} />}</td>
-						<td class='numeric'>{formatDuration(track.duration, { showMs: true })}</td>
+						<td class='numeric'>{formatDuration(track.length, { showMs: true })}</td>
 						<td>
 							{track.isrc && <ISRC code={track.isrc} />}
 						</td>

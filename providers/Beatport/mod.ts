@@ -132,7 +132,7 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 			number: index + 1,
 			title: title,
 			artists: rawTrack.artists.map(this.makeArtistCreditName.bind(this)),
-			duration: rawTrack.length_ms,
+			length: rawTrack.length_ms,
 			isrc: rawTrack.isrc,
 		};
 	}

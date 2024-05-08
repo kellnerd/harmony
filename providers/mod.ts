@@ -47,8 +47,8 @@ export function constructEntityUrl(entityId: ExternalEntityId): URL {
 
 /** Recommended default preferences which sort providers by quality. */
 export const defaultProviderPreferences: ProviderPreferences = {
-	// get track durations from the provider with the highest precision
-	duration: sortProvidersByQuality('durationPrecision'),
+	// get track lengths from the provider with the highest precision
+	length: sortProvidersByQuality('durationPrecision'),
 	// get cover art from the provider with the highest quality (currently: image resolution)
 	images: sortProvidersByQuality('artworkQuality'),
 	// use region-specific external URLs last (TODO: derive this from provider properties)
