@@ -11,10 +11,15 @@
 	--nav-accent: var(--brand-red);
 	--badge-fill: #414a63;
 	--badge-text: #ffffff;
-	--odd-fill:#efefef;
+	--odd-fill: #efefef;
 	--even-fill: #f8f8f8;
 	--link: #0066cc;
 	--link-accent: var(--brand-red);
+	/* Provider brand colors */
+	--apple: #fc3c44;
+	--bandcamp: #1da0c3;
+	--beatport: #00e586;
+	--deezer: #a238ff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -293,6 +298,38 @@ nav a:link, nav a:visited {
 nav img.icon-logo {
 	height: 2rem;
 	margin-right: 0.3rem;
+}
+
+/* ProviderInput.tsx */
+
+div.provider-inputs {
+	display: flex;
+	justify-content: center;
+	margin: 1em;
+}
+
+label.provider-input {
+	background-color: var(--badge-fill);
+	color: var(--badge-text);
+	margin: 0.5em;
+	padding: 0.2em 0.4em;
+	border-radius: 5px;
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+}
+
+label.bandcamp {
+	background-color: var(--bandcamp);
+}
+label.beatport {
+	background-color: var(--beatport);
+}
+label.deezer {
+	background-color: var(--deezer);
+}
+label.itunes {
+	background-color: var(--apple);
 }
 
 /* ProviderIcon.tsx */

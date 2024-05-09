@@ -21,6 +21,7 @@ export default defineRoute(async (req, ctx) => {
 	const seederSourceUrl = ctx.config.dev ? undefined : ctx.url;
 	const errors: Error[] = [];
 	let release: HarmonyRelease | undefined;
+	let enabledProviders: Set<string> | undefined = undefined;
 	let gtinInput: GTIN = '', urlInput = '', regionsInput: string[] = [];
 
 	try {
@@ -32,6 +33,7 @@ export default defineRoute(async (req, ctx) => {
 			providers,
 			snapshotMaxTimestamp,
 		};
+		enabledProviders = providers;
 		gtinInput = gtin ?? '';
 		urlInput = urls[0]?.href;
 		regionsInput = [...(regions ?? [])];
@@ -65,7 +67,12 @@ export default defineRoute(async (req, ctx) => {
 			</Head>
 			<main>
 				<h2 class='center'>Release Lookup</h2>
-				<ReleaseLookup gtin={gtinInput} externalUrl={urlInput} regions={regionsInput} />
+				<ReleaseLookup
+					enabledProviders={enabledProviders}
+					gtin={gtinInput}
+					externalUrl={urlInput}
+					regions={regionsInput}
+				/>
 				{errors.map((error) => (
 					<MessageBox
 						message={{

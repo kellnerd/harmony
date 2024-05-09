@@ -1,14 +1,24 @@
 import InputWithOverlay from './InputWithOverlay.tsx';
+import { ProviderCheckboxes } from './ProviderInput.tsx';
 import { SpriteIcon } from './SpriteIcon.tsx';
 
 import type { GTIN } from '@/harmonizer/types.ts';
 
-export default function ReleaseLookup({ gtin = '', externalUrl = '', regions = [], formAction = '' }: {
+interface ReleaseLookupProps {
+	enabledProviders?: Set<string>;
 	gtin?: GTIN;
 	externalUrl?: string;
 	regions?: string[];
 	formAction?: string;
-}) {
+}
+
+export default function ReleaseLookup({
+	enabledProviders,
+	gtin = '',
+	externalUrl = '',
+	regions = [],
+	formAction = '',
+}: ReleaseLookupProps) {
 	return (
 		<form action={formAction} class='center'>
 			<InputWithOverlay name='gtin' id='gtin-input' value={gtin} placeholder='GTIN/EAN/UPC (Barcode)'>
@@ -23,6 +33,7 @@ export default function ReleaseLookup({ gtin = '', externalUrl = '', regions = [
 			<InputWithOverlay type='submit' value='Lookup'>
 				<SpriteIcon name='search' />
 			</InputWithOverlay>
+			<ProviderCheckboxes enabledProviders={enabledProviders} />
 		</form>
 	);
 }
