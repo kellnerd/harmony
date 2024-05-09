@@ -31,8 +31,10 @@ export default class BeatportProvider extends MetadataProvider {
 
 	readonly artworkQuality = 1400;
 
+	readonly baseUrl = 'https://www.beatport.com';
+
 	constructUrl(entity: EntityId): URL {
-		return new URL([entity.type, entity.slug ?? '-', entity.id].join('/'), 'https://www.beatport.com');
+		return new URL([entity.type, entity.slug ?? '-', entity.id].join('/'), this.baseUrl);
 	}
 
 	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
@@ -60,11 +62,18 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 	}
 
 	async getRawRelease(): Promise<BeatportRelease> {
+		let releaseId = this.lookup.value;
+
 		if (this.lookup.method === 'gtin') {
-			throw new ProviderError(this.provider.name, 'GTIN lookups are not supported (yet)');
+			const id = await this.searchReleaseByGtin(this.lookup.value);
+			if (!id) {
+				throw new ProviderError(this.provider.name, 'Search returned no matching results');
+			}
+
+			releaseId = id;
 		}
 
-		const webUrl = this.provider.constructUrl({ id: this.lookup.value, type: 'release' });
+		const webUrl = this.provider.constructUrl({ id: releaseId, type: 'release' });
 		const { content: data, timestamp } = await this.provider.extractEmbeddedJson<BeatportNextData>(
 			webUrl,
 			this.options.snapshotMaxTimestamp,
@@ -72,6 +81,25 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 		this.cacheTime = timestamp;
 
 		return this.extractRawRelease(data);
+	}
+
+	async searchReleaseByGtin(gtin: string): Promise<string | undefined> {
+		const webUrl = new URL('search', this.provider.baseUrl);
+		webUrl.searchParams.set('q', gtin);
+
+		const { content: data } = await this.provider.extractEmbeddedJson<BeatportNextData>(
+			webUrl,
+			this.options.snapshotMaxTimestamp,
+		);
+
+		const result = data.props.pageProps.dehydratedState.queries[0];
+		if (!('releases' in result.state.data)) {
+			throw new ProviderError(this.provider.name, 'Failed to extract results from embedded JSON');
+		}
+
+		const release = result.state.data.releases.data.find((r) => r.upc === gtin);
+
+		return release?.release_id.toString();
 	}
 
 	convertRawRelease(rawRelease: BeatportRelease): HarmonyRelease {

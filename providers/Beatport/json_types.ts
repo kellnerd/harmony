@@ -2,9 +2,11 @@ export interface BeatportNextData {
 	props: {
 		pageProps: {
 			dehydratedState: {
-				queries: Array<ScalarQueryResult<Release> | ArrayQueryResult<Track>>;
+				queries:
+					| Array<ScalarQueryResult<Release> | ArrayQueryResult<Track>>
+					| Array<ScalarQueryResult<SearchResult>>;
 			};
-			release: Release;
+			release?: Release;
 		};
 	};
 }
@@ -32,6 +34,17 @@ export interface ArrayQueryResult<T> extends QueryResult {
 			results: Array<T>;
 		};
 		status: string;
+	};
+}
+
+export interface ReleaseSearchResult {
+	release_id: number;
+	upc: string;
+}
+
+export interface SearchResult {
+	releases: {
+		data: ReleaseSearchResult[];
 	};
 }
 
