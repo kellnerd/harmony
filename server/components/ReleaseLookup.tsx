@@ -21,11 +21,11 @@ export default function ReleaseLookup({
 }: ReleaseLookupProps) {
 	return (
 		<form action={formAction} class='center'>
-			<InputWithOverlay name='gtin' id='gtin-input' value={gtin} placeholder='GTIN/EAN/UPC (Barcode)'>
-				<SpriteIcon name='barcode' />
-			</InputWithOverlay>
 			<InputWithOverlay name='url' id='url-input' value={externalUrl} placeholder='Provider URL'>
 				<SpriteIcon name='world-www' />
+			</InputWithOverlay>
+			<InputWithOverlay name='gtin' id='gtin-input' value={gtin} placeholder='GTIN/EAN/UPC (Barcode)'>
+				<SpriteIcon name='barcode' />
 			</InputWithOverlay>
 			<InputWithOverlay name='region' id='region-input' value={regions.join(',')} placeholder='Region (Country Code)'>
 				<SpriteIcon name='world-pin' />
