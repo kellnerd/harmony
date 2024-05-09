@@ -208,7 +208,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 				types: linkTypes,
 			}],
 			images: [this.getArtwork(rawRelease.art_id, ['front'])],
-			credits: rawRelease.current.credits.replaceAll('\r', ''),
+			credits: rawRelease.current.credits?.replaceAll('\r', ''),
 			info: this.generateReleaseInfo(),
 		};
 

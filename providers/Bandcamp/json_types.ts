@@ -89,7 +89,7 @@ interface TrAlbumCurrent {
 	/** Description of the release. */
 	about: string;
 	/** Credits and copyright. */
-	credits: string;
+	credits: string | null;
 	auto_repriced: null;
 	new_desc_format: 1;
 	/** ID of the band (artist). */
