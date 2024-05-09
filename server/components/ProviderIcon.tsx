@@ -4,6 +4,7 @@ import { simplifyName } from 'utils/string/simplify.js';
 
 const providerIconMap: Record<string, string> = {
 	bandcamp: 'brand-bandcamp',
+	beatport: 'brand-beatport',
 	deezer: 'brand-deezer',
 	itunes: 'brand-apple',
 	musicbrainz: 'brand-metabrainz',
