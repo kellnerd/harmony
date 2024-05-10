@@ -19,13 +19,13 @@ export function createReleasePermalink(info: ReleaseInfo, baseUrl: URL): URL {
 
 	// Add provider IDs for all providers which were looked up by ID or URL.
 	const state = new URLSearchParams(
-		providersLookedUpById.map((provider) => [provider.simpleName, provider.id]),
+		providersLookedUpById.map((provider) => [provider.internalName, provider.id]),
 	);
 	if (providersLookedUpByGtin.length) {
 		state.append('gtin', providersLookedUpByGtin[0].lookup.value);
 		// Add all enabled providers which were looked up by GTIN (with empty provider ID value).
 		for (const provider of providersLookedUpByGtin) {
-			state.append(provider.simpleName, '');
+			state.append(provider.internalName, '');
 		}
 	}
 	// If a region has been used for lookup, it should be the same for all providers.

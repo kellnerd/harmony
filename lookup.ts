@@ -22,7 +22,7 @@ import type {
 export type ReleaseLookupParameters = {
 	/** GTIN of the release. */
 	gtin: GTIN | undefined;
-	/** Pairs of simplified provider names and provider IDs. */
+	/** Pairs of provider names (internal or display names) and provider IDs. */
 	providerIds: ProviderNameAndId[];
 	/** Provider URLs. */
 	urls: URL[];
@@ -44,8 +44,8 @@ export class CombinedReleaseLookup {
 		this.gtinLookupProviders = new Set(options?.providers ?? providers.internalNames);
 
 		if (lookup.providerIds?.length) {
-			for (const [providerSimpleName, id] of lookup.providerIds) {
-				this.queueLookupById(providerSimpleName, id);
+			for (const [providerName, id] of lookup.providerIds) {
+				this.queueLookupById(providerName, id);
 			}
 		}
 		if (lookup.urls?.length) {
@@ -59,26 +59,26 @@ export class CombinedReleaseLookup {
 	}
 
 	/** Initiates a new lookup by provider ID and adds it to the combined lookup. */
-	queueLookupById(providerSimpleName: string, id: string): boolean {
-		const provider = providers.findByName(providerSimpleName);
+	queueLookupById(providerName: string, id: string): boolean {
+		const provider = providers.findByName(providerName);
 		if (provider) {
-			const providerName = provider.name;
-			if (this.queuedProviderNames.has(providerName)) {
+			const displayName = provider.name;
+			if (this.queuedProviderNames.has(displayName)) {
 				this.messages.push({
 					type: 'error',
-					text: `Provider ${providerName} can only be used once per lookup, ignoring ID '${id}'`,
+					text: `Provider ${displayName} can only be used once per lookup, ignoring ID '${id}'`,
 				});
 				return false;
 			} else {
 				this.queuedReleases.push(provider.getRelease(id, this.options));
-				this.queuedProviderNames.add(providerName);
-				this.gtinLookupProviders.delete(providerSimpleName);
+				this.queuedProviderNames.add(displayName);
+				this.gtinLookupProviders.delete(provider.internalName);
 				return true;
 			}
 		} else {
 			this.messages.push({
 				type: 'error',
-				text: `There is no provider with the simplified name ${providerSimpleName}`,
+				text: `There is no provider with the name "${providerName}"`,
 			});
 			return false;
 		}
@@ -88,17 +88,17 @@ export class CombinedReleaseLookup {
 	queueLookupByUrl(url: URL): boolean {
 		const provider = providers.findByUrl(url);
 		if (provider) {
-			const providerName = provider.name;
-			if (this.queuedProviderNames.has(providerName)) {
+			const displayName = provider.name;
+			if (this.queuedProviderNames.has(displayName)) {
 				this.messages.push({
 					type: 'error',
-					text: `Provider ${providerName} can only be used once per lookup, ignoring ${url}`,
+					text: `Provider ${displayName} can only be used once per lookup, ignoring ${url}`,
 				});
 				return false;
 			} else {
 				this.queuedReleases.push(provider.getRelease(url, this.options));
-				this.queuedProviderNames.add(providerName);
-				this.gtinLookupProviders.delete(provider.simpleName);
+				this.queuedProviderNames.add(displayName);
+				this.gtinLookupProviders.delete(provider.internalName);
 				return true;
 			}
 		} else {
@@ -133,15 +133,15 @@ export class CombinedReleaseLookup {
 		}
 		this.gtin = gtin.toString();
 
-		for (const providerSimpleName of this.gtinLookupProviders) {
-			const provider = providers.findByName(providerSimpleName);
+		for (const providerName of this.gtinLookupProviders) {
+			const provider = providers.findByName(providerName);
 			if (provider) {
 				this.queuedReleases.push(provider.getRelease(['gtin', this.gtin], this.options));
 				this.queuedProviderNames.add(provider.name);
 			} else {
 				this.messages.push({
 					type: 'error',
-					text: `There is no provider with the simplified name ${providerSimpleName}`,
+					text: `There is no provider with the name "${providerName}"`,
 				});
 			}
 		}
@@ -209,7 +209,7 @@ export class CombinedReleaseLookup {
 					break;
 				case 0: {
 					const skippedProviders = Array.from(this.gtinLookupProviders)
-						.map((simpleName) => providers.toDisplayName(simpleName) ?? simpleName);
+						.map((internalName) => providers.toDisplayName(internalName) ?? internalName);
 					this.messages.push({
 						type: 'info',
 						text: `GTIN is unknown, lookups for the following providers were skipped: ${skippedProviders.join(', ')}`,
@@ -239,9 +239,15 @@ export class CombinedReleaseLookup {
 	}
 
 	private options: ReleaseOptions;
+
 	private gtin: string | undefined;
+
+	/** Internal names of providers which will be used for GTIN lookups. */
 	private gtinLookupProviders: Set<string>;
+
 	private queuedReleases: Promise<HarmonyRelease>[] = [];
+
+	/** Display names of all queued providers. */
 	private queuedProviderNames = new Set<string>();
 
 	/** Warnings and errors from the combined lookup process. */

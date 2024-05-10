@@ -63,8 +63,8 @@ export abstract class MetadataProvider {
 	/** Display name of the metadata source, has to be unique. */
 	abstract readonly name: string;
 
-	/** Simplified name of the metadata source, has to be unique. */
-	get simpleName(): string {
+	/** Simplified internal name of the metadata source, has to be unique. */
+	get internalName(): string {
 		return simplifyName(this.name);
 	}
 
@@ -128,7 +128,7 @@ export abstract class MetadataProvider {
 
 	/** Creates external entity IDs from the given provider-specific IDs. */
 	makeExternalIds(...entityIds: EntityId[]): ExternalEntityId[] {
-		return entityIds.map((entityId) => ({ ...entityId, provider: this.simpleName }));
+		return entityIds.map((entityId) => ({ ...entityId, provider: this.internalName }));
 	}
 
 	protected snaps: SnapStorage | undefined;
@@ -297,7 +297,7 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 		return {
 			providers: [{
 				name: this.provider.name,
-				simpleName: this.provider.simpleName,
+				internalName: this.provider.internalName,
 				id: this.id,
 				url: this.constructReleaseUrl(this.id, this.lookup.region),
 				apiUrl: this.constructReleaseApiUrl(),

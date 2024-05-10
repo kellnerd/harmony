@@ -8,20 +8,20 @@ export class ProviderRegistry {
 	add(Provider: MetadataProviderConstructor) {
 		const provider = new Provider({ snaps: this.#snaps });
 
-		const { name, simpleName } = provider;
+		const { name, internalName } = provider;
 		if (this.#displayNames.has(name)) {
 			throw new Error(`Provider names have to be unique, "${name}" already exists`);
 		}
-		if (this.#internalNames.has(simpleName)) {
-			throw new Error(`Internal provider names have to be unique, "${simpleName}" already exists`);
+		if (this.#internalNames.has(internalName)) {
+			throw new Error(`Internal provider names have to be unique, "${internalName}" already exists`);
 		}
 
 		this.#providerList.push(provider);
-		this.#providerMap[simpleName] = provider;
+		this.#providerMap[internalName] = provider;
 		this.#displayNames.add(name);
-		this.#internalNames.add(simpleName);
-		this.#displayToInternal[name] = simpleName;
-		this.#internalToDisplay[simpleName] = name;
+		this.#internalNames.add(internalName);
+		this.#displayToInternal[name] = internalName;
+		this.#internalToDisplay[internalName] = name;
 	}
 
 	/** Adds an instance for each of the given providers to the registry. */

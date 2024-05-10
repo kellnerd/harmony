@@ -15,11 +15,11 @@ export type ProviderIconProps = Omit<SpriteIconProps, 'name'> & {
 };
 
 export function ProviderIcon({ providerName, ...iconProps }: ProviderIconProps) {
-	const simpleName = simplifyName(providerName);
-	const iconName = providerIconMap[simpleName] ?? 'puzzle';
+	const internalName = simplifyName(providerName);
+	const iconName = providerIconMap[internalName] ?? 'puzzle';
 
 	return (
-		<span class={simpleName} title={providerName}>
+		<span class={internalName} title={providerName}>
 			<SpriteIcon name={iconName} {...iconProps} />
 		</span>
 	);

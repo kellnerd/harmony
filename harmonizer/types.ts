@@ -26,7 +26,7 @@ export interface EntityId {
 
 /** External identifier for an entity from a specific metadata provider. */
 export interface ExternalEntityId extends EntityId {
-	/** Simplified name of the provider. */
+	/** Internal name of the provider. */
 	provider: string;
 }
 
@@ -144,7 +144,7 @@ export type ReleaseOptions = Partial<{
 	 * Only used by providers which have region-specific API endpoints or pages.
 	 */
 	regions: Set<CountryCode>;
-	/** Simplified names of the providers which should (additionally) be used. */
+	/** Internal names of the providers which should (additionally) be used. */
 	providers: Set<string>;
 	/** Lookup release using historical snapshots before the given Unix timestamp. */
 	snapshotMaxTimestamp: number;
@@ -191,8 +191,8 @@ export type ProviderPreferences = Partial<Record<PreferenceProperty, ProviderNam
 export type ProviderInfo = {
 	/** Display name of the provider. */
 	name: ProviderName;
-	/** Simplified name of the provider. */
-	simpleName: string;
+	/** Internal name of the provider. */
+	internalName: string;
 	/** Provider ID of the entity. */
 	id: string;
 	/** Provider URL of the entity. */
