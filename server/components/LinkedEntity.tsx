@@ -20,7 +20,7 @@ export function LinkedEntity({ entity, entityType, displayName }: {
 			{entity.mbid
 				? (
 					<a href={join('https://musicbrainz.org/', entityType, entity.mbid).href}>
-						<ProviderIcon providerName='musicbrainz' size={18} stroke={1.5} />
+						<ProviderIcon providerName='MusicBrainz' size={18} stroke={1.5} />
 						{displayName}
 					</a>
 				)

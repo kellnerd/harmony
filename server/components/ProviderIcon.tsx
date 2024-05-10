@@ -1,6 +1,6 @@
 import { SpriteIcon, type SpriteIconProps } from '@/server/components/SpriteIcon.tsx';
 
-import { simplifyName } from 'utils/string/simplify.js';
+import { providers } from '@/providers/mod.ts';
 
 const providerIconMap: Record<string, string> = {
 	bandcamp: 'brand-bandcamp',
@@ -15,12 +15,21 @@ export type ProviderIconProps = Omit<SpriteIconProps, 'name'> & {
 };
 
 export function ProviderIcon({ providerName, ...iconProps }: ProviderIconProps) {
-	const internalName = simplifyName(providerName);
-	const iconName = providerIconMap[internalName] ?? 'puzzle';
+	let internalName = providers.toInternalName(providerName);
+	let displayName = providers.toDisplayName(providerName);
+
+	// TODO: Remove workaround once MB is a properly supported MetadataProvider.
+	if (providerName === 'MusicBrainz') {
+		internalName = providerName.toLowerCase();
+		displayName = providerName;
+	}
+
+	const iconName = internalName && providerIconMap[internalName];
+	const fallbackIcon = 'puzzle';
 
 	return (
-		<span class={internalName} title={providerName}>
-			<SpriteIcon name={iconName} {...iconProps} />
+		<span class={internalName} title={displayName}>
+			<SpriteIcon name={iconName ?? fallbackIcon} {...iconProps} />
 		</span>
 	);
 }
