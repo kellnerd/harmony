@@ -60,9 +60,11 @@ jobs:
           REMOTE_USER: ${{ secrets.DEPLOY_USER }}
           TARGET: ${{ secrets.DEPLOY_TARGET }}
           EXCLUDE: "/deno.lock, /snaps.db, /snaps/"
+          SCRIPT_BEFORE_REQUIRED: true
           SCRIPT_BEFORE: |
             set -e
             ls -al "${{ secrets.DEPLOY_TARGET }}"
+          SCRIPT_AFTER_REQUIRED: true
           SCRIPT_AFTER: |
             set -e
             ls -al "${{ secrets.DEPLOY_TARGET }}"
