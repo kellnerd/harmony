@@ -35,6 +35,8 @@ export type ProviderOptions = Partial<{
 	snaps: SnapStorage;
 }>;
 
+export type MetadataProviderConstructor = new (options: ProviderOptions) => MetadataProvider;
+
 /**
  * Abstract metadata provider which looks up releases from a specific source.
  * Converts the raw metadata into a common representation.

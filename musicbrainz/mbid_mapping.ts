@@ -2,7 +2,7 @@ import { ApiError, type EntityWithMbid } from '@kellnerd/musicbrainz';
 import type { RelatableEntityType } from '@kellnerd/musicbrainz/data/entity';
 import type { ExternalEntityId, HarmonyRelease, ResolvableEntity } from '@/harmonizer/types.ts';
 import { MB } from '@/musicbrainz/api_client.ts';
-import { constructEntityUrl } from '@/providers/mod.ts';
+import { providers } from '@/providers/mod.ts';
 import { isDevServer } from '@/server/config.ts';
 
 /**
@@ -35,7 +35,7 @@ export async function resolveToMbid(
 
 	// If the MBID is not cached, try to lookup canonical entity URLs with the MB API.
 	for (const entityId of uncachedIds) {
-		const externalUrl = constructEntityUrl(entityId);
+		const externalUrl = providers.constructEntityUrl(entityId);
 		try {
 			const result = await MB.browseUrl(externalUrl, {
 				inc: [`${entityType}-rels`],

@@ -1,5 +1,5 @@
 import { ProviderIcon } from './ProviderIcon.tsx';
-import { providerMap } from '@/providers/mod.ts';
+import { providers } from '@/providers/mod.ts';
 
 export function ProviderCheckbox({ providerName, simpleName, enabled = false }: {
 	providerName: string;
@@ -20,10 +20,11 @@ export function ProviderCheckbox({ providerName, simpleName, enabled = false }: 
 export function ProviderCheckboxes({ enabledProviders }: { enabledProviders?: Set<string> }) {
 	return (
 		<div className='provider-inputs'>
-			{Object.entries(providerMap).map(([simpleName, provider]) => {
+			{providers.displayNames.map((name) => {
+				const internalName = providers.toInternalName(name)!;
 				// TODO: Define default providers as a constant and use these as fallback.
-				const enabled = enabledProviders ? enabledProviders.has(simpleName) : false;
-				return <ProviderCheckbox providerName={provider!.name} simpleName={simpleName} enabled={enabled} />;
+				const enabled = enabledProviders ? enabledProviders.has(internalName) : false;
+				return <ProviderCheckbox providerName={name} simpleName={internalName} enabled={enabled} />;
 			})}
 		</div>
 	);

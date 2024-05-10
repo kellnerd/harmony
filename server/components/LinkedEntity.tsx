@@ -1,7 +1,7 @@
 import { ProviderIcon } from '@/server/components/ProviderIcon.tsx';
 
 import type { ResolvableEntity } from '@/harmonizer/types.ts';
-import { constructEntityUrl } from '@/providers/mod.ts';
+import { providers } from '@/providers/mod.ts';
 import { type EntityType } from '@kellnerd/musicbrainz';
 import { join } from 'std/url/join.ts';
 
@@ -13,7 +13,7 @@ export function LinkedEntity({ entity, entityType, displayName }: {
 	return (
 		<span class='entity-links'>
 			{entity.externalIds?.map((entityId) => (
-				<a href={constructEntityUrl(entityId).href}>
+				<a href={providers.constructEntityUrl(entityId).href}>
 					<ProviderIcon providerName={entityId.provider} size={18} stroke={1.5} />
 				</a>
 			))}

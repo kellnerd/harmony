@@ -1,6 +1,6 @@
 import type { ReleaseLookupParameters } from '@/lookup.ts';
 import type { ProviderNameAndId, ReleaseInfo, ReleaseOptions } from '@/harmonizer/types.ts';
-import { allProviderSimpleNames } from '@/providers/mod.ts';
+import { providers } from '@/providers/mod.ts';
 import { ensureValidGTIN } from '@/utils/gtin.ts';
 import { isDefined, isNotEmpty } from '@/utils/predicate.ts';
 import { assertCountryCode } from '@/utils/regions.ts';
@@ -70,10 +70,11 @@ export function extractReleaseLookupState(lookupUrl: URL): ReleaseLookupParamete
 		assertCountryCode(countryCode);
 	}
 
+	const providerNames = providers.internalNames;
 	const requestedProviders = new Set<string>();
 	const providerIds: ProviderNameAndId[] = [];
 	for (const [name, value] of searchParams) {
-		if (allProviderSimpleNames.has(name)) {
+		if (providerNames.has(name)) {
 			requestedProviders.add(name);
 			if (value) {
 				providerIds.push([name, value]);

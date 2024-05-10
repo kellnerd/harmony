@@ -1,5 +1,5 @@
 import { mergeRelease } from '@/harmonizer/merge.ts';
-import { allProviders, allProviderSimpleNames, defaultProviderPreferences, providerMap } from '@/providers/mod.ts';
+import { defaultProviderPreferences, providers } from '@/providers/mod.ts';
 import { LookupError } from '@/utils/errors.ts';
 import { ensureValidGTIN, isEqualGTIN, uniqueGtinSet } from '@/utils/gtin.ts';
 import { formatLanguageConfidence, formatScriptFrequency } from '@/utils/locale.ts';
@@ -41,7 +41,7 @@ export class CombinedReleaseLookup {
 	constructor(lookup: Partial<ReleaseLookupParameters>, options?: ReleaseOptions) {
 		// Create a deep copy, we don't want to manipulate the caller's options later on.
 		this.options = { ...options };
-		this.gtinLookupProviders = new Set(options?.providers ?? allProviderSimpleNames);
+		this.gtinLookupProviders = new Set(options?.providers ?? providers.internalNames);
 
 		if (lookup.providerIds?.length) {
 			for (const [providerSimpleName, id] of lookup.providerIds) {
@@ -60,7 +60,7 @@ export class CombinedReleaseLookup {
 
 	/** Initiates a new lookup by provider ID and adds it to the combined lookup. */
 	queueLookupById(providerSimpleName: string, id: string): boolean {
-		const provider = providerMap[providerSimpleName];
+		const provider = providers.findByName(providerSimpleName);
 		if (provider) {
 			const providerName = provider.name;
 			if (this.queuedProviderNames.has(providerName)) {
@@ -86,7 +86,7 @@ export class CombinedReleaseLookup {
 
 	/** Initiates a new lookup by provider URL and adds it to the combined lookup. */
 	queueLookupByUrl(url: URL): boolean {
-		const provider = allProviders.find((provider) => provider.supportsDomain(url));
+		const provider = providers.findByUrl(url);
 		if (provider) {
 			const providerName = provider.name;
 			if (this.queuedProviderNames.has(providerName)) {
@@ -134,7 +134,7 @@ export class CombinedReleaseLookup {
 		this.gtin = gtin.toString();
 
 		for (const providerSimpleName of this.gtinLookupProviders) {
-			const provider = providerMap[providerSimpleName];
+			const provider = providers.findByName(providerSimpleName);
 			if (provider) {
 				this.queuedReleases.push(provider.getRelease(['gtin', this.gtin], this.options));
 				this.queuedProviderNames.add(provider.name);
@@ -209,7 +209,7 @@ export class CombinedReleaseLookup {
 					break;
 				case 0: {
 					const skippedProviders = Array.from(this.gtinLookupProviders)
-						.map((simpleName) => providerMap[simpleName]?.name ?? simpleName);
+						.map((simpleName) => providers.toDisplayName(simpleName) ?? simpleName);
 					this.messages.push({
 						type: 'info',
 						text: `GTIN is unknown, lookups for the following providers were skipped: ${skippedProviders.join(', ')}`,
@@ -252,7 +252,7 @@ export class CombinedReleaseLookup {
  * Looks up the given URL with the first matching provider.
  */
 export function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<HarmonyRelease> {
-	const matchingProvider = allProviders.find((provider) => provider.supportsDomain(url));
+	const matchingProvider = providers.findByUrl(url);
 
 	if (!matchingProvider) {
 		throw new LookupError(`No provider supports ${url}`);
