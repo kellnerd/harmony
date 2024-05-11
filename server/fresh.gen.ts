@@ -7,6 +7,7 @@ import * as $_middleware from './routes/_middleware.ts';
 import * as $icon_sprite_svg from './routes/icon-sprite.svg.tsx';
 import * as $index from './routes/index.tsx';
 import * as $release from './routes/release.tsx';
+import * as $PersistentInput from './islands/PersistentInput.tsx';
 import * as $RegionList from './islands/RegionList.tsx';
 import { type Manifest } from '$fresh/server.ts';
 
@@ -19,6 +20,7 @@ const manifest = {
 		'./routes/release.tsx': $release,
 	},
 	islands: {
+		'./islands/PersistentInput.tsx': $PersistentInput,
 		'./islands/RegionList.tsx': $RegionList,
 	},
 	baseUrl: import.meta.url,

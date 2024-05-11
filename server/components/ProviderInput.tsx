@@ -1,4 +1,6 @@
 import { ProviderIcon } from './ProviderIcon.tsx';
+import { PersistentCheckbox } from '@/server/islands/PersistentInput.tsx';
+
 import { defaultProviders, providers } from '@/providers/mod.ts';
 
 export function ProviderCheckbox({ providerName, internalName, enabled = false }: {
@@ -12,7 +14,7 @@ export function ProviderCheckbox({ providerName, internalName, enabled = false }
 		<label htmlFor={id} className={['provider-input', internalName].join(' ')}>
 			<ProviderIcon providerName={providerName} />
 			{providerName}
-			<input type='checkbox' name={internalName} id={id} checked={enabled} value='' />
+			<PersistentCheckbox name={internalName} id={id} defaultValue={enabled} trueValue='' />
 		</label>
 	);
 }
