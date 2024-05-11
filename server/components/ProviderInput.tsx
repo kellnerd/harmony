@@ -1,12 +1,13 @@
 import { ProviderIcon } from './ProviderIcon.tsx';
 import { PersistentCheckbox } from '@/server/islands/PersistentInput.tsx';
 
-import { defaultProviders, providers } from '@/providers/mod.ts';
+import { providers } from '@/providers/mod.ts';
 
-export function ProviderCheckbox({ providerName, internalName, enabled = false }: {
+export function ProviderCheckbox({ providerName, internalName, enabled = false, persistent = false }: {
 	providerName: string;
 	internalName: string;
-	enabled: boolean;
+	enabled?: boolean;
+	persistent?: boolean;
 }) {
 	const id = `${internalName}-input`;
 
@@ -14,18 +15,30 @@ export function ProviderCheckbox({ providerName, internalName, enabled = false }
 		<label htmlFor={id} className={['provider-input', internalName].join(' ')}>
 			<ProviderIcon providerName={providerName} />
 			{providerName}
-			<PersistentCheckbox name={internalName} id={id} defaultValue={enabled} trueValue='' />
+			{persistent
+				? <PersistentCheckbox name={internalName} id={id} initialValue={enabled} trueValue='' />
+				: <input type='checkbox' name={internalName} id={id} checked={enabled} value='' />}
 		</label>
 	);
 }
 
-export function ProviderCheckboxes({ enabledProviders }: { enabledProviders?: Set<string> }) {
+export function ProviderCheckboxes({ enabledProviders, persistent = false }: {
+	enabledProviders?: Set<string>;
+	persistent?: boolean;
+}) {
 	return (
 		<div className='provider-inputs'>
 			{providers.displayNames.map((name) => {
 				const internalName = providers.toInternalName(name)!;
-				const enabled = enabledProviders ? enabledProviders.has(internalName) : defaultProviders.has(internalName);
-				return <ProviderCheckbox providerName={name} internalName={internalName} enabled={enabled} />;
+
+				return (
+					<ProviderCheckbox
+						providerName={name}
+						internalName={internalName}
+						enabled={enabledProviders?.has(internalName)}
+						persistent={persistent}
+					/>
+				);
 			})}
 		</div>
 	);

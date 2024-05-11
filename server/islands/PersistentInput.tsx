@@ -1,14 +1,27 @@
 import { IS_BROWSER } from 'fresh/runtime.ts';
 import { useSignal, useSignalEffect } from '@preact/signals';
 
-export function PersistentCheckbox({ name, id, defaultValue = false, trueValue = '1', falseValue = '0' }: {
+export interface PersistentCheckboxProps {
+	/** Name of the form input. */
 	name: string;
+	/** ID of the HTML element. */
 	id?: string;
-	defaultValue?: boolean;
+	/** Initial value which will be used if the input has not been persisted so far. */
+	initialValue?: boolean;
+	/** String value which will be persisted for an unchecked input. */
 	falseValue?: string;
+	/** String value which will be used in forms and persisted for a checked input. */
 	trueValue?: string;
-}) {
-	const checked = useSignal(defaultValue);
+}
+
+export function PersistentCheckbox({
+	name,
+	id,
+	initialValue = false,
+	trueValue = '1',
+	falseValue = '0',
+}: PersistentCheckboxProps) {
+	const checked = useSignal(initialValue);
 
 	if (IS_BROWSER) {
 		const storageKey = ['persist', id ?? name].join('.');

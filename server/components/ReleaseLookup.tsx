@@ -3,6 +3,7 @@ import { ProviderCheckboxes } from './ProviderInput.tsx';
 import { SpriteIcon } from './SpriteIcon.tsx';
 
 import type { GTIN } from '@/harmonizer/types.ts';
+import { defaultProviders } from '@/providers/mod.ts';
 
 interface ReleaseLookupProps {
 	enabledProviders?: Set<string>;
@@ -19,6 +20,11 @@ export default function ReleaseLookup({
 	regions = [],
 	formAction = '',
 }: ReleaseLookupProps) {
+	const isActiveLookup = (externalUrl !== '') || (gtin !== '' && Boolean(enabledProviders?.size));
+	if (!isActiveLookup) {
+		enabledProviders = defaultProviders;
+	}
+
 	return (
 		<form action={formAction} class='center'>
 			<InputWithOverlay name='url' id='url-input' value={externalUrl} placeholder='Provider URL'>
@@ -33,7 +39,7 @@ export default function ReleaseLookup({
 			<InputWithOverlay type='submit' value='Lookup'>
 				<SpriteIcon name='search' />
 			</InputWithOverlay>
-			<ProviderCheckboxes enabledProviders={enabledProviders} />
+			<ProviderCheckboxes enabledProviders={enabledProviders} persistent={!isActiveLookup} />
 		</form>
 	);
 }
