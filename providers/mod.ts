@@ -17,6 +17,18 @@ providers.addMultiple(
 	BeatportProvider,
 );
 
+/** Internal names of providers which are enabled by default (for GTIN lookups). */
+export const defaultProviders = new Set([
+	'Deezer',
+	'iTunes',
+].map((name) => {
+	const internalName = providers.toInternalName(name);
+	if (!internalName) {
+		throw new Error(`Invalid provider name "${name}"`);
+	}
+	return internalName;
+}));
+
 /** Recommended default preferences which sort providers by quality. */
 export const defaultProviderPreferences: ProviderPreferences = {
 	// Get track lengths from the provider with the highest precision.
