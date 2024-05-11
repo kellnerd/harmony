@@ -90,7 +90,7 @@ export function extractReleaseLookupState(lookupUrl: URL): ReleaseLookupParamete
 	}
 
 	return {
-		providers: requestedProviders.size ? requestedProviders : undefined,
+		providers: requestedProviders,
 		regions: new Set(regions),
 		gtin,
 		urls,
