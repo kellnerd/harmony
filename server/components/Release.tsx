@@ -7,25 +7,49 @@ import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import RegionList from '@/server/islands/RegionList.tsx';
 
+import { uniqueReleasePropertyValues } from '@/harmonizer/merge.ts';
 import { determineReleaseEventCountries } from '@/musicbrainz/release_countries.ts';
 import { formatPartialDate } from '@/utils/date.ts';
 import { formatLanguageConfidence, formatScriptFrequency, regionName } from '@/utils/locale.ts';
 import { flagEmoji } from '@/utils/regions.ts';
 import { formatTimestampAsISOString } from '@/utils/time.ts';
 
-import type { HarmonyRelease } from '@/harmonizer/types.ts';
+import type { HarmonyRelease, ProviderReleaseMapping } from '@/harmonizer/types.ts';
 
-export function Release({ release }: { release: HarmonyRelease }) {
+export function Release({ release, releaseMap }: { release: HarmonyRelease; releaseMap?: ProviderReleaseMapping }) {
 	const regions = release.availableIn;
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
 	const isMultiMedium = release.media.length > 1;
 	const { credits, copyright, language, script, info } = release;
 
+	function alternativeValues<Value extends string | number>(
+		propertyAccessor: (release: HarmonyRelease) => Value | undefined,
+	) {
+		if (!releaseMap) return;
+
+		const uniqueValues = uniqueReleasePropertyValues(releaseMap, propertyAccessor);
+		if (uniqueValues.length > 1) {
+			return (
+				<ul class='alt-values'>
+					{uniqueValues.map(
+						([value, providerNames]) => (
+							<li>
+								{value}
+								{providerNames.map((name) => <ProviderIcon providerName={name} stroke={1.25} />)}
+							</li>
+						),
+					)}
+				</ul>
+			);
+		}
+	}
+
 	return (
 		<div class='release'>
 			{info.messages.map((message) => <MessageBox message={message} />)}
 			<h2 class='release-title'>{release.title}</h2>
+			{alternativeValues((r) => r.title)}
 			<p class='release-artist'>
 				by <ArtistCredit artists={release.artists} />
 			</p>

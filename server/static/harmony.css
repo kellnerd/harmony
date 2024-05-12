@@ -118,6 +118,18 @@ a.label {
 	background-color: #209cee;
 }
 
+ul.alt-values {
+	font-size: 0.8rem;
+	opacity: 0.7;
+	margin: 0;
+	padding-left: 1.2em;
+	list-style: square;
+}
+ul.alt-values svg.icon {
+	height: 16px;
+	width: 16px;
+}
+
 /* forms */
 
 div.row {
@@ -375,6 +387,7 @@ span.tooltip-anchor {
 }
 
 span.tooltip-anchor > svg.icon {
+	height: var(--icon-size);
 	width: var(--icon-size);
 }
 
