@@ -11,6 +11,8 @@
 	--nav-accent: var(--brand-red);
 	--badge-fill: #414a63;
 	--badge-text: #ffffff;
+	--tooltip-fill: #555555;
+	--tooltip-text: var(--text);
 	--odd-fill: #efefef;
 	--even-fill: #f8f8f8;
 	--link: #0066cc;
@@ -352,6 +354,56 @@ h2.release-title {
 }
 p.release-artist {
 	margin-top: 0;
+}
+
+/* Tooltip.tsx */
+
+span.tooltip-anchor {
+	position: relative;
+	font-size: 1rem;
+	font-weight: normal;
+	cursor: pointer;
+	--arrow-length: 15px;
+	--icon-size: 24px;
+}
+
+span.tooltip-anchor > svg.icon {
+	width: var(--icon-size);
+}
+
+div[role=tooltip] {
+	position: absolute;
+	display: none;
+	background-color: var(--tooltip-fill);
+	color: var(--tooltip-text);
+	padding: 0.5em;
+	border-radius: 0.3em;
+	min-width: 10rem;
+	text-align: center;
+	cursor: initial;
+	/* Center tooltip above the tooltip anchor icon. */
+	transform: translateX(calc(-50% - var(--icon-size)/2));
+	bottom: calc(var(--arrow-length) + var(--icon-size));
+}
+div[role=tooltip]:after {
+	position: absolute;
+	content: "";
+	border: var(--arrow-length) solid transparent;
+	border-top-color: var(--tooltip-fill);
+	border-bottom: 0;
+	/* Center arrow at the bottom of the tooltip. */
+	bottom: calc(1px - var(--arrow-length));
+	left: calc(50% - var(--arrow-length));
+}
+
+span.tooltip-anchor:hover > div[role=tooltip] {
+	display: inline-block;
+}
+
+div[role=tooltip] > ol {
+	margin: 0;
+	padding-inline-start: 1.5em;
+	text-align: left;
 }
 
 @media screen and (min-width: 46rem) {
