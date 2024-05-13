@@ -411,3 +411,13 @@ div[role=tooltip] > ol {
 		max-width: 45rem;
 	}
 }
+
+@media screen and (max-width: 40rem) {
+	/* Put the tooltip anchor into a block (which is as wide as the page) to be able to use its width for the tooltip. */
+	span.tooltip-anchor {
+		display: block;
+	}
+	div[role=tooltip] {
+		max-width: 100%;
+	}
+}
