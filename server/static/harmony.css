@@ -127,6 +127,7 @@ input {
 
 input[type=text] {
 	width: 25em;
+	max-width: 100%;
 }
 input#region-input {
 	width: 14em;
@@ -180,6 +181,7 @@ div.input-with-overlay {
 	position: relative;
 	display: inline-block;
 	margin: 0.2em 0.4em;
+	max-width: 100%;
 }
 
 div.input-with-overlay > div.overlay {
