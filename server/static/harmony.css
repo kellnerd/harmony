@@ -120,6 +120,13 @@ a.label {
 
 /* forms */
 
+div.row {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	margin: 1em 0;
+}
+
 input {
 	padding: var(--input-padding);
 	box-sizing: border-box;
@@ -180,7 +187,7 @@ div.input-with-overlay {
 	color: initial;
 	position: relative;
 	display: inline-block;
-	margin: 0.2em 0.4em;
+	margin: 0.3em;
 	max-width: 100%;
 }
 
@@ -306,17 +313,10 @@ nav img.icon-logo {
 
 /* ProviderInput.tsx */
 
-div.provider-inputs {
-	display: flex;
-	justify-content: center;
-	flex-wrap: wrap;
-	margin: 1em;
-}
-
 label.provider-input {
 	background-color: var(--badge-fill);
 	color: var(--badge-text);
-	margin: 0.5em;
+	margin: 0.3em;
 	padding: 0.2em 0.4em;
 	border-radius: 5px;
 	display: flex;

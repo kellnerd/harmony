@@ -27,7 +27,7 @@ export function ProviderCheckboxes({ enabledProviders, persistent = false }: {
 	persistent?: boolean;
 }) {
 	return (
-		<div className='provider-inputs'>
+		<div class='row'>
 			{providers.displayNames.map((name) => {
 				const internalName = providers.toInternalName(name)!;
 
