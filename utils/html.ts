@@ -20,3 +20,19 @@ export function extractMetadataTag(html: string, name: string): string | undefin
 		new RegExp(`<meta(?=[^>]+?[name|property]=["']${name}["'])[^>]+?content=["'](.+?)["']`, 'i'),
 	);
 }
+
+/** Extracts the content of the div tag with the given class from HTML. */
+export function extractDivWithClass(html: string, className: string): string | undefined {
+	return extractTextFromHtml(
+		html,
+		new RegExp(`<div(?=[^>]+?class=["'][^"']*?\\b${className}\\b[^"']*?["'])[^>]+?>(.+)</div>`, 'i'),
+	);
+}
+
+/** Extracts the content of the div tag with the given class from HTML. */
+export function extractSpanWithClass(html: string, className: string): string | undefined {
+	return extractTextFromHtml(
+		html,
+		new RegExp(`<span(?=[^>]+?class=["'][^"']*?\\b${className}\\b[^"']*?["'])[^>]+?>(.+?)</span>`, 'i'),
+	);
+}
