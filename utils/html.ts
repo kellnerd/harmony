@@ -6,6 +6,15 @@ export function extractTextFromHtml(html: string, expression: RegExp) {
 	return value ? unescape(value) : undefined;
 }
 
+/** Extracts the value of the given attribute from the given HTML tag. */
+export function extractAttribute(
+	html: string,
+	tagName: keyof HTMLElementTagNameMap,
+	attribute: string,
+): string | undefined {
+	return extractTextFromHtml(html, new RegExp(`<${tagName}[^>]+?${attribute}=["']([^"']+?)["']`, 'i'));
+}
+
 /**
  * Extracts the value of the data attribute with the given key from HTML.
  */
