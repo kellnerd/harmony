@@ -53,6 +53,26 @@ export function extractSpanWithClass(html: string, className: string): string | 
 	);
 }
 
+/** Extracts text content and link `href` from the first anchor tag in the given HTML. */
+export function extractAnchorTag(html: string): AnchorTag | undefined {
+	return next(extractAnchorTags(html));
+}
+
+/** Extracts text content and link `href` from every anchor tag in the given HTML. */
+export function* extractAnchorTags(html: string): Generator<AnchorTag> {
+	const matches = html.matchAll(/<a [^>]*?href=["'](?<href>.+?)["'][^>]*?>(?<text>.+?)<\/a>/gi);
+	for (const match of matches) {
+		const { href, text } = match.groups!;
+		yield { href, text };
+	}
+}
+
+/** Representation of an HTML anchor `<a>` tag. */
+export interface AnchorTag {
+	href: string;
+	text: string;
+}
+
 /** Strips tags from the given HTML and decodes entities to return plain text. */
 export function toText(html: string): string {
 	return unescape(html.replaceAll(/<[^>]+>/g, ''));
