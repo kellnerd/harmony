@@ -22,6 +22,34 @@ export function formatPartialDate(date: PartialDate) {
 	return dateComponents.join('-');
 }
 
+/** Parses a German date with the month given as a string. */
+export function parseGermanDate(date: string): PartialDate | undefined {
+	const dateMatch = date.match(/^(?:(\d{1,2})\. )?(?:(\w+) )?(\d{4})$/);
+	if (!dateMatch) return;
+
+	const [_, day, monthName, year] = dateMatch;
+	return {
+		day: day ? parseInt(day, 10) : undefined,
+		month: monthName ? (monthNamesGerman.indexOf(monthName) + 1) : undefined,
+		year: parseInt(year, 10),
+	};
+}
+
+const monthNamesGerman = [
+	'Januar',
+	'Februar',
+	'März',
+	'April',
+	'Mai',
+	'Juni',
+	'Juli',
+	'August',
+	'September',
+	'Oktober',
+	'November',
+	'Dezember',
+];
+
 /** Parses `YYYY-MM-DD` date strings */
 export function parseHyphenatedDate(date: string): PartialDate {
 	if (date.match(/^(\d{4})-(\d{2})-(\d{2})$/)) {
