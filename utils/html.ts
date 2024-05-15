@@ -30,18 +30,30 @@ export function extractMetadataTag(html: string, name: string): string | undefin
 	);
 }
 
-/** Extracts the content of the div tag with the given class from HTML. */
+/** Extracts the content of the first div tag with the given class from HTML. */
 export function extractDivWithClass(html: string, className: string): string | undefined {
-	return extractTextFromHtml(
-		html,
-		new RegExp(`<div(?=[^>]+?class=["'][^"']*?\\b${className}\\b[^"']*?["'])[^>]+?>(.+)</div>`, 'i'),
-	);
+	return next(extractDivsWithClass(html, className));
 }
 
-/** Extracts the content of the div tag with the given class from HTML. */
+/** Extracts the content of all div tags with the given class from HTML. */
+export function* extractDivsWithClass(html: string, className: string): Generator<string> {
+	const matches = html.matchAll(
+		new RegExp(`<div(?=[^>]+?class=["'][^"']*?\\b${className}\\b[^"']*?["'])[^>]+?>(.+)</div>`, 'gi'),
+	);
+	for (const match of matches) {
+		yield match[1];
+	}
+}
+
+/** Extracts the content of the span tag with the given class from HTML. */
 export function extractSpanWithClass(html: string, className: string): string | undefined {
 	return extractTextFromHtml(
 		html,
 		new RegExp(`<span(?=[^>]+?class=["'][^"']*?\\b${className}\\b[^"']*?["'])[^>]+?>(.+?)</span>`, 'i'),
 	);
+}
+
+function next<T>(generator: Generator<T>): T | undefined {
+	const result = generator.next();
+	return result.done ? undefined : result.value;
 }
