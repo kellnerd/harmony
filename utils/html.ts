@@ -53,6 +53,11 @@ export function extractSpanWithClass(html: string, className: string): string | 
 	);
 }
 
+/** Strips tags from the given HTML and decodes entities to return plain text. */
+export function toText(html: string): string {
+	return unescape(html.replaceAll(/<[^>]+>/g, ''));
+}
+
 function next<T>(generator: Generator<T>): T | undefined {
 	const result = generator.next();
 	return result.done ? undefined : result.value;
