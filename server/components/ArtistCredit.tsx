@@ -6,12 +6,14 @@ export function ArtistCredit({ artists }: { artists: ArtistCreditName[] }) {
 
 	return (
 		<span class='artist-credit'>
-			{artists.map((artist, index) => (
-				<>
-					<LinkedEntity entity={artist} entityType='artist' displayName={artist.creditedName ?? artist.name} />
-					{artist.joinPhrase ?? (index !== lastIndex && (index === lastIndex - 1 ? ' & ' : ', '))}
-				</>
-			))}
+			{artists.length
+				? artists.map((artist, index) => (
+					<>
+						<LinkedEntity entity={artist} entityType='artist' displayName={artist.creditedName ?? artist.name} />
+						{artist.joinPhrase ?? (index !== lastIndex && (index === lastIndex - 1 ? ' & ' : ', '))}
+					</>
+				))
+				: '[unknown]'}
 		</span>
 	);
 }
