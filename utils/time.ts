@@ -43,3 +43,12 @@ export function formatTimestampAsISOString(unixSeconds: number): string {
 export function assertTimestamp(ts: number) {
 	assert(Number.isSafeInteger(ts) && ts >= 0, 'Timestamp has to be a non-negative integer');
 }
+
+/** Parses a duration in seconds from the given `m:s` or `H:m:s` string. */
+export function parseDuration(time: string): number {
+  const timeComponents = time.split(":").map(Number);
+  const maxIndex = timeComponents.length - 1;
+  return timeComponents.reduceRight((seconds, value, index) =>
+    seconds + value * (60 ** (maxIndex - index))
+  );
+}
