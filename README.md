@@ -2,10 +2,21 @@
 
 > Music Metadata Aggregator and MusicBrainz Importer
 
+## Features
+
+- Lookup of release metadata from multiple sources by URL and/or GTIN
+- Metadata providers convert source data into a common, harmonized representation
+- Additional sources can be supported by adding more provider implementations
+- Merging of harmonized metadata from your preferred providers
+- Seeding of MusicBrainz releases using the merged metadata
+- Resolving of external entity identifiers to MBIDs
+- Automatic guessing of title language and script
+- Permalinks which load snapshots of the originally queried source data
+
 ## Usage
 
 Most modules of this TypeScript codebase use web standards and should be able to run in modern browsers and other JavaScript runtimes.
-Only the [fresh] server app and the CLI were written specifically for [Deno].
+Only the [Fresh] server app and the CLI were written specifically for [Deno].
 
 The following instructions assume that you have the latest Deno version installed.
 
@@ -25,6 +36,8 @@ Alternatively you can run the [predefined task](deno.json) which automatically s
 deno task server
 ```
 
+Other environment variables which are used by the server are documented in the [configuration module](server/config.ts).
+
 There is also a small command line app which can be used for testing:
 
 ```sh
@@ -32,7 +45,7 @@ deno task cli
 ```
 
 [Deno]: https://deno.com
-[fresh]: https://fresh.deno.dev
+[Fresh]: https://fresh.deno.dev
 
 ## Contributing
 
