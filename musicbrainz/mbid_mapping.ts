@@ -4,6 +4,9 @@ import type { ExternalEntityId, HarmonyRelease, ResolvableEntity } from '@/harmo
 import { MB } from '@/musicbrainz/api_client.ts';
 import { providers } from '@/providers/mod.ts';
 import { isDevServer } from '@/server/config.ts';
+import { getLogger } from 'std/log/get_logger.ts';
+
+const log = getLogger('harmony.mbid');
 
 /**
  * Resolves external IDs for a MusicBrainz entity to its MBID.
@@ -54,7 +57,7 @@ export async function resolveToMbid(
 			// @ts-ignore: `entityType` is not narrowed, but every specific value is a valid key here.
 			const targetEntity = uniqueRel[entityType] as EntityWithMbid;
 			const mbid = targetEntity.id;
-			console.debug('Resolved', entityType, mbid, externalUrl.href);
+			log.debug(`Resolved ${externalUrl.href} to ${entityType} ${mbid}`);
 			setCachedMbid(entityId, mbid, contextCache);
 
 			return mbid;
@@ -62,7 +65,7 @@ export async function resolveToMbid(
 			if (error instanceof ApiError) {
 				// Only writes to the context cache to indicate that further requests for this URL should be skipped.
 				setCachedMbid(entityId, '', contextCache);
-				console.debug('Resolving error for', externalUrl.href);
+				log.debug(`Failed to resolve ${externalUrl.href}`);
 				continue;
 			}
 			throw error;
@@ -141,13 +144,13 @@ function setCacheItem(key: string, value: string, retries = 1) {
 	try {
 		cache.setItem(key, value);
 	} catch (error) {
-		console.debug('Failed to cache item:', error);
+		log.debug(`Failed to cache item: ${error}`);
 		if (retries > 0) {
 			deleteRandomCacheItem();
 			deleteRandomCacheItem();
 			setCacheItem(key, value, retries - 1);
 		} else {
-			console.warn(`Caching of '${key}' failed repeatedly`);
+			log.warn(`Caching of '${key}' failed repeatedly`);
 		}
 	}
 }

@@ -1,9 +1,12 @@
-// Automatically load .env environment variable file (before everything else).
+// Automatically load .env environment variable file and configure logger (before anything else).
 import 'std/dotenv/load.ts';
+import './logging.ts';
 
 import manifest from './fresh.gen.ts';
 import { start } from 'fresh/server.ts';
+import { getLogger } from 'std/log/get_logger.ts';
 
+const log = getLogger('harmony.server');
 const abortController = new AbortController();
 const isWindows = Deno.build.os === 'windows';
 
@@ -13,7 +16,7 @@ for (const signal of ['SIGINT', 'SIGTERM'] as const) {
 	if (isWindows && signal !== 'SIGINT') break;
 
 	Deno.addSignalListener(signal, () => {
-		console.info(`App received '${signal}', aborting...`);
+		log.info(`App received '${signal}', aborting...`);
 		abortController.abort(signal);
 	});
 }
@@ -21,14 +24,14 @@ for (const signal of ['SIGINT', 'SIGTERM'] as const) {
 // Ignore SIGHUP, which otherwise kills the process.
 if (!isWindows) {
 	Deno.addSignalListener('SIGHUP', () => {
-		console.warn(`App received 'SIGHUP', ignoring.`);
+		log.warn(`App received 'SIGHUP', ignoring.`);
 	});
 }
 
 // Instantiate Fresh HTTP server.
 await start(manifest, { server: { signal: abortController.signal } });
 
-console.info('Fresh server and all its connections were closed.');
+log.info('Fresh server and all its connections were closed.');
 
 // Explicitly exit, otherwise dev servers would restart on file changes.
 Deno.exit();
