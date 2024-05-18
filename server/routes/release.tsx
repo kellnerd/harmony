@@ -58,6 +58,7 @@ export default defineRoute(async (req, ctx) => {
 			// Log details for all unexpected errors (caused by bugs or wrong user inputs).
 			// Skip our own error classes and redundant `AggregateError` wrappers (their errors will be handled one by one).
 			if (!(error instanceof LookupError || error instanceof AggregateError)) {
+				log.info(req.url);
 				log.error(error);
 			}
 		}
