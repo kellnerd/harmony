@@ -1,5 +1,5 @@
 import { isDevServer } from '@/server/config.ts';
-import { blue, bold, green, red, yellow } from 'std/fmt/colors.ts';
+import { blue, bold, green, magenta, red, yellow } from 'std/fmt/colors.ts';
 import { setup } from 'std/log/setup.ts';
 import { ConsoleHandler } from 'std/log/console_handler.ts';
 import type { LevelName } from 'std/log/levels.ts';
@@ -8,6 +8,11 @@ setup({
 	handlers: {
 		default: new ConsoleHandler('DEBUG', {
 			formatter: ({ levelName, loggerName, msg }) => `${loggerName} [${color(levelName)}] ${msg}`,
+			// Disable coloring of the whole formatted message.
+			useColors: false,
+		}),
+		request: new ConsoleHandler('DEBUG', {
+			formatter: ({ msg, args: [req] }) => `${magenta((req as Request).method)} ${msg}`,
 			// Disable coloring of the whole formatted message.
 			useColors: false,
 		}),
@@ -28,6 +33,10 @@ setup({
 		'harmony.server': {
 			handlers: ['default'],
 			level: 'INFO',
+		},
+		'requests': {
+			handlers: ['request'],
+			level: isDevServer ? 'INFO' : 'WARN',
 		},
 	},
 });
