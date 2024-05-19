@@ -3,6 +3,7 @@ import { determineReleaseEventCountries } from './release_countries.ts';
 import { urlTypeIds } from './type_id.ts';
 import { preferArray } from 'utils/array/scalar.js';
 import { flatten } from 'utils/object/flatten.js';
+import { transform } from 'utils/string/transform.js';
 
 import type { ArtistCreditSeed, ReleaseSeed } from '@kellnerd/musicbrainz/seeding/release';
 import type { UrlLinkTypeId } from './type_id.ts';
@@ -109,7 +110,13 @@ function buildAnnotation(release: HarmonyRelease): string {
 		sections.push(`=== Credits from ${release.info.sourceMap?.credits!} ===`, release.credits);
 	}
 
-	return sections.join('\n\n');
+	const annotation = sections.join('\n\n');
+
+	// https://musicbrainz.org/doc/Annotation#Wiki_formatting
+	return transform(annotation, [
+		[/\[/g, '&#91;'],
+		[/\]/g, '&#93;'],
+	]);
 }
 
 function buildEditNote(info: ReleaseInfo, options: ReleaseSeedOptions): string {
