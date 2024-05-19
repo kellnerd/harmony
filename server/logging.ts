@@ -6,7 +6,7 @@ import type { LevelName } from 'std/log/levels.ts';
 setup({
 	handlers: {
 		default: new ConsoleHandler('DEBUG', {
-			formatter: ({ levelName, loggerName, msg }) => `${loggerName} ${color(levelName)} ${msg}`,
+			formatter: ({ levelName, loggerName, msg }) => `${loggerName} [${color(levelName)}] ${msg}`,
 			// Disable coloring of the whole formatted message.
 			useColors: false,
 		}),
