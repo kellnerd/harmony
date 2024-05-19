@@ -1,4 +1,5 @@
-import { blue, bold, red, yellow } from 'std/fmt/colors.ts';
+import { isDevServer } from '@/server/config.ts';
+import { blue, bold, green, red, yellow } from 'std/fmt/colors.ts';
 import { setup } from 'std/log/setup.ts';
 import { ConsoleHandler } from 'std/log/console_handler.ts';
 import type { LevelName } from 'std/log/levels.ts';
@@ -20,6 +21,10 @@ setup({
 			handlers: ['default'],
 			level: 'DEBUG', // temporary
 		},
+		'harmony.provider': {
+			handlers: ['default'],
+			level: isDevServer ? 'DEBUG' : 'INFO',
+		},
 		'harmony.server': {
 			handlers: ['default'],
 			level: 'INFO',
@@ -29,6 +34,8 @@ setup({
 
 function color(level: string): string {
 	switch (level as LevelName) {
+		case 'DEBUG':
+			return green(level);
 		case 'INFO':
 			return blue(level);
 		case 'WARN':

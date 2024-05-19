@@ -1,4 +1,5 @@
 import { ProviderError } from '@/utils/errors.ts';
+import { getLogger } from 'std/log/get_logger.ts';
 import { rateLimit } from 'utils/async/rateLimit.js';
 import { simplifyName } from 'utils/string/simplify.js';
 
@@ -18,6 +19,7 @@ import type {
 import type { PartialDate } from '@/utils/date.ts';
 import type { CacheOptions, Snapshot, SnapStorage } from 'snap-storage';
 import type { MaybePromise } from 'utils/types.d.ts';
+import type { Logger } from 'std/log/logger.ts';
 
 export type ProviderOptions = Partial<{
 	/** Duration of one rate-limiting interval for requests (in ms). */
@@ -131,6 +133,10 @@ export abstract class MetadataProvider {
 		return entityIds.map((entityId) => ({ ...entityId, provider: this.internalName }));
 	}
 
+	protected get log(): Logger {
+		return getLogger('harmony.provider');
+	}
+
 	protected snaps: SnapStorage | undefined;
 
 	protected fetch = fetch;
@@ -148,6 +154,7 @@ export abstract class MetadataProvider {
 				},
 				responseMutator: options?.responseMutator,
 			});
+			this.log.debug(`${input} => ${snapshot.path}`);
 		} else {
 			let response = await this.fetch(input, options?.requestInit);
 			if (options?.responseMutator) {
