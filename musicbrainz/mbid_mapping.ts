@@ -144,7 +144,7 @@ function setCacheItem(key: string, value: string, retries = 1) {
 	try {
 		cache.setItem(key, value);
 	} catch (error) {
-		const log = getLogger('harmony.mbid');		
+		const log = getLogger('harmony.mbid');
 		log.debug(`Failed to cache item: ${error}`);
 		if (retries > 0) {
 			deleteRandomCacheItem();
