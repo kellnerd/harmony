@@ -1,6 +1,3 @@
-// Configure logger, somehow it is not sufficient to do this in `server/main.ts`.
-import '@/server/logging.ts';
-
 import { MessageBox } from '@/server/components/MessageBox.tsx';
 import { Release } from '@/server/components/Release.tsx';
 import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
@@ -18,7 +15,6 @@ import { getLogger } from 'std/log/get_logger.ts';
 import type { GTIN, HarmonyRelease, ReleaseOptions } from '@/harmonizer/types.ts';
 import { LookupError, type ProviderError } from '@/utils/errors.ts';
 
-const log = getLogger('harmony.server');
 const seederTargetUrl = new URL('release/add', musicbrainzBaseUrl);
 
 export default defineRoute(async (req, ctx) => {
@@ -54,6 +50,7 @@ export default defineRoute(async (req, ctx) => {
 		} else if (error instanceof Error) {
 			errors.push(error);
 		}
+		const log = getLogger('harmony.server');
 		for (const error of errors) {
 			// Log details for all unexpected errors (caused by bugs or wrong user inputs).
 			// Skip our own error classes and redundant `AggregateError` wrappers (their errors will be handled one by one).

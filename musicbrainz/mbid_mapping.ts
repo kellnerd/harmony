@@ -6,8 +6,6 @@ import { providers } from '@/providers/mod.ts';
 import { isDevServer } from '@/server/config.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 
-const log = getLogger('harmony.mbid');
-
 /**
  * Resolves external IDs for a MusicBrainz entity to its MBID.
  *
@@ -35,6 +33,8 @@ export async function resolveToMbid(
 			uncachedIds.push(entityId);
 		}
 	}
+
+	const log = getLogger('harmony.mbid');
 
 	// If the MBID is not cached, try to lookup canonical entity URLs with the MB API.
 	for (const entityId of uncachedIds) {
@@ -144,6 +144,7 @@ function setCacheItem(key: string, value: string, retries = 1) {
 	try {
 		cache.setItem(key, value);
 	} catch (error) {
+		const log = getLogger('harmony.mbid');		
 		log.debug(`Failed to cache item: ${error}`);
 		if (retries > 0) {
 			deleteRandomCacheItem();
