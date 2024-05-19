@@ -164,6 +164,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 		}
 
 		const releaseUrl = new URL(rawRelease.link);
+		const fallbackCoverUrl = new URL(`album/${this.id}/image`, this.provider.apiBaseUrl);
 
 		return {
 			title: rawRelease.title,
@@ -182,8 +183,8 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 			status: 'Official',
 			packaging: 'None',
 			images: [{
-				url: new URL(rawRelease.cover_xl),
-				thumbUrl: new URL(rawRelease.cover_medium),
+				url: new URL(rawRelease.cover_xl ?? fallbackCoverUrl),
+				thumbUrl: new URL(rawRelease.cover_medium ?? fallbackCoverUrl),
 				types: ['front'],
 			}],
 			availableIn: this.determineAvailability(media),

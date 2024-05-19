@@ -54,11 +54,11 @@ export type MinimalRelease = {
 	/** The url of the album on Deezer */
 	link: string;
 	/** The url of the album's cover. Add 'size' parameter to the url to change size. Can be 'small', 'medium', 'big', 'xl' */
-	cover: string;
-	cover_small: string;
-	cover_medium: string;
-	cover_big: string;
-	cover_xl: string;
+	cover: string | '';
+	cover_small: string | null;
+	cover_medium: string | null;
+	cover_big: string | null;
+	cover_xl: string | null;
 	md5_image: string;
 	/** The album's release date */
 	release_date: string;
