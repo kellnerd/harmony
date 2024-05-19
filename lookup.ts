@@ -5,6 +5,7 @@ import { ensureValidGTIN, isEqualGTIN, uniqueGtinSet } from '@/utils/gtin.ts';
 import { formatLanguageConfidence, formatScriptFrequency } from '@/utils/locale.ts';
 import { isDefined, isNotError } from '@/utils/predicate.ts';
 import { detectScripts, scriptCodes } from '@/utils/script.ts';
+import { getLogger } from 'std/log/get_logger.ts';
 import lande from 'lande';
 import { zipObject } from 'utils/object/zipObject.js';
 
@@ -17,6 +18,7 @@ import type {
 	ProviderReleaseMapping,
 	ReleaseOptions,
 } from '@/harmonizer/types.ts';
+import type { Logger } from 'std/log/logger.ts';
 
 /** Parameters which can be used to lookup a release. */
 export type ReleaseLookupParameters = {
@@ -39,6 +41,7 @@ export type ReleaseLookupParameters = {
  */
 export class CombinedReleaseLookup {
 	constructor(lookup: Partial<ReleaseLookupParameters>, options?: ReleaseOptions) {
+		this.log = getLogger('harmony.lookup');
 		// Create a deep copy, we don't want to manipulate the caller's options later on.
 		this.options = { ...options };
 		this.gtinLookupProviders = new Set(options?.providers ?? providers.internalNames);
@@ -154,10 +157,19 @@ export class CombinedReleaseLookup {
 		const releasesOrErrors: Array<HarmonyRelease | Error> = releaseResults.map((result) => {
 			if (result.status === 'fulfilled') {
 				return result.value;
-			} else if (result.reason instanceof Error) {
-				return result.reason;
 			} else {
-				return Error(result.reason);
+				const { reason } = result;
+				if (reason instanceof Error) {
+					if (reason instanceof LookupError) {
+						this.log.warn(reason);
+					} else {
+						// Unexpected errors are more critical.
+						this.log.error(reason);
+					}
+					return reason;
+				} else {
+					return Error(reason);
+				}
 			}
 		});
 
@@ -237,6 +249,8 @@ export class CombinedReleaseLookup {
 
 		return release;
 	}
+
+	private log: Logger;
 
 	private options: ReleaseOptions;
 

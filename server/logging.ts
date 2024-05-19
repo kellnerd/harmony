@@ -12,6 +12,10 @@ setup({
 		}),
 	},
 	loggers: {
+		'harmony.lookup': {
+			handlers: ['default'],
+			level: 'INFO',
+		},
 		'harmony.mbid': {
 			handlers: ['default'],
 			level: 'DEBUG', // temporary
