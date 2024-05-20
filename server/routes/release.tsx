@@ -39,7 +39,7 @@ export default defineRoute(async (req, ctx) => {
 		urlInput = urls[0]?.href;
 		regionsInput = [...(regions ?? [])];
 
-		if (gtin || providerIds.length || urls.length) {
+		if (providerIds.length || urls.length || gtin && providers?.size) {
 			const lookup = new CombinedReleaseLookup({ gtin, providerIds, urls }, options);
 			release = await lookup.getMergedRelease(defaultProviderPreferences);
 			await resolveReleaseMbids(release);
