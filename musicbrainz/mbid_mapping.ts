@@ -79,6 +79,15 @@ export async function resolveReleaseMbids(release: HarmonyRelease) {
 	const { artists, labels, media } = release;
 	const contextCache = {};
 
+	// Cache external artist IDs for identically named artists without IDs.
+	const externalArtistIds = new Map<string, ExternalEntityId[]>();
+	for (const artist of artists) {
+		const { name, externalIds } = artist;
+		if (!externalArtistIds.has(name) && externalIds) {
+			externalArtistIds.set(name, externalIds);
+		}
+	}
+
 	await resolveMbidsForMultipleEntities(artists, 'artist', contextCache);
 	if (labels) {
 		await resolveMbidsForMultipleEntities(labels, 'label', contextCache);
@@ -86,6 +95,12 @@ export async function resolveReleaseMbids(release: HarmonyRelease) {
 	for (const medium of media) {
 		for (const track of medium.tracklist) {
 			if (track.artists) {
+				// Reuse external artist IDs of release artists for identically named track artists.
+				for (const artist of track.artists) {
+					if (!artist.externalIds?.length) {
+						artist.externalIds = externalArtistIds.get(artist.name);
+					}
+				}
 				await resolveMbidsForMultipleEntities(track.artists, 'artist', contextCache);
 			}
 		}
