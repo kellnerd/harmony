@@ -161,7 +161,8 @@ export class CombinedReleaseLookup {
 				const { reason } = result;
 				if (reason instanceof Error) {
 					if (reason instanceof LookupError) {
-						this.log.warn(reason);
+						// No need to log a stack trace, these are our own errors.
+						this.log.warn(reason.message);
 					} else {
 						// Unexpected errors are more critical.
 						this.log.error(reason);
