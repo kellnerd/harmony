@@ -197,6 +197,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			labels: label ? [label] : undefined,
 			gtin: rawRelease.current.upc ?? undefined,
 			releaseDate: parseISODateTime(rawRelease.current.release_date),
+			availableIn: ['XW'],
 			media: [{
 				format: 'Digital Media',
 				tracklist,
