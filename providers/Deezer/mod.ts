@@ -82,8 +82,8 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 		super(provider, specifier, options);
 
 		if (this.lookup.method === 'gtin') {
-			// Deezer API only returns a result for a truncated GTIN.
-			this.lookup.value = formatGtin(this.lookup.value);
+			// Deezer API only returns a result for a truncated GTIN with 12 digits (UPC) at least.
+			this.lookup.value = formatGtin(this.lookup.value, 12);
 		}
 	}
 
