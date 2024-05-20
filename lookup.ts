@@ -1,12 +1,10 @@
+import { detectLanguageAndScript } from '@/harmonizer/language_script.ts';
 import { mergeRelease } from '@/harmonizer/merge.ts';
 import { defaultProviderPreferences, providers } from '@/providers/mod.ts';
 import { LookupError } from '@/utils/errors.ts';
 import { ensureValidGTIN, isEqualGTIN, uniqueGtinSet } from '@/utils/gtin.ts';
-import { formatLanguageConfidence, formatScriptFrequency } from '@/utils/locale.ts';
 import { isDefined, isNotError } from '@/utils/predicate.ts';
-import { detectScripts, scriptCodes } from '@/utils/script.ts';
 import { getLogger } from 'std/log/get_logger.ts';
-import lande from 'lande';
 import { zipObject } from 'utils/object/zipObject.js';
 
 import type {
@@ -300,44 +298,4 @@ export function getMergedReleaseByGTIN(
 export function getMergedReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<HarmonyRelease> {
 	const lookup = new CombinedReleaseLookup({ urls: [url] }, options);
 	return lookup.getMergedRelease(defaultProviderPreferences);
-}
-
-function detectLanguageAndScript(release: HarmonyRelease): void {
-	const allTitles = release.media.flatMap((medium) => medium.tracklist.map((track) => track.title));
-	allTitles.push(release.title);
-
-	if (!release.script) {
-		const scripts = detectScripts(allTitles.join('\n'), scriptCodes);
-		const mainScript = scripts[0];
-
-		release.info.messages.push({
-			type: 'debug',
-			text: `Detected scripts of the titles: ${scripts.map(formatScriptFrequency).join(', ')}`,
-		});
-
-		if (mainScript?.frequency > 0.7) {
-			release.script = mainScript;
-		}
-	}
-
-	if (!release.language) {
-		const guessedLanguages = lande(allTitles.join('\n'));
-		const topLanguage = guessedLanguages[0];
-
-		const formattedList = guessedLanguages
-			.map(([code, confidence]) => ({ code, confidence }))
-			.filter(({ confidence }) => confidence > 0.1)
-			.map(formatLanguageConfidence);
-		release.info.messages.push({
-			type: 'debug',
-			text: `Guessed language of the titles: ${formattedList.join(', ')}`,
-		});
-
-		if (topLanguage[1] > 0.7) {
-			release.language = {
-				code: topLanguage[0],
-				confidence: topLanguage[1],
-			};
-		}
-	}
 }
