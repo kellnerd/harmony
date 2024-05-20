@@ -61,7 +61,7 @@ interface TrAlbum {
 	/** Tracklist of the download release. */
 	trackinfo: TrackInfo[];
 	playing_from: 'album page';
-	/** URL of the release page. */
+	/** URL of the release page, might be a custom domain. */
 	url: string;
 	use_expando_lyrics: boolean;
 }
@@ -247,6 +247,7 @@ type ReleaseType = typeof releaseTypes[number];
 interface Package {
 	/** ID of the package. */
 	id: number;
+	/** URL of the release page. */
 	url: string;
 	url_for_app: string;
 	/** ID of the package type. */

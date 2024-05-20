@@ -134,12 +134,22 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 
 	async convertRawRelease(albumPage: AlbumPage): Promise<HarmonyRelease> {
 		const { tralbum: rawRelease } = albumPage;
-		const releaseUrl = new URL(rawRelease.url);
-		this.id = this.provider.extractEntityFromUrl(releaseUrl)!.id;
+		const { packages } = rawRelease;
+
+		// Main release URL might use a custom domain, fallback to URL of first package.
+		let releaseUrl = new URL(rawRelease.url);
+		if (!releaseUrl.hostname.endsWith('bandcamp.com') && packages?.length) {
+			releaseUrl = new URL(packages[0].url);
+		}
+
+		this.id = this.provider.extractEntityFromUrl(releaseUrl)?.id;
+		if (!this.id) {
+			throw new ProviderError(this.provider.name, `Failed to extract ID from ${releaseUrl}`);
+		}
 
 		// The "band" can be the artist or a label.
 		const bandName = albumPage.band.name;
-		const bandUrl = new URL(rawRelease.url);
+		const bandUrl = new URL(releaseUrl);
 		bandUrl.pathname = '';
 		const bandId = this.provider.extractEntityFromUrl(bandUrl)!;
 		const externalBandIds = this.provider.makeExternalIds(bandId);
