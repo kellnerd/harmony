@@ -1,12 +1,16 @@
 import type { CountryCode, HarmonyRelease } from '@/harmonizer/types.ts';
 
 export function determineReleaseEventCountries(release: HarmonyRelease, maxEvents = 10): CountryCode[] | undefined {
-	if (!release.availableIn) {
+	const { availableIn, excludedFrom } = release;
+	const worldwide = 'XW';
+	if (!availableIn) {
 		return;
-	} else if (release.availableIn.length <= maxEvents) {
-		return release.availableIn;
-	} else if (!isImportantRegionExcluded(release.excludedFrom)) {
-		return ['XW'];
+	} else if (availableIn.includes(worldwide)) {
+		return [worldwide];
+	} else if (availableIn.length <= maxEvents) {
+		return availableIn;
+	} else if (!isImportantRegionExcluded(excludedFrom)) {
+		return [worldwide];
 	}
 }
 
