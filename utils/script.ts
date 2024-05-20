@@ -23,6 +23,13 @@ const scriptCombinations: Record<CombinedScriptCode, UnicodeScriptCode[]> = {
 	'Kore': ['Hang', 'Hani'],
 };
 
+// TODO: Tune weights of logographic scripts.
+export const scriptWeights: Partial<Record<UnicodeScriptCode, number>> = {
+	'Hani': 4,
+	'Hira': 3,
+	'Kana': 3,
+};
+
 /** ISO 15924 four letter script code. */
 export type ScriptCode = UnicodeScriptCode | CombinedScriptCode;
 
@@ -35,8 +42,8 @@ export type ScriptFrequency = {
 export function detectScripts(text: string, possibleScripts: readonly UnicodeScriptCode[]): ScriptFrequency[] {
 	const detectedScripts: ScriptFrequency[] = [];
 	const letters = text.replaceAll(/\P{Letter}/gu, '');
-	const totalLetters = letters.length;
-	let remainingLetters = totalLetters;
+	let remainingLetters = letters.length;
+	let weightedSum = 0;
 
 	for (const code of possibleScripts) {
 		const scriptRegex = new RegExp(`\\p{Script=${code}}`, 'gu');
@@ -44,16 +51,25 @@ export function detectScripts(text: string, possibleScripts: readonly UnicodeScr
 		const scriptLetterCount = [...scriptMatches].length;
 
 		if (scriptLetterCount) {
-			// TODO: increase weight of logographic scripts?
-			detectedScripts.push({ code, frequency: scriptLetterCount / totalLetters });
+			const scriptWeight = scriptWeights[code];
+			let weightedCount = scriptLetterCount;
+			if (scriptWeight) {
+				weightedCount *= scriptWeight;
+			}
 
-			// stop testing once all letters have been classified
+			detectedScripts.push({ code, frequency: weightedCount });
+			weightedSum += weightedCount;
+
+			// Stop testing once all letters have been classified.
 			remainingLetters -= scriptLetterCount;
 			if (!remainingLetters) break;
 		}
 	}
 
-	// calculate total frequency of combined scripts
+	// Normalize weighted counts by weighted sum to obtain the frequency.
+	detectedScripts.forEach((script) => script.frequency /= weightedSum);
+
+	// Calculate total frequency of combined scripts.
 	(Object.entries(scriptCombinations) as [CombinedScriptCode, ScriptCode[]][]).forEach(
 		([combinedScript, combination]) => {
 			const frequencies = detectedScripts
