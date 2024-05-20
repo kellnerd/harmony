@@ -35,7 +35,7 @@ export function detectLanguageAndScript(release: HarmonyRelease): void {
 			text: `Guessed language of the titles: ${formattedList.join(', ')}`,
 		});
 
-		if (topLanguage[1] > 0.7) {
+		if (topLanguage[1] > 0.8) {
 			release.language = {
 				code: topLanguage[0],
 				confidence: topLanguage[1],
