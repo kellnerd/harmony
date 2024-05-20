@@ -141,7 +141,12 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 			result.wrapperType === 'track' && result.kind === 'song' && result.collectionId === collection.collectionId
 		) as Track[];
 
-		// warn about results which belong to a different collection
+		// Warn about releases without returned tracks.
+		if (!tracks.length) {
+			this.addMessage(`The API returned no tracks, which usually happens for streaming-only releases`, 'warning');
+		}
+
+		// Warn about results which belong to a different collection.
 		const skippedResults = data.results.filter((result) => result.collectionId !== collection.collectionId);
 		if (skippedResults.length) {
 			const uniqueSkippedIds = [...new Set(skippedResults.map((result) => result.collectionId))];
