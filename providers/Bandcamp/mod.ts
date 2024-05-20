@@ -163,6 +163,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			// Fetch embedded player JSON which already has all track durations for pre-orders.
 			const embeddedPlayerRelease = await this.getEmbeddedPlayerRelease(rawRelease.id);
 			tracks = embeddedPlayerRelease.tracks;
+			this.addMessage('This is a pre-order release, so the metadata may change', 'warning');
 		}
 		const tracklist = tracks.map(this.convertRawTrack.bind(this));
 
