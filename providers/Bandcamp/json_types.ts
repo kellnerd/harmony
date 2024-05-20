@@ -285,7 +285,8 @@ interface Package {
 	band_id: number;
 	/** ID of the selling band (artist/label). */
 	selling_band_id: number;
-	label: null;
+	/** Name of the label. */
+	label: string | null;
 	/** Currency of the {@linkcode price} as a three letter code, e.g. `EUR`. */
 	currency: string;
 	country: null;

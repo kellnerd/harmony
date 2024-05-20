@@ -14,6 +14,7 @@ import { parseISODateTime } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { extractDataAttribute, extractMetadataTag } from '@/utils/html.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
+import { isNotNull } from '@/utils/predicate.ts';
 import { similarNames } from '@/utils/similarity.ts';
 import { simplifyName } from 'utils/string/simplify.js';
 
@@ -141,19 +142,35 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		const bandUrl = new URL(rawRelease.url);
 		bandUrl.pathname = '';
 		const bandId = this.provider.extractEntityFromUrl(bandUrl)!;
+		const externalBandIds = this.provider.makeExternalIds(bandId);
+		let bandIsLabel: boolean | undefined = undefined;
 
-		// Treat band as artist if the names are similar, otherwise as label.
 		const artist = this.makeArtistCreditName(rawRelease.artist);
 		let label: Label | undefined = undefined;
-		if (similarNames(artist.name, bandName)) {
-			artist.externalIds = this.provider.makeExternalIds(bandId);
-		} else {
-			// If the artist credit includes the band name it is not a label.
-			// TODO: Split multiple artists, then we can assign the band ID to one of them.
-			if (!simplifyName(artist.name).includes(simplifyName(bandName))) {
+
+		// Assume that the physical release label is also the digital label if it is unique.
+		const physicalLabels = rawRelease.packages?.map((pkg) => pkg.label).filter(isNotNull);
+		if (new Set(physicalLabels).size === 1) {
+			label = { name: physicalLabels![0] };
+			if (similarNames(label.name, bandName)) {
+				bandIsLabel = true;
+				label.externalIds = externalBandIds;
+			}
+		}
+
+		if (bandIsLabel !== true) {
+			// Treat band as artist if the names are similar, otherwise as label.
+			if (similarNames(artist.name, bandName)) {
+				bandIsLabel = false;
+				artist.externalIds = externalBandIds;
+			} else if (simplifyName(artist.name).includes(simplifyName(bandName))) {
+				// If the artist credit includes the band name it is not a label.
+				// TODO: Split multiple artists, then we can assign the band ID to one of them.
+				bandIsLabel = false;
+			} else {
 				label = {
 					name: bandName,
-					externalIds: this.provider.makeExternalIds(bandId),
+					externalIds: externalBandIds,
 				};
 			}
 		}

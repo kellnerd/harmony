@@ -9,3 +9,7 @@ export function isNotEmpty(value: string): boolean {
 export function isNotError<T>(value: T | Error): value is T {
 	return !(value instanceof Error);
 }
+
+export function isNotNull<T>(value: T | null): value is T {
+	return value !== null;
+}
