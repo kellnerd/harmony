@@ -134,7 +134,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 
 	async convertRawRelease(albumPage: AlbumPage): Promise<HarmonyRelease> {
 		const { tralbum: rawRelease } = albumPage;
-		const { packages } = rawRelease;
+		const { current, packages } = rawRelease;
 
 		// Main release URL might use a custom domain, fallback to URL of first package.
 		let releaseUrl = new URL(rawRelease.url);
@@ -159,7 +159,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		let label: Label | undefined = undefined;
 
 		// Assume that the physical release label is also the digital label if it is unique.
-		const physicalLabels = rawRelease.packages?.map((pkg) => pkg.label).filter(isNotNull);
+		const physicalLabels = packages?.map((pkg) => pkg.label).filter(isNotNull);
 		if (new Set(physicalLabels).size === 1) {
 			label = { name: physicalLabels![0] };
 			if (similarNames(label.name, bandName)) {
@@ -207,7 +207,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		}
 
 		const linkTypes: LinkType[] = [];
-		if (rawRelease.current.minimum_price > 0) {
+		if (current.minimum_price > 0) {
 			linkTypes.push('paid download');
 		} else {
 			linkTypes.push('free download');
@@ -216,8 +216,8 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			linkTypes.push('free streaming');
 		}
 
-		if (rawRelease.packages?.length) {
-			const packageInfo = rawRelease.packages.map(({ title, type_name, edition_size, upc }) =>
+		if (packages?.length) {
+			const packageInfo = packages.map(({ title, type_name, edition_size, upc }) =>
 				`- **${title}**: ${type_name} (edition of ${edition_size}, GTIN: ${upc})`
 			);
 			packageInfo.unshift('Available physical release packages:');
@@ -225,11 +225,11 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		}
 
 		const release: HarmonyRelease = {
-			title: rawRelease.current.title,
+			title: current.title,
 			artists: [artist],
 			labels: label ? [label] : undefined,
-			gtin: rawRelease.current.upc ?? undefined,
-			releaseDate: parseISODateTime(rawRelease.current.release_date),
+			gtin: current.upc ?? undefined,
+			releaseDate: parseISODateTime(current.release_date),
 			availableIn: ['XW'],
 			media: [{
 				format: 'Digital Media',
@@ -242,7 +242,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 				types: linkTypes,
 			}],
 			images: [this.getArtwork(rawRelease.art_id, ['front'])],
-			credits: rawRelease.current.credits?.replaceAll('\r', ''),
+			credits: current.credits?.replaceAll('\r', ''),
 			info: this.generateReleaseInfo(),
 		};
 
