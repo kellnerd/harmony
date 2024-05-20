@@ -127,7 +127,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			webUrl,
 			this.options.snapshotMaxTimestamp,
 		);
-		this.cacheTime = timestamp;
+		this.updateCacheTime(timestamp);
 
 		return release;
 	}
@@ -279,7 +279,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			new URL(`https://bandcamp.com/EmbeddedPlayer/album=${albumId}`),
 			this.options.snapshotMaxTimestamp,
 		);
-		this.cacheTime = timestamp;
+		this.updateCacheTime(timestamp);
 
 		return release;
 	}

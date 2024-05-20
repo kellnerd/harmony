@@ -78,7 +78,7 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 			webUrl,
 			this.options.snapshotMaxTimestamp,
 		);
-		this.cacheTime = timestamp;
+		this.updateCacheTime(timestamp);
 
 		return this.extractRawRelease(data);
 	}
@@ -87,10 +87,11 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 		const webUrl = new URL('search', this.provider.baseUrl);
 		webUrl.searchParams.set('q', gtin);
 
-		const { content: data } = await this.provider.extractEmbeddedJson<BeatportNextData>(
+		const { content: data, timestamp } = await this.provider.extractEmbeddedJson<BeatportNextData>(
 			webUrl,
 			this.options.snapshotMaxTimestamp,
 		);
+		this.updateCacheTime(timestamp);
 
 		const result = data.props.pageProps.dehydratedState.queries[0];
 		if (!('releases' in result.state.data)) {

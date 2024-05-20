@@ -246,7 +246,14 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 	protected id: string | undefined;
 
 	/** Date and time when the (last piece of) provider data was cached (in seconds since the UNIX epoch). */
-	protected cacheTime: number | undefined;
+	private cacheTime: number | undefined;
+
+	/** Updates {@linkcode cacheTime}, should be called after every cached request. */
+	protected updateCacheTime(timestamp: number) {
+		if (!this.cacheTime || timestamp > this.cacheTime) {
+			this.cacheTime = timestamp;
+		}
+	}
 
 	/**
 	 * Constructs a canonical release URL for the given provider ID (and optional region).

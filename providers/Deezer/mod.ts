@@ -101,7 +101,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 			apiUrl,
 			this.options.snapshotMaxTimestamp,
 		);
-		this.cacheTime = timestamp;
+		this.updateCacheTime(timestamp);
 
 		return release;
 	}
@@ -117,7 +117,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 			);
 			tracklist.push(...content.data);
 			nextPageQuery = content.next;
-			this.cacheTime = timestamp;
+			this.updateCacheTime(timestamp);
 		}
 
 		return tracklist;
@@ -128,7 +128,7 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 			new URL(`track/${trackId}`, this.provider.apiBaseUrl),
 			this.options.snapshotMaxTimestamp,
 		);
-		this.cacheTime = timestamp;
+		this.updateCacheTime(timestamp);
 		return track;
 	}
 

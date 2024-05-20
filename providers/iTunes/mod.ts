@@ -127,7 +127,7 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 
 		// Overwrite optional property with the actually used region (in order to build the accurate API URL).
 		this.lookup.region = region;
-		this.cacheTime = timestamp;
+		this.updateCacheTime(timestamp);
 
 		return content;
 	}
