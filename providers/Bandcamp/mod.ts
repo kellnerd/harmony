@@ -15,6 +15,7 @@ import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { extractDataAttribute, extractMetadataTag } from '@/utils/html.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
 import { similarNames } from '@/utils/similarity.ts';
+import { simplifyName } from 'utils/string/simplify.js';
 
 export default class BandcampProvider extends MetadataProvider {
 	readonly name = 'Bandcamp';
@@ -147,10 +148,14 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		if (similarNames(artist.name, bandName)) {
 			artist.externalIds = this.provider.makeExternalIds(bandId);
 		} else {
-			label = {
-				name: bandName,
-				externalIds: this.provider.makeExternalIds(bandId),
-			};
+			// If the artist credit includes the band name it is not a label.
+			// TODO: Split multiple artists, then we can assign the band ID to one of them.
+			if (!simplifyName(artist.name).includes(simplifyName(bandName))) {
+				label = {
+					name: bandName,
+					externalIds: this.provider.makeExternalIds(bandId),
+				};
+			}
 		}
 
 		let tracks: Array<TrackInfo | PlayerTrack> = rawRelease.trackinfo;
