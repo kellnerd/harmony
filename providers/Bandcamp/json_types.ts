@@ -31,7 +31,7 @@ interface TrAlbum {
 	freeDownloadPage: string | null;
 	FREE: 1;
 	PAID: 2;
-	/** Name of the artist. */
+	/** Credited name of the artist, can contain multiple names. */
 	artist: string;
 	/** Type of the release. */
 	item_type: ReleaseType;
@@ -41,7 +41,7 @@ interface TrAlbum {
 	has_discounts: boolean;
 	is_bonus: null;
 	play_cap_data: PlayCapData | null;
-	client_id_sig: null;
+	client_id_sig: string | null;
 	is_purchased: null;
 	items_purchased: null;
 	is_private_stream: null;
@@ -52,9 +52,9 @@ interface TrAlbum {
 	tralbum_subscriber_only: boolean;
 	featured_track_id: number;
 	initial_track_num: null;
-	/** Indicates whether the release can be pre-ordered. @todo Does this change upon release? */
+	/** Indicates whether the release is currently available for pre-ordered. */
 	is_preorder: boolean;
-	/** Indicates whether the release can be pre-ordered. Same as {@linkcode is_preorder}? */
+	/** Same as {@linkcode is_preorder}? */
 	album_is_preorder: boolean;
 	/** GMT date string when the release is/was released. */
 	album_release_date: string;
@@ -85,7 +85,8 @@ interface TrAlbumCurrent {
 	minimum_price: number;
 	minimum_price_nonzero: number;
 	require_email_0: null;
-	artist: null;
+	/** Credited name of the artist. Can be `null` if it is the same as the Bandcamp account. */
+	artist: string | null;
 	/** Description of the release. */
 	about: string;
 	/** Credits and copyright. */
@@ -181,7 +182,7 @@ export interface PlayerData {
 	/** Title of the release. */
 	album_title: string;
 	album_art_id: number;
-	/** Name of the artist. */
+	/** Credited name of the artist. */
 	artist: string;
 	/** Bandcamp subdomain (artist/label ID). */
 	subdomain: string;
@@ -214,7 +215,7 @@ export interface PlayerData {
 }
 
 export interface PlayerTrack {
-	/** Name of the track(?) artist. */
+	/** Name of the release(?) artist. @todo Can this be set per track at all? */
 	artist: string;
 	/** Title of the track. */
 	title: string;
@@ -263,7 +264,7 @@ interface Package {
 	/** Remainder of the {@linkcode description}. */
 	desc_pt2: string | null;
 	new_desc_format: 1;
-	grid_index: 0;
+	grid_index: number;
 	private: null;
 	subscriber_only: null;
 	/** Price of the package (floating point, in the given {@linkcode currency}). */
@@ -279,7 +280,7 @@ interface Package {
 	live_event_replays_enabled: null;
 	live_event_image_color_one: null;
 	live_event_image_color_two: null;
-	sku: '';
+	sku: string;
 	/** UPC/EAN barcode of the package. */
 	upc: string | null;
 	/** ID of the band (artist/label). */
@@ -313,7 +314,7 @@ interface Package {
 	/** Number of tracks which can currently be downloaded. */
 	download_track_count: number;
 	download_art_id: number;
-	/** Name of the artist. */
+	/** Credited name of the artist. */
 	download_artist: string;
 	/** Number of days within which the package will be shipped. */
 	fulfillment_days: number;
@@ -333,7 +334,7 @@ interface Package {
 	album_id: number;
 	/** Title of the release. */
 	album_title: string;
-	/** Name of the artist. Can be `null` if it is the same as the Bandcamp account? */
+	/** Credited name of the artist. Can be `null` if it is the same as the Bandcamp account. */
 	album_artist: string | null;
 	album_private: null;
 	/** GMT date string when the release page was published. */
