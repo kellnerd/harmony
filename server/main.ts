@@ -3,10 +3,13 @@ import 'std/dotenv/load.ts';
 import './logging.ts';
 
 import manifest from './fresh.gen.ts';
+import { shortRevision } from './config.ts';
 import { start } from 'fresh/server.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 
 const log = getLogger('harmony.server');
+log.info(`Revision: ${shortRevision}`);
+
 const abortController = new AbortController();
 const isWindows = Deno.build.os === 'windows';
 
