@@ -52,7 +52,7 @@ export const defaultRegions = ['GB', 'US', 'DE', 'JP'];
 export function extractReleaseLookupState(lookupUrl: URL): ReleaseLookupParameters & ReleaseOptions {
 	const { searchParams } = lookupUrl;
 
-	const gtin = searchParams.get('gtin') ?? undefined;
+	const gtin = searchParams.get('gtin')?.trim() ?? undefined;
 	if (gtin) {
 		ensureValidGTIN(gtin);
 	}
