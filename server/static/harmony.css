@@ -22,6 +22,7 @@
 	--bandcamp: #1da0c3;
 	--beatport: #00e586;
 	--deezer: #a238ff;
+	--hspforscher: #c20910;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -332,6 +333,9 @@ label.beatport {
 }
 label.deezer {
 	background-color: var(--deezer);
+}
+label.hspforscher {
+	background-color: var(--hspforscher);
 }
 label.itunes {
 	background-color: var(--apple);

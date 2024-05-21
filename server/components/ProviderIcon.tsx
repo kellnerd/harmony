@@ -6,6 +6,7 @@ const providerIconMap: Record<string, string> = {
 	bandcamp: 'brand-bandcamp',
 	beatport: 'brand-beatport',
 	deezer: 'brand-deezer',
+	hspforscher: 'brand-hoerspielforscher',
 	itunes: 'brand-apple',
 	musicbrainz: 'brand-metabrainz',
 };
