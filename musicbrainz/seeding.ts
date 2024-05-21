@@ -67,9 +67,10 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 export function convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditSeed | undefined {
 	if (!artists) return;
 
+	const lastIndex = artists.length - 1;
 	return {
 		names: artists.map((artist, index) => {
-			const defaultJoinPhrase = (index !== artists.length - 1) ? ', ' : undefined;
+			const defaultJoinPhrase = (index !== lastIndex) ? (index === lastIndex - 1 ? ' & ' : ', ') : undefined;
 
 			return {
 				artist: { name: artist.name },
