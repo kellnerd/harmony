@@ -88,7 +88,7 @@ export class HörspielforscherReleaseLookup extends ReleaseLookup<Hörspielforsc
 			episodeUrl,
 			this.options.snapshotMaxTimestamp,
 		);
-		this.cacheTime = timestamp;
+		this.updateCacheTime(timestamp);
 
 		return this.extractRawRelease(content);
 	}
