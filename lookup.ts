@@ -189,6 +189,8 @@ export class CombinedReleaseLookup {
 				this.options.regions = new Set(usedRegions);
 			} else {
 				const availableRegions = new Set(releases.flatMap((release) => release.availableIn ?? []));
+				// Remove special "worldwide" region, it is not usable for lookups.
+				availableRegions.delete('XW');
 				if (availableRegions.size) {
 					// Remove all preferred regions where the release is unlikely to be available.
 					if (this.options.regions?.size) {
