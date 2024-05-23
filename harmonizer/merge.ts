@@ -99,7 +99,7 @@ export function mergeRelease(
 		});
 
 		// as long as the merged release does not have media, nothing will happen here
-		if (mergedRelease.media.length) {
+		if (mergedRelease.media.length && sourceRelease.media.length) {
 			missingTrackProperties.forEach((property) => {
 				mergedRelease.media.forEach((medium, mediumIndex) => {
 					medium.tracklist.forEach((track, trackIndex) => {
@@ -159,6 +159,8 @@ export function mergeRelease(
 			const sourceRelease = releaseMap[providerName] as HarmonyRelease;
 
 			if (isTrackProperty(property)) {
+				if (!sourceRelease.media.length) continue;
+
 				mergedRelease.media.forEach((medium, mediumIndex) => {
 					medium.tracklist.forEach((track, trackIndex) => {
 						copyTo(track, sourceRelease.media[mediumIndex].tracklist[trackIndex], property);
@@ -193,7 +195,9 @@ export function mergeRelease(
 			if (track.artists) {
 				mergeArtistCredit(
 					track.artists,
-					availableSourceReleases.map((release) => release.media[mediumIndex].tracklist[trackIndex].artists),
+					availableSourceReleases
+						.filter((release) => release.media.length)
+						.map((release) => release.media[mediumIndex].tracklist[trackIndex].artists),
 				);
 			}
 		});
