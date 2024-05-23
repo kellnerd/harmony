@@ -265,10 +265,24 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 	}
 
 	convertRawTrack(rawTrack: TrackInfo | PlayerTrack): HarmonyTrack {
+		const { artist } = rawTrack;
+		let { title } = rawTrack;
+		let trackNumber: number;
+
+		if ('track_num' in rawTrack) {
+			trackNumber = rawTrack.track_num;
+			if (artist) {
+				// Track title is prefixed by the track artist (if filled).
+				title = title.replace(`${artist} - `, '');
+			}
+		} else {
+			trackNumber = rawTrack.tracknum + 1;
+		}
+
 		return {
-			number: 'track_num' in rawTrack ? rawTrack.track_num : rawTrack.tracknum + 1,
-			title: rawTrack.title,
-			artists: rawTrack.artist ? [this.makeArtistCreditName(rawTrack.artist)] : undefined,
+			number: trackNumber,
+			title,
+			artists: artist ? [this.makeArtistCreditName(artist)] : undefined,
 			length: rawTrack.duration * 1000,
 		};
 	}
