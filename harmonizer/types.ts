@@ -92,7 +92,7 @@ export type Artwork = {
 	comment?: string;
 };
 
-export type ArtworkType = 'front' | 'back';
+export type ArtworkType = 'front' | 'back' | 'track';
 
 export type ExternalLink = {
 	url: URL;

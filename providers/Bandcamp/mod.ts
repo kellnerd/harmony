@@ -13,9 +13,10 @@ import { type CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } f
 import { parseISODateTime } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { extractDataAttribute, extractMetadataTag } from '@/utils/html.ts';
-import { pluralWithCount } from '@/utils/plural.ts';
+import { plural, pluralWithCount } from '@/utils/plural.ts';
 import { isNotNull } from '@/utils/predicate.ts';
 import { similarNames } from '@/utils/similarity.ts';
+import { toTrackRanges } from '@/utils/tracklist.ts';
 import { simplifyName } from 'utils/string/simplify.js';
 
 export default class BandcampProvider extends MetadataProvider {
@@ -185,12 +186,26 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			}
 		}
 
+		const images = [this.getArtwork(rawRelease.art_id, ['front'])];
 		let tracks: Array<TrackInfo | PlayerTrack> = rawRelease.trackinfo;
 		if (rawRelease.is_preorder) {
 			// Fetch embedded player JSON which already has all track durations for pre-orders.
 			const embeddedPlayerRelease = await this.getEmbeddedPlayerRelease(rawRelease.id);
 			tracks = embeddedPlayerRelease.tracks;
 			this.addMessage('This is a pre-order release, so the metadata may change', 'warning');
+
+			// Extract track artwork.
+			const tracksWithArt = embeddedPlayerRelease.tracks.filter((track) => track.art_id);
+			if (tracksWithArt.length) {
+				this.addMessage(
+					`Release has track artwork for ${plural(tracksWithArt.length, 'track')} ${
+						toTrackRanges(tracksWithArt.map((track) => track.tracknum + 1)).join(', ')
+					}`,
+				);
+				images.push(...tracksWithArt.map(
+					(track) => this.getArtwork(track.art_id!, ['track'], `Track ${track.tracknum + 1}`),
+				));
+			}
 		}
 		const tracklist = tracks.map(this.convertRawTrack.bind(this));
 
@@ -241,7 +256,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 				url: releaseUrl,
 				types: linkTypes,
 			}],
-			images: [this.getArtwork(rawRelease.art_id, ['front'])],
+			images: images,
 			credits: current.credits?.replaceAll('\r', ''),
 			info: this.generateReleaseInfo(),
 		};
@@ -265,12 +280,13 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		};
 	}
 
-	getArtwork(artworkId: number, types?: ArtworkType[]): Artwork {
+	getArtwork(artworkId: number, types?: ArtworkType[], comment?: string): Artwork {
 		const baseUrl = 'https://f4.bcbits.com/img/';
 		return {
 			url: new URL(`a${artworkId}_0.jpg`, baseUrl),
 			thumbUrl: new URL(`a${artworkId}_9.jpg`, baseUrl), // 210x210
 			types,
+			comment,
 		};
 	}
 
