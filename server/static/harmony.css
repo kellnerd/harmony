@@ -172,6 +172,11 @@ td ul {
 
 figure.cover-image {
 	width: min-content;
+	display: inline-block;
+}
+
+figure.cover-image img {
+	height: 200px;
 }
 
 figure.cover-image > figcaption {
