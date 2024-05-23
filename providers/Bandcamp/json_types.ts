@@ -52,7 +52,7 @@ interface TrAlbum {
 	tralbum_subscriber_only: boolean;
 	featured_track_id: number;
 	initial_track_num: null;
-	/** Indicates whether the release is currently available for pre-ordered. */
+	/** Indicates whether the release is currently available for pre-order. */
 	is_preorder: boolean;
 	/** Same as {@linkcode is_preorder}? */
 	album_is_preorder: boolean;
@@ -124,8 +124,8 @@ export interface TrackInfo {
 	track_id: number;
 	/** Maps file formats to download URLs (`null` for unreleased tracks). */
 	file: FileUrls | null;
-	/** @todo Is this not `null` if the track artist is different from the release artist? */
-	artist: null;
+	/** Credited name of the track artist. Can be `null` if it is the same as the release artist. */
+	artist: string | null;
 	/** Title of the track. */
 	title: string;
 	encodings_id: number;
@@ -133,7 +133,7 @@ export interface TrackInfo {
 	private: null;
 	/** Number of the track. */
 	track_num: number;
-	/** Indicates whether the release can be pre-ordered. @todo Does this change upon release? */
+	/** Indicates whether the release is currently available for pre-order. */
 	album_preorder: boolean;
 	/** Indicates whether the track is still unreleased. */
 	unreleased_track: boolean;
@@ -215,15 +215,15 @@ export interface PlayerData {
 }
 
 export interface PlayerTrack {
-	/** Name of the release(?) artist. @todo Can this be set per track at all? */
+	/** Credited name of the track artist. Or the release artist if the band was lazy. */
 	artist: string;
 	/** Title of the track. */
 	title: string;
 	/** ID of the track. */
 	id: number;
 	encodings_id: number;
-	/** @todo Is this used for track art? */
-	art_id: null;
+	/** ID of the track art. */
+	art_id: number | null;
 	/** Duration in seconds (floating point, also set for unreleased tracks). */
 	duration: number;
 	/** Number of the track (zero-based index). */
@@ -236,6 +236,10 @@ export interface PlayerTrack {
 	track_streaming: boolean;
 	/** Indicates whether the track is included in the pre-order. */
 	preorder_download_track: boolean;
+	/** URL of the track art (small). */
+	art?: string;
+	/** URL of the track art (large). */
+	art_lg?: string;
 }
 
 type FileUrls = Record<'mp3-128', string>;
@@ -395,8 +399,13 @@ const packageTypes = {
 	1: 'Compact Disc (CD)',
 	2: 'Vinyl LP',
 	3: 'Cassette',
+	10: 'Poster/Print',
+	11: 'T-Shirt/Apparel',
+	14: 'Bag',
 	15: '2 x Vinyl LP',
 	16: '7" Vinyl',
+	17: 'Vinyl Box Set',
+	23: 'Book/Magazine',
 } as const;
 
 type PackageType = typeof packageTypes[keyof typeof packageTypes];
