@@ -45,6 +45,7 @@ export async function resolveToMbid(
 			});
 			const rels = result.relations.filter((rel) => rel['target-type'] === entityType);
 			if (rels.length !== 1) {
+				log.debug(`${result.resource} has ${rels.length} ${entityType} rels`);
 				// External URL can not be used as a unique identifier of one entity.
 				if (contextCache) {
 					// Only writes to the context cache to indicate that further requests for this URL should be skipped.
