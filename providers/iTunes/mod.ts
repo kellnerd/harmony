@@ -1,5 +1,6 @@
 import { availableRegions } from './regions.ts';
-import { type CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
@@ -28,6 +29,13 @@ export default class iTunesProvider extends MetadataProvider {
 		pathname: String.raw`/:region(\w{2})?/:type(album|artist)/:slug?/:id(\d+)`,
 	});
 
+	features: FeatureQualityMap = {
+		'cover size': 3000,
+		'duration precision': DurationPrecision.MS,
+		'GTIN lookup': FeatureQuality.BAD,
+		'MBID resolving': FeatureQuality.EXPENSIVE,
+	};
+
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: 'album',
@@ -42,10 +50,6 @@ export default class iTunesProvider extends MetadataProvider {
 		month: 4,
 		day: 28,
 	};
-
-	readonly durationPrecision = DurationPrecision.MS;
-
-	readonly artworkQuality = 3000;
 
 	readonly apiBaseUrl = 'https://itunes.apple.com';
 

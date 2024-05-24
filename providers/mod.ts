@@ -31,10 +31,7 @@ export const defaultProviders = new Set([
 
 /** Recommended default preferences which sort providers by quality. */
 export const defaultProviderPreferences: ProviderPreferences = {
-	// Get track lengths from the provider with the highest precision.
-	length: providers.sortNamesByQuality('durationPrecision'),
-	// Get cover art from the provider with the highest quality (currently: image resolution).
-	images: providers.sortNamesByQuality('artworkQuality'),
-	// Use region-specific external URLs last (TODO: derive this from provider properties).
-	externalId: ['Deezer', 'Bandcamp', 'Beatport', 'iTunes'],
+	length: providers.sortNamesByQuality('duration precision'),
+	images: providers.sortNamesByQuality('cover size'),
+	externalId: providers.sortNamesByQuality('MBID resolving'),
 };

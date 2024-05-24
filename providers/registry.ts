@@ -1,4 +1,5 @@
 import type { MetadataProvider, MetadataProviderConstructor } from './base.ts';
+import { FeatureQuality, ProviderFeature } from './features.ts';
 import type { ExternalEntityId } from '@/harmonizer/types.ts';
 import { SnapStorage } from 'snap-storage';
 
@@ -62,12 +63,12 @@ export class ProviderRegistry {
 		return this.#internalNames;
 	}
 
-	/** Returns a list of provider names sorted by the value of the given numeric property (descending). */
-	sortNamesByQuality(property: NumericKeys<MetadataProvider>): string[] {
+	/** Returns a list of provider names sorted by the quality value of the given feature (descending). */
+	sortNamesByQuality(feature: ProviderFeature): string[] {
 		return this.#providerList
 			.map((provider) => ({
 				name: provider.name,
-				quality: provider[property],
+				quality: provider.features[feature] ?? FeatureQuality.UNKNOWN,
 			}))
 			.sort((a, b) => b.quality - a.quality)
 			.map((provider) => provider.name);
@@ -91,7 +92,3 @@ export class ProviderRegistry {
 	#internalToDisplay: Record<string, string | undefined> = {};
 	#snaps = new SnapStorage();
 }
-
-type NumericKeys<T> = {
-	[K in keyof T]-?: T[K] extends number ? K : never;
-}[keyof T];

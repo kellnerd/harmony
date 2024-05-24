@@ -9,7 +9,8 @@ import type {
 	Label,
 	LinkType,
 } from '@/harmonizer/types.ts';
-import { type CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { extractDataAttribute, extractMetadataTag } from '@/utils/html.ts';
@@ -32,16 +33,19 @@ export default class BandcampProvider extends MetadataProvider {
 		pathname: '/{music}?',
 	});
 
+	readonly features: FeatureQualityMap = {
+		'cover size': 3000,
+		'duration precision': DurationPrecision.MS,
+		'GTIN lookup': FeatureQuality.MISSING,
+		'MBID resolving': FeatureQuality.PRESENT,
+	};
+
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: 'album',
 	};
 
 	readonly releaseLookup = BandcampReleaseLookup;
-
-	readonly durationPrecision = DurationPrecision.MS;
-
-	readonly artworkQuality = 3000;
 
 	extractEntityFromUrl(url: URL): EntityId | undefined {
 		const albumResult = this.supportedUrls.exec(url);

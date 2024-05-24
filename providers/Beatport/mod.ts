@@ -1,6 +1,7 @@
 import type { Artist, BeatportNextData, BeatportRelease, Release, Track } from './json_types.ts';
 import type { ArtistCreditName, EntityId, HarmonyRelease, HarmonyTrack, LinkType } from '@/harmonizer/types.ts';
-import { CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { extractTextFromHtml } from '@/utils/html.ts';
@@ -13,6 +14,13 @@ export default class BeatportProvider extends MetadataProvider {
 		pathname: '/:type(artist|label|release)/:slug/:id',
 	});
 
+	readonly features: FeatureQualityMap = {
+		'cover size': 1400,
+		'duration precision': DurationPrecision.MS,
+		'GTIN lookup': FeatureQuality.EXPENSIVE,
+		'MBID resolving': FeatureQuality.PRESENT,
+	};
+
 	readonly entityTypeMap = {
 		artist: 'artist',
 		label: 'label',
@@ -21,15 +29,11 @@ export default class BeatportProvider extends MetadataProvider {
 
 	readonly releaseLookup = BeatportReleaseLookup;
 
-	readonly durationPrecision = DurationPrecision.MS;
-
 	readonly launchDate: PartialDate = {
 		year: 2005,
 		month: 1,
 		day: 7,
 	};
-
-	readonly artworkQuality = 1400;
 
 	readonly baseUrl = 'https://www.beatport.com';
 

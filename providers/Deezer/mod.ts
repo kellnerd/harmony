@@ -1,11 +1,6 @@
 import { availableRegions } from './regions.ts';
-import {
-	type CacheEntry,
-	DurationPrecision,
-	MetadataProvider,
-	type ProviderOptions,
-	ReleaseLookup,
-} from '@/providers/base.ts';
+import { type CacheEntry, MetadataProvider, type ProviderOptions, ReleaseLookup } from '@/providers/base.ts';
+import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { formatGtin } from '@/utils/gtin.ts';
@@ -39,6 +34,13 @@ export default class DeezerProvider extends MetadataProvider {
 		pathname: String.raw`/:language(\w{2})?/:type(album|artist)/:id(\d+)`,
 	});
 
+	readonly features: FeatureQualityMap = {
+		'cover size': 1400,
+		'duration precision': DurationPrecision.SECONDS,
+		'GTIN lookup': FeatureQuality.GOOD,
+		'MBID resolving': FeatureQuality.GOOD,
+	};
+
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: 'album',
@@ -53,10 +55,6 @@ export default class DeezerProvider extends MetadataProvider {
 		month: 8,
 		day: 22,
 	};
-
-	readonly durationPrecision = DurationPrecision.SECONDS;
-
-	readonly artworkQuality = 1400;
 
 	readonly apiBaseUrl = 'https://api.deezer.com';
 

@@ -8,7 +8,8 @@
  */
 
 import type { EntityId, HarmonyRelease } from '@/harmonizer/types.ts';
-import { DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { FeatureQualityMap } from '@/providers/features.ts';
 
 export default class TemplateProvider extends MetadataProvider {
 	readonly name = '';
@@ -18,16 +19,14 @@ export default class TemplateProvider extends MetadataProvider {
 		pathname: '/:type(artist|release)/:id',
 	});
 
+	readonly features: FeatureQualityMap = {};
+
 	readonly entityTypeMap = {
 		artist: '',
 		release: '',
 	};
 
 	readonly releaseLookup = TemplateReleaseLookup;
-
-	readonly durationPrecision = DurationPrecision.SECONDS;
-
-	readonly artworkQuality = 0;
 
 	constructUrl(entity: EntityId): URL {
 		throw new Error('Method not implemented.');

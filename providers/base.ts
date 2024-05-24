@@ -16,6 +16,7 @@ import type {
 	ReleaseOptions,
 	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
+import type { FeatureQualityMap } from './features.ts';
 import type { PartialDate } from '@/utils/date.ts';
 import type { CacheOptions, Snapshot, SnapStorage } from 'snap-storage';
 import type { MaybePromise } from 'utils/types.d.ts';
@@ -82,6 +83,9 @@ export abstract class MetadataProvider {
 	 */
 	abstract readonly supportedUrls: URLPattern;
 
+	/** Features of the provider and their quality. */
+	readonly features: FeatureQualityMap = {};
+
 	/** Maps MusicBrainz entity types to the corresponding entity types of the provider. */
 	abstract readonly entityTypeMap: Record<HarmonyEntityType, string>;
 
@@ -91,11 +95,6 @@ export abstract class MetadataProvider {
 	readonly availableRegions?: Set<CountryCode>;
 
 	readonly launchDate: PartialDate = {};
-
-	abstract readonly durationPrecision: DurationPrecision;
-
-	/** Uses the median image height in pixels as the basic metric. */
-	abstract readonly artworkQuality: number;
 
 	/** Looks up the release which is identified by the given specifier (URL, GTIN/barcode or provider ID). */
 	getRelease(specifier: ReleaseSpecifier, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
@@ -349,9 +348,3 @@ export type CacheEntry<Content> = {
 	/** Successfully queried region of the API. */
 	region?: CountryCode;
 };
-
-export enum DurationPrecision {
-	SECONDS,
-	MS,
-	US,
-}
