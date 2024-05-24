@@ -44,8 +44,15 @@ export async function resolveToMbid(
 				inc: [`${entityType}-rels`],
 			});
 			const rels = result.relations.filter((rel) => rel['target-type'] === entityType);
-			if (rels.length !== 1) {
-				log.debug(`${result.resource} has ${rels.length} ${entityType} rels`);
+			const targetEntityMbids = rels.map((rel) => {
+				// @ts-ignore: `entityType` is not narrowed, but every specific value is a valid key here.
+				const targetEntity = rel[entityType] as EntityWithMbid;
+				return targetEntity.id;
+			});
+
+			const uniqueTargetCount = new Set(targetEntityMbids).size;
+			if (uniqueTargetCount !== 1) {
+				log.debug(`${result.resource} has rels to ${uniqueTargetCount} ${entityType} entities`);
 				// External URL can not be used as a unique identifier of one entity.
 				if (contextCache) {
 					// Only writes to the context cache to indicate that further requests for this URL should be skipped.
@@ -54,10 +61,7 @@ export async function resolveToMbid(
 				continue;
 			}
 
-			const uniqueRel = rels[0];
-			// @ts-ignore: `entityType` is not narrowed, but every specific value is a valid key here.
-			const targetEntity = uniqueRel[entityType] as EntityWithMbid;
-			const mbid = targetEntity.id;
+			const mbid = targetEntityMbids[0];
 			log.debug(`Resolved ${externalUrl.href} to ${entityType} ${mbid}`);
 			setCachedMbid(entityId, mbid, contextCache);
 
