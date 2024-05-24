@@ -1,7 +1,7 @@
 import { detectLanguageAndScript } from '@/harmonizer/language_script.ts';
 import { mergeRelease } from '@/harmonizer/merge.ts';
 import { defaultProviderPreferences, providers } from '@/providers/mod.ts';
-import { LookupError } from '@/utils/errors.ts';
+import { LookupError, ProviderError } from '@/utils/errors.ts';
 import { ensureValidGTIN, isEqualGTIN, uniqueGtinSet } from '@/utils/gtin.ts';
 import { isDefined, isNotError } from '@/utils/predicate.ts';
 import { getLogger } from 'std/log/get_logger.ts';
@@ -160,7 +160,11 @@ export class CombinedReleaseLookup {
 				if (reason instanceof Error) {
 					if (reason instanceof LookupError) {
 						// No need to log a stack trace, these are our own errors.
-						this.log.warn(reason.message);
+						if (reason instanceof ProviderError) {
+							this.log.warn(`${reason.providerName}: ${reason.message}`);
+						} else {
+							this.log.warn(reason.message);
+						}
 					} else {
 						// Unexpected errors are more critical.
 						this.log.error(reason);
