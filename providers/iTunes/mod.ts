@@ -32,7 +32,7 @@ export default class iTunesProvider extends MetadataProvider {
 	features: FeatureQualityMap = {
 		'cover size': 3000,
 		'duration precision': DurationPrecision.MS,
-		'GTIN lookup': FeatureQuality.BAD,
+		'GTIN lookup': FeatureQuality.PRESENT,
 		'MBID resolving': FeatureQuality.EXPENSIVE,
 	};
 

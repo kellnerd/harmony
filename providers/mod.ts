@@ -1,3 +1,4 @@
+import { FeatureQuality } from './features.ts';
 import { ProviderRegistry } from './registry.ts';
 import type { ProviderPreferences } from '@/harmonizer/types.ts';
 
@@ -18,16 +19,9 @@ providers.addMultiple(
 );
 
 /** Internal names of providers which are enabled by default (for GTIN lookups). */
-export const defaultProviders = new Set([
-	'Deezer',
-	'iTunes',
-].map((name) => {
-	const internalName = providers.toInternalName(name);
-	if (!internalName) {
-		throw new Error(`Invalid provider name "${name}"`);
-	}
-	return internalName;
-}));
+export const defaultProviders = new Set(
+	providers.filterInternalNamesByQuality('GTIN lookup', (quality) => quality >= FeatureQuality.PRESENT),
+);
 
 /** Recommended default preferences which sort providers by quality. */
 export const defaultProviderPreferences: ProviderPreferences = {

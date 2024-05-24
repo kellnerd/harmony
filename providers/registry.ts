@@ -42,6 +42,13 @@ export class ProviderRegistry {
 		return provider.constructUrl(entityId);
 	}
 
+	/** Returns a list of internal provider names that meet the quality condition for the given feature. */
+	filterInternalNamesByQuality(feature: ProviderFeature, predicate: (quality: number) => boolean): string[] {
+		return this.#providerList
+			.filter((provider) => predicate(provider.features[feature] ?? FeatureQuality.UNKNOWN))
+			.map((provider) => provider.internalName);
+	}
+
 	/** Finds a registered provider by name (internal name or display name). */
 	findByName(name: string): MetadataProvider | undefined {
 		const internalName = this.toInternalName(name);
