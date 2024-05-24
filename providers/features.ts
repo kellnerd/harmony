@@ -3,6 +3,7 @@ const providerFeatures = [
 	'duration precision',
 	'GTIN lookup',
 	'MBID resolving',
+	'release label',
 ] as const;
 
 /** Features which a `MetadataProvider` can have. */

@@ -19,6 +19,7 @@ export default class BeatportProvider extends MetadataProvider {
 		'duration precision': DurationPrecision.MS,
 		'GTIN lookup': FeatureQuality.EXPENSIVE,
 		'MBID resolving': FeatureQuality.PRESENT,
+		'release label': FeatureQuality.GOOD,
 	};
 
 	readonly entityTypeMap = {

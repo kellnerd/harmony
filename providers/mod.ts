@@ -25,6 +25,7 @@ export const defaultProviders = new Set(
 
 /** Recommended default preferences which sort providers by quality. */
 export const defaultProviderPreferences: ProviderPreferences = {
+	labels: providers.sortNamesByQuality('release label'),
 	length: providers.sortNamesByQuality('duration precision'),
 	images: providers.sortNamesByQuality('cover size'),
 	externalId: providers.sortNamesByQuality('MBID resolving'),
