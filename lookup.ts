@@ -4,7 +4,9 @@ import { defaultProviderPreferences, providers } from '@/providers/mod.ts';
 import { LookupError, ProviderError } from '@/utils/errors.ts';
 import { ensureValidGTIN, isEqualGTIN, uniqueGtinSet } from '@/utils/gtin.ts';
 import { isDefined, isNotError } from '@/utils/predicate.ts';
+import { ResponseError } from 'snap-storage';
 import { getLogger } from 'std/log/get_logger.ts';
+import { LogLevels } from 'std/log/levels.ts';
 import { zipObject } from 'utils/object/zipObject.js';
 
 import type {
@@ -152,7 +154,7 @@ export class CombinedReleaseLookup {
 	/** Finalizes all queued lookup requests and returns the provider release mapping. */
 	async getProviderReleaseMapping(): Promise<ProviderReleaseMapping> {
 		const releaseResults = await Promise.allSettled(this.queuedReleases);
-		const releasesOrErrors: Array<HarmonyRelease | Error> = releaseResults.map((result) => {
+		const releasesOrErrors: Array<HarmonyRelease | Error> = await Promise.all(releaseResults.map(async (result) => {
 			if (result.status === 'fulfilled') {
 				return result.value;
 			} else {
@@ -165,6 +167,13 @@ export class CombinedReleaseLookup {
 						} else {
 							this.log.warn(reason.message);
 						}
+					} else if (reason instanceof ResponseError) {
+						const { status, statusText, text } = reason.response;
+						this.log.warn(`${reason.message} (${status} ${statusText})`);
+						if (this.log.level >= LogLevels.DEBUG) {
+							const responseText = await text();
+							this.log.debug(responseText.trim());
+						}
 					} else {
 						// Unexpected errors are more critical.
 						this.log.error(reason);
@@ -174,7 +183,7 @@ export class CombinedReleaseLookup {
 					return Error(reason);
 				}
 			}
-		});
+		}));
 
 		return zipObject(Array.from(this.queuedProviderNames), releasesOrErrors);
 	}

@@ -21,7 +21,7 @@
 		"preact-render-to-string": "https://esm.sh/*preact-render-to-string@6.2.2",
 		"@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
 		"@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
-		"snap-storage": "https://deno.land/x/snap_storage@v0.6.0/mod.ts",
+		"snap-storage": "https://deno.land/x/snap_storage@v0.6.1/mod.ts",
 		"std/": "https://deno.land/std@0.216.0/",
 		"tabler-icons/": "https://deno.land/x/tabler_icons_tsx@0.0.6/tsx/",
 		"ts-custom-error": "https://esm.sh/ts-custom-error@3.3.1",
