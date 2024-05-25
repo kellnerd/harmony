@@ -42,6 +42,16 @@ export class ProviderRegistry {
 		return provider.constructUrl(entityId);
 	}
 
+	/** Returns a list of internal provider names that belong to the given category. */
+	filterInternalNamesByCategory(category: string): string[] {
+		if (category === 'all') {
+			return [...this.#internalNames];
+		} else {
+			// TODO: Add a real `categories` property to `MetadataProvider` and use it here.
+			return [];
+		}
+	}
+
 	/** Returns a list of internal provider names that meet the quality condition for the given feature. */
 	filterInternalNamesByQuality(feature: ProviderFeature, predicate: (quality: number) => boolean): string[] {
 		return this.#providerList

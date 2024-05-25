@@ -70,8 +70,10 @@ export function extractReleaseLookupState(lookupUrl: URL): ReleaseLookupParamete
 		assertCountryCode(countryCode);
 	}
 
+	const category = searchParams.get('category');
+	const requestedProviders = new Set(category ? providers.filterInternalNamesByCategory(category) : undefined);
+
 	const providerNames = providers.internalNames;
-	const requestedProviders = new Set<string>();
 	const providerIds: ProviderNameAndId[] = [];
 	for (const [name, value] of searchParams) {
 		if (providerNames.has(name)) {
