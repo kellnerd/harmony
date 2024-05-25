@@ -163,9 +163,9 @@ export class CombinedReleaseLookup {
 					if (reason instanceof LookupError) {
 						// No need to log a stack trace, these are our own errors.
 						if (reason instanceof ProviderError) {
-							this.log.warn(`${reason.providerName}: ${reason.message}`);
+							this.log.info(`${reason.providerName}: ${reason.message}`);
 						} else {
-							this.log.warn(reason.message);
+							this.log.info(reason.message);
 						}
 					} else if (reason instanceof ResponseError) {
 						const { status, statusText, text } = reason.response;
