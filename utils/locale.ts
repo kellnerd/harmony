@@ -26,6 +26,12 @@ export function formatLanguageConfidence({ code, confidence }: Language): string
 
 	let formattedLanguage = languageNames.of(code)!;
 
+	// Temporary workaround for the incomplete ICU in Deno/Chromium:
+	// https://github.com/denoland/deno/issues/13257#issuecomment-2132257563
+	if (formattedLanguage === 'rn') {
+		formattedLanguage = 'Rundi';
+	}
+
 	if (confidence) {
 		formattedLanguage += ` (${percentage(confidence)}% confidence)`;
 	}
