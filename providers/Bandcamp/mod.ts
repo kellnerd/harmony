@@ -153,14 +153,15 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		const { tralbum: rawRelease } = albumPage;
 		const { current, packages } = rawRelease;
 
-		if (current.type === 'track' && current.album_id !== null) {
-			this.addMessage('Only standalone tracks released outside an album should be imported', 'warning');
-		}
-
 		// Main release URL might use a custom domain, fallback to URL of first package.
 		let releaseUrl = new URL(rawRelease.url);
 		if (!releaseUrl.hostname.endsWith('bandcamp.com') && packages?.length) {
 			releaseUrl = new URL(packages[0].url);
+		}
+
+		if (rawRelease.item_type === 'track' && rawRelease.album_url) {
+			const albumUrl = new URL(rawRelease.album_url, releaseUrl);
+			this.addMessage(`Please import the full release from ${albumUrl}`, 'warning');
 		}
 
 		// The "band" can be the artist or a label.
