@@ -25,7 +25,7 @@ export default class BandcampProvider extends MetadataProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: ':artist.bandcamp.com',
-		pathname: '/:type(album)/:album',
+		pathname: '/:type(album|track)/:title',
 	});
 
 	readonly artistUrlPattern = new URLPattern({
@@ -42,20 +42,22 @@ export default class BandcampProvider extends MetadataProvider {
 
 	readonly entityTypeMap = {
 		artist: 'artist',
-		release: 'album',
+		release: ['album', 'track'],
 	};
 
 	readonly releaseLookup = BandcampReleaseLookup;
 
-	extractEntityFromUrl(url: URL): EntityId | undefined {
+	extractEntityFromUrl(url: URL): EntityId {
 		const albumResult = this.supportedUrls.exec(url);
 		if (albumResult) {
 			const artist = albumResult.hostname.groups.artist!;
-			const { type, album } = albumResult.pathname.groups;
-			if (type && album) {
+			const { type, title } = albumResult.pathname.groups;
+			if (type && title) {
 				return {
 					type,
-					id: [artist, album].join('/'),
+					// 'album' is assumed by default, so we only encode the `type` for tracks
+					// to save space.
+					id: (type === 'album' ? [artist, title] : [artist, type, title]).join('/'),
 				};
 			}
 		}
@@ -67,16 +69,26 @@ export default class BandcampProvider extends MetadataProvider {
 				id: artistResult.hostname.groups.artist!,
 			};
 		}
+
+		throw new ProviderError(this.name, `Failed to extract ID from ${url}`);
 	}
 
 	constructUrl(entity: EntityId): URL {
-		const [artist, album] = entity.id.split('/', 2);
+		let [artist, type, title] = entity.id.split('/', 3);
 		const artistUrl = new URL(`https://${artist}.bandcamp.com`);
 
 		if (entity.type === 'artist') return artistUrl;
 
-		// else if (entity.type === 'album')
-		return new URL(['album', album].join('/'), artistUrl);
+		// else if (type === 'album' || type === 'track')
+
+		// Only tracks include their `type` in the ID; we default to 'album' otherwise.
+		if (title === undefined) {
+			title = type;
+			type = entity.type;
+		}
+		// Use the entity type encoded in the ID, which defaults to 'album' if not specified,
+		// rather than `entity.type`, which is fixed to 'album' as the default Bandcamp release type.
+		return new URL([type, title].join('/'), artistUrl);
 	}
 
 	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
@@ -127,7 +139,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			throw new ProviderError(this.provider.name, 'GTIN lookups are not supported');
 		}
 
-		const webUrl = this.constructReleaseUrl(this.lookup.value);
+		const webUrl = this.constructReleaseUrl(this.lookup.value, this.lookup);
 		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<AlbumPage>(
 			webUrl,
 			this.options.snapshotMaxTimestamp,
@@ -141,15 +153,14 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		const { tralbum: rawRelease } = albumPage;
 		const { current, packages } = rawRelease;
 
+		if (current.type === 'track' && current.album_id !== null) {
+			this.addMessage('Only standalone tracks released outside an album should be imported', 'warning');
+		}
+
 		// Main release URL might use a custom domain, fallback to URL of first package.
 		let releaseUrl = new URL(rawRelease.url);
 		if (!releaseUrl.hostname.endsWith('bandcamp.com') && packages?.length) {
 			releaseUrl = new URL(packages[0].url);
-		}
-
-		this.id = this.provider.extractEntityFromUrl(releaseUrl)?.id;
-		if (!this.id) {
-			throw new ProviderError(this.provider.name, `Failed to extract ID from ${releaseUrl}`);
 		}
 
 		// The "band" can be the artist or a label.
