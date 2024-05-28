@@ -224,6 +224,10 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		}
 		const tracklist = tracks.map(this.convertRawTrack.bind(this));
 
+		if (current.type === 'track' && current.isrc) {
+			tracklist[0].isrc = current.isrc;
+		}
+
 		const realTrackCount = albumPage['og:description']?.match(/(\d+) track/i)?.[1];
 		if (realTrackCount) {
 			const hiddenTrackCount = parseInt(realTrackCount) - tracks.length;

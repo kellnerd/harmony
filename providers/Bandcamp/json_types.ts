@@ -112,6 +112,8 @@ interface TrAlbumCurrent {
 	type: ReleaseType;
 	/** ID of the release. Can be `null` for standalone tracks. */
 	album_id: number | null;
+	/** ISRC of the track, for track releases. */
+	isrc?: string;
 }
 
 enum DownloadPreference {
