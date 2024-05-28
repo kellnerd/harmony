@@ -18,8 +18,7 @@ import { LookupError, type ProviderError } from '@/utils/errors.ts';
 const seederTargetUrl = new URL('release/add', musicbrainzBaseUrl);
 
 export default defineRoute(async (req, ctx) => {
-	// Only set seeder URL (used for permalinks) in production servers.
-	const seederSourceUrl = ctx.config.dev ? undefined : ctx.url;
+	const seederSourceUrl = ctx.url;
 	const errors: Error[] = [];
 	let release: HarmonyRelease | undefined;
 	let enabledProviders: Set<string> | undefined = undefined;
