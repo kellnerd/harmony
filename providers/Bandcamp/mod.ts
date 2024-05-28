@@ -1,4 +1,4 @@
-import type { AlbumPage, PlayerData, PlayerTrack, TrackInfo } from './json_types.ts';
+import type { AlbumCurrent, PlayerData, PlayerTrack, ReleasePage, TrackInfo } from './json_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -129,18 +129,18 @@ export default class BandcampProvider extends MetadataProvider {
 	}
 }
 
-export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, AlbumPage> {
+export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, ReleasePage> {
 	constructReleaseApiUrl(): URL | undefined {
 		return undefined;
 	}
 
-	async getRawRelease(): Promise<AlbumPage> {
+	async getRawRelease(): Promise<ReleasePage> {
 		if (this.lookup.method === 'gtin') {
 			throw new ProviderError(this.provider.name, 'GTIN lookups are not supported');
 		}
 
 		const webUrl = this.constructReleaseUrl(this.lookup.value, this.lookup);
-		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<AlbumPage>(
+		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<ReleasePage>(
 			webUrl,
 			this.options.snapshotMaxTimestamp,
 		);
@@ -149,7 +149,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		return release;
 	}
 
-	async convertRawRelease(albumPage: AlbumPage): Promise<HarmonyRelease> {
+	async convertRawRelease(albumPage: ReleasePage): Promise<HarmonyRelease> {
 		const { tralbum: rawRelease } = albumPage;
 		const { current, packages } = rawRelease;
 
@@ -203,7 +203,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 
 		const images = [this.getArtwork(rawRelease.art_id, ['front'])];
 		let tracks: Array<TrackInfo | PlayerTrack> = rawRelease.trackinfo;
-		if (rawRelease.is_preorder) {
+		if (rawRelease.item_type === 'album' && rawRelease.album_is_preorder) {
 			// Fetch embedded player JSON which already has all track durations for pre-orders.
 			const embeddedPlayerRelease = await this.getEmbeddedPlayerRelease(rawRelease.id);
 			tracks = embeddedPlayerRelease.tracks;
@@ -262,8 +262,8 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			title: current.title,
 			artists: [artist],
 			labels: label ? [label] : undefined,
-			gtin: current.upc ?? undefined,
-			releaseDate: parseISODateTime(current.release_date),
+			gtin: (current as AlbumCurrent).upc ?? undefined,
+			releaseDate: current.release_date ? parseISODateTime(current.release_date) : undefined,
 			availableIn: ['XW'],
 			media: [{
 				format: 'Digital Media',
@@ -283,13 +283,13 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		return release;
 	}
 
-	convertRawTrack(rawTrack: TrackInfo | PlayerTrack): HarmonyTrack {
+	convertRawTrack(rawTrack: TrackInfo | PlayerTrack, index: number): HarmonyTrack {
 		const { artist } = rawTrack;
 		let { title } = rawTrack;
 		let trackNumber: number;
 
 		if ('track_num' in rawTrack) {
-			trackNumber = rawTrack.track_num;
+			trackNumber = rawTrack.track_num ?? index + 1;
 			if (artist) {
 				// Track title is prefixed by the track artist (if filled).
 				title = title.replace(`${artist} - `, '');
