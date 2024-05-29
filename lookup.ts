@@ -168,10 +168,10 @@ export class CombinedReleaseLookup {
 							this.log.info(reason.message);
 						}
 					} else if (reason instanceof ResponseError) {
-						const { status, statusText, text } = reason.response;
+						const { status, statusText } = reason.response;
 						this.log.warn(`${reason.message} (${status} ${statusText})`);
 						if (this.log.level >= LogLevels.DEBUG) {
-							const responseText = await text();
+							const responseText = await reason.response.text();
 							this.log.debug(responseText.trim());
 						}
 					} else {
