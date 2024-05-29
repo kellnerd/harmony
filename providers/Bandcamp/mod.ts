@@ -130,6 +130,8 @@ export default class BandcampProvider extends MetadataProvider {
 }
 
 export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, ReleasePage> {
+	rawReleaseUrl: URL | undefined;
+
 	constructReleaseApiUrl(): URL | undefined {
 		return undefined;
 	}
@@ -140,6 +142,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		}
 
 		const webUrl = this.constructReleaseUrl(this.lookup.value, this.lookup);
+		this.rawReleaseUrl = webUrl;
 		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<ReleasePage>(
 			webUrl,
 			this.options.snapshotMaxTimestamp,
@@ -153,10 +156,10 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		const { tralbum: rawRelease } = albumPage;
 		const { current, packages } = rawRelease;
 
-		// Main release URL might use a custom domain, fallback to URL of first package.
+		// Main release URL might use a custom domain, fallback to the cached `rawReleaseUrl`.
 		let releaseUrl = new URL(rawRelease.url);
-		if (!releaseUrl.hostname.endsWith('bandcamp.com') && packages?.length) {
-			releaseUrl = new URL(packages[0].url);
+		if (!releaseUrl.hostname.endsWith('bandcamp.com')) {
+			releaseUrl = this.rawReleaseUrl!;
 		}
 
 		if (rawRelease.item_type === 'track' && rawRelease.album_url) {
