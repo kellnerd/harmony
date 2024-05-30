@@ -170,9 +170,11 @@ export class CombinedReleaseLookup {
 					} else if (reason instanceof ResponseError) {
 						const { status, statusText } = reason.response;
 						this.log.warn(`${reason.message} (${status} ${statusText})`);
-						if (this.log.level >= LogLevels.DEBUG) {
+						if (this.log.level <= LogLevels.DEBUG) {
 							const responseText = await reason.response.text();
-							this.log.debug(responseText.trim());
+							if (responseText.length) {
+								this.log.debug(responseText.trim());
+							}
 						}
 					} else {
 						// Unexpected errors are more critical.
