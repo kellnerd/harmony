@@ -1,5 +1,5 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
-import { filterErrorEntries, mapEntryValues } from '@/utils/record.ts';
+import { copyTo, filterErrorEntries, isFilled, uniqueMappedValues } from '@/utils/record.ts';
 import { similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
 import { assert } from 'std/assert/assert.ts';
@@ -240,41 +240,6 @@ function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T[], sou
 	});
 }
 
-/**
- * Returns pairs of unique mapped values and keys which use this value.
- *
- * Mapped values are converted to string identifiers before comparison.
- */
-export function uniqueMappedValues<Key extends string, Value, Result>(
-	record: Record<Key, Value>,
-	mapper: (value: Value) => Result | null | undefined,
-	makeIdentifier?: (value: Result) => string,
-): Array<[Result, Key[]]> {
-	const uniqueValuesByIdentifier = new Map<string, Result>();
-	const keysByIdentifier = new Map<string, Key[]>();
-
-	for (const [key, value] of mapEntryValues(record, mapper)) {
-		if (value === null || value === undefined) continue;
-
-		const identifier = makeIdentifier ? makeIdentifier(value) : value.toString();
-		const providers = keysByIdentifier.get(identifier);
-		if (providers) {
-			providers.push(key);
-			keysByIdentifier.set(identifier, providers);
-		} else {
-			keysByIdentifier.set(identifier, [key]);
-			uniqueValuesByIdentifier.set(identifier, value);
-		}
-	}
-
-	const result: Array<[Result, Key[]]> = [];
-	for (const [key, value] of uniqueValuesByIdentifier) {
-		result.push([value, keysByIdentifier.get(key)!]);
-	}
-
-	return result;
-}
-
 /** Ensures that the given releases are compatible and can be merged. */
 function assertReleaseCompatibility(releaseMap: ProviderReleaseMap) {
 	if (!Object.keys(releaseMap).length) return;
@@ -304,20 +269,6 @@ function assertReleaseCompatibility(releaseMap: ProviderReleaseMap) {
 			}`,
 		);
 	}
-}
-
-/** Copies properties between records of the same type. Helper to prevent type errors. */
-function copyTo<T>(target: T, source: T, property: keyof T) {
-	return target[property] = source[property];
-}
-
-/** Checks whether the given value is an empty object (or array). */
-function isEmptyObject(value: unknown): boolean {
-	return typeof value === 'object' && value !== null && Object.keys(value).length === 0;
-}
-
-function isFilled(value: unknown): boolean {
-	return value !== undefined && !isEmptyObject(value);
 }
 
 function isTrackProperty(property: PreferenceProperty): property is ImmutableTrackProperty {
