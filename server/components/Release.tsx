@@ -51,10 +51,15 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 		<div class='release'>
 			{info.messages.map((message) => <MessageBox message={message} />)}
 			<h2 class='release-title'>{release.title}</h2>
-			{alternativeValues((r) => r.title)}
+			{alternativeValues((release) => release.title)}
 			<p class='release-artist'>
 				by <ArtistCredit artists={release.artists} />
 			</p>
+			{alternativeValues(
+				(release) => release.artists,
+				(artists) => <ArtistCredit artists={artists} />,
+				(artists) => artists.map((artist) => artist.creditedName ?? artist.name).join(),
+			)}
 			<table class='release-info'>
 				<tr>
 					<th>Providers</th>
@@ -76,7 +81,10 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 				</tr>
 				<tr>
 					<th>Release date</th>
-					<td>{formatPartialDate(release.releaseDate ?? {}) || '[unknown]'}</td>
+					<td>
+						{formatPartialDate(release.releaseDate ?? {}) || '[unknown]'}
+						{alternativeValues((release) => release.releaseDate, formatPartialDate, formatPartialDate)}
+					</td>
 				</tr>
 				{release.labels && (
 					<tr>
