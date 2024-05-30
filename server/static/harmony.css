@@ -173,6 +173,9 @@ td.numeric {
 	text-align: right;
 	font-variant: tabular-nums;
 }
+td.numeric > ul {
+	text-align: left;
+}
 
 td ul {
 	margin: 0;
@@ -370,9 +373,6 @@ div.region-list > button {
 
 h2.release-title {
 	margin-bottom: 0;
-}
-p.release-artist {
-	margin-top: 0;
 }
 
 /* Tooltip.tsx */
