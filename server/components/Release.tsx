@@ -23,19 +23,21 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 	const isMultiMedium = release.media.length > 1;
 	const { credits, copyright, language, script, info } = release;
 
-	function alternativeValues<Value extends string | number>(
+	function alternativeValues<Value>(
 		propertyAccessor: (release: HarmonyRelease) => Value | undefined,
+		display?: (value: Value) => unknown,
+		stringify?: (value: Value) => string,
 	) {
 		if (!releaseMap) return;
 
-		const uniqueValues = uniqueReleasePropertyValues(releaseMap, propertyAccessor);
+		const uniqueValues = uniqueReleasePropertyValues(releaseMap, propertyAccessor, stringify);
 		if (uniqueValues.length > 1) {
 			return (
 				<ul class='alt-values'>
 					{uniqueValues.map(
 						([value, providerNames]) => (
 							<li>
-								{value}
+								{display ? display(value) : value}
 								{providerNames.map((name) => <ProviderIcon providerName={name} stroke={1.25} />)}
 							</li>
 						),

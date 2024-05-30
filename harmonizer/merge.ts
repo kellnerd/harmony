@@ -240,28 +240,37 @@ function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T[], sou
 }
 
 /** Returns pairs of unique values and providers which use this value for the given release property. */
-export function uniqueReleasePropertyValues<Value extends string | number>(
+export function uniqueReleasePropertyValues<Value>(
 	releaseMap: ProviderReleaseMapping,
-	propertyAccessor: (release: HarmonyRelease) => Value | undefined,
+	propertyAccessor: (release: HarmonyRelease) => Value | null | undefined,
+	stringify?: (value: Value) => string,
 ): Array<[Value, ProviderName[]]> {
-	const uniqueValues = new Set<Value>();
-	const providersByUniqueValue: Partial<Record<Value, string[]>> = {};
+	const uniqueValuesByKey = new Map<string, Value>();
+	const providersByKey = new Map<string, string[]>();
 
 	for (const [providerName, release] of Object.entries(releaseMap)) {
 		if (release instanceof Error) continue;
 
 		const value = propertyAccessor(release);
-		if (value === undefined) continue;
+		if (value === null || value === undefined) continue;
 
-		if (uniqueValues.has(value)) {
-			providersByUniqueValue[value]!.push(providerName);
+		const key = stringify ? stringify(value) : value.toString();
+		const providers = providersByKey.get(key);
+		if (providers) {
+			providers.push(providerName);
+			providersByKey.set(key, providers);
 		} else {
-			uniqueValues.add(value);
-			providersByUniqueValue[value] = [providerName];
+			providersByKey.set(key, [providerName]);
+			uniqueValuesByKey.set(key, value);
 		}
 	}
 
-	return Object.entries(providersByUniqueValue) as Array<[Value, ProviderName[]]>;
+	const result: Array<[Value, ProviderName[]]> = [];
+	for (const [key, value] of uniqueValuesByKey) {
+		result.push([value, providersByKey.get(key)!]);
+	}
+
+	return result;
 }
 
 /** Ensures that the given releases are compatible and can be merged. */
