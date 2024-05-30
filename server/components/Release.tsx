@@ -14,9 +14,9 @@ import { formatLanguageConfidence, formatScriptFrequency, regionName } from '@/u
 import { flagEmoji } from '@/utils/regions.ts';
 import { formatTimestampAsISOString } from '@/utils/time.ts';
 
-import type { HarmonyRelease, ProviderReleaseMapping } from '@/harmonizer/types.ts';
+import type { HarmonyRelease, ProviderReleaseMap } from '@/harmonizer/types.ts';
 
-export function Release({ release, releaseMap }: { release: HarmonyRelease; releaseMap?: ProviderReleaseMapping }) {
+export function Release({ release, releaseMap }: { release: HarmonyRelease; releaseMap?: ProviderReleaseMap }) {
 	const regions = release.availableIn;
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);

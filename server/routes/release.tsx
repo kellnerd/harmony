@@ -8,11 +8,12 @@ import { resolveReleaseMbids } from '@/musicbrainz/mbid_mapping.ts';
 import { defaultProviderPreferences } from '@/providers/mod.ts';
 import { codeUrl, musicbrainzBaseUrl } from '@/server/config.ts';
 import { extractReleaseLookupState } from '@/server/state.ts';
+import { filterErrorEntries } from '@/utils/record.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 
-import type { GTIN, HarmonyRelease, ProviderReleaseMapping, ReleaseOptions } from '@/harmonizer/types.ts';
+import type { GTIN, HarmonyRelease, ProviderReleaseMap, ReleaseOptions } from '@/harmonizer/types.ts';
 import { LookupError, type ProviderError } from '@/utils/errors.ts';
 
 const seederTargetUrl = new URL('release/add', musicbrainzBaseUrl);
@@ -21,7 +22,7 @@ export default defineRoute(async (req, ctx) => {
 	const seederSourceUrl = ctx.url;
 	const errors: Error[] = [];
 	let release: HarmonyRelease | undefined;
-	let releaseMap: ProviderReleaseMapping | undefined;
+	let releaseMap: ProviderReleaseMap | undefined;
 	let enabledProviders: Set<string> | undefined = undefined;
 	let gtinInput: GTIN = '', urlInput = '', regionsInput: string[] = [];
 
@@ -41,7 +42,7 @@ export default defineRoute(async (req, ctx) => {
 
 		if (providerIds.length || urls.length || gtin && providers?.size) {
 			const lookup = new CombinedReleaseLookup({ gtin, providerIds, urls }, options);
-			releaseMap = await lookup.getCompleteProviderReleaseMapping();
+			releaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
 			release = await lookup.getMergedRelease(defaultProviderPreferences);
 			await resolveReleaseMbids(release);
 		}

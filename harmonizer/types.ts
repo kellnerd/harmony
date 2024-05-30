@@ -177,7 +177,10 @@ export type ProviderName = string;
 export type ProviderNameAndId = [string, string];
 
 /** Mapping from the provider's name to the release returned by that provider. */
-export type ProviderReleaseMapping = Record<ProviderName, HarmonyRelease | Error>;
+export type ProviderReleaseMap = Record<ProviderName, HarmonyRelease>;
+
+/** Mapping from the provider's name to the release or error returned by that provider. */
+export type ProviderReleaseErrorMap = Record<ProviderName, HarmonyRelease | Error>;
 
 export type ImmutableTrackProperty = typeof immutableTrackProperties[number];
 

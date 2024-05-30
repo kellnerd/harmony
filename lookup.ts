@@ -15,7 +15,7 @@ import type {
 	ProviderMessage,
 	ProviderNameAndId,
 	ProviderPreferences,
-	ProviderReleaseMapping,
+	ProviderReleaseErrorMap,
 	ReleaseOptions,
 } from '@/harmonizer/types.ts';
 import type { Logger } from 'std/log/logger.ts';
@@ -152,7 +152,7 @@ export class CombinedReleaseLookup {
 	}
 
 	/** Finalizes all queued lookup requests and returns the provider release mapping. */
-	async getProviderReleaseMapping(): Promise<ProviderReleaseMapping> {
+	async getProviderReleaseMapping(): Promise<ProviderReleaseErrorMap> {
 		const releaseResults = await Promise.allSettled(this.queuedReleases);
 		const releasesOrErrors: Array<HarmonyRelease | Error> = await Promise.all(releaseResults.map(async (result) => {
 			if (result.status === 'fulfilled') {
@@ -191,7 +191,7 @@ export class CombinedReleaseLookup {
 	}
 
 	/** Ensures that all requested providers have been looked up and returns the provider release mapping. */
-	async getCompleteProviderReleaseMapping(): Promise<ProviderReleaseMapping> {
+	async getCompleteProviderReleaseMapping(): Promise<ProviderReleaseErrorMap> {
 		let releaseMap = await this.getProviderReleaseMapping();
 
 		// We might still have providers left for which we have not done a lookup because the GTIN was not available.

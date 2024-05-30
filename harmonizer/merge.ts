@@ -1,5 +1,5 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
-import { isNotError } from '@/utils/predicate.ts';
+import { filterErrorEntries } from '@/utils/record.ts';
 import { similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
 import { assert } from 'std/assert/assert.ts';
@@ -15,7 +15,8 @@ import type {
 	ProviderMessage,
 	ProviderName,
 	ProviderPreferences,
-	ProviderReleaseMapping,
+	ProviderReleaseErrorMap,
+	ProviderReleaseMap,
 	ResolvableEntity,
 } from './types.ts';
 
@@ -26,10 +27,10 @@ import type {
  * @returns Merged release (with immutable properties from their preferred providers as well as some combined properties).
  */
 export function mergeRelease(
-	releaseMap: ProviderReleaseMapping,
+	releaseMap: ProviderReleaseErrorMap,
 	preferences: ProviderPreferences | ProviderName[] = {},
 ): HarmonyRelease {
-	assertReleaseCompatibility(releaseMap);
+	assertReleaseCompatibility(filterErrorEntries(releaseMap));
 
 	const availableProviders: ProviderName[] = Object.entries(releaseMap)
 		.filter(([_providerName, releaseOrError]) => !(releaseOrError instanceof Error))
@@ -241,7 +242,7 @@ function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T[], sou
 
 /** Returns pairs of unique values and providers which use this value for the given release property. */
 export function uniqueReleasePropertyValues<Value>(
-	releaseMap: ProviderReleaseMapping,
+	releaseMap: ProviderReleaseMap,
 	propertyAccessor: (release: HarmonyRelease) => Value | null | undefined,
 	stringify?: (value: Value) => string,
 ): Array<[Value, ProviderName[]]> {
@@ -249,8 +250,6 @@ export function uniqueReleasePropertyValues<Value>(
 	const providersByKey = new Map<string, string[]>();
 
 	for (const [providerName, release] of Object.entries(releaseMap)) {
-		if (release instanceof Error) continue;
-
 		const value = propertyAccessor(release);
 		if (value === null || value === undefined) continue;
 
@@ -274,9 +273,8 @@ export function uniqueReleasePropertyValues<Value>(
 }
 
 /** Ensures that the given releases are compatible and can be merged. */
-function assertReleaseCompatibility(releaseMap: ProviderReleaseMapping) {
-	const releases = Object.values(releaseMap).filter(isNotError);
-	if (!releases.length) return;
+function assertReleaseCompatibility(releaseMap: ProviderReleaseMap) {
+	if (!Object.keys(releaseMap).length) return;
 
 	assertUniquePropertyValue(
 		(release) => (release.gtin) ? Number(release.gtin) : undefined,
