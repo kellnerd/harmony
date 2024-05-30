@@ -11,6 +11,7 @@ import RegionList from '@/server/islands/RegionList.tsx';
 import { determineReleaseEventCountries } from '@/musicbrainz/release_countries.ts';
 import { formatPartialDate } from '@/utils/date.ts';
 import { formatLanguageConfidence, formatScriptFrequency, regionName } from '@/utils/locale.ts';
+import { mapValues } from '@/utils/record.ts';
 import { flagEmoji } from '@/utils/regions.ts';
 import { formatTimestampAsISOString } from '@/utils/time.ts';
 
@@ -171,7 +172,13 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 				)}
 			</table>
 			{release.images?.map((artwork) => <CoverImage artwork={artwork} />)}
-			{release.media.map((medium) => <Tracklist medium={medium} showTitle={isMultiMedium} />)}
+			{release.media.map((medium, index) => (
+				<Tracklist
+					medium={medium}
+					mediumMap={releaseMap && mapValues(releaseMap, (release) => release.media[index])}
+					showTitle={isMultiMedium}
+				/>
+			))}
 		</div>
 	);
 }

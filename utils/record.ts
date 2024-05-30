@@ -29,6 +29,14 @@ export function mapEntryValues<Key extends string, Value, Result>(
 		.map(([key, value], index) => [key as Key, mapper(value, index)]);
 }
 
+/** Creates a new record from the keys and the mapped values of the given record. */
+export function mapValues<Key extends string, Value, Result>(
+	record: Record<Key, Value>,
+	mapper: (value: Value, index?: number) => Result,
+): Record<Key, Result> {
+	return Object.fromEntries(mapEntryValues(record, mapper)) as Record<Key, Result>;
+}
+
 /**
  * Returns pairs of unique mapped values and keys which use this value.
  *

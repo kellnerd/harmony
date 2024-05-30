@@ -1,17 +1,21 @@
+import { setupAlternativeValues } from './AlternativeValues.tsx';
 import { ArtistCredit } from './ArtistCredit.tsx';
 import { ISRC } from './ISRC.tsx';
+
 import { pluralWithCount } from '@/utils/plural.ts';
+import { mapValues } from '@/utils/record.ts';
 import { flagEmoji } from '@/utils/regions.ts';
 import { formatDuration } from '@/utils/time.ts';
 
-import type { HarmonyMedium } from '@/harmonizer/types.ts';
+import type { HarmonyMedium, ProviderName } from '@/harmonizer/types.ts';
 
-type Props = {
+export type TracklistProps = {
 	medium: HarmonyMedium;
+	mediumMap?: Record<ProviderName, HarmonyMedium>;
 	showTitle?: boolean;
 };
 
-export function Tracklist({ medium, showTitle = false }: Props) {
+export function Tracklist({ medium, mediumMap, showTitle = false }: TracklistProps) {
 	return (
 		<table class='tracklist'>
 			{showTitle && (
@@ -30,14 +34,39 @@ export function Tracklist({ medium, showTitle = false }: Props) {
 					{medium.tracklist.some((track) => track.availableIn) && <th>Availability</th>}
 				</tr>
 			</thead>
-			{medium.tracklist.map((track) => {
+			{medium.tracklist.map((track, index) => {
 				const regions = track.availableIn;
+
+				const trackMap = mediumMap && mapValues(mediumMap, (medium) => medium.tracklist[index]);
+				const AlternativeValues = setupAlternativeValues(trackMap);
+
 				return (
 					<tr>
 						<td class='numeric'>{track.number}</td>
-						<td>{track.title}</td>
-						<td>{track.artists && <ArtistCredit artists={track.artists} />}</td>
-						<td class='numeric'>{formatDuration(track.length, { showMs: true })}</td>
+						<td>
+							{track.title}
+							<AlternativeValues property={(track) => track.title} />
+						</td>
+						<td>
+							{track.artists && (
+								<>
+									<ArtistCredit artists={track.artists} />
+									<AlternativeValues
+										property={(track) => track.artists}
+										display={(artists) => <ArtistCredit artists={artists} plainText />}
+										identifier={(artists) => artists.map((artist) => artist.creditedName ?? artist.name).join()}
+									/>
+								</>
+							)}
+						</td>
+						<td class='numeric'>
+							{formatDuration(track.length, { showMs: true })}
+							<AlternativeValues
+								property={(track) => track.length}
+								display={formatDuration}
+								identifier={(ms) => (ms / 2000).toFixed(0)}
+							/>
+						</td>
 						<td>
 							{track.isrc && <ISRC code={track.isrc} />}
 						</td>
