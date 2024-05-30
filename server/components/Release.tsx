@@ -1,3 +1,4 @@
+import { setupAlternativeValues } from './AlternativeValues.tsx';
 import { ArtistCredit } from './ArtistCredit.tsx';
 import { CoverImage } from './CoverImage.tsx';
 import { LinkedEntity } from './LinkedEntity.tsx';
@@ -10,7 +11,6 @@ import RegionList from '@/server/islands/RegionList.tsx';
 import { determineReleaseEventCountries } from '@/musicbrainz/release_countries.ts';
 import { formatPartialDate } from '@/utils/date.ts';
 import { formatLanguageConfidence, formatScriptFrequency, regionName } from '@/utils/locale.ts';
-import { uniqueMappedValues } from '@/utils/record.ts';
 import { flagEmoji } from '@/utils/regions.ts';
 import { formatTimestampAsISOString } from '@/utils/time.ts';
 
@@ -23,43 +23,21 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 	const isMultiMedium = release.media.length > 1;
 	const { credits, copyright, language, script, info } = release;
 
-	function alternativeValues<Value>(
-		propertyAccessor: (release: HarmonyRelease) => Value | undefined,
-		display?: (value: Value) => unknown,
-		makeIdentifier?: (value: Value) => string,
-	) {
-		if (!releaseMap) return;
-
-		const uniqueValues = uniqueMappedValues(releaseMap, propertyAccessor, makeIdentifier);
-		if (uniqueValues.length > 1) {
-			return (
-				<ul class='alt-values'>
-					{uniqueValues.map(
-						([value, providerNames]) => (
-							<li>
-								{display ? display(value) : value}
-								{providerNames.map((name) => <ProviderIcon providerName={name} stroke={1.25} />)}
-							</li>
-						),
-					)}
-				</ul>
-			);
-		}
-	}
+	const AlternativeValues = setupAlternativeValues(releaseMap);
 
 	return (
 		<div class='release'>
 			{info.messages.map((message) => <MessageBox message={message} />)}
 			<h2 class='release-title'>{release.title}</h2>
-			{alternativeValues((release) => release.title)}
+			<AlternativeValues property={(release) => release.title} />
 			<p class='release-artist'>
 				by <ArtistCredit artists={release.artists} />
 			</p>
-			{alternativeValues(
-				(release) => release.artists,
-				(artists) => <ArtistCredit artists={artists} plainText />,
-				(artists) => artists.map((artist) => artist.creditedName ?? artist.name).join(),
-			)}
+			<AlternativeValues
+				property={(release) => release.artists}
+				display={(artists) => <ArtistCredit artists={artists} plainText />}
+				identifier={(artists) => artists.map((artist) => artist.creditedName ?? artist.name).join()}
+			/>
 			<table class='release-info'>
 				<tr>
 					<th>Providers</th>
@@ -83,7 +61,11 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 					<th>Release date</th>
 					<td>
 						{formatPartialDate(release.releaseDate ?? {}) || '[unknown]'}
-						{alternativeValues((release) => release.releaseDate, formatPartialDate, formatPartialDate)}
+						<AlternativeValues
+							property={(release) => release.releaseDate}
+							display={formatPartialDate}
+							identifier={formatPartialDate}
+						/>
 					</td>
 				</tr>
 				{release.labels && (
