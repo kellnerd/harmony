@@ -31,9 +31,9 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 			{info.messages.map((message) => <MessageBox message={message} />)}
 			<h2 class='release-title'>{release.title}</h2>
 			<AlternativeValues property={(release) => release.title} />
-			<p class='release-artist'>
+			<div class='release-artist'>
 				by <ArtistCredit artists={release.artists} />
-			</p>
+			</div>
 			<AlternativeValues
 				property={(release) => release.artists}
 				display={(artists) => <ArtistCredit artists={artists} plainText />}
