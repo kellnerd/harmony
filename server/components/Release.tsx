@@ -7,7 +7,7 @@ import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import RegionList from '@/server/islands/RegionList.tsx';
 
-import { uniqueReleasePropertyValues } from '@/harmonizer/merge.ts';
+import { uniqueMappedValues } from '@/harmonizer/merge.ts';
 import { determineReleaseEventCountries } from '@/musicbrainz/release_countries.ts';
 import { formatPartialDate } from '@/utils/date.ts';
 import { formatLanguageConfidence, formatScriptFrequency, regionName } from '@/utils/locale.ts';
@@ -26,11 +26,11 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 	function alternativeValues<Value>(
 		propertyAccessor: (release: HarmonyRelease) => Value | undefined,
 		display?: (value: Value) => unknown,
-		stringify?: (value: Value) => string,
+		makeIdentifier?: (value: Value) => string,
 	) {
 		if (!releaseMap) return;
 
-		const uniqueValues = uniqueReleasePropertyValues(releaseMap, propertyAccessor, stringify);
+		const uniqueValues = uniqueMappedValues(releaseMap, propertyAccessor, makeIdentifier);
 		if (uniqueValues.length > 1) {
 			return (
 				<ul class='alt-values'>

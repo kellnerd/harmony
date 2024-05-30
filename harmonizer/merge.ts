@@ -1,5 +1,5 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
-import { filterErrorEntries } from '@/utils/record.ts';
+import { filterErrorEntries, mapEntryValues } from '@/utils/record.ts';
 import { similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
 import { assert } from 'std/assert/assert.ts';
@@ -240,33 +240,36 @@ function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T[], sou
 	});
 }
 
-/** Returns pairs of unique values and providers which use this value for the given release property. */
-export function uniqueReleasePropertyValues<Value>(
-	releaseMap: ProviderReleaseMap,
-	propertyAccessor: (release: HarmonyRelease) => Value | null | undefined,
-	stringify?: (value: Value) => string,
-): Array<[Value, ProviderName[]]> {
-	const uniqueValuesByKey = new Map<string, Value>();
-	const providersByKey = new Map<string, string[]>();
+/**
+ * Returns pairs of unique mapped values and keys which use this value.
+ *
+ * Mapped values are converted to string identifiers before comparison.
+ */
+export function uniqueMappedValues<Key extends string, Value, Result>(
+	record: Record<Key, Value>,
+	mapper: (value: Value) => Result | null | undefined,
+	makeIdentifier?: (value: Result) => string,
+): Array<[Result, Key[]]> {
+	const uniqueValuesByIdentifier = new Map<string, Result>();
+	const keysByIdentifier = new Map<string, Key[]>();
 
-	for (const [providerName, release] of Object.entries(releaseMap)) {
-		const value = propertyAccessor(release);
+	for (const [key, value] of mapEntryValues(record, mapper)) {
 		if (value === null || value === undefined) continue;
 
-		const key = stringify ? stringify(value) : value.toString();
-		const providers = providersByKey.get(key);
+		const identifier = makeIdentifier ? makeIdentifier(value) : value.toString();
+		const providers = keysByIdentifier.get(identifier);
 		if (providers) {
-			providers.push(providerName);
-			providersByKey.set(key, providers);
+			providers.push(key);
+			keysByIdentifier.set(identifier, providers);
 		} else {
-			providersByKey.set(key, [providerName]);
-			uniqueValuesByKey.set(key, value);
+			keysByIdentifier.set(identifier, [key]);
+			uniqueValuesByIdentifier.set(identifier, value);
 		}
 	}
 
-	const result: Array<[Value, ProviderName[]]> = [];
-	for (const [key, value] of uniqueValuesByKey) {
-		result.push([value, providersByKey.get(key)!]);
+	const result: Array<[Result, Key[]]> = [];
+	for (const [key, value] of uniqueValuesByIdentifier) {
+		result.push([value, keysByIdentifier.get(key)!]);
 	}
 
 	return result;
@@ -291,7 +294,7 @@ function assertReleaseCompatibility(releaseMap: ProviderReleaseMap) {
 		propertyAccessor: (release: HarmonyRelease) => Value | undefined,
 		errorDescription: string,
 	) {
-		const uniqueValues = uniqueReleasePropertyValues(releaseMap, propertyAccessor);
+		const uniqueValues = uniqueMappedValues(releaseMap, propertyAccessor);
 		assert(
 			uniqueValues.length <= 1,
 			`${errorDescription}: ${
