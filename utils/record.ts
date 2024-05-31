@@ -1,3 +1,10 @@
+/** Clones properties between records of the same type. Creates a deep copy if necessary. */
+export function cloneInto<T>(target: T, source: T, property: keyof T) {
+	let value = source[property];
+	if (typeof value === 'object' && value !== null) value = structuredClone(value);
+	return target[property] = value;
+}
+
 /** Copies properties between records of the same type. Helper to prevent type errors. */
 export function copyTo<T>(target: T, source: T, property: keyof T) {
 	return target[property] = source[property];
@@ -54,10 +61,10 @@ export function uniqueMappedValues<Key extends string, Value, Result>(
 		if (value === null || value === undefined) continue;
 
 		const identifier = makeIdentifier ? makeIdentifier(value) : value.toString();
-		const providers = keysByIdentifier.get(identifier);
-		if (providers) {
-			providers.push(key);
-			keysByIdentifier.set(identifier, providers);
+		const knownKeys = keysByIdentifier.get(identifier);
+		if (knownKeys) {
+			knownKeys.push(key);
+			keysByIdentifier.set(identifier, knownKeys);
 		} else {
 			keysByIdentifier.set(identifier, [key]);
 			uniqueValuesByIdentifier.set(identifier, value);

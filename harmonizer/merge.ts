@@ -1,5 +1,5 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
-import { copyTo, filterErrorEntries, isFilled, uniqueMappedValues } from '@/utils/record.ts';
+import { cloneInto, copyTo, filterErrorEntries, isFilled, uniqueMappedValues } from '@/utils/record.ts';
 import { similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
 import { assert } from 'std/assert/assert.ts';
@@ -85,13 +85,13 @@ export function mergeRelease(
 
 	orderByPreference(availableProviders, preferredProviders);
 
-	// Phase 1: Copy properties without specific provider preferences
+	// Phase 1: Clone properties without specific provider preferences
 	for (const providerName of availableProviders) {
 		const sourceRelease = releaseMap[providerName] as HarmonyRelease;
 
-		// copy missing properties into the merge target and keep track of their sources
+		// Clone missing properties into the merge target and keep track of their sources.
 		missingReleaseProperties.forEach((property) => {
-			const value = copyTo(mergedRelease, sourceRelease, property);
+			const value = cloneInto(mergedRelease, sourceRelease, property);
 
 			if (isFilled(value)) {
 				mergedRelease.info.sourceMap![property] = providerName;
@@ -99,7 +99,7 @@ export function mergeRelease(
 			}
 		});
 
-		// as long as the merged release does not have media, nothing will happen here
+		// As long as the merged release does not have media, nothing will happen here.
 		if (mergedRelease.media.length && sourceRelease.media.length) {
 			missingTrackProperties.forEach((property) => {
 				mergedRelease.media.forEach((medium, mediumIndex) => {
@@ -147,7 +147,7 @@ export function mergeRelease(
 		return mergedRelease;
 	}
 
-	// Phase 2: Copy individual properties from their preferred providers
+	// Phase 2: Clone individual properties from their preferred providers
 	(Object.entries(preferences) as [PreferenceProperty, ProviderName[]][]).forEach(([property, preferredProviders]) => {
 		if (property === 'media' || property === 'externalId') {
 			// handled during phase 1 and phase 3
@@ -173,7 +173,7 @@ export function mergeRelease(
 					break;
 				}
 			} else {
-				const value = copyTo(mergedRelease, sourceRelease, property);
+				const value = cloneInto(mergedRelease, sourceRelease, property);
 
 				if (isFilled(value)) {
 					mergedRelease.info.sourceMap![property] = providerName;
