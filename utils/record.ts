@@ -1,7 +1,10 @@
 /** Clones properties between records of the same type. Creates a deep copy if necessary. */
 export function cloneInto<T>(target: T, source: T, property: keyof T) {
 	let value = source[property];
-	if (typeof value === 'object' && value !== null) value = structuredClone(value);
+	// TODO: Stop using URL for images and remove this temporary workaround.
+	if (property !== 'images' && typeof value === 'object' && value !== null) {
+		value = structuredClone(value);
+	}
 	return target[property] = value;
 }
 
