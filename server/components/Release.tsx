@@ -36,8 +36,8 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 			</div>
 			<AlternativeValues
 				property={(release) => release.artists}
-				display={(artists) => <ArtistCredit artists={artists} plainText />}
-				identifier={(artists) => artists.map((artist) => artist.creditedName ?? artist.name).join()}
+				display={(artists) => <ArtistCredit artists={artists} />}
+				identifier={(artists) => artists.map((artist) => artist.creditedName ?? artist.name).join('\n')}
 			/>
 			<table class='release-info'>
 				<tr>

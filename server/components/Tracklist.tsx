@@ -53,8 +53,8 @@ export function Tracklist({ medium, mediumMap, showTitle = false }: TracklistPro
 									<ArtistCredit artists={track.artists} />
 									<AlternativeValues
 										property={(track) => track.artists}
-										display={(artists) => <ArtistCredit artists={artists} plainText />}
-										identifier={(artists) => artists.map((artist) => artist.creditedName ?? artist.name).join()}
+										display={(artists) => <ArtistCredit artists={artists} />}
+										identifier={(artists) => artists.map((artist) => artist.creditedName ?? artist.name).join('\n')}
 									/>
 								</>
 							)}
