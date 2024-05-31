@@ -64,7 +64,7 @@ export function Tracklist({ medium, mediumMap, showTitle = false }: TracklistPro
 							<AlternativeValues
 								property={(track) => track.length}
 								display={formatDuration}
-								identifier={(ms) => (ms / 2000).toFixed(0)}
+								identifier={(ms) => Math.round(ms / 1000).toFixed(0)}
 							/>
 						</td>
 						<td>
