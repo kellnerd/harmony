@@ -2,9 +2,10 @@ import { ArtistCredit } from '@/server/components/ArtistCredit.tsx';
 import { MagicISRC } from '@/server/components/ISRCSubmission.tsx';
 import { MessageBox } from '@/server/components/MessageBox.tsx';
 import { ProviderList } from '@/server/components/ProviderList.tsx';
+import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
 import { CombinedReleaseLookup } from '@/lookup.ts';
-import type { HarmonyRelease, ReleaseOptions } from '@/harmonizer/types.ts';
+import type { HarmonyRelease, ProviderInfo, ReleaseOptions } from '@/harmonizer/types.ts';
 import { MB } from '@/musicbrainz/api_client.ts';
 import { providers as providerRegistry } from '@/providers/mod.ts';
 import { musicbrainzBaseUrl } from '@/server/config.ts';
@@ -18,6 +19,8 @@ export default defineRoute(async (req, ctx) => {
 	const errors: Error[] = [];
 	let release: HarmonyRelease | undefined = undefined;
 	let releaseMbid: string | undefined;
+	let releaseUrl: URL | undefined;
+	let isrcProvider: ProviderInfo | undefined;
 
 	try {
 		releaseMbid = ctx.url.searchParams.get('release_mbid') ?? undefined;
@@ -46,6 +49,11 @@ export default defineRoute(async (req, ctx) => {
 
 		const lookup = new CombinedReleaseLookup({ urls, gtin, providerIds }, options);
 		release = await lookup.getMergedRelease();
+
+		const { info } = release;
+		const isrcSource = info.sourceMap?.isrc;
+		isrcProvider = info.providers.find((provider) => provider.name === isrcSource);
+		releaseUrl = new URL(`release/${releaseMbid}`, musicbrainzBaseUrl);
 	} catch (error) {
 		if (error instanceof AggregateError) {
 			errors.push(error, ...error.errors);
@@ -90,12 +98,30 @@ export default defineRoute(async (req, ctx) => {
 						}}
 					/>
 				))}
-				{releaseMbid && (
-					<p>
-						<a href={new URL(`release/${releaseMbid}`, musicbrainzBaseUrl).href} target='_blank'>Open on MusicBrainz</a>
-					</p>
+				{releaseUrl && (
+					<div className='message'>
+						<SpriteIcon name='brand-metabrainz' />
+						<p>
+							<a href={releaseUrl.href} target='_blank'>
+								Open on MusicBrainz
+							</a>
+						</p>
+					</div>
 				)}
-				{release && <MagicISRC release={release} targetMbid={releaseMbid} />}
+				{release && isrcProvider && (
+					<div class='message'>
+						<SpriteIcon name='disc' />
+						<div>
+							<p>
+								Submit ISRCs from {isrcProvider.name} to MusicBrainz:{' '}
+								<MagicISRC release={release} targetMbid={releaseMbid!} />
+							</p>
+							<p>
+								<small>Submit ISRCs from {isrcProvider.url.href} to {releaseUrl!.href}</small>
+							</p>
+						</div>
+					</div>
+				)}
 			</main>
 		</>
 	);

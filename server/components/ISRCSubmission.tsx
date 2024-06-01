@@ -15,9 +15,5 @@ export function MagicISRC({ release, targetMbid }: { release: HarmonyRelease; ta
 	const submissionUrl = new URL('https://magicisrc.kepstin.ca');
 	submissionUrl.search = query.toString();
 
-	return (
-		<p class='magic-isrc'>
-			<a href={submissionUrl.href} target='_blank'>Submit ISRCs with MagicISRC</a>
-		</p>
-	);
+	return <a class='magic-isrc' href={submissionUrl.href} target='_blank'>Open with MagicISRC</a>;
 }

@@ -8,6 +8,7 @@ import IconAlertTriangle from 'tabler-icons/alert-triangle.tsx';
 import IconBarcode from 'tabler-icons/barcode.tsx';
 import IconBug from 'tabler-icons/bug.tsx';
 import IconDatabaseImport from 'tabler-icons/database-import.tsx';
+import IconDisc from 'tabler-icons/disc.tsx';
 import IconHelp from 'tabler-icons/help.tsx';
 import IconInfoCircle from 'tabler-icons/info-circle.tsx';
 import IconPuzzle from 'tabler-icons/puzzle.tsx';
@@ -26,6 +27,7 @@ const icons: Icon[] = [
 	IconBarcode,
 	IconBug,
 	IconDatabaseImport,
+	IconDisc,
 	IconHelp,
 	IconInfoCircle,
 	IconSearch,
