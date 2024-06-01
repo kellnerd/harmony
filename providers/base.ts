@@ -103,7 +103,7 @@ export abstract class MetadataProvider {
 	}
 
 	/** Checks whether the provider supports the domain of the given URL. */
-	supportsDomain(url: URL): boolean {
+	supportsDomain(url: URL | string): boolean {
 		return new URLPattern({ hostname: this.supportedUrls.hostname }).test(url);
 	}
 

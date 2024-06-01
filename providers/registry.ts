@@ -66,7 +66,7 @@ export class ProviderRegistry {
 	}
 
 	/** Finds a registered provider which supports the domain of the given URL. */
-	findByUrl(url: URL): MetadataProvider | undefined {
+	findByUrl(url: URL | string): MetadataProvider | undefined {
 		return this.#providerList.find((provider) => provider.supportsDomain(url));
 	}
 
