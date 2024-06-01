@@ -1,19 +1,22 @@
 import { ArtistCredit } from '@/server/components/ArtistCredit.tsx';
+import { CoverImage } from '@/server/components/CoverImage.tsx';
 import { MagicISRC } from '@/server/components/ISRCSubmission.tsx';
 import { MessageBox } from '@/server/components/MessageBox.tsx';
 import { ProviderList } from '@/server/components/ProviderList.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
 import { CombinedReleaseLookup } from '@/lookup.ts';
-import type { HarmonyRelease, ProviderInfo, ReleaseOptions } from '@/harmonizer/types.ts';
+import type { Artwork, HarmonyRelease, ProviderInfo, ReleaseOptions } from '@/harmonizer/types.ts';
 import { MB } from '@/musicbrainz/api_client.ts';
 import { providers as providerRegistry } from '@/providers/mod.ts';
 import { musicbrainzBaseUrl } from '@/server/config.ts';
 import { extractReleaseLookupState } from '@/server/state.ts';
 import { LookupError, ProviderError } from '@/utils/errors.ts';
+import { filterErrorEntries } from '@/utils/record.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
 import { getLogger } from 'std/log/get_logger.ts';
+import { join } from 'std/url/join.ts';
 
 export default defineRoute(async (req, ctx) => {
 	const errors: Error[] = [];
@@ -21,6 +24,7 @@ export default defineRoute(async (req, ctx) => {
 	let releaseMbid: string | undefined;
 	let releaseUrl: URL | undefined;
 	let isrcProvider: ProviderInfo | undefined;
+	let allImages: Artwork[] = [];
 
 	try {
 		releaseMbid = ctx.url.searchParams.get('release_mbid') ?? undefined;
@@ -50,10 +54,15 @@ export default defineRoute(async (req, ctx) => {
 		const lookup = new CombinedReleaseLookup({ urls, gtin, providerIds }, options);
 		release = await lookup.getMergedRelease();
 
+		const providerReleaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
+		allImages = Object.entries(providerReleaseMap).flatMap(([provider, release]) =>
+			release.images?.map((image) => ({ ...image, provider })) ?? []
+		);
+
 		const { info } = release;
 		const isrcSource = info.sourceMap?.isrc;
 		isrcProvider = info.providers.find((provider) => provider.name === isrcSource);
-		releaseUrl = new URL(`release/${releaseMbid}`, musicbrainzBaseUrl);
+		releaseUrl = join(musicbrainzBaseUrl, 'release', releaseMbid);
 	} catch (error) {
 		if (error instanceof AggregateError) {
 			errors.push(error, ...error.errors);
@@ -122,6 +131,19 @@ export default defineRoute(async (req, ctx) => {
 						</div>
 					</div>
 				)}
+				{releaseUrl && (
+					<div className='message'>
+						<SpriteIcon name='photo-plus' />
+						<div>
+							<p>
+								<a href={join(releaseUrl, 'add-cover-art').href} target='_blank'>
+									Add cover art
+								</a>
+							</p>
+						</div>
+					</div>
+				)}
+				{allImages.map((artwork) => <CoverImage artwork={artwork} />)}
 			</main>
 		</>
 	);
