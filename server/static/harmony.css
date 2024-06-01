@@ -144,6 +144,10 @@ input {
 	box-sizing: border-box;
 }
 
+input:disabled {
+	cursor: not-allowed;
+}
+
 input[type=text] {
 	width: 25em;
 	max-width: 100%;
