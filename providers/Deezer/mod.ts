@@ -30,7 +30,7 @@ export default class DeezerProvider extends MetadataProvider {
 	readonly name = 'Deezer';
 
 	readonly supportedUrls = new URLPattern({
-		hostname: 'www.deezer.com',
+		hostname: '{www.}?deezer.com',
 		pathname: String.raw`/:language(\w{2})?/:type(album|artist)/:id(\d+)`,
 	});
 
