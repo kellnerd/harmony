@@ -1,3 +1,4 @@
+import { FeatureQuality, type FeatureQualityMap, type ProviderFeature } from './features.ts';
 import { ProviderError } from '@/utils/errors.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 import { rateLimit } from 'utils/async/rateLimit.js';
@@ -16,7 +17,6 @@ import type {
 	ReleaseOptions,
 	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
-import type { FeatureQualityMap } from './features.ts';
 import type { PartialDate } from '@/utils/date.ts';
 import type { CacheOptions, Snapshot, SnapStorage } from 'snap-storage';
 import type { MaybePromise } from 'utils/types.d.ts';
@@ -130,6 +130,11 @@ export abstract class MetadataProvider {
 	/** Creates external entity IDs from the given provider-specific IDs. */
 	makeExternalIds(...entityIds: EntityId[]): ExternalEntityId[] {
 		return entityIds.map((entityId) => ({ ...entityId, provider: this.internalName }));
+	}
+
+	/** Returns the quality rating of the given feature. */
+	getQuality(feature: ProviderFeature): FeatureQuality {
+		return this.features[feature] ?? FeatureQuality.UNKNOWN;
 	}
 
 	protected get log(): Logger {

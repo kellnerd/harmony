@@ -1,5 +1,5 @@
 import type { MetadataProvider, MetadataProviderConstructor } from './base.ts';
-import { FeatureQuality, ProviderFeature } from './features.ts';
+import type { ProviderFeature } from './features.ts';
 import type { ExternalEntityId } from '@/harmonizer/types.ts';
 import { SnapStorage } from 'snap-storage';
 
@@ -42,6 +42,13 @@ export class ProviderRegistry {
 		return provider.constructUrl(entityId);
 	}
 
+	/** Returns a list of internal provider names that meet the given condition. */
+	filterInternalNames(predicate: (provider: MetadataProvider) => boolean): string[] {
+		return this.#providerList
+			.filter((provider) => predicate(provider))
+			.map((provider) => provider.internalName);
+	}
+
 	/** Returns a list of internal provider names that belong to the given category. */
 	filterInternalNamesByCategory(category: string): string[] {
 		if (category === 'all') {
@@ -50,13 +57,6 @@ export class ProviderRegistry {
 			// TODO: Add a real `categories` property to `MetadataProvider` and use it here.
 			return [];
 		}
-	}
-
-	/** Returns a list of internal provider names that meet the quality condition for the given feature. */
-	filterInternalNamesByQuality(feature: ProviderFeature, predicate: (quality: number) => boolean): string[] {
-		return this.#providerList
-			.filter((provider) => predicate(provider.features[feature] ?? FeatureQuality.UNKNOWN))
-			.map((provider) => provider.internalName);
 	}
 
 	/** Finds a registered provider by name (internal name or display name). */
@@ -85,7 +85,7 @@ export class ProviderRegistry {
 		return this.#providerList
 			.map((provider) => ({
 				name: provider.name,
-				quality: provider.features[feature] ?? FeatureQuality.UNKNOWN,
+				quality: provider.getQuality(feature),
 			}))
 			.sort((a, b) => b.quality - a.quality)
 			.map((provider) => provider.name);

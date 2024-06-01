@@ -20,7 +20,7 @@ providers.addMultiple(
 
 /** Internal names of providers which are enabled by default (for GTIN lookups). */
 export const defaultProviders = new Set(
-	providers.filterInternalNamesByQuality('GTIN lookup', (quality) => quality >= FeatureQuality.PRESENT),
+	providers.filterInternalNames((provider) => provider.getQuality('GTIN lookup') >= FeatureQuality.PRESENT),
 );
 
 /** Recommended default preferences which sort providers by quality. */
