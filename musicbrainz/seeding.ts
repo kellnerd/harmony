@@ -13,12 +13,19 @@ import type { FormDataRecord } from 'utils/types.d.ts';
 export interface ReleaseSeedOptions {
 	/** URL of the project which was used to seed the release, for edit notes. */
 	projectUrl: URL;
+	/** URL to which MusicBrainz should redirect, permalink query parameters will be set automatically. */
+	redirectUrl?: URL;
 	/** Base URL of the Harmony instance which was used to seed the release, for permalinks. */
 	seederUrl?: URL;
 }
 
 export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedOptions): FormDataRecord {
 	const countries = preferArray(determineReleaseEventCountries(release));
+	const { redirectUrl } = options;
+
+	if (redirectUrl) {
+		redirectUrl.search = createReleasePermalink(release.info, redirectUrl).search;
+	}
 
 	const seed: ReleaseSeed = {
 		name: release.title,
@@ -59,6 +66,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 		),
 		annotation: buildAnnotation(release),
 		edit_note: buildEditNote(release.info, options),
+		redirect_uri: redirectUrl?.href,
 	};
 
 	return flatten(seed);

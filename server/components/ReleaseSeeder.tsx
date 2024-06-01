@@ -14,6 +14,7 @@ export function ReleaseSeeder({ release, sourceUrl, targetUrl, projectUrl }: {
 }) {
 	const seed = createReleaseSeed(release, {
 		projectUrl,
+		redirectUrl: sourceUrl && new URL('release/actions', sourceUrl),
 		seederUrl: sourceUrl,
 	});
 
