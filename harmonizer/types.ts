@@ -90,6 +90,7 @@ export type Artwork = {
 	thumbUrl?: URL;
 	types?: ArtworkType[];
 	comment?: string;
+	provider?: ProviderName;
 };
 
 export type ArtworkType = 'front' | 'back' | 'track';

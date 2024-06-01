@@ -125,7 +125,8 @@ ul.alt-values {
 	padding-left: 1.2em;
 	list-style: square;
 }
-ul.alt-values svg.icon {
+
+span.label svg.icon, ul.alt-values svg.icon {
 	height: 16px;
 	width: 16px;
 }
