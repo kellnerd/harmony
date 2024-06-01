@@ -3,7 +3,7 @@ import { ArtistCredit } from './ArtistCredit.tsx';
 import { CoverImage } from './CoverImage.tsx';
 import { LinkedEntity } from './LinkedEntity.tsx';
 import { MessageBox } from './MessageBox.tsx';
-import { ProviderIcon } from './ProviderIcon.tsx';
+import { ProviderList } from './ProviderList.tsx';
 import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import RegionList from '@/server/islands/RegionList.tsx';
@@ -13,7 +13,6 @@ import { formatPartialDate } from '@/utils/date.ts';
 import { formatLanguageConfidence, formatScriptFrequency, regionName } from '@/utils/locale.ts';
 import { mapValues } from '@/utils/record.ts';
 import { flagEmoji } from '@/utils/regions.ts';
-import { formatTimestampAsISOString } from '@/utils/time.ts';
 
 import type { HarmonyRelease, ProviderReleaseMap } from '@/harmonizer/types.ts';
 
@@ -43,19 +42,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 				<tr>
 					<th>Providers</th>
 					<td>
-						<ul>
-							{info.providers.map((provider) => (
-								<li>
-									<ProviderIcon providerName={provider.name} size={20} stroke={1.5} />
-									{provider.name}: <a href={provider.url.href} target='_blank'>{provider.id}</a>
-									{provider.apiUrl && <a class='label ml-2' href={provider.apiUrl.href} target='_blank'>API</a>}
-									{provider.cacheTime && (
-										<span class='label ml-2'>Cached: {formatTimestampAsISOString(provider.cacheTime)}</span>
-									)}
-									{provider.processingTime && <span class='label ml-2'>{provider.processingTime.toFixed(0)} ms</span>}
-								</li>
-							))}
-						</ul>
+						<ProviderList providers={info.providers} />
 					</td>
 				</tr>
 				<tr>
