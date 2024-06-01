@@ -153,6 +153,20 @@ export class CombinedReleaseLookup {
 
 	/** Finalizes all queued lookup requests and returns the provider release mapping. */
 	async getProviderReleaseMapping(): Promise<ProviderReleaseErrorMap> {
+		if (!this.queuedReleases.length) {
+			const lookupErrors = this.messages
+				.filter((message) => message.type === 'error')
+				.map((message) => new LookupError(message.text));
+			switch (lookupErrors.length) {
+				case 0:
+					throw new LookupError('No release lookups have been queued');
+				case 1:
+					throw lookupErrors[0];
+				default:
+					throw new AggregateError(lookupErrors, 'Release lookup failed');
+			}
+		}
+
 		const releaseResults = await Promise.allSettled(this.queuedReleases);
 		const releasesOrErrors: Array<HarmonyRelease | Error> = await Promise.all(releaseResults.map(async (result) => {
 			if (result.status === 'fulfilled') {
