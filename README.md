@@ -8,7 +8,7 @@
 - Metadata providers convert source data into a common, harmonized representation
 - Additional sources can be supported by adding more provider implementations
 - Merging of harmonized metadata from your preferred providers
-- Seeding of MusicBrainz releases using the merged metadata
+- Seeding of [MusicBrainz] releases using the merged metadata
 - Resolving of external entity identifiers to MBIDs
 - Automatic guessing of title language and script
 - Permalinks which load snapshots of the originally queried source data
@@ -46,6 +46,32 @@ deno task cli
 
 [Deno]: https://deno.com
 [Fresh]: https://fresh.deno.dev
+[MusicBrainz]: https://musicbrainz.org
+
+## Architecture
+
+The entire code is written in TypeScript, the components of the web interface additionally use JSX syntax.
+
+A brief explanation of the directory structure should give you a basic idea how Harmony is working:
+
+- `harmonizer/`: Harmonized source data representation and algorithms
+  - `types.ts`: Type definitions of harmonized releases (and other entities)
+  - `merge.ts`: Merging algorithm for harmonized releases (from multiple sources)
+- `providers/`: Metadata provider implementations, one per subfolder
+  - `base.ts`: Abstract base classes from which all providers inherit
+  - `registry.ts`: Registry which manages all supported providers, instantiated in `mod.ts`
+- `lookup.ts`: Combined release lookup which accepts GTIN, URLs and/or IDs for any supported provider from the registry
+- `musicbrainz/`: MusicBrainz specific code
+  - `seeding.ts`: Release editor seeding
+  - `mbid_mapping.ts`: Resolving of external IDs/URLs to MBIDs
+- `server/`: Web app to lookup releases and import them into MusicBrainz
+  - `routes/`: Request handlers of the [Fresh] server (file-based routing)
+  - `static/`: Static files which will be served
+  - `components/`: Static [Preact] components which will be rendered as HTML by the server
+  - `islands/`: Dynamic [Preact] components which will be re-rendered by the client
+- `utils/`: Various utility functions
+
+[Preact]: https://preactjs.com/
 
 ## Contributing
 
