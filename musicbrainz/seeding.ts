@@ -24,7 +24,11 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 	const { redirectUrl } = options;
 
 	if (redirectUrl) {
-		redirectUrl.search = createReleasePermalink(release.info, redirectUrl).search;
+		// Preserve lookup parameters such as the used providers.
+		const lookupState = createReleasePermalink(release.info, redirectUrl).searchParams;
+		// Timestamp `ts` is not needed and may even lead to cache misses when different lookup options are used.
+		lookupState.delete('ts');
+		redirectUrl.search = lookupState.toString();
 	}
 
 	const seed: ReleaseSeed = {
