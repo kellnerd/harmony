@@ -167,6 +167,11 @@ export class CombinedReleaseLookup {
 			}
 		}
 
+		// Exit early if our cached release map is up to date.
+		if (this.processedProviders === this.queuedReleases.length) {
+			return this.cachedReleaseMap;
+		}
+
 		const releaseResults = await Promise.allSettled(this.queuedReleases);
 		const releasesOrErrors: Array<HarmonyRelease | Error> = await Promise.all(releaseResults.map(async (result) => {
 			if (result.status === 'fulfilled') {
@@ -201,16 +206,24 @@ export class CombinedReleaseLookup {
 			}
 		}));
 
-		return zipObject(Array.from(this.queuedProviderNames), releasesOrErrors);
+		this.cachedReleaseMap = zipObject(Array.from(this.queuedProviderNames), releasesOrErrors);
+		this.processedProviders = this.queuedReleases.length;
+
+		return this.cachedReleaseMap;
 	}
 
 	/** Ensures that all requested providers have been looked up and returns the provider release mapping. */
 	async getCompleteProviderReleaseMapping(): Promise<ProviderReleaseErrorMap> {
-		let releaseMap = await this.getProviderReleaseMapping();
+		await this.getProviderReleaseMapping();
+
+		// Exit early if our cached release map is up to date.
+		if (this.completelyProcessedProviders === this.queuedReleases.length) {
+			return this.cachedReleaseMap;
+		}
 
 		// We might still have providers left for which we have not done a lookup because the GTIN was not available.
 		if (this.gtinLookupProviders.size && !this.gtin) {
-			const releases = Object.values(releaseMap).filter(isNotError);
+			const releases = Object.values(this.cachedReleaseMap).filter(isNotError);
 
 			// Use already used or available regions of the completed release lookups instead of the standard preferences.
 			const usedRegions = releases.map((release) => release.info.providers[0].lookup.region).filter(isDefined);
@@ -246,7 +259,7 @@ export class CombinedReleaseLookup {
 				case 1:
 					// Queue new lookups and get the updated release mapping.
 					if (this.queueLookupsByGTIN(gtinCandidates[0])) {
-						releaseMap = await this.getProviderReleaseMapping();
+						this.cachedReleaseMap = await this.getProviderReleaseMapping();
 					}
 					break;
 				case 0: {
@@ -266,7 +279,9 @@ export class CombinedReleaseLookup {
 			}
 		}
 
-		return releaseMap;
+		this.completelyProcessedProviders = this.queuedReleases.length;
+
+		return this.cachedReleaseMap;
 	}
 
 	/** Ensures that all requested providers have been looked up and returns the combined release. */
@@ -293,6 +308,15 @@ export class CombinedReleaseLookup {
 
 	/** Display names of all queued providers. */
 	private queuedProviderNames = new Set<string>();
+
+	/** Caches the latest provider release mapping. */
+	private cachedReleaseMap: ProviderReleaseErrorMap = {};
+
+	/** Number of already processed providers for the cached release map. */
+	private processedProviders = 0;
+
+	/** Number of already completely processed providers for the cached release map. */
+	private completelyProcessedProviders = 0;
 
 	/** Warnings and errors from the combined lookup process. */
 	messages: ProviderMessage[] = [];
