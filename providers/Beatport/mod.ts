@@ -135,7 +135,7 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 					slug: rawRelease.label.slug,
 				}),
 			}],
-			gtin: rawRelease.upc,
+			gtin: rawRelease.upc ?? undefined,
 			releaseDate: parseHyphenatedDate(rawRelease.new_release_date),
 			media: [{
 				format: 'Digital Media',
