@@ -22,7 +22,8 @@ export function detectLanguageAndScript(release: HarmonyRelease): void {
 		}
 	}
 
-	if (!release.language) {
+	// Guesses for single track releases are wrong more often than not, skip them.
+	if (!release.language && allTitles.length > 2) {
 		const guessedLanguages = lande(allTitles.join('\n'));
 		const topLanguage = guessedLanguages[0];
 
