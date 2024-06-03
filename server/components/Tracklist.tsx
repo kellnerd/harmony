@@ -11,7 +11,7 @@ import type { HarmonyMedium, ProviderName } from '@/harmonizer/types.ts';
 
 export type TracklistProps = {
 	medium: HarmonyMedium;
-	mediumMap?: Record<ProviderName, HarmonyMedium>;
+	mediumMap?: Record<ProviderName, HarmonyMedium | undefined>;
 	showTitle?: boolean;
 };
 
@@ -37,7 +37,7 @@ export function Tracklist({ medium, mediumMap, showTitle = false }: TracklistPro
 			{medium.tracklist.map((track, index) => {
 				const regions = track.availableIn;
 
-				const trackMap = mediumMap && mapValues(mediumMap, (medium) => medium.tracklist[index]);
+				const trackMap = mediumMap && mapValues(mediumMap, (medium) => medium?.tracklist[index]);
 				const AlternativeValues = setupAlternativeValues(trackMap);
 
 				return (
@@ -45,14 +45,14 @@ export function Tracklist({ medium, mediumMap, showTitle = false }: TracklistPro
 						<td class='numeric'>{track.number}</td>
 						<td>
 							{track.title}
-							<AlternativeValues property={(track) => track.title} />
+							<AlternativeValues property={(track) => track?.title} />
 						</td>
 						<td>
 							{track.artists && (
 								<>
 									<ArtistCredit artists={track.artists} />
 									<AlternativeValues
-										property={(track) => track.artists}
+										property={(track) => track?.artists}
 										display={(artists) => <ArtistCredit artists={artists} />}
 										identifier={(artists) => artists.map((artist) => artist.creditedName ?? artist.name).join('\n')}
 									/>
@@ -62,7 +62,7 @@ export function Tracklist({ medium, mediumMap, showTitle = false }: TracklistPro
 						<td class='numeric'>
 							{formatDuration(track.length, { showMs: true })}
 							<AlternativeValues
-								property={(track) => track.length}
+								property={(track) => track?.length}
 								display={formatDuration}
 								identifier={(ms) => Math.round(ms / 1000).toFixed(0)}
 							/>
