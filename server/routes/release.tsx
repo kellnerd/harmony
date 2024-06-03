@@ -2,12 +2,13 @@ import { MessageBox } from '@/server/components/MessageBox.tsx';
 import { Release } from '@/server/components/Release.tsx';
 import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
 import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
+import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
 import { CombinedReleaseLookup } from '@/lookup.ts';
 import { resolveReleaseMbids } from '@/musicbrainz/mbid_mapping.ts';
 import { defaultProviderPreferences } from '@/providers/mod.ts';
 import { codeUrl, musicbrainzBaseUrl } from '@/server/config.ts';
-import { extractReleaseLookupState } from '@/server/state.ts';
+import { createReleasePermalink, extractReleaseLookupState } from '@/server/state.ts';
 import { filterErrorEntries } from '@/utils/record.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
@@ -78,6 +79,13 @@ export default defineRoute(async (req, ctx) => {
 					externalUrl={urlInput}
 					regions={regionsInput}
 				/>
+				{release && (
+					<p class='center'>
+						<a href={createReleasePermalink(release.info, ctx.url).href}>
+							<SpriteIcon name='link' />Permalink
+						</a>
+					</p>
+				)}
 				{errors.map((error) => (
 					<MessageBox
 						message={{

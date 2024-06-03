@@ -131,6 +131,12 @@ span.label svg.icon, ul.alt-values svg.icon {
 	width: 16px;
 }
 
+a > svg.icon {
+	vertical-align: top;
+	height: 18px;
+	width: 18px;
+}
+
 /* forms */
 
 div.row {

@@ -11,6 +11,7 @@ import IconDatabaseImport from 'tabler-icons/database-import.tsx';
 import IconDisc from 'tabler-icons/disc.tsx';
 import IconHelp from 'tabler-icons/help.tsx';
 import IconInfoCircle from 'tabler-icons/info-circle.tsx';
+import IconLink from 'tabler-icons/link.tsx';
 import IconPhotoPlus from 'tabler-icons/photo-plus.tsx';
 import IconPuzzle from 'tabler-icons/puzzle.tsx';
 import IconSearch from 'tabler-icons/search.tsx';
@@ -31,6 +32,7 @@ const icons: Icon[] = [
 	IconDisc,
 	IconHelp,
 	IconInfoCircle,
+	IconLink,
 	IconPhotoPlus,
 	IconSearch,
 	IconWorldPin,
