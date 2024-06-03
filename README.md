@@ -56,7 +56,7 @@ A brief explanation of the directory structure should give you a basic idea how 
 
 - `harmonizer/`: Harmonized source data representation and algorithms
   - `types.ts`: Type definitions of harmonized releases (and other entities)
-  - `merge.ts`: Merging algorithm for harmonized releases (from multiple sources)
+  - `merge.ts`: Merge algorithm for harmonized releases (from multiple sources)
 - `providers/`: Metadata provider implementations, one per subfolder
   - `base.ts`: Abstract base classes from which all providers inherit
   - `registry.ts`: Registry which manages all supported providers, instantiated in `mod.ts`
@@ -71,7 +71,21 @@ A brief explanation of the directory structure should give you a basic idea how 
   - `islands/`: Dynamic [Preact] components which will be re-rendered by the client
 - `utils/`: Various utility functions
 
+Let us see what happens if someone looks up a release using the website:
+
+1. The Fresh app handles the request to the `/release` route in `server/routes/release.tsx`.
+2. A combined release lookup is initiated, which finds the matching provider(s) in the registry and calls their release lookup methods.
+3. Each requested provider fetches the release data and converts it into a harmonized release.
+4. Once all requested providers have been looked up, the individual release are combined into one release using the merge algorithm.
+5. The route handler calls the MBID mapper, handles errors and renders the release page, including a hidden release seeder form.
+6. In order to create the release seed, the harmonized release is converted into the format expected by MusicBrainz where some data can only be put into the annotation.
+
+All requests which are initiated by a provider will be cached by the base class using [snap_storage] (persisted in `snaps.db` and a `snaps/` folder).
+Each snapshot contains the response body and can be accessed by request URL and a timestamp condition.
+This allows edit notes to contain permalinks which encode a timestamp and the necessary info to initiate the same lookup again, now with the underlying requests being cached.
+
 [Preact]: https://preactjs.com/
+[snap_storage]: https://github.com/kellnerd/snap_storage
 
 ## Contributing
 
