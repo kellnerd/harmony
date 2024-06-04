@@ -63,7 +63,7 @@ jobs:
           REMOTE_PORT: ${{ secrets.DEPLOY_PORT || 22 }}
           REMOTE_USER: ${{ secrets.DEPLOY_USER }}
           TARGET: ${{ secrets.DEPLOY_TARGET }}
-          EXCLUDE: "/deno.lock, /snaps.db, /snaps/"
+          EXCLUDE: "/deno.lock, /.env, /snaps.db, /snaps/"
           SCRIPT_BEFORE_REQUIRED: true
           SCRIPT_BEFORE: |
             set -e
