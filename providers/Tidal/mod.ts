@@ -129,6 +129,10 @@ export class TidalReleaseLookup extends ReleaseLookup<TidalProvider, Album> {
 	}
 
 	protected async getRawRelease(): Promise<Album> {
+		if (!this.lookup.region && this.options.regions && this.options.regions.size > 0) {
+			this.lookup.region = [...this.options.regions][0];
+		}
+
 		const apiUrl = this.constructReleaseApiUrl();
 
 		let cacheEntry, release;
