@@ -5,7 +5,7 @@ import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 
-import type { Album, AlbumItem, ApiError, Artist, Image, Resource, Result } from './api_types.ts';
+import type { Album, AlbumItem, ApiError, Artist, Image, Resource, Result, TokenResult } from './api_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -90,8 +90,8 @@ export default class TidalProvider extends MetadataProvider {
 		const body = new URLSearchParams();
 		body.append('grant_type', 'client_credentials');
 		body.append('client_id', tidalClientId);
-		const snapshot = await this.snaps.cache(url, {
-			fetch: this.fetch,
+
+		const cacheEntry = await this.fetchJSON<TokenResult>(url, {
 			requestInit: {
 				method: 'POST',
 				headers: {
@@ -105,8 +105,7 @@ export default class TidalProvider extends MetadataProvider {
 			},
 		});
 
-		const result = await snapshot.content.json();
-		return result.access_token;
+		return cacheEntry?.content?.access_token;
 	}
 }
 

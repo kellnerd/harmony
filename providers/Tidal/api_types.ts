@@ -90,3 +90,10 @@ export type Result<T> = {
 	data: Resource<T>[];
 	metadata: ResultMetadata;
 };
+
+export type TokenResult = {
+	access_token: string;
+	expires_in: number;
+	scope: string;
+	token_type: string;
+};
