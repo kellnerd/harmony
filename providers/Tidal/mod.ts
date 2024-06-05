@@ -130,29 +130,43 @@ export class TidalReleaseLookup extends ReleaseLookup<TidalProvider, Album> {
 	}
 
 	protected async getRawRelease(): Promise<Album> {
-		if (!this.lookup.region && this.options.regions && this.options.regions.size > 0) {
-			this.lookup.region = [...this.options.regions][0];
+		let cacheEntry, release;
+
+		// Try querying all regions
+		for (const region of this.options.regions || []) {
+			this.lookup.region = region;
+			const apiUrl = this.constructReleaseApiUrl();
+			if (this.lookup.method === 'gtin') {
+				cacheEntry = await this.provider.query<Result<Album>>(
+					apiUrl,
+					this.options.snapshotMaxTimestamp,
+				);
+
+				if (cacheEntry.content?.data?.length) {
+					release = cacheEntry.content.data[0].resource;
+					break;
+				}
+			} else { // if (method === 'id') {
+				try {
+					cacheEntry = await this.provider.query<Resource<Album>>(
+						apiUrl,
+						this.options.snapshotMaxTimestamp,
+					);
+					release = cacheEntry.content?.resource;
+					if (release) {
+						break;
+					}
+				} catch (e) {
+					// If this was a 404 not found error, ignore it and try next region.
+					if (e.response?.status !== 404) {
+						throw e;
+					}
+				}
+			}
 		}
 
-		const apiUrl = this.constructReleaseApiUrl();
-
-		let cacheEntry, release;
-		if (this.lookup.method === 'gtin') {
-			cacheEntry = await this.provider.query<Result<Album>>(
-				apiUrl,
-				this.options.snapshotMaxTimestamp,
-			);
-
-			if (cacheEntry.content.data.length === 0) {
-				throw new ResponseError(this.provider.name, 'API returned no results for this barcode', apiUrl);
-			}
-			release = cacheEntry.content.data[0].resource;
-		} else { // if (method === 'id') {
-			cacheEntry = await this.provider.query<Resource<Album>>(
-				apiUrl,
-				this.options.snapshotMaxTimestamp,
-			);
-			release = cacheEntry.content.resource;
+		if (!cacheEntry || !release) {
+			throw new ResponseError(this.provider.name, 'API returned no results', this.constructReleaseApiUrl());
 		}
 
 		this.updateCacheTime(cacheEntry.timestamp);
