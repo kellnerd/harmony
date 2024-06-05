@@ -13,6 +13,7 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	HarmonyTrack,
+	Label,
 } from '@/harmonizer/types.ts';
 
 // See https://developer.tidal.com/reference/web-api
@@ -41,7 +42,7 @@ export default class TidalProvider extends MetadataProvider {
 		'duration precision': DurationPrecision.SECONDS,
 		'GTIN lookup': FeatureQuality.GOOD,
 		'MBID resolving': FeatureQuality.PRESENT,
-		'release label': FeatureQuality.MISSING,
+		'release label': FeatureQuality.BAD,
 	};
 
 	readonly entityTypeMap = {
@@ -204,6 +205,7 @@ export class TidalReleaseLookup extends ReleaseLookup<TidalProvider, Album> {
 			status: 'Official',
 			packaging: 'None',
 			images: this.getLargestCoverImage(rawRelease.imageCover),
+			labels: this.getLabels(rawRelease),
 			info: this.generateReleaseInfo(),
 		};
 	}
@@ -274,6 +276,18 @@ export class TidalReleaseLookup extends ReleaseLookup<TidalProvider, Album> {
 			url: new URL(largestImage.url),
 			types: ['front'],
 		}];
+	}
+
+	private getLabels(rawRelease: Album): Label[] {
+		// It is unsure whether providerInfo is actually used for some releases,
+		// but it is documented in the API schemas.
+		if (rawRelease.providerInfo?.providerName) {
+			return [{
+				name: rawRelease.providerInfo?.providerName,
+			}];
+		}
+
+		return [];
 	}
 }
 
