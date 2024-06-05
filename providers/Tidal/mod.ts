@@ -5,7 +5,7 @@ import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 
-import type { Album, AlbumItem, ApiError, Artist, Image, Resource, Result, TokenResult } from './api_types.ts';
+import type { Album, AlbumItem, ApiError, Image, Resource, Result, SimpleArtist, TokenResult } from './api_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -252,7 +252,7 @@ export class TidalReleaseLookup extends ReleaseLookup<TidalProvider, Album> {
 		return result;
 	}
 
-	private convertRawArtist(artist: Artist): ArtistCreditName {
+	private convertRawArtist(artist: SimpleArtist): ArtistCreditName {
 		return {
 			name: artist.name,
 			creditedName: artist.name,

@@ -1,24 +1,31 @@
-export type Artist = {
+export type SimpleArtist = {
 	/** The Tidal ID */
 	id: string;
 	name: string;
 	picture: Image[];
 	main: boolean;
-	tidalUrl: string;
 };
 
-export type Album = {
+export type Artist = SimpleArtist & {
+	tidalUrl: string;
+	popularity: number;
+};
+
+export type SimpleAlbum = {
 	/** The Tidal ID */
 	id: string;
-	barcodeId: string;
 	title: string;
-	artists: Artist[];
+	imageCover: Image[];
+	videoCover: Image[];
+};
+
+export type Album = SimpleAlbum & {
+	barcodeId: string;
+	artists: SimpleArtist[];
 	/** Full release duration in seconds */
 	duration: number;
 	/** Release date in YYYY-MM-DD format */
 	releaseDate: string;
-	imageCover: Image[];
-	videoCover: Image[];
 	numberOfVolumes: number;
 	numberOfTracks: number;
 	numberOfVideos: number;
@@ -27,24 +34,42 @@ export type Album = {
 	mediaMetadata: MediaMetadata;
 	properties: Properties;
 	tidalUrl: string;
+	providerInfo: ProviderInfo;
+	popularity: number;
 };
 
-export type AlbumItem = {
+export type CommonAlbumItem = {
 	artifactType: 'track' | 'video';
 	/** The Tidal ID */
 	id: string;
 	title: string;
-	artists: Artist[];
+	artists: SimpleArtist[];
 	/** Track duration in seconds */
 	duration: number;
+	/** Version of the album's item; complements title */
+	version: string;
+	album: SimpleAlbum;
 	trackNumber: number;
 	volumeNumber: number;
 	isrc: string;
 	copyright: string;
 	mediaMetadata: MediaMetadata;
-	properties: Properties;
 	tidalUrl: string;
+	providerInfo: ProviderInfo;
+	popularity: number;
 };
+
+export type Track = CommonAlbumItem & {
+	properties: Properties;
+};
+
+export type Video = CommonAlbumItem & {
+	properties: VideoProperties;
+	image: Image;
+	releaseDate: string;
+};
+
+export type AlbumItem = Track | Video;
 
 export type Image = {
 	url: string;
@@ -66,6 +91,16 @@ export type MediaMetadata = {
 export type Properties = {
 	/** Can be "explicit", other? */
 	content: string;
+};
+
+export type VideoProperties = Properties & {
+	/** Example: live-stream */
+	'video-type': string;
+};
+
+export type ProviderInfo = {
+	providerId: string;
+	providerName: string;
 };
 
 export type Error = {
