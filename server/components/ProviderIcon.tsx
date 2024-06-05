@@ -8,6 +8,7 @@ const providerIconMap: Record<string, string> = {
 	deezer: 'brand-deezer',
 	itunes: 'brand-apple',
 	musicbrainz: 'brand-metabrainz',
+	tidal: 'brand-tidal',
 };
 
 export type ProviderIconProps = Omit<SpriteIconProps, 'name'> & {

@@ -22,6 +22,7 @@
 	--bandcamp: #1da0c3;
 	--beatport: #00e586;
 	--deezer: #a238ff;
+	--tidal: #000000;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -366,6 +367,9 @@ label.deezer {
 }
 label.itunes {
 	background-color: var(--apple);
+}
+label.tidal {
+	background-color: var(--tidal);
 }
 
 /* ProviderIcon.tsx */
