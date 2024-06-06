@@ -9,6 +9,7 @@ import type { Album, AlbumItem, ApiError, Image, Resource, Result, SimpleArtist 
 import type {
 	ArtistCreditName,
 	Artwork,
+	CountryCode,
 	EntityId,
 	HarmonyMedium,
 	HarmonyRelease,
@@ -35,7 +36,7 @@ export default class TidalProvider extends MetadataProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '{www.}?tidal.com',
-		pathname: String.raw`(/browse)?/:type(album|artist)/:id(\d+)`,
+		pathname: String.raw`{/browse}?/:type(album|artist)/:id(\d+)`,
 	});
 
 	readonly features: FeatureQualityMap = {
@@ -50,6 +51,8 @@ export default class TidalProvider extends MetadataProvider {
 		artist: 'artist',
 		release: 'album',
 	};
+
+	readonly defaultRegion: CountryCode = 'US';
 
 	readonly availableRegions = new Set(availableRegions);
 
@@ -125,7 +128,7 @@ export class TidalReleaseLookup extends ReleaseLookup<TidalProvider, Album> {
 		const { method, value, region } = this.lookup;
 		let lookupUrl: URL;
 		const query = new URLSearchParams({
-			countryCode: region || 'US',
+			countryCode: region || this.provider.defaultRegion,
 		});
 		if (method === 'gtin') {
 			lookupUrl = new URL(`/albums/byBarcodeId`, this.provider.apiBaseUrl);
@@ -142,7 +145,7 @@ export class TidalReleaseLookup extends ReleaseLookup<TidalProvider, Album> {
 		let cacheEntry, release;
 
 		// Try querying all regions
-		for (const region of this.options.regions || []) {
+		for (const region of this.options.regions || [this.provider.defaultRegion]) {
 			this.lookup.region = region;
 			const apiUrl = this.constructReleaseApiUrl();
 			if (this.lookup.method === 'gtin') {
@@ -188,7 +191,7 @@ export class TidalReleaseLookup extends ReleaseLookup<TidalProvider, Album> {
 		const limit = 100;
 		let offset = 0;
 		const query = new URLSearchParams({
-			countryCode: this.lookup.region || 'US',
+			countryCode: this.lookup.region || this.provider.defaultRegion,
 			limit: String(limit),
 			offset: String(offset),
 		});
