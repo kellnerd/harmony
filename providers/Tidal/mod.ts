@@ -35,7 +35,7 @@ export default class TidalProvider extends MetadataProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '{www.}?tidal.com',
-		pathname: String.raw`/browse/:type(album|artist)/:id(\d+)`,
+		pathname: String.raw`(/browse)?/:type(album|artist)/:id(\d+)`,
 	});
 
 	readonly features: FeatureQualityMap = {
@@ -64,7 +64,7 @@ export default class TidalProvider extends MetadataProvider {
 	readonly apiBaseUrl = 'https://openapi.tidal.com';
 
 	constructUrl(entity: EntityId): URL {
-		return new URL([entity.type, entity.id].join('/'), 'https://www.tidal.com/browse/');
+		return new URL([entity.type, entity.id].join('/'), 'https://tidal.com/');
 	}
 
 	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
