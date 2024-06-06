@@ -200,12 +200,12 @@ export class TidalReleaseLookup extends ReleaseLookup<TidalProvider, Album> {
 				this.options.snapshotMaxTimestamp,
 			);
 			tracklist.push(...content.data.map((r) => r.resource));
+			this.updateCacheTime(timestamp);
 			if (!content.metadata.total || content.metadata.total <= tracklist.length) {
 				break;
 			}
 			offset += limit;
 			query.set('offset', String(offset));
-			this.updateCacheTime(timestamp);
 		}
 
 		return tracklist;
