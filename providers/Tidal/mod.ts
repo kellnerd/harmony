@@ -304,16 +304,23 @@ export class TidalReleaseLookup extends ReleaseLookup<TidalProvider, Album> {
 
 	private getLargestCoverImage(images: Image[]): Artwork[] {
 		let largestImage: Image | undefined;
-		let maxSize = 0;
+		let thumbnail: Image | undefined;
 		images.forEach((i) => {
-			if (i.width > maxSize) {
+			if (!largestImage || i.width > largestImage.width) {
 				largestImage = i;
-				maxSize = i.width;
+			}
+			if (i.width >= 200 && (!thumbnail || i.width < thumbnail.width)) {
+				thumbnail = i;
 			}
 		});
 		if (!largestImage) return [];
+		let thumbUrl: URL | undefined;
+		if (thumbnail) {
+			thumbUrl = new URL(thumbnail.url);
+		}
 		return [{
 			url: new URL(largestImage.url),
+			thumbUrl: thumbUrl,
 			types: ['front'],
 		}];
 	}
