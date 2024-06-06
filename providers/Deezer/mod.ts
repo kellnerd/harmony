@@ -1,5 +1,5 @@
 import { availableRegions } from './regions.ts';
-import { type CacheEntry, MetadataProvider, type ProviderOptions, ReleaseLookup } from '@/providers/base.ts';
+import { type CacheEntry, MetadataApiProvider, type ProviderOptions, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
@@ -18,7 +18,7 @@ import type {
 
 // See https://developers.deezer.com/api
 
-export default class DeezerProvider extends MetadataProvider {
+export default class DeezerProvider extends MetadataApiProvider {
 	constructor(options: ProviderOptions = {}) {
 		super({
 			rateLimitInterval: 5000,
@@ -75,7 +75,7 @@ export default class DeezerProvider extends MetadataProvider {
 	}
 }
 
-export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> {
+export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Release> {
 	constructor(provider: DeezerProvider, specifier: ReleaseSpecifier, options: ReleaseOptions = {}) {
 		super(provider, specifier, options);
 
