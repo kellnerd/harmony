@@ -21,7 +21,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
 	const isMultiMedium = release.media.length > 1;
-	const { credits, copyright, language, script, info } = release;
+	const { credits, copyright, labels, language, script, info } = release;
 
 	const AlternativeValues = setupAlternativeValues(releaseMap);
 
@@ -56,12 +56,12 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 						/>
 					</td>
 				</tr>
-				{release.labels && (
+				{labels && labels.length > 0 && (
 					<tr>
 						<th>Labels</th>
 						<td>
 							<ul>
-								{release.labels?.map((label) => (
+								{labels?.map((label) => (
 									<li>
 										<LinkedEntity entity={label} entityType='label' displayName={label.name} /> {label.catalogNumber}
 									</li>
