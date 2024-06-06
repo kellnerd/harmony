@@ -141,48 +141,53 @@ export class TidalReleaseLookup extends ReleaseLookup<TidalProvider, Album> {
 		return lookupUrl;
 	}
 
-	protected async getRawRelease(): Promise<Album> {
-		let cacheEntry, release;
-
-		// Try querying all regions
+	protected async queryAllRegions<Data>(
+		dataValidator: (data: Data) => boolean,
+		errorValidator: (error: unknown) => boolean = (_) => false,
+	): Promise<Data> {
 		for (const region of this.options.regions || [this.provider.defaultRegion]) {
 			this.lookup.region = region;
 			const apiUrl = this.constructReleaseApiUrl();
-			if (this.lookup.method === 'gtin') {
-				cacheEntry = await this.provider.query<Result<Album>>(
+			try {
+				const cacheEntry = await this.provider.query<Data>(
 					apiUrl,
 					this.options.snapshotMaxTimestamp,
 				);
-
-				if (cacheEntry.content?.data?.length) {
-					release = cacheEntry.content.data[0].resource;
-					break;
+				if (dataValidator(cacheEntry.content)) {
+					this.updateCacheTime(cacheEntry.timestamp);
+					return cacheEntry.content;
 				}
-			} else { // if (method === 'id') {
-				try {
-					cacheEntry = await this.provider.query<Resource<Album>>(
-						apiUrl,
-						this.options.snapshotMaxTimestamp,
-					);
-					release = cacheEntry.content?.resource;
-					if (release) {
-						break;
-					}
-				} catch (e) {
-					// If this was a 404 not found error, ignore it and try next region.
-					if (e.response?.status !== 404) {
-						throw e;
-					}
+			} catch (error: unknown) {
+				// Allow the caller to ignore exceptions and retry next region.
+				if (!errorValidator(error)) {
+					throw error;
 				}
 			}
 		}
 
-		if (!cacheEntry || !release) {
-			throw new ResponseError(this.provider.name, 'API returned no results', this.constructReleaseApiUrl());
-		}
+		// No results were found for any region.
+		throw new ResponseError(this.provider.name, 'API returned no results', this.constructReleaseApiUrl());
+	}
 
-		this.updateCacheTime(cacheEntry.timestamp);
-		return release;
+	protected async getRawRelease(): Promise<Album> {
+		if (this.lookup.method === 'gtin') {
+			const validator = (data: Result<Album>) => {
+				return Boolean(data?.data?.length);
+			};
+			const result = await this.queryAllRegions<Result<Album>>(validator);
+			return result.data[0].resource;
+		} else {
+			const validator = (data: Resource<Album>) => {
+				return Boolean(data?.resource);
+			};
+			// If this was a 404 not found error, ignore it and try next region.
+			const errorValidator = (error: unknown) => {
+				const { response } = error as { response?: Response };
+				return response?.status === 404;
+			};
+			const result = await this.queryAllRegions<Resource<Album>>(validator, errorValidator);
+			return result.resource;
+		}
 	}
 
 	private async getRawTracklist(albumId: string): Promise<AlbumItem[]> {
