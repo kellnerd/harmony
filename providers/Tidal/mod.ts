@@ -5,7 +5,7 @@ import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 
-import type { Album, AlbumItem, ApiError, Image, Resource, Result, SimpleArtist, TokenResult } from './api_types.ts';
+import type { Album, AlbumItem, ApiError, Image, Resource, Result, SimpleArtist } from './api_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -86,6 +86,16 @@ export default class TidalProvider extends MetadataProvider {
 	}
 
 	private async accessToken(): Promise<string> {
+		const cacheKey = `${this.name}:accessKey`;
+		let tokenResult = JSON.parse(localStorage.getItem(cacheKey) || '{}');
+		if (!tokenResult?.accessToken || Date.now() > tokenResult?.validUntil) {
+			tokenResult = await this.requestAccessToken();
+			localStorage.setItem(cacheKey, JSON.stringify(tokenResult));
+		}
+		return tokenResult.accessToken;
+	}
+
+	private async requestAccessToken(): Promise<{ accessToken: string; validUntil: number }> {
 		// See https://developer.tidal.com/documentation/api-sdk/api-sdk-quick-start
 		const url = new URL('https://auth.tidal.com/v1/oauth2/token');
 		const auth = encodeBase64(`${tidalClientId}:${tidalClientSecret}`);
@@ -93,21 +103,20 @@ export default class TidalProvider extends MetadataProvider {
 		body.append('grant_type', 'client_credentials');
 		body.append('client_id', tidalClientId);
 
-		const cacheEntry = await this.fetchJSON<TokenResult>(url, {
-			requestInit: {
-				method: 'POST',
-				headers: {
-					'Authorization': `Basic ${auth}`,
-					'Content-Type': 'application/x-www-form-urlencoded',
-				},
-				body,
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Authorization': `Basic ${auth}`,
+				'Content-Type': 'application/x-www-form-urlencoded',
 			},
-			policy: {
-				maxAge: 60 * 60 * 24, // 24 hours
-			},
+			body: body,
 		});
 
-		return cacheEntry?.content?.access_token;
+		const content = await response.json();
+		return {
+			accessToken: content?.access_token,
+			validUntil: Date.now() + (content.expires_in * 1000),
+		};
 	}
 }
 
