@@ -1,5 +1,5 @@
 import { FeatureQuality, type FeatureQualityMap, type ProviderFeature } from './features.ts';
-import { ProviderError } from '@/utils/errors.ts';
+import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 import { rateLimit } from 'utils/async/rateLimit.js';
 import { simplifyName } from 'utils/string/simplify.js';
@@ -348,6 +348,48 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 		}
 
 		return release;
+	}
+}
+
+/** Extends `MetadataProvider` with functions common to lookups accessing web APIs. */
+export abstract class MetadataApiProvider extends MetadataProvider {
+	/** Must be implemented to perform a request against the specified URL. */
+	abstract query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>>;
+}
+
+/** Extends `ReleaseLookup` with functions common to lookups accessing web APIs. */
+export abstract class ReleaseApiLookup<Provider extends MetadataApiProvider, RawRelease>
+	extends ReleaseLookup<Provider, RawRelease> {
+	/** Constructs an API URL for a release using the specified lookup options. */
+	abstract constructReleaseApiUrl(): URL;
+
+	/** Performs the query for the URL returned by {@linkcode constructReleaseApiUrl} for all configured regions until valid data is returned. */
+	protected async queryAllRegions<Data>(
+		dataValidator: (data: Data) => boolean,
+		errorValidator: (error: unknown) => boolean = (_) => false,
+	): Promise<Data> {
+		for (const region of this.options.regions || []) {
+			this.lookup.region = region;
+			const apiUrl = this.constructReleaseApiUrl();
+			try {
+				const cacheEntry = await this.provider.query<Data>(
+					apiUrl,
+					this.options.snapshotMaxTimestamp,
+				);
+				if (dataValidator(cacheEntry.content)) {
+					this.updateCacheTime(cacheEntry.timestamp);
+					return cacheEntry.content;
+				}
+			} catch (error: unknown) {
+				// Allow the caller to ignore exceptions and retry next region.
+				if (!errorValidator(error)) {
+					throw error;
+				}
+			}
+		}
+
+		// No results were found for any region.
+		throw new ResponseError(this.provider.name, 'API returned no results', this.constructReleaseApiUrl());
 	}
 }
 

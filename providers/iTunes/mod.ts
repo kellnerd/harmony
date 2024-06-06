@@ -1,12 +1,11 @@
 import { availableRegions } from './regions.ts';
-import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
-import { ResponseError } from '@/utils/errors.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
 
-import type { Collection, ReleaseResult, Result, Track } from './api_types.ts';
+import type { Collection, ReleaseResult, Track } from './api_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -21,7 +20,7 @@ import type {
 
 // See https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI
 
-export default class iTunesProvider extends MetadataProvider {
+export default class iTunesProvider extends MetadataApiProvider {
 	readonly name = 'iTunes';
 
 	readonly supportedUrls = new URLPattern({
@@ -69,36 +68,15 @@ export default class iTunesProvider extends MetadataProvider {
 		return entity;
 	}
 
-	async query<Data extends Result<unknown>>(
-		apiUrl: URL,
-		preferredRegions?: Set<CountryCode>,
-		maxTimestamp?: number,
-	): Promise<CacheEntry<Data>> {
-		if (!preferredRegions?.size) {
-			// Use the default region of the API (which would also be used if none was specified).
-			preferredRegions = new Set([this.defaultRegion]);
-		}
-
-		const query = apiUrl.searchParams;
-
-		for (const region of preferredRegions) {
-			query.set('country', region.toLowerCase());
-			apiUrl.search = query.toString();
-
-			const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
-				policy: { maxTimestamp },
-			});
-			if (cacheEntry.content.resultCount) {
-				cacheEntry.region = region;
-				return cacheEntry;
-			}
-		}
-
-		throw new ResponseError(this.name, 'API returned no results', apiUrl);
+	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
+			policy: { maxTimestamp },
+		});
+		return cacheEntry;
 	}
 }
 
-export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseResult> {
+export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, ReleaseResult> {
 	constructReleaseApiUrl(): URL {
 		const { method, value, region } = this.lookup;
 		const lookupUrl = new URL('lookup', this.provider.apiBaseUrl);
@@ -122,18 +100,13 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 	}
 
 	protected async getRawRelease(): Promise<ReleaseResult> {
-		const apiUrl = this.constructReleaseApiUrl();
-		const { content, timestamp, region } = await this.provider.query<ReleaseResult>(
-			apiUrl,
-			this.options.regions,
-			this.options.snapshotMaxTimestamp,
-		);
-
-		// Overwrite optional property with the actually used region (in order to build the accurate API URL).
-		this.lookup.region = region;
-		this.updateCacheTime(timestamp);
-
-		return content;
+		if (!this.options.regions?.size) {
+			this.options.regions = new Set([this.provider.defaultRegion]);
+		}
+		const validator = (data: ReleaseResult) => {
+			return Boolean(data?.resultCount);
+		};
+		return await this.queryAllRegions<ReleaseResult>(validator);
 	}
 
 	protected convertRawRelease(data: ReleaseResult): HarmonyRelease {

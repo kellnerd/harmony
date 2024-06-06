@@ -1,5 +1,5 @@
 import { availableRegions } from './regions.ts';
-import { type CacheEntry, MetadataProvider, type ProviderOptions, ReleaseLookup } from '@/providers/base.ts';
+import { type CacheEntry, MetadataApiProvider, type ProviderOptions, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
@@ -23,7 +23,7 @@ import { pluralWithCount } from '../../utils/plural.ts';
 const tidalClientId = Deno.env.get('HARMONY_TIDAL_CLIENT_ID') || '';
 const tidalClientSecret = Deno.env.get('HARMONY_TIDAL_CLIENT_SECRET') || '';
 
-export default class TidalProvider extends MetadataProvider {
+export default class TidalProvider extends MetadataApiProvider {
 	constructor(options: ProviderOptions = {}) {
 		super({
 			rateLimitInterval: 1000,
@@ -123,7 +123,7 @@ export default class TidalProvider extends MetadataProvider {
 	}
 }
 
-export class TidalReleaseLookup extends ReleaseLookup<TidalProvider, Album> {
+export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 	constructReleaseApiUrl(): URL {
 		const { method, value, region } = this.lookup;
 		let lookupUrl: URL;
@@ -141,35 +141,10 @@ export class TidalReleaseLookup extends ReleaseLookup<TidalProvider, Album> {
 		return lookupUrl;
 	}
 
-	protected async queryAllRegions<Data>(
-		dataValidator: (data: Data) => boolean,
-		errorValidator: (error: unknown) => boolean = (_) => false,
-	): Promise<Data> {
-		for (const region of this.options.regions || [this.provider.defaultRegion]) {
-			this.lookup.region = region;
-			const apiUrl = this.constructReleaseApiUrl();
-			try {
-				const cacheEntry = await this.provider.query<Data>(
-					apiUrl,
-					this.options.snapshotMaxTimestamp,
-				);
-				if (dataValidator(cacheEntry.content)) {
-					this.updateCacheTime(cacheEntry.timestamp);
-					return cacheEntry.content;
-				}
-			} catch (error: unknown) {
-				// Allow the caller to ignore exceptions and retry next region.
-				if (!errorValidator(error)) {
-					throw error;
-				}
-			}
-		}
-
-		// No results were found for any region.
-		throw new ResponseError(this.provider.name, 'API returned no results', this.constructReleaseApiUrl());
-	}
-
 	protected async getRawRelease(): Promise<Album> {
+		if (!this.options.regions?.size) {
+			this.options.regions = new Set([this.provider.defaultRegion]);
+		}
 		if (this.lookup.method === 'gtin') {
 			const validator = (data: Result<Album>) => {
 				return Boolean(data?.data?.length);
