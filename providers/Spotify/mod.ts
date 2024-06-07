@@ -5,7 +5,7 @@ import { ResponseError } from '@/utils/errors.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { availableRegions } from './regions.ts';
 
-import type { Album, ApiError, Image, SimplifiedArtist, SimplifiedTrack } from './api_types.ts';
+import type { Album, ApiError, Image, SearchResult, SimplifiedArtist, SimplifiedTrack } from './api_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -32,8 +32,7 @@ export default class SpotifyProvider extends MetadataApiProvider {
 	readonly features: FeatureQualityMap = {
 		'cover size': 640,
 		'duration precision': DurationPrecision.MS,
-		// 'GTIN lookup': FeatureQuality.GOOD,
-		'GTIN lookup': FeatureQuality.MISSING,
+		'GTIN lookup': FeatureQuality.GOOD,
 		'MBID resolving': FeatureQuality.GOOD,
 		'release label': FeatureQuality.PRESENT,
 	};
@@ -118,7 +117,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			query.set('market', region);
 		}
 		if (method === 'gtin') {
-			lookupUrl = new URL(`/search`, this.provider.apiBaseUrl);
+			lookupUrl = new URL(`search`, this.provider.apiBaseUrl);
 			query.set('type', 'album');
 			query.set('q', `upc:${value}`);
 		} else { // if (method === 'id')
@@ -130,18 +129,31 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 	}
 
 	protected async getRawRelease(): Promise<Album> {
+		this.lookup.region = [...this.options.regions || []][0];
 		const apiUrl = this.constructReleaseApiUrl();
 		if (this.lookup.method === 'gtin') {
-			throw new Error('GTIN lookup not implemented.');
-		} else { // if (method === 'id')
-			const cacheEntry = await this.provider.query<Album>(
+			const cacheEntry = await this.provider.query<SearchResult>(
 				apiUrl,
 				this.options.snapshotMaxTimestamp,
 			);
-			const release = cacheEntry.content;
-			this.updateCacheTime(cacheEntry.timestamp);
-			return release;
+			if (!cacheEntry.content?.albums?.items?.length) {
+				throw new ResponseError(this.provider.name, 'API returned no results', apiUrl);
+			}
+
+			// Result is a SimplifiedAlbum. Perform a regular ID lookup with the found release
+			// ID to retrieve complete data.
+			this.lookup.method = 'id';
+			this.lookup.value = cacheEntry.content.albums.items[0].id;
 		}
+
+		const cacheEntry = await this.provider.query<Album>(
+			this.constructReleaseApiUrl(),
+			this.options.snapshotMaxTimestamp,
+		);
+		const release = cacheEntry.content;
+
+		this.updateCacheTime(cacheEntry.timestamp);
+		return release;
 	}
 
 	// deno-lint-ignore require-await

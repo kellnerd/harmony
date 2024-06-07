@@ -1,11 +1,10 @@
-export type Album = {
+export type SimplifiedAlbum = {
 	id: string;
 	type: 'album';
 	href: string;
 	name: string;
 	uri: string;
 	artists: SimplifiedArtist[];
-	tracks: ResultList<SimplifiedTrack>;
 	album_type: AlbumType;
 	total_tracks: number;
 	release_date: string;
@@ -14,6 +13,10 @@ export type Album = {
 	images: Image[];
 	available_markets: string[];
 	restrictions: { reason: string };
+};
+
+export type Album = SimplifiedAlbum & {
+	tracks: ResultList<SimplifiedTrack>;
 	copyrights: Copyright[];
 	external_ids: ExternalIds;
 	genres: string[];
@@ -95,6 +98,17 @@ export type ResultList<T> = {
 	next: string;
 	previous: string;
 	items: T[];
+};
+
+export type SearchResult = {
+	albums: ResultList<SimplifiedAlbum>;
+	tracks: ResultList<SimplifiedTrack>;
+	artists: ResultList<SimplifiedArtist>;
+	// Unsupported / not needed:
+	// Playlists: ResultList<Playlist>;
+	// Shows: ResultList<Show>;
+	// Episodes: ResultList<Episode>;
+	// Audiobooks: ResultList<Audiobook>;
 };
 
 export type ApiError = {
