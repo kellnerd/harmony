@@ -5,7 +5,15 @@ import { ResponseError } from '@/utils/errors.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { availableRegions } from './regions.ts';
 
-import type { Album, ApiError, Image, SearchResult, SimplifiedArtist, SimplifiedTrack } from './api_types.ts';
+import type {
+	Album,
+	ApiError,
+	Copyright,
+	Image,
+	SearchResult,
+	SimplifiedArtist,
+	SimplifiedTrack,
+} from './api_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -173,7 +181,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			}],
 			media,
 			releaseDate: parseHyphenatedDate(rawRelease.release_date),
-			copyright: rawRelease.copyrights.map((c) => c.text).join('\n'),
+			copyright: this.getCopyright(rawRelease.copyrights),
 			status: 'Official',
 			packaging: 'None',
 			images: this.getLargestCoverImage(rawRelease.images),
@@ -265,6 +273,23 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		}
 
 		return [];
+	}
+
+	private getCopyright(copyrights: Copyright[]): string {
+		return copyrights.map(this.formatCopyright).join('\n');
+	}
+
+	private formatCopyright(copyright: Copyright): string {
+		// As Spotify provides separate fields for copyright and phonographic
+		// copyright those get often entered without the corresponding symbol.
+		// When only importing the text entry the information gets lost. Hence
+		// prefix the entries with the © or ℗ symbol if it is not already present.
+		let { text, type } = copyright;
+		text = text.replace(/\(c\)/i, '©').replace(/\(p\)/i, '℗');
+		if (!text.includes('©') && !text.includes('℗')) {
+			text = `${type === 'P' ? '℗' : '©'} ${text}`;
+		}
+		return text;
 	}
 }
 
