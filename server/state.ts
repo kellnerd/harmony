@@ -62,7 +62,7 @@ export function extractReleaseLookupState(lookupUrl: URL): ReleaseLookupParamete
 
 	// Also accept comma-separated regions from HTML form for convenience.
 	let regions = searchParams.getAll('region').filter(isNotEmpty)
-		.flatMap((value) => value.toUpperCase().split(','));
+		.flatMap((value) => value.toUpperCase().split(',').map((s) => s.trim()));
 	if (!regions.length) {
 		regions = defaultRegions;
 	}
