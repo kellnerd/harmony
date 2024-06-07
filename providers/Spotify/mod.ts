@@ -266,13 +266,10 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 	}
 
 	private getLabels(rawRelease: Album): Label[] {
-		if (rawRelease.label) {
-			return [{
-				name: rawRelease.label,
-			}];
-		}
-
-		return [];
+		// split label string using slashes if the results have at least 3 characters
+		return rawRelease.label?.split(/(?<=[^/]{3,})\/(?=[^/]{3,})/).map((label) => ({
+			name: label.trim(),
+		}));
 	}
 
 	private getCopyright(copyrights: Copyright[]): string {
