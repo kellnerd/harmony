@@ -5,6 +5,7 @@ import BandcampProvider from './Bandcamp/mod.ts';
 import BeatportProvider from './Beatport/mod.ts';
 import DeezerProvider from './Deezer/mod.ts';
 import iTunesProvider from './iTunes/mod.ts';
+import SpotifyProvider from './Spotify/mod.ts';
 import TidalProvider from './Tidal/mod.ts';
 
 /** Registry with all supported providers. */
@@ -14,6 +15,7 @@ export const providers = new ProviderRegistry();
 providers.addMultiple(
 	DeezerProvider,
 	iTunesProvider,
+	SpotifyProvider,
 	TidalProvider,
 	BandcampProvider,
 	BeatportProvider,
