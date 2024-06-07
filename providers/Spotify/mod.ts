@@ -110,18 +110,14 @@ export default class SpotifyProvider extends MetadataApiProvider {
 
 export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Album> {
 	constructReleaseApiUrl(): URL {
-		const { method, value, region } = this.lookup;
 		let lookupUrl: URL;
 		const query = new URLSearchParams();
-		if (region) {
-			query.set('market', region);
-		}
-		if (method === 'gtin') {
+		if (this.lookup.method === 'gtin') {
 			lookupUrl = new URL(`search`, this.provider.apiBaseUrl);
 			query.set('type', 'album');
-			query.set('q', `upc:${value}`);
+			query.set('q', `upc:${this.lookup.value}`);
 		} else { // if (method === 'id')
-			lookupUrl = new URL(`albums/${value}`, this.provider.apiBaseUrl);
+			lookupUrl = new URL(`albums/${this.lookup.value}`, this.provider.apiBaseUrl);
 		}
 
 		lookupUrl.search = query.toString();
@@ -129,7 +125,6 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 	}
 
 	protected async getRawRelease(): Promise<Album> {
-		this.lookup.region = [...this.options.regions || []][0];
 		const apiUrl = this.constructReleaseApiUrl();
 		if (this.lookup.method === 'gtin') {
 			const cacheEntry = await this.provider.query<SearchResult>(
