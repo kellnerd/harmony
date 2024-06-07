@@ -146,21 +146,21 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 			this.options.regions = new Set([this.provider.defaultRegion]);
 		}
 		if (this.lookup.method === 'gtin') {
-			const validator = (data: Result<Album>) => {
+			const isValidData = (data: Result<Album>) => {
 				return Boolean(data?.data?.length);
 			};
-			const result = await this.queryAllRegions<Result<Album>>(validator);
+			const result = await this.queryAllRegions<Result<Album>>(isValidData);
 			return result.data[0].resource;
 		} else {
-			const validator = (data: Resource<Album>) => {
+			const isValidData = (data: Resource<Album>) => {
 				return Boolean(data?.resource);
 			};
 			// If this was a 404 not found error, ignore it and try next region.
-			const errorValidator = (error: unknown) => {
+			const isCriticalError = (error: unknown) => {
 				const { response } = error as { response?: Response };
-				return response?.status === 404;
+				return response?.status !== 404;
 			};
-			const result = await this.queryAllRegions<Resource<Album>>(validator, errorValidator);
+			const result = await this.queryAllRegions<Resource<Album>>(isValidData, isCriticalError);
 			return result.resource;
 		}
 	}

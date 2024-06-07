@@ -365,8 +365,8 @@ export abstract class ReleaseApiLookup<Provider extends MetadataApiProvider, Raw
 
 	/** Performs the query for the URL returned by {@linkcode constructReleaseApiUrl} for all configured regions until valid data is returned. */
 	protected async queryAllRegions<Data>(
-		dataValidator: (data: Data) => boolean,
-		errorValidator: (error: unknown) => boolean = (_) => false,
+		isValidData: (data: Data) => boolean,
+		isCriticalError: (error: unknown) => boolean = (_) => true,
 	): Promise<Data> {
 		for (const region of this.options.regions || []) {
 			this.lookup.region = region;
@@ -376,13 +376,13 @@ export abstract class ReleaseApiLookup<Provider extends MetadataApiProvider, Raw
 					apiUrl,
 					this.options.snapshotMaxTimestamp,
 				);
-				if (dataValidator(cacheEntry.content)) {
+				if (isValidData(cacheEntry.content)) {
 					this.updateCacheTime(cacheEntry.timestamp);
 					return cacheEntry.content;
 				}
 			} catch (error: unknown) {
 				// Allow the caller to ignore exceptions and retry next region.
-				if (!errorValidator(error)) {
+				if (isCriticalError(error)) {
 					throw error;
 				}
 			}
