@@ -10,6 +10,7 @@ import type {
 	ApiError,
 	Copyright,
 	Image,
+	ResultList,
 	SearchResult,
 	SimplifiedArtist,
 	SimplifiedTrack,
@@ -171,12 +172,27 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		return release;
 	}
 
-	// deno-lint-ignore require-await
 	private async getRawTracklist(rawRelease: Album): Promise<SimplifiedTrack[]> {
-		// FIXME: Check whether the track list is complete and perform additional
-		// queries if it is not.
-		// Also ISRCs seem to be only available in separate queries.
-		return rawRelease.tracks.items;
+		let allTracks: SimplifiedTrack[] = [];
+		allTracks = allTracks.concat(rawRelease.tracks.items);
+
+		// The initial response contains max. 50 tracks. Fetch the remaining
+		// tracks with separate requests if needed.
+		let nextUrl = rawRelease.tracks.next;
+		while (nextUrl && allTracks.length < rawRelease.tracks.total) {
+			const cacheEntry = await this.provider.query<ResultList<SimplifiedTrack>>(
+				new URL(nextUrl),
+				this.options.snapshotMaxTimestamp,
+			);
+			this.updateCacheTime(cacheEntry.timestamp);
+			allTracks = allTracks.concat(cacheEntry.content.items);
+			nextUrl = cacheEntry.content.next;
+		}
+
+		// TODO: ISRCs seem to be only available when separately querying tracks
+		// via the /v1/tracks endpoint.
+
+		return allTracks;
 	}
 
 	protected async convertRawRelease(rawRelease: Album): Promise<HarmonyRelease> {
