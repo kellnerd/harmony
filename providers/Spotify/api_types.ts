@@ -90,13 +90,20 @@ export type AlbumType = 'album' | 'single' | 'compilation';
 
 export type CopyrightType = 'C' | 'P';
 
-export type ResultList<T> = {
+export type BaseResultList = {
 	href: string;
 	limit: number;
 	offset: number;
 	total: number;
 	next: string;
 	previous: string;
+};
+
+export type TrackList = BaseResultList & {
+	tracks: Track[];
+};
+
+export type ResultList<T> = BaseResultList & {
 	items: T[];
 };
 

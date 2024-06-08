@@ -14,6 +14,8 @@ import type {
 	SearchResult,
 	SimplifiedArtist,
 	SimplifiedTrack,
+	Track,
+	TrackList,
 } from './api_types.ts';
 import type {
 	ArtistCreditName,
@@ -172,7 +174,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		return release;
 	}
 
-	private async getRawTracklist(rawRelease: Album): Promise<SimplifiedTrack[]> {
+	private async getRawTracklist(rawRelease: Album): Promise<Track[]> {
 		let allTracks: SimplifiedTrack[] = [];
 		allTracks = allTracks.concat(rawRelease.tracks.items);
 
@@ -189,8 +191,29 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			nextUrl = cacheEntry.content.next;
 		}
 
-		// TODO: ISRCs seem to be only available when separately querying tracks
-		// via the /v1/tracks endpoint.
+		// Load full details including ISRCs
+		return this.getRawTrackDetails(allTracks);
+	}
+
+	private async getRawTrackDetails(simplifiedTracks: SimplifiedTrack[]): Promise<Track[]> {
+		let allTracks: Track[] = [];
+		const trackIds = simplifiedTracks.map((track) => track.id);
+
+		// The SimplifiedTrack entries do not contain ISRCs.
+		// Perform track queries to obtain the full details of all tracks.
+		// Each query can return up to 50 tracks.
+		const maxResults = 50;
+		const apiUrl = new URL('tracks', this.provider.apiBaseUrl);
+		for (let index = 0; index < trackIds.length; index += maxResults) {
+			apiUrl.searchParams.set('ids', trackIds.slice(index, index + maxResults).join(','));
+			apiUrl.search = apiUrl.searchParams.toString();
+			const cacheEntry = await this.provider.query<TrackList>(
+				apiUrl,
+				this.options.snapshotMaxTimestamp,
+			);
+			this.updateCacheTime(cacheEntry.timestamp);
+			allTracks = allTracks.concat(cacheEntry.content.tracks);
+		}
 
 		return allTracks;
 	}
@@ -219,7 +242,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		};
 	}
 
-	private convertRawTracklist(tracklist: SimplifiedTrack[]): HarmonyMedium[] {
+	private convertRawTracklist(tracklist: Track[]): HarmonyMedium[] {
 		const result: HarmonyMedium[] = [];
 		let medium: HarmonyMedium = {
 			number: 1,
@@ -249,12 +272,12 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		return result;
 	}
 
-	private convertRawTrack(track: SimplifiedTrack): HarmonyTrack {
+	private convertRawTrack(track: Track): HarmonyTrack {
 		const result: HarmonyTrack = {
 			number: track.track_number,
 			title: track.name,
 			length: track.duration_ms,
-			// isrc: track., // FIXME
+			isrc: track.external_ids.isrc,
 			artists: track.artists.map(this.convertRawArtist.bind(this)),
 			availableIn: track.available_markets,
 		};
