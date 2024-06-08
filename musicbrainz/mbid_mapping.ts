@@ -1,4 +1,4 @@
-import { ApiError, type EntityWithMbid } from '@kellnerd/musicbrainz';
+import { ApiError, type EntityWithMbid, RateLimitError } from '@kellnerd/musicbrainz';
 import type { RelatableEntityType } from '@kellnerd/musicbrainz/data/entity';
 import type { ExternalEntityId, HarmonyRelease, ResolvableEntity } from '@/harmonizer/types.ts';
 import { MB } from '@/musicbrainz/api_client.ts';
@@ -72,6 +72,8 @@ export async function resolveToMbid(
 				setCachedMbid(entityId, '', contextCache);
 				log.debug(`Failed to resolve ${externalUrl.href}`);
 				continue;
+			} else if (error instanceof RateLimitError) {
+				error.message = `Some MusicBrainz URL lookups failed: ${error.message}`;
 			}
 			throw error;
 		}
