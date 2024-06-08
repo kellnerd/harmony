@@ -1,6 +1,7 @@
 import { detectLanguageAndScript } from '@/harmonizer/language_script.ts';
 import { mergeRelease } from '@/harmonizer/merge.ts';
 import { defaultProviderPreferences, providers } from '@/providers/mod.ts';
+import { FeatureQuality } from '@/providers/features.ts';
 import { LookupError, ProviderError } from '@/utils/errors.ts';
 import { ensureValidGTIN, isEqualGTIN, uniqueGtinSet } from '@/utils/gtin.ts';
 import { isDefined, isNotError } from '@/utils/predicate.ts';
@@ -139,8 +140,16 @@ export class CombinedReleaseLookup {
 		for (const providerName of this.gtinLookupProviders) {
 			const provider = providers.findByName(providerName);
 			if (provider) {
-				this.queuedReleases.push(provider.getRelease(['gtin', this.gtin], this.options));
-				this.queuedProviderNames.add(provider.name);
+				if (provider.getQuality('GTIN lookup') != FeatureQuality.MISSING) {
+					this.queuedReleases.push(provider.getRelease(['gtin', this.gtin], this.options));
+					this.queuedProviderNames.add(provider.name);
+				} else {
+					this.messages.push({
+						provider: provider.name,
+						type: 'warning',
+						text: 'GTIN lookups are not supported',
+					});
+				}
 			} else {
 				this.messages.push({
 					type: 'error',
