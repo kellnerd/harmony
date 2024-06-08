@@ -52,7 +52,7 @@ export type SimplifiedTrack = LinkedTrack & {
 	disc_number: number;
 	duration_ms: number;
 	explicit: boolean;
-	is_playable: boolean;
+	is_playable: boolean | undefined;
 	is_local: boolean;
 	preview_url: string;
 	linked_from: LinkedTrack | undefined;
