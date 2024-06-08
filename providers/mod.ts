@@ -1,4 +1,3 @@
-import { FeatureQuality } from './features.ts';
 import { ProviderRegistry } from './registry.ts';
 import type { ProviderPreferences } from '@/harmonizer/types.ts';
 
@@ -22,7 +21,7 @@ providers.addMultiple(
 
 /** Internal names of providers which are enabled by default (for GTIN lookups). */
 export const defaultProviders = new Set(
-	providers.filterInternalNames((provider) => provider.getQuality('GTIN lookup') >= FeatureQuality.PRESENT),
+	providers.filterInternalNamesByCategory('default'),
 );
 
 /** Recommended default preferences which sort providers by quality. */

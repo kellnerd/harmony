@@ -1,5 +1,5 @@
 import type { MetadataProvider, MetadataProviderConstructor } from './base.ts';
-import type { ProviderFeature } from './features.ts';
+import { FeatureQuality, type ProviderFeature } from './features.ts';
 import type { ExternalEntityId } from '@/harmonizer/types.ts';
 import { SnapStorage } from 'snap-storage';
 
@@ -51,11 +51,15 @@ export class ProviderRegistry {
 
 	/** Returns a list of internal provider names that belong to the given category. */
 	filterInternalNamesByCategory(category: string): string[] {
-		if (category === 'all') {
-			return [...this.#internalNames];
-		} else {
-			// TODO: Add a real `categories` property to `MetadataProvider` and use it here.
-			return [];
+		switch (category) {
+			case 'all':
+				return [...this.#internalNames];
+			case 'default':
+				// Providers which support inexpensive GTIN lookups are enabled by default.
+				return this.filterInternalNames((provider) => provider.getQuality('GTIN lookup') >= FeatureQuality.PRESENT);
+			default:
+				// TODO: Add a real `categories` property to `MetadataProvider` and use it here.
+				return [];
 		}
 	}
 
