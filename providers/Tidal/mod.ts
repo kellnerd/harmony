@@ -1,5 +1,11 @@
 import { availableRegions } from './regions.ts';
-import { type CacheEntry, MetadataApiProvider, type ProviderOptions, ReleaseApiLookup } from '@/providers/base.ts';
+import {
+	ApiAccessToken,
+	type CacheEntry,
+	MetadataApiProvider,
+	type ProviderOptions,
+	ReleaseApiLookup,
+} from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
@@ -70,11 +76,12 @@ export default class TidalProvider extends MetadataApiProvider {
 	}
 
 	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+		const accessToken = await this.cachedAccessToken(this.requestAccessToken);
 		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
 			policy: { maxTimestamp },
 			requestInit: {
 				headers: {
-					'Authorization': `Bearer ${await this.accessToken()}`,
+					'Authorization': `Bearer ${accessToken}`,
 					'Content-Type': 'application/vnd.tidal.v1+json',
 				},
 			},
@@ -87,17 +94,7 @@ export default class TidalProvider extends MetadataApiProvider {
 		return cacheEntry;
 	}
 
-	private async accessToken(): Promise<string> {
-		const cacheKey = `${this.name}:accessKey`;
-		let tokenResult = JSON.parse(localStorage.getItem(cacheKey) || '{}');
-		if (!tokenResult?.accessToken || Date.now() > tokenResult?.validUntil) {
-			tokenResult = await this.requestAccessToken();
-			localStorage.setItem(cacheKey, JSON.stringify(tokenResult));
-		}
-		return tokenResult.accessToken;
-	}
-
-	private async requestAccessToken(): Promise<{ accessToken: string; validUntil: number }> {
+	private async requestAccessToken(): Promise<ApiAccessToken> {
 		// See https://developer.tidal.com/documentation/api-sdk/api-sdk-quick-start
 		const url = new URL('https://auth.tidal.com/v1/oauth2/token');
 		const auth = encodeBase64(`${tidalClientId}:${tidalClientSecret}`);
@@ -117,7 +114,7 @@ export default class TidalProvider extends MetadataApiProvider {
 		const content = await response.json();
 		return {
 			accessToken: content?.access_token,
-			validUntil: Date.now() + (content.expires_in * 1000),
+			validUntilTimestamp: Date.now() + (content.expires_in * 1000),
 		};
 	}
 }

@@ -1,4 +1,4 @@
-import { type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
+import { ApiAccessToken, type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
@@ -68,11 +68,12 @@ export default class SpotifyProvider extends MetadataApiProvider {
 	}
 
 	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+		const accessToken = await this.cachedAccessToken(this.requestAccessToken);
 		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
 			policy: { maxTimestamp },
 			requestInit: {
 				headers: {
-					'Authorization': `Bearer ${await this.accessToken()}`,
+					'Authorization': `Bearer ${accessToken}`,
 				},
 			},
 		});
@@ -84,17 +85,7 @@ export default class SpotifyProvider extends MetadataApiProvider {
 		return cacheEntry;
 	}
 
-	private async accessToken(): Promise<string> {
-		const cacheKey = `${this.name}:accessKey`;
-		let tokenResult = JSON.parse(localStorage.getItem(cacheKey) || '{}');
-		if (!tokenResult?.accessToken || Date.now() > tokenResult?.validUntil) {
-			tokenResult = await this.requestAccessToken();
-			localStorage.setItem(cacheKey, JSON.stringify(tokenResult));
-		}
-		return tokenResult.accessToken;
-	}
-
-	private async requestAccessToken(): Promise<{ accessToken: string; validUntil: number }> {
+	private async requestAccessToken(): Promise<ApiAccessToken> {
 		// See https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow
 		const url = new URL('https://accounts.spotify.com/api/token');
 		const auth = encodeBase64(`${spotifyClientId}:${spotifyClientSecret}`);
@@ -113,7 +104,7 @@ export default class SpotifyProvider extends MetadataApiProvider {
 		const content = await response.json();
 		return {
 			accessToken: content?.access_token,
-			validUntil: Date.now() + (content.expires_in * 1000),
+			validUntilTimestamp: Date.now() + (content.expires_in * 1000),
 		};
 	}
 }

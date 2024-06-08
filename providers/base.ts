@@ -351,10 +351,34 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 	}
 }
 
+export interface ApiAccessToken {
+	accessToken: string;
+	validUntilTimestamp: number;
+}
+
 /** Extends `MetadataProvider` with functions common to lookups accessing web APIs. */
 export abstract class MetadataApiProvider extends MetadataProvider {
 	/** Must be implemented to perform a request against the specified URL. */
 	abstract query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>>;
+
+	/**
+	 * Returns a cached API access token.
+	 *
+	 * Must be passed a function `requestAccessToken` which will return a promise resolving to a
+	 * `ApiAccessToken`, containing the access token and an expiration Unix timestamp. The result is
+	 * cached and `requestAccessToken` only gets called if the cached token has expired.
+	 */
+	protected async cachedAccessToken(requestAccessToken: () => Promise<ApiAccessToken>): Promise<string> {
+		const cacheKey = `${this.name}:accessToken`;
+		let tokenResult = JSON.parse(localStorage.getItem(cacheKey) || '{}');
+		if (
+			!tokenResult?.accessToken || !tokenResult?.validUntilTimestamp || Date.now() > tokenResult.validUntilTimestamp
+		) {
+			tokenResult = await requestAccessToken();
+			localStorage.setItem(cacheKey, JSON.stringify(tokenResult));
+		}
+		return tokenResult.accessToken;
+	}
 }
 
 /** Extends `ReleaseLookup` with functions common to lookups accessing web APIs. */
