@@ -133,20 +133,32 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 	}
 
 	protected async getRawRelease(): Promise<Album> {
-		const apiUrl = this.constructReleaseApiUrl();
 		if (this.lookup.method === 'gtin') {
-			const cacheEntry = await this.provider.query<SearchResult>(
-				apiUrl,
-				this.options.snapshotMaxTimestamp,
-			);
-			if (!cacheEntry.content?.albums?.items?.length) {
-				throw new ResponseError(this.provider.name, 'API returned no results', apiUrl);
+			// Spotify does not always find UPC barcodes but expects them prefixed with
+			// 0 to a max. size of 14 characters. E.g. "810121774182" gives no results,
+			// but "00810121774182" does.
+			let albumId: string | undefined;
+			while (this.lookup.value.length <= 14 && !albumId) {
+				const cacheEntry = await this.provider.query<SearchResult>(
+					this.constructReleaseApiUrl(),
+					this.options.snapshotMaxTimestamp,
+				);
+				if (cacheEntry.content?.albums?.items?.length) {
+					albumId = cacheEntry.content.albums.items[0].id;
+				}
+				// Prefix the GTIN with an additional 0
+				this.lookup.value = `0${this.lookup.value}`;
+			}
+
+			// No results found
+			if (!albumId) {
+				throw new ResponseError(this.provider.name, 'API returned no results', this.constructReleaseApiUrl());
 			}
 
 			// Result is a SimplifiedAlbum. Perform a regular ID lookup with the found release
 			// ID to retrieve complete data.
 			this.lookup.method = 'id';
-			this.lookup.value = cacheEntry.content.albums.items[0].id;
+			this.lookup.value = albumId;
 		}
 
 		const cacheEntry = await this.provider.query<Album>(
