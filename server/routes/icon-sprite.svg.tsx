@@ -16,6 +16,7 @@ import IconLink from 'tabler-icons/link.tsx';
 import IconPhotoPlus from 'tabler-icons/photo-plus.tsx';
 import IconPuzzle from 'tabler-icons/puzzle.tsx';
 import IconSearch from 'tabler-icons/search.tsx';
+import IconVideo from 'tabler-icons/video.tsx';
 import IconWorldPin from 'tabler-icons/world-pin.tsx';
 import IconWorldWww from 'tabler-icons/world-www.tsx';
 
@@ -36,6 +37,7 @@ const icons: Icon[] = [
 	IconLink,
 	IconPhotoPlus,
 	IconSearch,
+	IconVideo,
 	IconWorldPin,
 	IconWorldWww,
 

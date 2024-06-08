@@ -1,6 +1,7 @@
 import { setupAlternativeValues } from './AlternativeValues.tsx';
 import { ArtistCredit } from './ArtistCredit.tsx';
 import { ISRC } from './ISRC.tsx';
+import { SpriteIcon } from './SpriteIcon.tsx';
 
 import { pluralWithCount } from '@/utils/plural.ts';
 import { mapValues } from '@/utils/record.ts';
@@ -44,6 +45,11 @@ export function Tracklist({ medium, mediumMap, showTitle = false }: TracklistPro
 					<tr>
 						<td class='numeric'>{track.number}</td>
 						<td>
+							{track.type === 'video' && (
+								<span title='Video'>
+									<SpriteIcon name='video' size={20} stroke={1.5} />
+								</span>
+							)}
 							{track.title}
 							<AlternativeValues property={(track) => track?.title} />
 						</td>
