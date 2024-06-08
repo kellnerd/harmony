@@ -16,7 +16,6 @@ import type {
 	HarmonyTrack,
 	Label,
 } from '@/harmonizer/types.ts';
-import { pluralWithCount } from '../../utils/plural.ts';
 
 // See https://developer.tidal.com/reference/web-api
 
@@ -225,9 +224,6 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 			tracklist: [],
 		};
 
-		// Get info about video tracks to show a warning to the user.
-		const videoTrackInfo: string[] = [];
-
 		// split flat tracklist into media
 		tracklist.forEach((item) => {
 			// store the previous medium and create a new one
@@ -243,21 +239,8 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 				};
 			}
 
-			if (item.artifactType === 'video') {
-				videoTrackInfo.push(`${item.trackNumber}: ${item.title}`);
-			}
-
 			medium.tracklist.push(this.convertRawTrack(item));
 		});
-
-		if (videoTrackInfo.length) {
-			this.addMessage(
-				`This release contains ${pluralWithCount(videoTrackInfo.length, 'video track')}:\n- ${
-					videoTrackInfo.join('\n- ')
-				}`,
-				'warning',
-			);
-		}
 
 		// store the final medium
 		result.push(medium);
@@ -272,6 +255,7 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 			length: track.duration * 1000,
 			isrc: track.isrc,
 			artists: track.artists.map(this.convertRawArtist.bind(this)),
+			type: track.artifactType === 'video' ? 'video' : 'audio',
 		};
 
 		return result;
