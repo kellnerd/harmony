@@ -13,7 +13,7 @@ import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/ba
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
-import { extractDataAttribute, extractMetadataTag } from '@/utils/html.ts';
+import { extractDataAttribute, extractMetadataTag, extractTextFromHtml } from '@/utils/html.ts';
 import { plural, pluralWithCount } from '@/utils/plural.ts';
 import { isNotNull } from '@/utils/predicate.ts';
 import { similarNames } from '@/utils/similarity.ts';
@@ -119,6 +119,11 @@ export default class BandcampProvider extends MetadataProvider {
 					const description = extractMetadataTag(html, 'og:description');
 					if (description) {
 						jsonEntries.push(['og:description', `"${description}"`]);
+					}
+
+					const licenseUrl = extractTextFromHtml(html, /class="cc-icons"\s+href="([^"]+)"/i);
+					if (licenseUrl) {
+						jsonEntries.push(['licenseUrl', `"${licenseUrl}"`]);
 					}
 
 					const json = `{${jsonEntries.map(([key, serializedValue]) => `"${key}":${serializedValue}`).join(',')}}`;
@@ -283,6 +288,13 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			credits: current.credits?.replaceAll('\r', ''),
 			info: this.generateReleaseInfo(),
 		};
+
+		if (albumPage.licenseUrl) {
+			release.externalLinks.push({
+				url: new URL(albumPage.licenseUrl),
+				types: ['license'],
+			});
+		}
 
 		return release;
 	}

@@ -108,7 +108,8 @@ export type LinkType =
 	| 'free streaming'
 	| 'mail order'
 	| 'paid download'
-	| 'paid streaming';
+	| 'paid streaming'
+	| 'license';
 
 /** MusicBrainz medium formats (incomplete). */
 export type MediumFormat =
