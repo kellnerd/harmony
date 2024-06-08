@@ -2,6 +2,7 @@ import { type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/provid
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
+import { selectLargestImage } from '@/utils/image.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { availableRegions } from './regions.ts';
 
@@ -9,7 +10,6 @@ import type {
 	Album,
 	ApiError,
 	Copyright,
-	Image,
 	ResultList,
 	SearchResult,
 	SimplifiedArtist,
@@ -19,7 +19,6 @@ import type {
 } from './api_types.ts';
 import type {
 	ArtistCreditName,
-	Artwork,
 	EntityId,
 	HarmonyMedium,
 	HarmonyRelease,
@@ -222,6 +221,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		this.id = rawRelease.id;
 		const rawTracklist = await this.getRawTracklist(rawRelease);
 		const media = this.convertRawTracklist(rawTracklist);
+		const artwork = selectLargestImage(rawRelease.images, ['front']);
 		return {
 			title: rawRelease.name,
 			artists: rawRelease.artists.map(this.convertRawArtist.bind(this)),
@@ -235,7 +235,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			copyright: this.getCopyright(rawRelease.copyrights),
 			status: 'Official',
 			packaging: 'None',
-			images: this.getLargestCoverImage(rawRelease.images),
+			images: artwork ? [artwork] : [],
 			labels: this.getLabels(rawRelease),
 			availableIn: rawRelease.available_markets,
 			info: this.generateReleaseInfo(),
@@ -291,29 +291,6 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			creditedName: artist.name,
 			externalIds: this.provider.makeExternalIds({ type: 'artist', id: artist.id }),
 		};
-	}
-
-	private getLargestCoverImage(images: Image[]): Artwork[] {
-		let largestImage: Image | undefined;
-		let thumbnail: Image | undefined;
-		images.forEach((i) => {
-			if (!largestImage || i.width > largestImage.width) {
-				largestImage = i;
-			}
-			if (i.width >= 200 && (!thumbnail || i.width < thumbnail.width)) {
-				thumbnail = i;
-			}
-		});
-		if (!largestImage) return [];
-		let thumbUrl: URL | undefined;
-		if (thumbnail) {
-			thumbUrl = new URL(thumbnail.url);
-		}
-		return [{
-			url: new URL(largestImage.url),
-			thumbUrl: thumbUrl,
-			types: ['front'],
-		}];
 	}
 
 	private getLabels(rawRelease: Album): Label[] {

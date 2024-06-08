@@ -3,12 +3,12 @@ import { type CacheEntry, MetadataApiProvider, type ProviderOptions, ReleaseApiL
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
+import { selectLargestImage } from '@/utils/image.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 
-import type { Album, AlbumItem, ApiError, Image, Resource, Result, SimpleArtist } from './api_types.ts';
+import type { Album, AlbumItem, ApiError, Resource, Result, SimpleArtist } from './api_types.ts';
 import type {
 	ArtistCreditName,
-	Artwork,
 	CountryCode,
 	EntityId,
 	HarmonyMedium,
@@ -197,6 +197,7 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 		this.id = rawRelease.id;
 		const rawTracklist = await this.getRawTracklist(this.id);
 		const media = this.convertRawTracklist(rawTracklist);
+		const artwork = selectLargestImage(rawRelease.imageCover, ['front']);
 		return {
 			title: rawRelease.title,
 			artists: rawRelease.artists.map(this.convertRawArtist.bind(this)),
@@ -210,7 +211,7 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 			copyright: rawRelease.copyright,
 			status: 'Official',
 			packaging: 'None',
-			images: this.getLargestCoverImage(rawRelease.imageCover),
+			images: artwork ? [artwork] : [],
 			labels: this.getLabels(rawRelease),
 			info: this.generateReleaseInfo(),
 		};
@@ -267,29 +268,6 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 			creditedName: artist.name,
 			externalIds: this.provider.makeExternalIds({ type: 'artist', id: artist.id.toString() }),
 		};
-	}
-
-	private getLargestCoverImage(images: Image[]): Artwork[] {
-		let largestImage: Image | undefined;
-		let thumbnail: Image | undefined;
-		images.forEach((i) => {
-			if (!largestImage || i.width > largestImage.width) {
-				largestImage = i;
-			}
-			if (i.width >= 200 && (!thumbnail || i.width < thumbnail.width)) {
-				thumbnail = i;
-			}
-		});
-		if (!largestImage) return [];
-		let thumbUrl: URL | undefined;
-		if (thumbnail) {
-			thumbUrl = new URL(thumbnail.url);
-		}
-		return [{
-			url: new URL(largestImage.url),
-			thumbUrl: thumbUrl,
-			types: ['front'],
-		}];
 	}
 
 	private getLabels(rawRelease: Album): Label[] {
