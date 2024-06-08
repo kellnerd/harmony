@@ -5,7 +5,7 @@ import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
 
-import type { Collection, ReleaseResult, Track } from './api_types.ts';
+import type { Collection, Kind, ReleaseResult, Track } from './api_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -113,9 +113,12 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		// API also returns other release variants for GTIN lookups, only use the first collection result
 		const collection = data.results.find((result) => result.wrapperType === 'collection') as Collection;
 		this.id = collection.collectionId.toString();
+
+		// Skip bonus items like booklets.
+		const validTrackKinds: Kind[] = ['song', 'music-video'];
 		const tracks = data.results.filter((result) =>
-			// skip bonus items (e.g. booklets or videos)
-			result.wrapperType === 'track' && result.kind === 'song' && result.collectionId === collection.collectionId
+			result.wrapperType === 'track' && result.collectionId === collection.collectionId &&
+			validTrackKinds.includes(result.kind)
 		) as Track[];
 
 		// Warn about releases without returned tracks.
@@ -207,6 +210,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 				title,
 				length: track.trackTimeMillis,
 				artists: [this.convertRawArtist(track.artistName, track.artistViewUrl)],
+				type: track.kind === 'music-video' ? 'video' : undefined,
 			});
 		});
 
