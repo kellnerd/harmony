@@ -1,6 +1,7 @@
 import { ApiAccessToken, type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
+import { splitLabels } from '@/utils/label.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { selectLargestImage } from '@/utils/image.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
@@ -17,14 +18,7 @@ import type {
 	Track,
 	TrackList,
 } from './api_types.ts';
-import type {
-	ArtistCreditName,
-	EntityId,
-	HarmonyMedium,
-	HarmonyRelease,
-	HarmonyTrack,
-	Label,
-} from '@/harmonizer/types.ts';
+import type { ArtistCreditName, EntityId, HarmonyMedium, HarmonyRelease, HarmonyTrack } from '@/harmonizer/types.ts';
 
 // See https://developer.spotify.com/documentation/web-api
 
@@ -235,7 +229,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			status: 'Official',
 			packaging: 'None',
 			images: artwork ? [artwork] : [],
-			labels: this.getLabels(rawRelease),
+			labels: splitLabels(rawRelease.label),
 			availableIn: rawRelease.available_markets,
 			info: this.generateReleaseInfo(),
 		};
@@ -290,13 +284,6 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			creditedName: artist.name,
 			externalIds: this.provider.makeExternalIds({ type: 'artist', id: artist.id }),
 		};
-	}
-
-	private getLabels(rawRelease: Album): Label[] {
-		// split label string using slashes if the results have at least 3 characters
-		return rawRelease.label?.split(/(?<=[^/]{3,})\/(?=[^/]{3,})/).map((label) => ({
-			name: label.trim(),
-		}));
 	}
 
 	private getCopyright(copyrights: Copyright[]): string {

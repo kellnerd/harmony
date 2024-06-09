@@ -2,6 +2,7 @@ import { availableRegions } from './regions.ts';
 import { type CacheEntry, MetadataApiProvider, type ProviderOptions, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
+import { splitLabels } from '@/utils/label.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { formatGtin } from '@/utils/gtin.ts';
 
@@ -174,10 +175,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 			}],
 			media,
 			releaseDate: parseHyphenatedDate(rawRelease.release_date),
-			// split label string using slashes if the results have at least 3 characters
-			labels: rawRelease.label.split(/(?<=[^/]{3,})\/(?=[^/]{3,})/).map((label) => ({
-				name: label.trim(),
-			})),
+			labels: splitLabels(rawRelease.label),
 			status: 'Official',
 			packaging: 'None',
 			images: [{
