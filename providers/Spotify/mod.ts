@@ -128,19 +128,24 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 	protected async getRawRelease(): Promise<Album> {
 		if (this.lookup.method === 'gtin') {
 			// Spotify does not always find UPC barcodes but expects them prefixed with
-			// 0 to a max. size of 14 characters. E.g. "810121774182" gives no results,
+			// 0 to a length of 14 characters. E.g. "810121774182" gives no results,
 			// but "00810121774182" does.
 			let albumId: string | undefined;
-			while (this.lookup.value.length <= 14 && !albumId) {
+			while (true) {
 				const cacheEntry = await this.provider.query<SearchResult>(
 					this.constructReleaseApiUrl(),
 					this.options.snapshotMaxTimestamp,
 				);
 				if (cacheEntry.content?.albums?.items?.length) {
 					albumId = cacheEntry.content.albums.items[0].id;
+					break;
+				} else if (this.lookup.value.length < 14) {
+					// Prefix the GTIN with 0s
+					this.lookup.value = this.lookup.value.padStart(14, '0');
+				} else {
+					// No results found
+					break;
 				}
-				// Prefix the GTIN with an additional 0
-				this.lookup.value = `0${this.lookup.value}`;
 			}
 
 			// No results found
