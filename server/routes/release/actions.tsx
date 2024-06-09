@@ -35,6 +35,7 @@ export default defineRoute(async (req, ctx) => {
 		const { gtin, urls, regions, providerIds, providers, snapshotMaxTimestamp } = extractReleaseLookupState(ctx.url);
 		const options: ReleaseOptions = {
 			withSeparateMedia: true,
+			withISRC: true,
 			regions,
 			providers,
 			snapshotMaxTimestamp,

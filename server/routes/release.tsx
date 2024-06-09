@@ -32,6 +32,7 @@ export default defineRoute(async (req, ctx) => {
 		const options: ReleaseOptions = {
 			withSeparateMedia: true,
 			withAllTrackArtists: true,
+			withISRC: true,
 			regions,
 			providers,
 			snapshotMaxTimestamp,

@@ -169,7 +169,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		return release;
 	}
 
-	private async getRawTracklist(rawRelease: Album): Promise<Track[]> {
+	private async getRawTracklist(rawRelease: Album): Promise<SimplifiedTrack[]> {
 		const allTracks: SimplifiedTrack[] = [...rawRelease.tracks.items];
 
 		// The initial response contains max. 50 tracks. Fetch the remaining
@@ -186,7 +186,11 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		}
 
 		// Load full details including ISRCs
-		return this.getRawTrackDetails(allTracks);
+		if (this.options.withISRC) {
+			return this.getRawTrackDetails(allTracks);
+		} else {
+			return allTracks;
+		}
 	}
 
 	private async getRawTrackDetails(simplifiedTracks: SimplifiedTrack[]): Promise<Track[]> {
@@ -237,7 +241,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		};
 	}
 
-	private convertRawTracklist(tracklist: Track[]): HarmonyMedium[] {
+	private convertRawTracklist(tracklist: SimplifiedTrack[]): HarmonyMedium[] {
 		const result: HarmonyMedium[] = [];
 		let medium: HarmonyMedium = {
 			number: 1,
@@ -267,12 +271,12 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		return result;
 	}
 
-	private convertRawTrack(track: Track): HarmonyTrack {
+	private convertRawTrack(track: SimplifiedTrack | Track): HarmonyTrack {
 		const result: HarmonyTrack = {
 			number: track.track_number,
 			title: track.name,
 			length: track.duration_ms,
-			isrc: track.external_ids.isrc,
+			isrc: (track as Track).external_ids?.isrc,
 			artists: track.artists.map(this.convertRawArtist.bind(this)),
 			availableIn: track.available_markets,
 		};
