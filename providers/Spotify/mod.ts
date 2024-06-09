@@ -170,8 +170,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 	}
 
 	private async getRawTracklist(rawRelease: Album): Promise<Track[]> {
-		let allTracks: SimplifiedTrack[] = [];
-		allTracks = allTracks.concat(rawRelease.tracks.items);
+		const allTracks: SimplifiedTrack[] = [...rawRelease.tracks.items];
 
 		// The initial response contains max. 50 tracks. Fetch the remaining
 		// tracks with separate requests if needed.
@@ -182,7 +181,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 				this.options.snapshotMaxTimestamp,
 			);
 			this.updateCacheTime(cacheEntry.timestamp);
-			allTracks = allTracks.concat(cacheEntry.content.items);
+			allTracks.push(...cacheEntry.content.items);
 			nextUrl = cacheEntry.content.next;
 		}
 
@@ -191,7 +190,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 	}
 
 	private async getRawTrackDetails(simplifiedTracks: SimplifiedTrack[]): Promise<Track[]> {
-		let allTracks: Track[] = [];
+		const allTracks: Track[] = [];
 		const trackIds = simplifiedTracks.map((track) => track.id);
 
 		// The SimplifiedTrack entries do not contain ISRCs.
@@ -207,7 +206,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 				this.options.snapshotMaxTimestamp,
 			);
 			this.updateCacheTime(cacheEntry.timestamp);
-			allTracks = allTracks.concat(cacheEntry.content.tracks);
+			allTracks.push(...cacheEntry.content.tracks);
 		}
 
 		return allTracks;
