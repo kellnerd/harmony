@@ -124,6 +124,10 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 						<th>Copyright</th>
 						<td>
 							<TextWithLineBreaks lines={copyright.split('\n')} />
+							<AlternativeValues
+								property={(release) => release.copyright}
+								display={(copyright) => <TextWithLineBreaks lines={copyright.split('\n')} />}
+							/>
 						</td>
 					</tr>
 				)}
