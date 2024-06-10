@@ -21,7 +21,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
 	const isMultiMedium = release.media.length > 1;
-	const { credits, copyright, labels, language, script, info } = release;
+	const { credits, copyright, labels, language, script, types, info } = release;
 
 	const AlternativeValues = setupAlternativeValues(releaseMap);
 
@@ -149,6 +149,12 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 					<tr>
 						<th>Script</th>
 						<td>{formatScriptFrequency(script)}</td>
+					</tr>
+				)}
+				{types && types.size > 0 && (
+					<tr>
+						<th>Types</th>
+						<td>{Array.from(types.values()).join(', ')}</td>
 					</tr>
 				)}
 				{info.providers.length > 1 && (
