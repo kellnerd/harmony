@@ -117,6 +117,9 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 	constructReleaseApiUrl(): URL {
 		let lookupUrl: URL;
 		const query = new URLSearchParams();
+		if (this.lookup.region) {
+			query.set('market', this.lookup.region);
+		}
 		if (this.lookup.method === 'gtin') {
 			lookupUrl = new URL(`search`, this.provider.apiBaseUrl);
 			query.set('type', 'album');
@@ -131,6 +134,8 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 
 	protected async getRawRelease(): Promise<Album> {
 		if (this.lookup.method === 'gtin') {
+			// For GTIN lookups use the region
+			this.lookup.region = this.options?.regions?.values().next().value;
 			// Spotify does not always find UPC barcodes but expects them prefixed with
 			// 0 to a length of 14 characters. E.g. "810121774182" gives no results,
 			// but "00810121774182" does.
@@ -161,6 +166,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			// ID to retrieve complete data.
 			this.lookup.method = 'id';
 			this.lookup.value = albumId;
+			this.lookup.region = undefined;
 		}
 
 		const cacheEntry = await this.provider.query<Album>(
