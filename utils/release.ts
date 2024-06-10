@@ -28,3 +28,15 @@ export function guessLiveRelease(tracks: HarmonyTrack[]): boolean {
 		return types.has('Live');
 	});
 }
+
+export function convertReleaseType(
+	sourceType: string,
+	typeMap: Record<string, ReleaseGroupType>,
+): Set<ReleaseGroupType> {
+	const types = new Set<ReleaseGroupType>();
+	const type = typeMap[sourceType];
+	if (type) {
+		types.add(type);
+	}
+	return types;
+}
