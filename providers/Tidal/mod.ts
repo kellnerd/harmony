@@ -89,7 +89,7 @@ export default class TidalProvider extends MetadataApiProvider {
 			});
 			const apiError = cacheEntry.content as ApiError;
 
-			if (apiError) {
+			if (apiError?.errors) {
 				throw new TidalResponseError(apiError, apiUrl);
 			}
 			return cacheEntry;
