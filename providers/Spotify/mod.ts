@@ -4,6 +4,7 @@ import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { splitLabels } from '@/utils/label.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { selectLargestImage } from '@/utils/image.ts';
+import { convertReleaseType } from '@/utils/release.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { availableRegions } from './regions.ts';
 
@@ -18,7 +19,14 @@ import type {
 	Track,
 	TrackList,
 } from './api_types.ts';
-import type { ArtistCreditName, EntityId, HarmonyMedium, HarmonyRelease, HarmonyTrack } from '@/harmonizer/types.ts';
+import type {
+	ArtistCreditName,
+	EntityId,
+	HarmonyMedium,
+	HarmonyRelease,
+	HarmonyTrack,
+	ReleaseGroupType,
+} from '@/harmonizer/types.ts';
 
 // See https://developer.spotify.com/documentation/web-api
 
@@ -114,6 +122,14 @@ export default class SpotifyProvider extends MetadataApiProvider {
 }
 
 export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Album> {
+	private releaseTypeMap: Record<string, ReleaseGroupType> = {
+		'compilation': 'Compilation',
+		'single': 'Single',
+		// Type can also be "album", but this might be too generic
+		// to be reliably set as a MusicBrainz type.
+		// 'album': 'Album',
+	};
+
 	constructReleaseApiUrl(): URL {
 		const { method, value, region } = this.lookup;
 		let lookupUrl: URL;
@@ -251,6 +267,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			releaseDate: parseHyphenatedDate(rawRelease.release_date),
 			copyright: this.getCopyright(rawRelease.copyrights),
 			status: 'Official',
+			types: convertReleaseType(rawRelease.album_type, this.releaseTypeMap),
 			packaging: 'None',
 			images: artwork ? [artwork] : [],
 			labels: splitLabels(rawRelease.label),
