@@ -17,6 +17,7 @@ import type {
 	LinkType,
 	ReleaseGroupType,
 } from '@/harmonizer/types.ts';
+import { guessTypesForRelease } from '@/utils/release.ts';
 
 // See https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI
 
@@ -171,7 +172,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 			this.addMessage(`Successfully extracted GTIN ${gtin} from artwork URL`);
 		}
 
-		return {
+		const release: HarmonyRelease = {
 			title,
 			artists: [this.convertRawArtist(collection.artistName, collection.artistViewUrl)],
 			gtin: gtin,
@@ -188,6 +189,9 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 			copyright: collection.copyright,
 			info: this.generateReleaseInfo(),
 		};
+
+		guessTypesForRelease(release);
+		return release;
 	}
 
 	private convertRawTracklist(tracklist: Track[]): HarmonyMedium[] {
