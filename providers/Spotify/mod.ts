@@ -310,8 +310,8 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 	 * If a GTIN is shorter than 14 characters also try variants prefixed with 0
 	 * to a maximum length of 14 characters.
 	 *
-	 * @param gtin
-	 * @returns
+	 * @param gtin Original GTIN.
+	 * @returns GTIN variations to try to search.
 	 */
 	private getGtinCandidates(gtin: string): string[] {
 		const candidates = [gtin];
