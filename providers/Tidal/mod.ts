@@ -76,22 +76,33 @@ export default class TidalProvider extends MetadataApiProvider {
 	}
 
 	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
-		const accessToken = await this.cachedAccessToken(this.requestAccessToken);
-		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
-			policy: { maxTimestamp },
-			requestInit: {
-				headers: {
-					'Authorization': `Bearer ${accessToken}`,
-					'Content-Type': 'application/vnd.tidal.v1+json',
+		try {
+			const accessToken = await this.cachedAccessToken(this.requestAccessToken);
+			const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
+				policy: { maxTimestamp },
+				requestInit: {
+					headers: {
+						'Authorization': `Bearer ${accessToken}`,
+						'Content-Type': 'application/vnd.tidal.v1+json',
+					},
 				},
-			},
-		});
-		const { error } = cacheEntry.content as { error?: ApiError };
+			});
+			const apiError = cacheEntry.content as ApiError;
 
-		if (error) {
-			throw new TidalResponseError(error, apiUrl);
+			if (apiError) {
+				throw new TidalResponseError(apiError, apiUrl);
+			}
+			return cacheEntry;
+		} catch (error) {
+			// Clone the response so the body of the original response can be
+			// consumed later if the error gets re-thrown.
+			const apiError = await error.response?.clone().json() as ApiError;
+			if (apiError?.errors) {
+				throw new TidalResponseError(apiError, apiUrl);
+			} else {
+				throw error;
+			}
 		}
-		return cacheEntry;
 	}
 
 	private async requestAccessToken(): Promise<ApiAccessToken> {
@@ -282,7 +293,7 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 
 class TidalResponseError extends ResponseError {
 	constructor(readonly details: ApiError, url: URL) {
-		const msg = details.errors.map((e) => `${e.field}: ${e.detail}`).join(', ');
+		const msg = details.errors.map((e) => `${e.field ?? e.category}: ${e.detail}`).join(', ');
 		super('Tidal', msg, url);
 	}
 }

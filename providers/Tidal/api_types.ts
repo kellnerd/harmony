@@ -107,7 +107,7 @@ export type Error = {
 	category: string;
 	code: string;
 	detail: string;
-	field: string;
+	field?: string;
 };
 
 export type ApiError = {
