@@ -62,21 +62,31 @@ export default class SpotifyProvider extends MetadataApiProvider {
 	}
 
 	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
-		const accessToken = await this.cachedAccessToken(this.requestAccessToken);
-		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
-			policy: { maxTimestamp },
-			requestInit: {
-				headers: {
-					'Authorization': `Bearer ${accessToken}`,
+		try {
+			const accessToken = await this.cachedAccessToken(this.requestAccessToken);
+			const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
+				policy: { maxTimestamp },
+				requestInit: {
+					headers: {
+						'Authorization': `Bearer ${accessToken}`,
+					},
 				},
-			},
-		});
-		const { error } = cacheEntry.content as { error?: ApiError };
-
-		if (error) {
-			throw new SpotifyResponseError(error, apiUrl);
+			});
+			const apiError = cacheEntry.content as ApiError;
+			if (apiError.error) {
+				throw new SpotifyResponseError(apiError, apiUrl);
+			}
+			return cacheEntry;
+		} catch (error) {
+			// Clone the response so the body of the original response can be
+			// consumed later if the error gets re-thrown.
+			const apiError = await error.response?.clone().json() as ApiError;
+			if (apiError?.error) {
+				throw new SpotifyResponseError(apiError, apiUrl);
+			} else {
+				throw error;
+			}
 		}
-		return cacheEntry;
 	}
 
 	private async requestAccessToken(): Promise<ApiAccessToken> {
