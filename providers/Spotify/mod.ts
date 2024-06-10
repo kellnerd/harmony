@@ -140,19 +140,14 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			// 0 to a length of 14 characters. E.g. "810121774182" gives no results,
 			// but "00810121774182" does.
 			let albumId: string | undefined;
-			while (true) {
+			for (const gtin of this.getGtinCandidates(this.lookup.value)) {
+				this.lookup.value = gtin;
 				const cacheEntry = await this.provider.query<SearchResult>(
 					this.constructReleaseApiUrl(),
 					this.options.snapshotMaxTimestamp,
 				);
 				if (cacheEntry.content?.albums?.items?.length) {
 					albumId = cacheEntry.content.albums.items[0].id;
-					break;
-				} else if (this.lookup.value.length < 14) {
-					// Prefix the GTIN with 0s
-					this.lookup.value = this.lookup.value.padStart(14, '0');
-				} else {
-					// No results found
 					break;
 				}
 			}
@@ -300,6 +295,27 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			creditedName: artist.name,
 			externalIds: this.provider.makeExternalIds({ type: 'artist', id: artist.id }),
 		};
+	}
+
+	/**
+	 * Returns a list of possible GTINs to search for.
+	 *
+	 * If a GTIN is shorter than 14 characters also try variants prefixed with 0
+	 * to a maximum length of 14 characters.
+	 *
+	 * @param gtin
+	 * @returns
+	 */
+	private getGtinCandidates(gtin: string): string[] {
+		const candidates = [gtin];
+		// Try padding to 14 characters, this seems to give results most often.
+		// As a last fallback also try 13 characters.
+		[14, 13].forEach((length) => {
+			if (gtin.length < length) {
+				candidates.push(gtin.padStart(length, '0'));
+			}
+		});
+		return candidates;
 	}
 
 	private getCopyright(copyrights: Copyright[]): string {
