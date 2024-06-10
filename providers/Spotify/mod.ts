@@ -30,7 +30,7 @@ export default class SpotifyProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'open.spotify.com',
-		pathname: '{/intl-:region}?/:type(artist|album)/:id',
+		pathname: '{/intl-:language}?/:type(artist|album)/:id',
 	});
 
 	readonly features: FeatureQualityMap = {
