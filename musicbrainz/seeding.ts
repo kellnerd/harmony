@@ -110,6 +110,8 @@ function convertLinkType(linkType: LinkType, url?: URL): UrlLinkTypeId | undefin
 		case 'discography page':
 			// TODO: handle special cases based on their URLs
 			return urlTypeIds['discography entry'];
+		case 'license':
+			return urlTypeIds['license'];
 	}
 }
 

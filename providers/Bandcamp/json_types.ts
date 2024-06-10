@@ -5,6 +5,8 @@ export interface ReleasePage {
 	band: Band;
 	/** OpenGraph description, contains the number of tracks (including hidden tracks). */
 	'og:description'?: string;
+	/** License URL. */
+	licenseUrl?: string;
 }
 
 interface Band {
