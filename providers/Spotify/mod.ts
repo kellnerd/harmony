@@ -134,23 +134,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 
 	protected async getRawRelease(): Promise<Album> {
 		if (this.lookup.method === 'gtin') {
-			// For GTIN lookups use the region
-			this.lookup.region = this.options?.regions?.values().next().value;
-			// Spotify does not always find UPC barcodes but expects them prefixed with
-			// 0 to a length of 14 characters. E.g. "810121774182" gives no results,
-			// but "00810121774182" does.
-			let albumId: string | undefined;
-			for (const gtin of this.getGtinCandidates(this.lookup.value)) {
-				this.lookup.value = gtin;
-				const cacheEntry = await this.provider.query<SearchResult>(
-					this.constructReleaseApiUrl(),
-					this.options.snapshotMaxTimestamp,
-				);
-				if (cacheEntry.content?.albums?.items?.length) {
-					albumId = cacheEntry.content.albums.items[0].id;
-					break;
-				}
-			}
+			const albumId = await this.queryAlbumIdByGtin(this.lookup.value);
 
 			// No results found
 			if (!albumId) {
@@ -172,6 +156,29 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 
 		this.updateCacheTime(cacheEntry.timestamp);
 		return release;
+	}
+
+	private async queryAlbumIdByGtin(gtin: string): Promise<string | undefined> {
+		// Spotify does not always find UPC barcodes but expects them prefixed with
+		// 0 to a length of 14 characters. E.g. "810121774182" gives no results,
+		// but "00810121774182" does.
+		const gtins = this.getGtinCandidates(gtin);
+		// For GTIN lookups use the region
+		for (const region of this.options?.regions || [undefined]) {
+			this.lookup.region = region;
+			for (const gtin of gtins) {
+				this.lookup.value = gtin;
+				const cacheEntry = await this.provider.query<SearchResult>(
+					this.constructReleaseApiUrl(),
+					this.options.snapshotMaxTimestamp,
+				);
+				if (cacheEntry.content?.albums?.items?.length) {
+					return cacheEntry.content.albums.items[0].id;
+				}
+			}
+		}
+
+		return undefined;
 	}
 
 	private async getRawTracklist(rawRelease: Album): Promise<SimplifiedTrack[]> {
