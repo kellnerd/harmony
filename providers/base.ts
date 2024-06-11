@@ -159,7 +159,7 @@ export abstract class MetadataProvider {
 				},
 				responseMutator: options?.responseMutator,
 			});
-			this.log.debug(`${input} => ${snapshot.path}`);
+			this.log.debug(`${input} => ${snapshot.path} (${snapshot.isFresh ? 'fresh' : 'old'})`);
 		} else {
 			let response = await this.fetch(input, options?.requestInit);
 			if (options?.responseMutator) {
