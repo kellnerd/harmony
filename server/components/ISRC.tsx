@@ -1,4 +1,4 @@
-const isrcPattern = /^([A-Z]{2})-?([A-Z0-9]{3})-?(\d{2})-?(\d{5})$/;
+const isrcPattern = /^([A-Z]{2})-?([A-Z0-9]{3})-?(\d{2})-?(\d{5})$/i;
 
 export function ISRC({ code }: { code: string }) {
 	const codeMatch = code.trim().match(isrcPattern);
