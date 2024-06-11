@@ -6,12 +6,8 @@ import { isDefined, isNotEmpty } from '@/utils/predicate.ts';
 import { assertCountryCode } from '@/utils/regions.ts';
 import { assertTimestamp } from '@/utils/time.ts';
 
-/**
- * Creates a release lookup permalink for the given release info.
- *
- * Domain and base path of the given URL will be used.
- */
-export function createReleasePermalink(info: ReleaseInfo, baseUrl: URL): URL {
+/** Encodes the given release info into release lookup state query parameters. */
+export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
 	const providersLookedUpByGtin = info.providers.filter((provider) => provider.lookup.method === 'gtin');
 	const providersLookedUpById = info.providers.filter((provider) => provider.lookup.method === 'id');
 	const usedRegion = info.providers.map((provider) => provider.lookup.region).find(isDefined);
@@ -35,8 +31,17 @@ export function createReleasePermalink(info: ReleaseInfo, baseUrl: URL): URL {
 	// Maximum timestamp can be used to load the latest snapshot up to this timestamp for each provider.
 	state.append('ts', Math.max(...cacheTimestamps).toFixed(0));
 
+	return state;
+}
+
+/**
+ * Creates a release lookup permalink for the given release info.
+ *
+ * Domain and base path of the given URL will be used.
+ */
+export function createReleasePermalink(info: ReleaseInfo, baseUrl: URL): URL {
 	const permalink = new URL('release', baseUrl);
-	permalink.search = state.toString();
+	permalink.search = encodeReleaseLookupState(info).toString();
 
 	return permalink;
 }

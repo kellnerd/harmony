@@ -1,4 +1,4 @@
-import { createReleasePermalink } from '@/server/state.ts';
+import { createReleasePermalink, encodeReleaseLookupState } from '@/server/state.ts';
 import { determineReleaseEventCountries } from './release_countries.ts';
 import { urlTypeIds } from './type_id.ts';
 import { preferArray } from 'utils/array/scalar.js';
@@ -25,7 +25,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 
 	if (redirectUrl) {
 		// Preserve lookup parameters such as the used providers.
-		const lookupState = createReleasePermalink(release.info, redirectUrl).searchParams;
+		const lookupState = encodeReleaseLookupState(release.info);
 		// Timestamp `ts` is not needed and may even lead to cache misses when different lookup options are used.
 		lookupState.delete('ts');
 		redirectUrl.search = lookupState.toString();
