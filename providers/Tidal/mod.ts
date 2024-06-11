@@ -40,7 +40,7 @@ export default class TidalProvider extends MetadataApiProvider {
 	readonly name = 'Tidal';
 
 	readonly supportedUrls = new URLPattern({
-		hostname: '{www.}?tidal.com',
+		hostname: '{(www|listen).}?tidal.com',
 		pathname: String.raw`{/browse}?/:type(album|artist)/:id(\d+)`,
 	});
 
