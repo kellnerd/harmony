@@ -40,7 +40,10 @@ jobs:
         run: deno test -A
 
   deploy:
-    if: vars.DEPLOY_ENABLED == 'true' && (startsWith(github.ref, 'refs/tags/v') || inputs.perform_deploy)
+    if: >-
+      vars.DEPLOY_ENABLED == 'true' &&
+      contains(fromJSON(vars.DEPLOYERS), github.actor) &&
+      (startsWith(github.ref, 'refs/tags/v') || inputs.perform_deploy)
     runs-on: ubuntu-latest
     needs: test
 
