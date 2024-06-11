@@ -3,7 +3,6 @@ import { type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/provid
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
-import { pluralWithCount } from '@/utils/plural.ts';
 
 import type { Collection, Kind, ReleaseResult, Track } from './api_types.ts';
 import type {
@@ -142,12 +141,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 			const skippedUrls = uniqueSkippedIds.map((id) =>
 				this.cleanViewUrl(skippedResults.find((result) => result.collectionId === id)!.collectionViewUrl)
 			);
-			this.addMessage(
-				`The API also returned ${
-					pluralWithCount(skippedUrls.length, 'other result, which was skipped', 'other results, which were skipped')
-				}:\n- ${skippedUrls.join('\n- ')}`,
-				'warning',
-			);
+			this.warnMultipleResults(skippedUrls);
 		}
 
 		const linkTypes: LinkType[] = [];

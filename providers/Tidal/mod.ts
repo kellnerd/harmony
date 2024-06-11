@@ -157,6 +157,9 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 				return Boolean(data?.data?.length);
 			};
 			const result = await this.queryAllRegions<Result<Album>>(isValidData);
+			if (result.data.length > 1) {
+				this.warnMultipleResults(result.data.slice(1).map((release) => release.resource.tidalUrl));
+			}
 			return result.data[0].resource;
 		} else {
 			const isValidData = (data: Resource<Album>) => {

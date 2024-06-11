@@ -21,6 +21,7 @@ import type { PartialDate } from '@/utils/date.ts';
 import type { CacheOptions, Snapshot, SnapStorage } from 'snap-storage';
 import type { MaybePromise } from 'utils/types.d.ts';
 import type { Logger } from 'std/log/logger.ts';
+import { pluralWithCount } from '@/utils/plural.ts';
 
 export type ProviderOptions = Partial<{
 	/** Duration of one rate-limiting interval for requests (in ms). */
@@ -333,6 +334,19 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 			}],
 			messages: this.messages,
 		};
+	}
+
+	/**
+	 * Shows a warning if the provider found more than the expected result for a lookup.
+	 * Expects a list of URLs pointing to the extra results from the provider.
+	 */
+	protected warnMultipleResults(urls: string[] | URL[]) {
+		this.addMessage(
+			`The API also returned ${
+				pluralWithCount(urls.length, 'other result, which was skipped', 'other results, which were skipped')
+			}:\n- ${urls.join('\n- ')}`,
+			'warning',
+		);
 	}
 
 	/** Determines excluded regions of the release (if available regions have been specified for the provider). */

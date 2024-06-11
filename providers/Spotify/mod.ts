@@ -173,8 +173,12 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 					this.constructReleaseApiUrl(),
 					this.options.snapshotMaxTimestamp,
 				);
-				if (cacheEntry.content?.albums?.items?.length) {
-					return cacheEntry.content.albums.items[0].id;
+				const releases = cacheEntry.content?.albums?.items;
+				if (releases?.length) {
+					if (releases.length > 1) {
+						this.warnMultipleResults(releases.slice(1).map((release) => release.external_urls?.spotify));
+					}
+					return releases[0].id;
 				}
 			}
 		}
