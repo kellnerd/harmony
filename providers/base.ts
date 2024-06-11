@@ -341,10 +341,11 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 	 * Expects a list of URLs pointing to the extra results from the provider.
 	 */
 	protected warnMultipleResults(urls: string[] | URL[]) {
+		const lines = urls.map((url) => `${url} ([lookup](?url=${encodeURIComponent(String(url))}))`);
 		this.addMessage(
 			`The API also returned ${
 				pluralWithCount(urls.length, 'other result, which was skipped', 'other results, which were skipped')
-			}:\n- ${urls.join('\n- ')}`,
+			}:\n- ${lines.join('\n- ')}`,
 			'warning',
 		);
 	}
