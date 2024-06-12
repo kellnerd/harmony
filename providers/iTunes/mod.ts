@@ -24,7 +24,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '{geo.}?(itunes|music).apple.com',
-		pathname: String.raw`/:region(\w{2})?/:type(album|artist)/:slug?/:id(\d+)`,
+		pathname: String.raw`/:region(\w{2})?/:type(album|artist)/:slug?/{id}?:id(\d+)`,
 	});
 
 	features: FeatureQualityMap = {
