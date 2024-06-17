@@ -10,14 +10,32 @@ export function guessTypesForRelease(release: HarmonyRelease) {
 	release.types = types;
 }
 
+const detectTypesPatterns = [
+	// Commonly used for Bandcamp releases
+	/\s\((EP|Single|Live|Demo)\)(?:\s\(.*?\))?$/i,
+	// iTunes singles and EPs
+	/\s- (EP|Single|Live)(?:\s\(.*?\))?$/i,
+	// Generic "EP" suffix
+	/\s(EP)(?:\s\(.*?\))?$/i,
+];
+
+const typeMap: Map<string, ReleaseGroupType> = new Map([
+	['demo', 'Demo'],
+	['ep', 'EP'],
+	['live', 'Live'],
+	['single', 'Single'],
+]);
+
 /** Guesses a release type from a title. */
 export function guessTypesFromTitle(title: string): Set<ReleaseGroupType> {
-	const match = title.match(/ \((EP|Single|Live)\)$/i);
 	const types = new Set<ReleaseGroupType>();
-	if (match) {
-		const type = match[1];
-		types.add(type.charAt(0).toUpperCase() + type.slice(1) as ReleaseGroupType);
-	}
+	detectTypesPatterns.forEach((pattern) => {
+		const match = title.match(pattern);
+		if (match) {
+			const type = match[1].toLowerCase();
+			types.add(typeMap.get(type) as ReleaseGroupType);
+		}
+	});
 	return types;
 }
 
@@ -29,6 +47,7 @@ export function guessLiveRelease(tracks: HarmonyTrack[]): boolean {
 	});
 }
 
+/** Converts a provider specific type to a `ReleaseGroupType` from a given mapping. */
 export function convertReleaseType(
 	sourceType: string,
 	typeMap: Record<string, ReleaseGroupType>,

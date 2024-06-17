@@ -263,7 +263,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 	}
 
 	private getTypesFromTitle(title: string): { title: string; types: Set<ReleaseGroupType> } {
-		const re = / - (EP|Single)$/;
+		const re = /\s- (EP|Single)$/;
 		const match = title.match(re);
 		const types = new Set<ReleaseGroupType>();
 		if (match) {
