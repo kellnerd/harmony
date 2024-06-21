@@ -113,7 +113,7 @@ export default defineRoute(async (req, ctx) => {
 						<SpriteIcon name='brand-metabrainz' />
 						<p>
 							<a href={releaseUrl.href} target='_blank'>
-								Open on MusicBrainz
+								Open in MusicBrainz
 							</a>
 						</p>
 					</div>
