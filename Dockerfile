@@ -10,4 +10,5 @@ RUN deno cache server/main.ts
 
 ARG version
 ENV DENO_DEPLOYMENT_ID $version
+USER deno:deno
 CMD deno run -A server/main.ts
