@@ -9,8 +9,8 @@ export function ProviderList({ providers }: { providers: ProviderInfo[] }) {
 			{providers.map((provider) => (
 				<li>
 					<ProviderIcon providerName={provider.name} size={20} stroke={1.5} />
-					{provider.name}: <a href={provider.url.href} target='_blank'>{provider.id}</a>
-					{provider.apiUrl && <a class='label ml-2' href={provider.apiUrl.href} target='_blank'>API</a>}
+					{provider.name}: <a href={provider.url.href}>{provider.id}</a>
+					{provider.apiUrl && <a class='label ml-2' href={provider.apiUrl.href}>API</a>}
 					{provider.cacheTime && (
 						<span class='label ml-2'>Cached: {formatTimestampAsISOString(provider.cacheTime)}</span>
 					)}
