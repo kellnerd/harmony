@@ -1,3 +1,4 @@
+import { DownloadPreference } from './json_types.ts';
 import type { AlbumCurrent, PlayerData, PlayerTrack, ReleasePage, TrackInfo } from './json_types.ts';
 import type {
 	ArtistCreditName,
@@ -250,9 +251,10 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		}
 
 		const linkTypes: LinkType[] = [];
-		if (current.minimum_price > 0) {
+		if (current.minimum_price > 0 || current.download_pref === DownloadPreference.PAID) {
 			linkTypes.push('paid download');
-		} else {
+		}
+		if (rawRelease.freeDownloadPage || current.minimum_price === 0.0) {
 			linkTypes.push('free download');
 		}
 		if (rawRelease.trackinfo.every((track) => track.streaming)) {
