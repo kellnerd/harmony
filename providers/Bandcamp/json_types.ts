@@ -99,8 +99,10 @@ interface TrAlbumCurrent {
 	require_email: null;
 	is_set_price: null;
 	set_price: number;
+	/** Minimum price of the release. */
 	minimum_price: number;
-	minimum_price_nonzero: number;
+	/** Value can be `null` if {@linkcode minimum_price} is `0.0`. */
+	minimum_price_nonzero: number | null;
 	require_email_0: null;
 	/** Credited name of the artist. Can be `null` if it is the same as the Bandcamp account. */
 	artist: string | null;
@@ -151,7 +153,7 @@ export interface TrackCurrent extends TrAlbumCurrent {
 	type: 'track';
 }
 
-enum DownloadPreference {
+export enum DownloadPreference {
 	FREE = 1,
 	PAID = 2,
 }
