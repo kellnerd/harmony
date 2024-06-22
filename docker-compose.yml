@@ -4,7 +4,7 @@ services:
       context: .
       args:
         version: v2024.6.12
-    container_name: harmony-container
+    container_name: harmony
     image: harmony
     ports:
       - "8000:8000"
