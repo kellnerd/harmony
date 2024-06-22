@@ -261,19 +261,28 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			linkTypes.push('free streaming');
 		}
 
+		let gtin = (current as AlbumCurrent).upc ?? undefined;
 		if (packages?.length) {
 			const packageInfo = packages.map(({ title, type_name, edition_size, upc }) =>
 				`- **${title}**: ${type_name} (edition of ${edition_size}, GTIN: ${upc})`
 			);
 			packageInfo.unshift('Available physical release packages:');
 			this.addMessage(packageInfo.join('\n'));
+
+			if (gtin && packages.some((physicalRelease) => gtin === physicalRelease.upc)) {
+				this.addMessage(
+					`GTIN ${gtin} was not used for the digital release as it belongs to one of the physical release packages`,
+					'warning',
+				);
+				gtin = undefined;
+			}
 		}
 
 		const release: HarmonyRelease = {
 			title: current.title,
 			artists: [artist],
 			labels: label ? [label] : undefined,
-			gtin: (current as AlbumCurrent).upc ?? undefined,
+			gtin: gtin,
 			releaseDate: current.release_date ? parseISODateTime(current.release_date) : undefined,
 			availableIn: ['XW'],
 			media: [{
