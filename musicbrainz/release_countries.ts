@@ -36,7 +36,13 @@ const dependentTerritories = [
 	'TK', // Tokelau -> New Zealand
 ];
 
+const boycottedRegions = [
+	'BY', // Belarus
+	'RU', // Russia
+];
+
 const ignoredExcludedRegions = new Set([
 	...uninhabitedRegions,
 	...dependentTerritories,
+	...boycottedRegions,
 ]);
