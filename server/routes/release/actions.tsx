@@ -112,8 +112,8 @@ export default defineRoute(async (req, ctx) => {
 					<div className='message'>
 						<SpriteIcon name='brand-metabrainz' />
 						<p>
-							<a href={releaseUrl.href} target='_blank'>
-								Open on MusicBrainz
+							<a href={releaseUrl.href}>
+								Open in MusicBrainz
 							</a>
 						</p>
 					</div>
@@ -137,7 +137,7 @@ export default defineRoute(async (req, ctx) => {
 						<SpriteIcon name='photo-plus' />
 						<div>
 							<p>
-								<a href={join(releaseUrl, 'add-cover-art').href} target='_blank'>
+								<a href={join(releaseUrl, 'add-cover-art').href}>
 									Add cover art
 								</a>
 							</p>

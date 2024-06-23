@@ -11,7 +11,7 @@ export function CoverImage({ artwork }: { artwork: Artwork }) {
 
 	return (
 		<figure class='cover-image'>
-			<a href={artwork.url.href} target='_blank'>
+			<a href={artwork.url.href}>
 				<img src={artwork.thumbUrl?.href ?? artwork.url.href} alt={description} title={description} />
 			</a>
 			<figcaption>
