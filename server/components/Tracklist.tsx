@@ -1,6 +1,7 @@
 import { setupAlternativeValues } from './AlternativeValues.tsx';
 import { ArtistCredit } from './ArtistCredit.tsx';
 import { ISRC } from './ISRC.tsx';
+import { LinkedEntity } from './LinkedEntity.tsx';
 import { SpriteIcon } from './SpriteIcon.tsx';
 
 import { pluralWithCount } from '@/utils/plural.ts';
@@ -50,7 +51,9 @@ export function Tracklist({ medium, mediumMap, showTitle = false }: TracklistPro
 									<SpriteIcon name='video' size={20} stroke={1.5} />
 								</span>
 							)}
-							{track.title}
+							{track.recording
+								? <LinkedEntity entity={track.recording} entityType='recording' displayName={track.title} />
+								: track.title}
 							<AlternativeValues property={(track) => track?.title} />
 						</td>
 						<td>
