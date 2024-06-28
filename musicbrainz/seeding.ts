@@ -54,6 +54,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 				artist_credit: convertArtistCredit(track.artists),
 				number: track.number?.toString(),
 				length: track.length,
+				recording: track.recording?.mbid,
 			})),
 		})),
 		language: release.language?.code,

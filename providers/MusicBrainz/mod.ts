@@ -98,6 +98,7 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 					title: track.title,
 					length: track.length ?? undefined,
 					artists: track['artist-credit'].map(this.convertRawArtist),
+					recording: { mbid: track.recording.id },
 					type: track.recording.video ? 'video' : 'audio',
 				})) ?? [],
 			})),

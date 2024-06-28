@@ -32,4 +32,5 @@ export const immutableReleaseProperties = [
 export const immutableTrackProperties = [
 	'isrc',
 	'length',
+	'recording',
 ] as const;

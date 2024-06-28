@@ -74,6 +74,7 @@ export type HarmonyTrack = {
 	type?: TrackType;
 	isrc?: string;
 	availableIn?: CountryCode[];
+	recording?: ResolvableEntity;
 };
 
 export type ArtistCreditName = ResolvableEntity & {
