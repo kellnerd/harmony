@@ -63,7 +63,8 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 							<ul>
 								{labels?.map((label) => (
 									<li>
-										<LinkedEntity entity={label} entityType='label' displayName={label.name} /> {label.catalogNumber}
+										<LinkedEntity entity={label} entityType='label' displayName={label.name ?? '[unknown]'} />{' '}
+										{label.catalogNumber}
 									</li>
 								))}
 							</ul>

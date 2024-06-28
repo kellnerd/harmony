@@ -103,7 +103,7 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 			})),
 			releaseDate: parseHyphenatedDate(rawRelease.date ?? ''),
 			labels: rawRelease['label-info'].map((info) => ({
-				name: info.label?.name ?? '',
+				name: info.label?.name,
 				catalogNumber: info['catalog-number'] ?? undefined,
 				mbid: info.label?.id,
 			})),
@@ -124,7 +124,6 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 
 	private convertRawArtist(artistCredit: ArtistCredit): ArtistCreditName {
 		return {
-			name: artistCredit.artist.name,
 			creditedName: artistCredit.name,
 			mbid: artistCredit.artist.id,
 		};

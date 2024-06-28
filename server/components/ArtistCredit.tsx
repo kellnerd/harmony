@@ -7,7 +7,7 @@ export function ArtistCredit({ artists, plainText = false }: { artists: ArtistCr
 	return (
 		<span class='artist-credit'>
 			{artists.map((artist, index) => {
-				const displayName = artist.creditedName ?? artist.name;
+				const displayName = artist.creditedName ?? artist.name ?? '[unknown]';
 				return (
 					<>
 						{plainText ? displayName : <LinkedEntity entity={artist} entityType='artist' displayName={displayName} />}

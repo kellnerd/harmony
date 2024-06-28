@@ -229,6 +229,7 @@ function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T[], sou
 			const sourceItem = source[index];
 			if (
 				sourceItem.externalIds?.length &&
+				sourceItem.name && targetItem.name &&
 				similarNames(sourceItem.name, targetItem.name)
 			) {
 				for (const artistId of sourceItem.externalIds) {

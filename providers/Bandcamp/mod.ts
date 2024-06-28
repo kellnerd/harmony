@@ -1,7 +1,7 @@
 import { DownloadPreference } from './json_types.ts';
 import type { AlbumCurrent, PlayerData, PlayerTrack, ReleasePage, TrackInfo } from './json_types.ts';
 import type {
-	ArtistCreditName,
+	ArtistCreditItem,
 	Artwork,
 	ArtworkType,
 	EntityId,
@@ -188,7 +188,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		const physicalLabels = packages?.map((pkg) => pkg.label).filter(isNotNull);
 		if (new Set(physicalLabels).size === 1) {
 			label = { name: physicalLabels![0] };
-			if (similarNames(label.name, bandName)) {
+			if (similarNames(label.name!, bandName)) {
 				bandIsLabel = true;
 				label.externalIds = externalBandIds;
 			}
@@ -333,7 +333,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		};
 	}
 
-	makeArtistCreditName(artist: string): ArtistCreditName {
+	makeArtistCreditName(artist: string): ArtistCreditItem {
 		return {
 			name: artist,
 			creditedName: artist,
