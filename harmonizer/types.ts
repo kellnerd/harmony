@@ -37,6 +37,7 @@ export interface ResolvableEntity {
 	mbid?: string;
 }
 
+// New properties also have to be added to `properties.ts` to be considered by the merge algorithm!
 export type HarmonyRelease = {
 	title: string;
 	artists: ArtistCredit;
@@ -65,6 +66,7 @@ export type HarmonyMedium = {
 	tracklist: HarmonyTrack[];
 };
 
+// New properties also have to be added to `properties.ts` to be considered by the merge algorithm!
 export type HarmonyTrack = {
 	title: string;
 	artists?: ArtistCredit;
