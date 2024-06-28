@@ -21,7 +21,9 @@
 	--apple: #fc3c44;
 	--bandcamp: #1da0c3;
 	--beatport: #00e586;
+	--brainz: #eb743b;
 	--deezer: #a238ff;
+	--musicbrainz: #ba478f;
 	--spotify: #1db954;
 	--tidal: #000000;
 }
@@ -368,6 +370,9 @@ label.deezer {
 }
 label.itunes {
 	background-color: var(--apple);
+}
+label.musicbrainz {
+	background-color: var(--musicbrainz);
 }
 label.spotify {
 	background-color: var(--spotify);
