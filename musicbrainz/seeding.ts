@@ -5,7 +5,16 @@ import { preferArray } from 'utils/array/scalar.js';
 import { flatten } from 'utils/object/flatten.js';
 import { transform } from 'utils/string/transform.js';
 
-import type { ArtistCreditSeed, ReleaseSeed } from '@kellnerd/musicbrainz/seeding/release';
+import type {
+	ArtistCreditNameSeed,
+	ArtistCreditSeed,
+	MediumSeed,
+	ReleaseEventSeed,
+	ReleaseLabelSeed,
+	ReleaseSeed,
+	ReleaseUrlSeed,
+	TrackSeed,
+} from '@kellnerd/musicbrainz/seeding/release';
 import type { UrlLinkTypeId } from './type_id.ts';
 import type { ArtistCreditName, HarmonyRelease, LinkType, ReleaseInfo } from '@/harmonizer/types.ts';
 import type { FormDataRecord } from 'utils/types.d.ts';
@@ -35,21 +44,21 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 		name: release.title,
 		artist_credit: convertArtistCredit(release.artists),
 		barcode: release.gtin?.toString(),
-		events: countries.map((country) => ({
+		events: countries.map<ReleaseEventSeed>((country) => ({
 			date: release.releaseDate,
 			country,
 		})),
-		labels: release.labels?.map((label) => ({
+		labels: release.labels?.map<ReleaseLabelSeed>((label) => ({
 			name: label.name,
 			catalog_number: label.catalogNumber,
 			mbid: label.mbid,
 		})),
 		status: release.status,
 		packaging: release.packaging,
-		mediums: release.media.map((medium) => ({
+		mediums: release.media.map<MediumSeed>((medium) => ({
 			format: medium.format,
 			name: medium.title,
-			track: medium.tracklist.map((track) => ({
+			track: medium.tracklist.map<TrackSeed>((track) => ({
 				name: track.title,
 				artist_credit: convertArtistCredit(track.artists),
 				number: track.number?.toString(),
@@ -59,7 +68,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 		})),
 		language: release.language?.code,
 		script: release.script?.code,
-		urls: release.externalLinks.flatMap((link) =>
+		urls: release.externalLinks.flatMap<ReleaseUrlSeed>((link) =>
 			link.types?.length
 				? link.types.map((type) => ({
 					url: link.url.href,
@@ -82,7 +91,7 @@ export function convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditS
 
 	const lastIndex = artists.length - 1;
 	return {
-		names: artists.map((artist, index) => {
+		names: artists.map<ArtistCreditNameSeed>((artist, index) => {
 			const defaultJoinPhrase = (index !== lastIndex) ? (index === lastIndex - 1 ? ' & ' : ', ') : undefined;
 
 			return {
