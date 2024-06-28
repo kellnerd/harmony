@@ -1,10 +1,10 @@
-import type { EntityId, HarmonyRelease, HarmonyTrack, MediumFormat } from '@/harmonizer/types.ts';
+import type { ArtistCreditName, EntityId, HarmonyRelease, HarmonyTrack, MediumFormat } from '@/harmonizer/types.ts';
 import { CacheEntry, MetadataApiProvider, ProviderOptions, ReleaseApiLookup } from '@/providers/base.ts';
 import { FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { isDefined } from '@/utils/predicate.ts';
-import { Release } from '@kellnerd/musicbrainz/api-types';
+import { ArtistCredit, Release } from '@kellnerd/musicbrainz/api-types';
 import { join } from 'std/url/join.ts';
 
 export default class MusicBrainzProvider extends MetadataApiProvider {
@@ -86,7 +86,7 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 
 		const release: HarmonyRelease = {
 			title: rawRelease.title,
-			artists: rawRelease['artist-credit'],
+			artists: rawRelease['artist-credit'].map(this.convertRawArtist),
 			gtin: rawRelease.barcode || undefined, // TODO: handle empty barcode
 			externalLinks: [],
 			media: rawRelease.media.map((medium) => ({
@@ -97,7 +97,7 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 					number: track.number,
 					title: track.title,
 					length: track.length ?? undefined,
-					artists: track['artist-credit'],
+					artists: track['artist-credit'].map(this.convertRawArtist),
 					type: track.recording.video ? 'video' : 'audio',
 				})) ?? [],
 			})),
@@ -115,6 +115,14 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 		}
 
 		return release;
+	}
+
+	private convertRawArtist(artistCredit: ArtistCredit): ArtistCreditName {
+		return {
+			name: artistCredit.artist.name,
+			creditedName: artistCredit.name,
+			mbid: artistCredit.artist.id,
+		};
 	}
 }
 
