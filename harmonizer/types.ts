@@ -54,6 +54,7 @@ export type HarmonyRelease = {
 	copyright?: string;
 	availableIn?: CountryCode[];
 	excludedFrom?: CountryCode[];
+	releaseGroup?: ResolvableEntity;
 	info: ReleaseInfo;
 };
 

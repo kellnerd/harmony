@@ -15,6 +15,7 @@ export const combinableReleaseProperties: Array<keyof HarmonyRelease> = [
 export const immutableReleaseProperties = [
 	'title',
 	'artists',
+	'releaseGroup',
 	'gtin', // TODO: has to be missing or identical during merge
 	'media', // TODO: has to be missing or of identical shape during merge
 	'language',

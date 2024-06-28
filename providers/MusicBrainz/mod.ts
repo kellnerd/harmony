@@ -62,7 +62,7 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 		let url: URL;
 		if (this.lookup.method === 'id') {
 			url = join(this.provider.apiBaseUrl, 'release', this.lookup.value);
-			url.searchParams.set('inc', ['artist-credits', 'labels', 'recordings'].join('+'));
+			url.searchParams.set('inc', ['artist-credits', 'labels', 'recordings', 'release-groups'].join('+'));
 		} else { // if (this.lookup.method === 'gtin')
 			throw new Error('Method not implemented.');
 		}
@@ -112,6 +112,7 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 			packaging: rawRelease.packaging ?? undefined,
 			availableIn: rawRelease['release-events']
 				?.flatMap((event) => event.area?.['iso-3166-1-codes']).filter(isDefined) ?? [],
+			releaseGroup: { mbid: rawRelease['release-group'].id },
 			info: this.generateReleaseInfo(),
 		};
 
@@ -131,4 +132,4 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 	}
 }
 
-type RawRelease = Release<'artist-credits' | 'labels' | 'recordings'>;
+type RawRelease = Release<'artist-credits' | 'labels' | 'recordings' | 'release-groups'>;

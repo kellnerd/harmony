@@ -43,6 +43,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 	const seed: ReleaseSeed = {
 		name: release.title,
 		artist_credit: convertArtistCredit(release.artists),
+		release_group: release.releaseGroup?.mbid,
 		barcode: release.gtin?.toString(),
 		events: countries.map<ReleaseEventSeed>((country) => ({
 			date: release.releaseDate,
