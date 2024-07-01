@@ -15,7 +15,9 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	LinkType,
+	ReleaseGroupType,
 } from '@/harmonizer/types.ts';
+import { guessTypesForRelease } from '@/utils/release.ts';
 
 // See https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI
 
@@ -144,6 +146,8 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 			this.warnMultipleResults(skippedUrls);
 		}
 
+		const { title, types } = this.getTypesFromTitle(collection.collectionName);
+
 		const linkTypes: LinkType[] = [];
 		if (collection.collectionPrice) {
 			// A missing price might also indicate that the release date is in the future,
@@ -168,8 +172,8 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 			this.addMessage(`Successfully extracted GTIN ${gtin} from artwork URL`);
 		}
 
-		return {
-			title: collection.collectionName,
+		const release: HarmonyRelease = {
+			title,
 			artists: [this.convertRawArtist(collection.artistName, collection.artistViewUrl)],
 			gtin: gtin,
 			externalLinks: [{
@@ -179,11 +183,15 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 			media: this.convertRawTracklist(tracks),
 			releaseDate: parseISODateTime(collection.releaseDate),
 			status: 'Official',
+			types,
 			packaging: 'None',
 			images: [this.processImage(collection.artworkUrl100, ['front'])],
 			copyright: collection.copyright,
 			info: this.generateReleaseInfo(),
 		};
+
+		guessTypesForRelease(release);
+		return release;
 	}
 
 	private convertRawTracklist(tracklist: Track[]): HarmonyMedium[] {
@@ -252,6 +260,18 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		url.pathname = url.pathname.replace(/(?<=\/(artist|album))\/[^/]+(?=\/\d+)/, '');
 
 		return url;
+	}
+
+	private getTypesFromTitle(title: string): { title: string; types: Set<ReleaseGroupType> } {
+		const re = /\s- (EP|Single)$/;
+		const match = title.match(re);
+		const types = new Set<ReleaseGroupType>();
+		if (match) {
+			title = title.replace(re, '');
+			types.add(match[1] as ReleaseGroupType);
+		}
+
+		return { title, types };
 	}
 }
 

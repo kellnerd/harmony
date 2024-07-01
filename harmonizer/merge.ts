@@ -17,6 +17,7 @@ import type {
 	ProviderPreferences,
 	ProviderReleaseErrorMap,
 	ProviderReleaseMap,
+	ReleaseGroupType,
 	ResolvableEntity,
 } from './types.ts';
 
@@ -58,6 +59,7 @@ export function mergeRelease(
 		artists: [],
 		externalLinks: [],
 		media: [],
+		types: new Set<ReleaseGroupType>(),
 		info: {
 			providers: [],
 			messages: errorMessages,
@@ -122,6 +124,11 @@ export function mergeRelease(
 		mergedRelease.externalLinks.push(...sourceRelease.externalLinks);
 		mergedRelease.info.providers.push(...sourceRelease.info.providers);
 		mergedRelease.info.messages.push(...sourceRelease.info.messages);
+
+		// Merge types
+		if (sourceRelease.types) {
+			mergedRelease.types = mergedRelease.types?.union(sourceRelease.types);
+		}
 
 		// combine availabilities
 		sourceRelease.availableIn?.forEach((region) => {

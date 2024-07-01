@@ -20,6 +20,7 @@ import { isNotNull } from '@/utils/predicate.ts';
 import { similarNames } from '@/utils/similarity.ts';
 import { toTrackRanges } from '@/utils/tracklist.ts';
 import { simplifyName } from 'utils/string/simplify.js';
+import { guessTypesForRelease } from '@/utils/release.ts';
 
 export default class BandcampProvider extends MetadataProvider {
 	readonly name = 'Bandcamp';
@@ -291,6 +292,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			}],
 			status: 'Official',
 			packaging: 'None',
+			types: current.type == 'track' ? new Set(['Single']) : undefined,
 			externalLinks: [{
 				url: releaseUrl,
 				types: linkTypes,
@@ -307,6 +309,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			});
 		}
 
+		guessTypesForRelease(release);
 		return release;
 	}
 

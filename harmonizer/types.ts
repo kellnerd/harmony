@@ -4,6 +4,8 @@ import type { EntityType } from '@kellnerd/musicbrainz';
 import type { ReleasePackaging, ReleaseStatus } from '@kellnerd/musicbrainz/data/release';
 import type { PartialDate } from '../utils/date.ts';
 import type { ScriptFrequency } from '../utils/script.ts';
+import type { ReleaseGroupType } from 'jsr:@kellnerd/musicbrainz@^0.3.0/data/release-group';
+export type { ReleaseGroupType } from 'jsr:@kellnerd/musicbrainz@^0.3.0/data/release-group';
 
 /** MusicBrainz entity types which Harmony supports. */
 export type HarmonyEntityType = Extract<EntityType, 'release' | 'artist'>;
@@ -46,6 +48,7 @@ export type HarmonyRelease = {
 	language?: Language;
 	script?: ScriptFrequency;
 	status?: ReleaseStatus;
+	types?: Set<ReleaseGroupType>;
 	releaseDate?: PartialDate;
 	labels?: Label[];
 	packaging?: ReleasePackaging;

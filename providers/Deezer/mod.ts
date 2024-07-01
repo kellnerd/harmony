@@ -5,6 +5,7 @@ import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { splitLabels } from '@/utils/label.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { formatGtin } from '@/utils/gtin.ts';
+import { convertReleaseType } from '@/utils/release.ts';
 
 import type { ApiError, MinimalArtist, Release, ReleaseTrack, Result, Track, TracklistItem } from './api_types.ts';
 import type {
@@ -13,6 +14,7 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	HarmonyTrack,
+	ReleaseGroupType,
 	ReleaseOptions,
 	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
@@ -85,6 +87,14 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 			this.lookup.value = formatGtin(this.lookup.value, 12);
 		}
 	}
+
+	private releaseTypeMap: Record<string, ReleaseGroupType> = {
+		'ep': 'EP',
+		'single': 'Single',
+		// Release.record_type can also be "album", but this might be too generic
+		// to be reliably set as a MusicBrainz type.
+		// 'album': 'Album',
+	};
 
 	constructReleaseApiUrl(): URL {
 		if (this.lookup.method === 'gtin') {
@@ -177,6 +187,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 			releaseDate: parseHyphenatedDate(rawRelease.release_date),
 			labels: splitLabels(rawRelease.label),
 			status: 'Official',
+			types: convertReleaseType(rawRelease.record_type, this.releaseTypeMap),
 			packaging: 'None',
 			images: [{
 				url: new URL(rawRelease.cover_xl ?? fallbackCoverUrl),
