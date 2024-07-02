@@ -81,13 +81,9 @@ export type HarmonyTrack = {
 };
 
 export type ArtistCreditName = ResolvableEntity & {
+	name: string;
 	creditedName?: string;
 	joinPhrase?: string;
-};
-
-/** Artist credit item which is guaranteed to contain the artist name. */
-export type ArtistCreditItem = ArtistCreditName & {
-	name: string;
 };
 
 type ArtistCredit = ArtistCreditName[];

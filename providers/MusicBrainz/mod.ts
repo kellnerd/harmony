@@ -154,6 +154,7 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 
 	private convertRawArtist(artistCredit: ArtistCredit): ArtistCreditName {
 		return {
+			name: artistCredit.artist.name,
 			creditedName: artistCredit.name,
 			mbid: artistCredit.artist.id,
 		};

@@ -89,7 +89,7 @@ export async function resolveReleaseMbids(release: HarmonyRelease) {
 	const externalArtistIds = new Map<string, ExternalEntityId[]>();
 	for (const artist of artists) {
 		const { name, externalIds } = artist;
-		if (name && !externalArtistIds.has(name) && externalIds) {
+		if (!externalArtistIds.has(name) && externalIds) {
 			externalArtistIds.set(name, externalIds);
 		}
 	}
@@ -104,7 +104,7 @@ export async function resolveReleaseMbids(release: HarmonyRelease) {
 				if (track.artists) {
 					// Reuse external artist IDs of release artists for identically named track artists.
 					for (const artist of track.artists) {
-						if (!artist.externalIds?.length && artist.name) {
+						if (!artist.externalIds?.length) {
 							artist.externalIds = externalArtistIds.get(artist.name);
 						}
 					}

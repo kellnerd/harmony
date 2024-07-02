@@ -1,7 +1,7 @@
 import { DownloadPreference } from './json_types.ts';
 import type { AlbumCurrent, PlayerData, PlayerTrack, ReleasePage, TrackInfo } from './json_types.ts';
 import type {
-	ArtistCreditItem,
+	ArtistCreditName,
 	Artwork,
 	ArtworkType,
 	EntityId,
@@ -333,7 +333,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		};
 	}
 
-	makeArtistCreditName(artist: string): ArtistCreditItem {
+	makeArtistCreditName(artist: string): ArtistCreditName {
 		return {
 			name: artist,
 			creditedName: artist,
