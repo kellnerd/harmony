@@ -47,6 +47,13 @@ export default defineRoute(async (req, ctx) => {
 			releaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
 			release = await lookup.getMergedRelease(defaultProviderPreferences);
 			await resolveReleaseMbids(release);
+			const mbInfo = release.info.providers.find((provider) => provider.name === 'MusicBrainz');
+			if (mbInfo) {
+				release.info.messages.push({
+					text: `Release already exists on MusicBrainz ([show actions](release/actions?release_mbid=${mbInfo.id}))`,
+					type: 'info',
+				});
+			}
 		}
 	} catch (error) {
 		if (error instanceof AggregateError) {
