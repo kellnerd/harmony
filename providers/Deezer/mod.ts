@@ -1,11 +1,11 @@
 import { availableRegions } from './regions.ts';
 import { type CacheEntry, MetadataApiProvider, type ProviderOptions, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
+import { convertReleaseType } from '@/harmonizer/release_types.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { splitLabels } from '@/utils/label.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { formatGtin } from '@/utils/gtin.ts';
-import { convertReleaseType } from '@/utils/release.ts';
 
 import type { ApiError, MinimalArtist, Release, ReleaseTrack, Result, Track, TracklistItem } from './api_types.ts';
 import type {

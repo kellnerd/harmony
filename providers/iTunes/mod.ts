@@ -1,6 +1,7 @@
 import { availableRegions } from './regions.ts';
 import { type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
+import { guessTypesForRelease } from '@/harmonizer/release_types.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
 
@@ -17,7 +18,6 @@ import type {
 	LinkType,
 	ReleaseGroupType,
 } from '@/harmonizer/types.ts';
-import { guessTypesForRelease } from '@/utils/release.ts';
 
 // See https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI
 

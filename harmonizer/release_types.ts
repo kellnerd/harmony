@@ -1,4 +1,4 @@
-import { HarmonyRelease, HarmonyTrack, ReleaseGroupType } from '@/harmonizer/types.ts';
+import { HarmonyRelease, HarmonyTrack, ReleaseGroupType } from './types.ts';
 
 /** Guess the types for a release from release and track titles. */
 export function guessTypesForRelease(release: HarmonyRelease) {

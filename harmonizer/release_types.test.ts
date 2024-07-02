@@ -1,10 +1,10 @@
-import { guessLiveRelease, guessTypesForRelease, guessTypesFromTitle } from './release.ts';
-import { HarmonyRelease, HarmonyTrack, ReleaseGroupType } from '@/harmonizer/types.ts';
+import { guessLiveRelease, guessTypesForRelease, guessTypesFromTitle } from './release_types.ts';
+import { HarmonyRelease, HarmonyTrack, ReleaseGroupType } from './types.ts';
 
 import { assertEquals } from 'std/assert/assert_equals.ts';
 import { describe, it } from 'std/testing/bdd.ts';
 
-import type { FunctionSpec } from './test_spec.ts';
+import type { FunctionSpec } from '../utils/test_spec.ts';
 
 describe('release types', () => {
 	describe('guess types for release', () => {

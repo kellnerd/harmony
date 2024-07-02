@@ -7,10 +7,10 @@ import {
 	ReleaseApiLookup,
 } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
+import { convertReleaseType } from '@/harmonizer/release_types.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { selectLargestImage } from '@/utils/image.ts';
-import { convertReleaseType } from '@/utils/release.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 
 import type { Album, AlbumItem, ApiError, Resource, Result, SimpleArtist } from './api_types.ts';

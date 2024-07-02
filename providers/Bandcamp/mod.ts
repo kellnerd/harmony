@@ -10,6 +10,7 @@ import type {
 	Label,
 	LinkType,
 } from '@/harmonizer/types.ts';
+import { guessTypesForRelease } from '@/harmonizer/release_types.ts';
 import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime } from '@/utils/date.ts';
@@ -20,7 +21,6 @@ import { isNotNull } from '@/utils/predicate.ts';
 import { similarNames } from '@/utils/similarity.ts';
 import { toTrackRanges } from '@/utils/tracklist.ts';
 import { simplifyName } from 'utils/string/simplify.js';
-import { guessTypesForRelease } from '@/utils/release.ts';
 
 export default class BandcampProvider extends MetadataProvider {
 	readonly name = 'Bandcamp';
