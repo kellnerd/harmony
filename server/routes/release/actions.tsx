@@ -113,7 +113,7 @@ export default defineRoute(async (req, ctx) => {
 					/>
 				))}
 				{releaseUrl && (
-					<div className='message'>
+					<div class='message'>
 						<SpriteIcon name='brand-metabrainz' />
 						<p>
 							<a href={releaseUrl.href}>
@@ -139,7 +139,7 @@ export default defineRoute(async (req, ctx) => {
 				{release?.artists.map((artist) => <LinkWithMusicBrainz entity={artist} entityType='artist' />)}
 				{release?.labels?.map((label) => <LinkWithMusicBrainz entity={label} entityType='label' />)}
 				{releaseUrl && (
-					<div className='message'>
+					<div class='message'>
 						<SpriteIcon name='photo-plus' />
 						<div>
 							<p>

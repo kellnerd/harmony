@@ -24,7 +24,7 @@ export function LinkWithMusicBrainz({ entity, entityType }: {
 	})).toString();
 
 	return (
-		<div className='message'>
+		<div class='message'>
 			<SpriteIcon name='link' />
 			<div>
 				<p>

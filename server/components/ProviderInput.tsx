@@ -21,8 +21,8 @@ export function ProviderCheckbox({
 
 	return (
 		<label
-			htmlFor={id}
-			className={['provider-input', internalName].join(' ')}
+			for={id}
+			class={['provider-input', internalName].join(' ')}
 			title={disabled ? 'Provider does not support GTIN lookups' : undefined}
 		>
 			<ProviderIcon providerName={providerName} />
