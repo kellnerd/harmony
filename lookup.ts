@@ -14,6 +14,7 @@ import type {
 	GTIN,
 	HarmonyRelease,
 	ProviderMessage,
+	ProviderName,
 	ProviderNameAndId,
 	ProviderPreferences,
 	ProviderReleaseErrorMap,
@@ -294,7 +295,7 @@ export class CombinedReleaseLookup {
 	}
 
 	/** Ensures that all requested providers have been looked up and returns the combined release. */
-	async getMergedRelease(providerPreferences?: ProviderPreferences): Promise<HarmonyRelease> {
+	async getMergedRelease(providerPreferences?: ProviderPreferences | ProviderName[]): Promise<HarmonyRelease> {
 		const releaseMap = await this.getCompleteProviderReleaseMapping();
 		const release = mergeRelease(releaseMap, providerPreferences);
 		// Prepend error and warning messages of the combined lookup.
