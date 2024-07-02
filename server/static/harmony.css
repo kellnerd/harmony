@@ -267,7 +267,7 @@ div.message {
 	border-radius: 5px;
 }
 
-div.message svg.icon {
+div.message > svg.icon {
 	min-width: fit-content;
 	margin-right: 0.3em;
 }

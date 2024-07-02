@@ -1,5 +1,6 @@
 import { ArtistCredit } from '@/server/components/ArtistCredit.tsx';
 import { CoverImage } from '@/server/components/CoverImage.tsx';
+import { LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
 import { MagicISRC } from '@/server/components/ISRCSubmission.tsx';
 import { MessageBox } from '@/server/components/MessageBox.tsx';
 import { ProviderList } from '@/server/components/ProviderList.tsx';
@@ -51,6 +52,9 @@ export default defineRoute(async (req, ctx) => {
 				}
 			}
 		}
+
+		// Add MB release to the combined lookup to match external IDs with MBIDs.
+		providerIds.push(['MusicBrainz', releaseMbid]);
 
 		const lookup = new CombinedReleaseLookup({ urls, gtin, providerIds }, options);
 		release = await lookup.getMergedRelease();
@@ -132,6 +136,8 @@ export default defineRoute(async (req, ctx) => {
 						</div>
 					</div>
 				)}
+				{release?.artists.map((artist) => <LinkWithMusicBrainz entity={artist} entityType='artist' />)}
+				{release?.labels?.map((label) => <LinkWithMusicBrainz entity={label} entityType='label' />)}
 				{releaseUrl && (
 					<div className='message'>
 						<SpriteIcon name='photo-plus' />
