@@ -1,6 +1,6 @@
 import type { ArtistCreditName, EntityId, HarmonyRelease, HarmonyTrack, MediumFormat } from '@/harmonizer/types.ts';
 import { CacheEntry, MetadataApiProvider, ProviderOptions, ReleaseApiLookup } from '@/providers/base.ts';
-import { FeatureQualityMap } from '@/providers/features.ts';
+import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { isDefined } from '@/utils/predicate.ts';
@@ -10,8 +10,8 @@ import { join } from 'std/url/join.ts';
 export default class MusicBrainzProvider extends MetadataApiProvider {
 	constructor(options: ProviderOptions = {}) {
 		super({
-			rateLimitInterval: 1000,
-			concurrentRequests: 1,
+			rateLimitInterval: 5000,
+			concurrentRequests: 5,
 			...options,
 		});
 	}
@@ -23,7 +23,12 @@ export default class MusicBrainzProvider extends MetadataApiProvider {
 		pathname: '/:type(artist|release)/:id',
 	});
 
-	readonly features: FeatureQualityMap = {};
+	readonly features: FeatureQualityMap = {
+		'duration precision': DurationPrecision.MS,
+		'GTIN lookup': FeatureQuality.GOOD,
+		'MBID resolving': FeatureQuality.GOOD,
+		'release label': FeatureQuality.GOOD,
+	};
 
 	readonly entityTypeMap = {
 		artist: 'artist',
@@ -64,16 +69,39 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 			url = join(this.provider.apiBaseUrl, 'release', this.lookup.value);
 			url.searchParams.set('inc', ['artist-credits', 'labels', 'recordings', 'release-groups'].join('+'));
 		} else { // if (this.lookup.method === 'gtin')
-			throw new Error('Method not implemented.');
+			url = join(this.provider.apiBaseUrl, 'release');
+			url.searchParams.set('query', `barcode:${this.lookup.value}`);
 		}
 		url.searchParams.set('fmt', 'json');
 		return url;
 	}
 
 	async getRawRelease(): Promise<RawRelease> {
-		const apiUrl = this.constructReleaseApiUrl();
+		if (this.lookup.method === 'gtin') {
+			const apiUrl = this.constructReleaseApiUrl();
+			const { content, timestamp } = await this.provider.query<ReleaseSearchResults>(
+				apiUrl,
+				this.options.snapshotMaxTimestamp,
+			);
+			this.updateCacheTime(timestamp);
+
+			const { releases } = content;
+			if (releases.length) {
+				if (releases.length > 1) {
+					this.warnMultipleResults(
+						releases.slice(1).map((release) => this.provider.constructUrl({ id: release.id, type: 'release' })),
+					);
+				}
+				// Perform a regular ID lookup with the found release ID to retrieve complete data.
+				this.lookup.method = 'id';
+				this.lookup.value = releases[0].id;
+			} else {
+				throw new ResponseError(this.provider.name, 'API returned no results', apiUrl);
+			}
+		}
+
 		const { content: release, timestamp } = await this.provider.query<RawRelease>(
-			apiUrl,
+			this.constructReleaseApiUrl(),
 			this.options.snapshotMaxTimestamp,
 		);
 		this.updateCacheTime(timestamp);
@@ -133,3 +161,18 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 }
 
 type RawRelease = Release<'artist-credits' | 'labels' | 'recordings' | 'release-groups'>;
+
+interface ReleaseSearchResults {
+	created: string;
+	count: number;
+	offset: number;
+	releases: ReleaseResult[];
+}
+
+// Incomplete, will be replaced by types from @kellnerd/musicbrainz once those exist.
+interface ReleaseResult {
+	/** MBID of the release. */
+	id: string;
+	title: string;
+	barcode: string;
+}
