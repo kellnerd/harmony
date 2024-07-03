@@ -1,4 +1,5 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
+import { sortTypes } from './release_types.ts';
 import { cloneInto, copyTo, filterErrorEntries, isFilled, uniqueMappedValues } from '@/utils/record.ts';
 import { similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
@@ -17,7 +18,6 @@ import type {
 	ProviderPreferences,
 	ProviderReleaseErrorMap,
 	ProviderReleaseMap,
-	ReleaseGroupType,
 	ResolvableEntity,
 } from './types.ts';
 
@@ -59,7 +59,7 @@ export function mergeRelease(
 		artists: [],
 		externalLinks: [],
 		media: [],
-		types: new Set<ReleaseGroupType>(),
+		types: [],
 		info: {
 			providers: [],
 			messages: errorMessages,
@@ -127,7 +127,8 @@ export function mergeRelease(
 
 		// Merge types
 		if (sourceRelease.types) {
-			mergedRelease.types = mergedRelease.types?.union(sourceRelease.types);
+			// FIXME: Provide better merge algorithm
+			mergedRelease.types = sortTypes(new Set(mergedRelease.types).union(new Set(sourceRelease.types)));
 		}
 
 		// combine availabilities

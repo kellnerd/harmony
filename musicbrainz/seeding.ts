@@ -45,7 +45,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 			mbid: label.mbid,
 		})),
 		status: release.status,
-		type: Array.from(release.types?.values() || []),
+		type: release.types,
 		packaging: release.packaging,
 		mediums: release.media.map((medium) => ({
 			format: medium.format,

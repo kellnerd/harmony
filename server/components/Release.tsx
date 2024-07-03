@@ -151,10 +151,10 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 						<td>{formatScriptFrequency(script)}</td>
 					</tr>
 				)}
-				{types && types.size > 0 && (
+				{types && types.length > 0 && (
 					<tr>
 						<th>Types</th>
-						<td>{Array.from(types).join(' + ')}</td>
+						<td>{types.join(' + ')}</td>
 					</tr>
 				)}
 				{info.providers.length > 1 && (

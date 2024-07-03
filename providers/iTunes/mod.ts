@@ -262,13 +262,13 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		return url;
 	}
 
-	private getTypesFromTitle(title: string): { title: string; types: Set<ReleaseGroupType> } {
+	private getTypesFromTitle(title: string): { title: string; types: ReleaseGroupType[] } {
 		const re = /\s- (EP|Single)$/;
 		const match = title.match(re);
-		const types = new Set<ReleaseGroupType>();
+		const types: ReleaseGroupType[] = [];
 		if (match) {
 			title = title.replace(re, '');
-			types.add(match[1] as ReleaseGroupType);
+			types.push(match[1] as ReleaseGroupType);
 		}
 
 		return { title, types };

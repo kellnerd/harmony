@@ -1,4 +1,4 @@
-import { guessLiveRelease, guessTypesForRelease, guessTypesFromTitle } from './release_types.ts';
+import { guessLiveRelease, guessTypesForRelease, guessTypesFromTitle, sortTypes } from './release_types.ts';
 import { HarmonyRelease, HarmonyTrack, ReleaseGroupType } from './types.ts';
 
 import { assertEquals } from 'std/assert/assert_equals.ts';
@@ -8,14 +8,14 @@ import type { FunctionSpec } from '../utils/test_spec.ts';
 
 describe('release types', () => {
 	describe('guess types for release', () => {
-		const passingCases: Array<[string, HarmonyRelease, Set<string>]> = [
-			['should detect EP type from title', makeRelease('Wake of a Nation (EP)'), new Set(['EP'])],
-			['should keep existing types', makeRelease('Wake of a Nation (EP)', ['Interview']), new Set(['EP', 'Interview'])],
-			['should detect live type from title', makeRelease('One Second (Live)'), new Set(['Live'])],
+		const passingCases: Array<[string, HarmonyRelease, string[]]> = [
+			['should detect EP type from title', makeRelease('Wake of a Nation (EP)'), ['EP']],
+			['should keep existing types', makeRelease('Wake of a Nation (EP)', ['Interview']), ['EP', 'Interview']],
+			['should detect live type from title', makeRelease('One Second (Live)'), ['Live']],
 			[
 				'should detect live type from tracks',
-				makeRelease('One Second', null, [{ title: 'One Second - Live' }, { title: 'Darker Thoughts - Live' }]),
-				new Set(['Live']),
+				makeRelease('One Second', undefined, [{ title: 'One Second - Live' }, { title: 'Darker Thoughts - Live' }]),
+				['Live'],
 			],
 		];
 
@@ -79,11 +79,19 @@ describe('release types', () => {
 			});
 		});
 	});
+
+	describe('sort types', () => {
+		it('should sort primary type first', () => {
+			const types: ReleaseGroupType[] = ['Remix', 'Live', 'EP', 'Compilation'];
+			const sortedTypes = sortTypes(types);
+			assertEquals(sortedTypes, ['EP', 'Compilation', 'Live', 'Remix']);
+		});
+	});
 });
 
 function makeRelease(
 	title: string,
-	types: ReleaseGroupType[] | null = null,
+	types: ReleaseGroupType[] | undefined = undefined,
 	tracks: HarmonyTrack[] = [],
 ): HarmonyRelease {
 	return {
@@ -93,7 +101,7 @@ function makeRelease(
 		media: [{
 			tracklist: tracks,
 		}],
-		types: types ? new Set(types) : undefined,
+		types: types,
 		info: {
 			providers: [],
 			messages: [],

@@ -48,7 +48,7 @@ export type HarmonyRelease = {
 	language?: Language;
 	script?: ScriptFrequency;
 	status?: ReleaseStatus;
-	types?: Set<ReleaseGroupType>;
+	types?: ReleaseGroupType[];
 	releaseDate?: PartialDate;
 	labels?: Label[];
 	packaging?: ReleasePackaging;

@@ -1,13 +1,17 @@
 import { HarmonyRelease, HarmonyTrack, ReleaseGroupType } from './types.ts';
+import { primaryTypeIds } from '@kellnerd/musicbrainz/data/release-group';
 
 /** Guess the types for a release from release and track titles. */
 export function guessTypesForRelease(release: HarmonyRelease) {
-	let types = release.types || new Set();
+	let types = new Set<ReleaseGroupType>();
+	if (release.types) {
+		types = types.union(new Set(release.types));
+	}
 	types = types.union(guessTypesFromTitle(release.title));
 	if (!types.has('Live') && guessLiveRelease(release.media.flatMap((media) => media.tracklist))) {
 		types.add('Live');
 	}
-	release.types = types;
+	release.types = sortTypes(types);
 }
 
 const detectTypesPatterns = [
@@ -51,11 +55,37 @@ export function guessLiveRelease(tracks: HarmonyTrack[]): boolean {
 export function convertReleaseType(
 	sourceType: string,
 	typeMap: Record<string, ReleaseGroupType>,
-): Set<ReleaseGroupType> {
-	const types = new Set<ReleaseGroupType>();
+): ReleaseGroupType[] {
+	const types: ReleaseGroupType[] = [];
 	const type = typeMap[sourceType];
 	if (type) {
-		types.add(type);
+		types.push(type);
 	}
 	return types;
+}
+
+/** Returns a new array with the types sorted, primary types first and secondary types second. */
+export function sortTypes(types: Iterable<ReleaseGroupType>): ReleaseGroupType[] {
+	return Array.from(types).sort((a, b) => {
+		if (a == b) {
+			return 0;
+		}
+
+		const primaryA = isPrimaryType(a);
+		const primaryB = isPrimaryType(b);
+
+		if (primaryA && !primaryB) {
+			return -1;
+		} else if (!primaryA && primaryB) {
+			return 1;
+		} else {
+			return a > b ? 1 : -1;
+		}
+	});
+}
+
+const primaryTypes = Object.keys(primaryTypeIds);
+
+function isPrimaryType(type: ReleaseGroupType): boolean {
+	return primaryTypes.includes(type);
 }
