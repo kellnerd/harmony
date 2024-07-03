@@ -51,17 +51,14 @@ export function guessLiveRelease(tracks: HarmonyTrack[]): boolean {
 	});
 }
 
-/** Converts a provider specific type to a `ReleaseGroupType` from a given mapping. */
-export function convertReleaseType(
-	sourceType: string,
-	typeMap: Record<string, ReleaseGroupType>,
-): ReleaseGroupType[] {
-	const types: ReleaseGroupType[] = [];
-	const type = typeMap[sourceType];
-	if (type) {
-		types.push(type);
+/** Takes a release type as a string and turns it into a [ReleaseGroupType]. */
+export function capitalizeReleaseType(sourceType: string): ReleaseGroupType {
+	const type = sourceType.toLowerCase();
+	if (type == 'ep') {
+		return 'EP';
+	} else {
+		return type.charAt(0).toUpperCase() + type.slice(1) as ReleaseGroupType;
 	}
-	return types;
 }
 
 /** Returns a new array with the types sorted, primary types first and secondary types second. */

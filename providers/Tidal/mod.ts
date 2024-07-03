@@ -7,7 +7,7 @@ import {
 	ReleaseApiLookup,
 } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
-import { convertReleaseType } from '@/harmonizer/release_types.ts';
+import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { selectLargestImage } from '@/utils/image.ts';
@@ -22,7 +22,6 @@ import type {
 	HarmonyRelease,
 	HarmonyTrack,
 	Label,
-	ReleaseGroupType,
 } from '@/harmonizer/types.ts';
 
 // See https://developer.tidal.com/reference/web-api
@@ -133,14 +132,6 @@ export default class TidalProvider extends MetadataApiProvider {
 }
 
 export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
-	private releaseTypeMap: Record<string, ReleaseGroupType> = {
-		'EP': 'EP',
-		'SINGLE': 'Single',
-		// Type can also be "ALBUM", but this might be too generic
-		// to be reliably set as a MusicBrainz type.
-		// 'ALBUM': 'Album',
-	};
-
 	constructReleaseApiUrl(): URL {
 		const { method, value, region } = this.lookup;
 		let lookupUrl: URL;
@@ -231,7 +222,7 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 			releaseDate: parseHyphenatedDate(rawRelease.releaseDate),
 			copyright: rawRelease.copyright,
 			status: 'Official',
-			types: convertReleaseType(rawRelease.type, this.releaseTypeMap),
+			types: [capitalizeReleaseType(rawRelease.type)],
 			packaging: 'None',
 			images: artwork ? [artwork] : [],
 			labels: this.getLabels(rawRelease),

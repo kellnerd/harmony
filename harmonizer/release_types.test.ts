@@ -1,4 +1,11 @@
-import { guessLiveRelease, guessTypesForRelease, guessTypesFromTitle, mergeTypes, sortTypes } from './release_types.ts';
+import {
+	capitalizeReleaseType,
+	guessLiveRelease,
+	guessTypesForRelease,
+	guessTypesFromTitle,
+	mergeTypes,
+	sortTypes,
+} from './release_types.ts';
 import { HarmonyRelease, HarmonyTrack, ReleaseGroupType } from './types.ts';
 
 import { assertEquals } from 'std/assert/assert_equals.ts';
@@ -76,6 +83,20 @@ describe('release types', () => {
 		passingCases.forEach(([description, input, expected]) => {
 			it(description, () => {
 				assertEquals(guessLiveRelease(input), expected);
+			});
+		});
+	});
+
+	describe('capitalize release type', () => {
+		const passingCases: FunctionSpec<typeof capitalizeReleaseType> = [
+			['should uppercase first letter', 'single', 'Single'],
+			['should handle capitalized input', 'ALBUM', 'Album'],
+			['should leave EP uppercase', 'ep', 'EP'],
+		];
+
+		passingCases.forEach(([description, input, expected]) => {
+			it(description, () => {
+				assertEquals(capitalizeReleaseType(input), expected);
 			});
 		});
 	});
