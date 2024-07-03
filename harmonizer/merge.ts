@@ -1,5 +1,5 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
-import { sortTypes } from './release_types.ts';
+import { mergeTypes } from './release_types.ts';
 import { cloneInto, copyTo, filterErrorEntries, isFilled, uniqueMappedValues } from '@/utils/record.ts';
 import { similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
@@ -125,10 +125,9 @@ export function mergeRelease(
 		mergedRelease.info.providers.push(...sourceRelease.info.providers);
 		mergedRelease.info.messages.push(...sourceRelease.info.messages);
 
-		// Merge types
+		// Merge release group types
 		if (sourceRelease.types) {
-			// FIXME: Provide better merge algorithm
-			mergedRelease.types = sortTypes(new Set(mergedRelease.types).union(new Set(sourceRelease.types)));
+			mergedRelease.types = mergeTypes(mergedRelease.types || [], sourceRelease.types);
 		}
 
 		// combine availabilities

@@ -1,4 +1,4 @@
-import { guessLiveRelease, guessTypesForRelease, guessTypesFromTitle, sortTypes } from './release_types.ts';
+import { guessLiveRelease, guessTypesForRelease, guessTypesFromTitle, mergeTypes, sortTypes } from './release_types.ts';
 import { HarmonyRelease, HarmonyTrack, ReleaseGroupType } from './types.ts';
 
 import { assertEquals } from 'std/assert/assert_equals.ts';
@@ -85,6 +85,17 @@ describe('release types', () => {
 			const types: ReleaseGroupType[] = ['Remix', 'Live', 'EP', 'Compilation'];
 			const sortedTypes = sortTypes(types);
 			assertEquals(sortedTypes, ['EP', 'Compilation', 'Live', 'Remix']);
+		});
+	});
+
+	describe('merge types', () => {
+		it('should reduce to a sorted list with a single primary type', () => {
+			const mergedTypes = mergeTypes(
+				['Live', 'Album'],
+				['Single', 'Compilation', 'Live'],
+				['EP'],
+			);
+			assertEquals(mergedTypes, ['EP', 'Compilation', 'Live']);
 		});
 	});
 });

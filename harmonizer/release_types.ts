@@ -84,8 +84,47 @@ export function sortTypes(types: Iterable<ReleaseGroupType>): ReleaseGroupType[]
 	});
 }
 
+/** Takes several lists of types and returns a single array of unique, sorted types.
+ *
+ * The result is reduced to unique elements with only a single primary type.
+ */
+export function mergeTypes(...typeLists: Array<ReleaseGroupType>[]): ReleaseGroupType[] {
+	const primaryTypes = new Set<ReleaseGroupType>();
+	const resultTypes = new Set<ReleaseGroupType>();
+	typeLists.forEach((types) => {
+		types.forEach((type) => {
+			if (isPrimaryType(type)) {
+				primaryTypes.add(type);
+			} else {
+				resultTypes.add(type);
+			}
+		});
+	});
+	if (primaryTypes.size) {
+		resultTypes.add(reducePrimaryTypes(Array.from(primaryTypes)));
+	}
+	return sortTypes(resultTypes);
+}
+
 const primaryTypes = Object.keys(primaryTypeIds);
 
 function isPrimaryType(type: ReleaseGroupType): boolean {
 	return primaryTypes.includes(type);
+}
+
+/** Reduce a list of primary */
+function reducePrimaryTypes(types: Array<ReleaseGroupType>): ReleaseGroupType {
+	return types.reduce((previous, current) => {
+		if (previous == 'Album' || previous == 'Other') {
+			// Prefer more specific types over Album or Other. Many providers use Album
+			// as the generic type.
+			return current;
+		} else if (previous == 'Single' && current == 'EP') {
+			// Prefer EP over Single
+			return current;
+		}
+
+		// No specific preference, just use the first type found.
+		return previous;
+	});
 }
