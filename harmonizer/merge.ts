@@ -1,5 +1,5 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
-import { mergeTypes } from './release_types.ts';
+import { guessTypesForRelease, mergeTypes } from './release_types.ts';
 import { cloneInto, copyTo, filterErrorEntries, isFilled, uniqueMappedValues } from '@/utils/record.ts';
 import { similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
@@ -142,6 +142,9 @@ export function mergeRelease(
 			}
 		});
 	}
+
+	// Extend the types with types guessed from titles
+	guessTypesForRelease(mergedRelease);
 
 	// assign temporary sets to the merge target
 	if (availableRegions.size) {

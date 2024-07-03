@@ -10,7 +10,6 @@ import type {
 	Label,
 	LinkType,
 } from '@/harmonizer/types.ts';
-import { guessTypesForRelease } from '@/harmonizer/release_types.ts';
 import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime } from '@/utils/date.ts';
@@ -309,7 +308,6 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			});
 		}
 
-		guessTypesForRelease(release);
 		return release;
 	}
 

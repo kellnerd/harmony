@@ -1,7 +1,6 @@
 import { availableRegions } from './regions.ts';
 import { type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
-import { guessTypesForRelease } from '@/harmonizer/release_types.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
 
@@ -190,7 +189,6 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 			info: this.generateReleaseInfo(),
 		};
 
-		guessTypesForRelease(release);
 		return release;
 	}
 
