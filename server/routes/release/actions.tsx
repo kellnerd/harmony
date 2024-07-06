@@ -7,12 +7,14 @@ import { ProviderList } from '@/server/components/ProviderList.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
 import { CombinedReleaseLookup } from '@/lookup.ts';
-import type { Artwork, HarmonyRelease, ProviderInfo, ReleaseOptions } from '@/harmonizer/types.ts';
+import { deduplicateEntities } from '@/harmonizer/deduplicate.ts';
+import type { ArtistCreditName, Artwork, HarmonyRelease, ProviderInfo, ReleaseOptions } from '@/harmonizer/types.ts';
 import { MB } from '@/musicbrainz/api_client.ts';
 import { providers as providerRegistry } from '@/providers/mod.ts';
 import { musicbrainzBaseUrl } from '@/server/config.ts';
 import { extractReleaseLookupState } from '@/server/state.ts';
 import { LookupError, ProviderError } from '@/utils/errors.ts';
+import { isDefined } from '@/utils/predicate.ts';
 import { filterErrorEntries } from '@/utils/record.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
@@ -25,6 +27,7 @@ export default defineRoute(async (req, ctx) => {
 	let releaseMbid: string | undefined;
 	let releaseUrl: URL | undefined;
 	let isrcProvider: ProviderInfo | undefined;
+	let allArtists: ArtistCreditName[] = [];
 	let allImages: Artwork[] = [];
 
 	try {
@@ -58,6 +61,13 @@ export default defineRoute(async (req, ctx) => {
 
 		const lookup = new CombinedReleaseLookup({ urls, gtin, providerIds }, options);
 		release = await lookup.getMergedRelease();
+
+		// Combine and deduplicate release and track artists.
+		const trackArtists = release.media
+			.flatMap((medium) => medium.tracklist)
+			.flatMap((track) => track.artists)
+			.filter(isDefined);
+		allArtists = deduplicateEntities(release.artists.concat(trackArtists));
 
 		const providerReleaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
 		allImages = Object.entries(providerReleaseMap).flatMap(([provider, release]) =>
@@ -136,9 +146,10 @@ export default defineRoute(async (req, ctx) => {
 						</div>
 					</div>
 				)}
-				{release?.artists.map((artist) => (
-					<LinkWithMusicBrainz entity={artist} entityType='artist' sourceEntityUrl={releaseUrl!} />
-				))}
+				{releaseUrl &&
+					allArtists.map((artist) => (
+						<LinkWithMusicBrainz entity={artist} entityType='artist' sourceEntityUrl={releaseUrl} />
+					))}
 				{release?.labels?.map((label) => (
 					<LinkWithMusicBrainz entity={label} entityType='label' sourceEntityUrl={releaseUrl!} />
 				))}
