@@ -7,9 +7,10 @@ import type { EntityType } from '@kellnerd/musicbrainz/data/entity';
 import { join } from 'std/url/join.ts';
 import { flatten } from 'utils/object/flatten.js';
 
-export function LinkWithMusicBrainz({ entity, entityType }: {
+export function LinkWithMusicBrainz({ entity, entityType, sourceEntityUrl }: {
 	entity: ResolvableEntity;
 	entityType: EntityType;
+	sourceEntityUrl: URL;
 }) {
 	if (!entity.externalIds?.length || !entity.mbid) return null;
 
@@ -18,8 +19,9 @@ export function LinkWithMusicBrainz({ entity, entityType }: {
 	const mbEditLink = join(musicbrainzBaseUrl, entityType, entity.mbid, 'edit');
 	mbEditLink.search = new URLSearchParams(flatten({
 		[`edit-${entityType}`]: {
-			// TODO: Prefill link types and edit note.
+			// TODO: Prefill link types.
 			url: externalLinks.map((link) => ({ text: link.href })),
+			edit_note: `Matched ${entityType} while importing ${sourceEntityUrl} with Harmony`,
 		},
 	})).toString();
 

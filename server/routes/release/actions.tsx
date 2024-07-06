@@ -136,8 +136,12 @@ export default defineRoute(async (req, ctx) => {
 						</div>
 					</div>
 				)}
-				{release?.artists.map((artist) => <LinkWithMusicBrainz entity={artist} entityType='artist' />)}
-				{release?.labels?.map((label) => <LinkWithMusicBrainz entity={label} entityType='label' />)}
+				{release?.artists.map((artist) => (
+					<LinkWithMusicBrainz entity={artist} entityType='artist' sourceEntityUrl={releaseUrl!} />
+				))}
+				{release?.labels?.map((label) => (
+					<LinkWithMusicBrainz entity={label} entityType='label' sourceEntityUrl={releaseUrl!} />
+				))}
 				{releaseUrl && (
 					<div class='message'>
 						<SpriteIcon name='photo-plus' />
