@@ -10,6 +10,7 @@ import type {
 	ExternalEntityId,
 	HarmonyEntityType,
 	HarmonyRelease,
+	LinkType,
 	MessageType,
 	ProviderMessage,
 	ReleaseInfo,
@@ -127,6 +128,12 @@ export abstract class MetadataProvider {
 
 	/** Constructs a canonical entity URL for the given provider ID. */
 	abstract constructUrl(entity: EntityId): URL;
+
+	/** Returns the appropriate external link types for the given entity. */
+	// deno-lint-ignore no-unused-vars
+	getLinkTypesForEntity(entity: EntityId): LinkType[] {
+		return [];
+	}
 
 	/** Creates external entity IDs from the given provider-specific IDs. */
 	makeExternalIds(...entityIds: EntityId[]): ExternalEntityId[] {
