@@ -5,6 +5,7 @@ import { preferArray } from 'utils/array/scalar.js';
 import { flatten } from 'utils/object/flatten.js';
 import { transform } from 'utils/string/transform.js';
 
+import type { EntityType } from '@kellnerd/musicbrainz/data/entity';
 import type {
 	ArtistCreditNameSeed,
 	ArtistCreditSeed,
@@ -15,7 +16,6 @@ import type {
 	ReleaseUrlSeed,
 	TrackSeed,
 } from '@kellnerd/musicbrainz/seeding/release';
-import type { UrlLinkTypeId } from './type_id.ts';
 import type { ArtistCreditName, HarmonyRelease, LinkType, ReleaseInfo } from '@/harmonizer/types.ts';
 import type { FormDataRecord } from 'utils/types.d.ts';
 
@@ -73,7 +73,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 			link.types?.length
 				? link.types.map((type) => ({
 					url: link.url.href,
-					link_type: convertLinkType(type, link.url),
+					link_type: convertLinkType('release', type, link.url),
 				}))
 				: ({
 					url: link.url.href,
@@ -106,23 +106,26 @@ export function convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditS
 }
 
 // deno-lint-ignore no-unused-vars
-function convertLinkType(linkType: LinkType, url?: URL): UrlLinkTypeId | undefined {
+export function convertLinkType(entityType: EntityType, linkType: LinkType, url?: URL): number | undefined {
+	const typeIds = urlTypeIds[entityType];
+	if (!typeIds) return;
+
 	switch (linkType) {
 		case 'free streaming':
-			return urlTypeIds['free streaming'];
+			return typeIds['free streaming'];
 		case 'paid streaming':
-			return urlTypeIds.streaming;
+			return typeIds.streaming;
 		case 'free download':
-			return urlTypeIds['download for free'];
+			return typeIds['download for free'];
 		case 'paid download':
-			return urlTypeIds['purchase for download'];
+			return typeIds['purchase for download'];
 		case 'mail order':
-			return urlTypeIds['purchase for mail-order'];
+			return typeIds['purchase for mail-order'];
 		case 'discography page':
 			// TODO: handle special cases based on their URLs
-			return urlTypeIds['discography entry'];
+			return typeIds['discography page'] ?? typeIds['discography entry'];
 		case 'license':
-			return urlTypeIds['license'];
+			return typeIds['license'];
 	}
 }
 
