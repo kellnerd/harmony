@@ -13,6 +13,7 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	HarmonyTrack,
+	LinkType,
 	ReleaseOptions,
 	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
@@ -61,6 +62,10 @@ export default class DeezerProvider extends MetadataApiProvider {
 
 	constructUrl(entity: EntityId): URL {
 		return new URL([entity.type, entity.id].join('/'), 'https://www.deezer.com');
+	}
+
+	getLinkTypesForEntity(): LinkType[] {
+		return ['free streaming'];
 	}
 
 	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
@@ -171,7 +176,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 			gtin: rawRelease.upc,
 			externalLinks: [{
 				url: releaseUrl,
-				types: ['free streaming'],
+				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,
 			releaseDate: parseHyphenatedDate(rawRelease.release_date),

@@ -92,6 +92,11 @@ export default class BandcampProvider extends MetadataProvider {
 		return new URL([type, title].join('/'), artistUrl);
 	}
 
+	getLinkTypesForEntity(): LinkType[] {
+		// MB has special handling for Bandcamp artist URLs
+		return ['discography page'];
+	}
+
 	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
 		return this.fetchJSON<Data>(webUrl, {
 			policy: { maxTimestamp },

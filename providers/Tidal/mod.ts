@@ -21,6 +21,7 @@ import type {
 	HarmonyRelease,
 	HarmonyTrack,
 	Label,
+	LinkType,
 } from '@/harmonizer/types.ts';
 
 // See https://developer.tidal.com/reference/web-api
@@ -73,6 +74,10 @@ export default class TidalProvider extends MetadataApiProvider {
 
 	constructUrl(entity: EntityId): URL {
 		return new URL([entity.type, entity.id].join('/'), 'https://tidal.com/');
+	}
+
+	getLinkTypesForEntity(): LinkType[] {
+		return ['paid streaming'];
 	}
 
 	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
@@ -215,7 +220,7 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 			gtin: rawRelease.barcodeId,
 			externalLinks: [{
 				url: new URL(rawRelease.tidalUrl),
-				types: ['paid streaming'],
+				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,
 			releaseDate: parseHyphenatedDate(rawRelease.releaseDate),

@@ -105,7 +105,6 @@ export function convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditS
 	};
 }
 
-// deno-lint-ignore no-unused-vars
 export function convertLinkType(entityType: EntityType, linkType: LinkType, url?: URL): number | undefined {
 	const typeIds = urlTypeIds[entityType];
 	if (!typeIds) return;
@@ -122,7 +121,10 @@ export function convertLinkType(entityType: EntityType, linkType: LinkType, url?
 		case 'mail order':
 			return typeIds['purchase for mail-order'];
 		case 'discography page':
-			// TODO: handle special cases based on their URLs
+			// Handle URLs which MB treats as special cases
+			if (url?.hostname.endsWith('.bandcamp.com')) {
+				return typeIds.bandcamp;
+			}
 			return typeIds['discography page'] ?? typeIds['discography entry'];
 		case 'license':
 			return typeIds['license'];

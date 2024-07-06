@@ -67,6 +67,11 @@ export default class iTunesProvider extends MetadataApiProvider {
 		return entity;
 	}
 
+	getLinkTypesForEntity(): LinkType[] {
+		// There is no way to appropriately determine this for an artist page.
+		return ['paid streaming'];
+	}
+
 	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
 		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
 			policy: { maxTimestamp },

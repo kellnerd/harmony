@@ -18,7 +18,14 @@ import type {
 	Track,
 	TrackList,
 } from './api_types.ts';
-import type { ArtistCreditName, EntityId, HarmonyMedium, HarmonyRelease, HarmonyTrack } from '@/harmonizer/types.ts';
+import type {
+	ArtistCreditName,
+	EntityId,
+	HarmonyMedium,
+	HarmonyRelease,
+	HarmonyTrack,
+	LinkType,
+} from '@/harmonizer/types.ts';
 
 // See https://developer.spotify.com/documentation/web-api
 
@@ -59,6 +66,10 @@ export default class SpotifyProvider extends MetadataApiProvider {
 
 	constructUrl(entity: EntityId): URL {
 		return new URL([entity.type, entity.id].join('/'), 'https://open.spotify.com');
+	}
+
+	getLinkTypesForEntity(): LinkType[] {
+		return ['free streaming'];
 	}
 
 	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
@@ -245,7 +256,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			gtin: rawRelease.external_ids.ean || rawRelease.external_ids.upc,
 			externalLinks: [{
 				url: new URL(rawRelease.external_urls.spotify),
-				types: ['free streaming'],
+				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,
 			releaseDate: parseHyphenatedDate(rawRelease.release_date),
