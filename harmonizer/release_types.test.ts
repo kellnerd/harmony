@@ -92,6 +92,8 @@ describe('release types', () => {
 			['should uppercase first letter', 'single', 'Single'],
 			['should handle capitalized input', 'ALBUM', 'Album'],
 			['should leave EP uppercase', 'ep', 'EP'],
+			['should keep casing of Mixtape/Street', 'Mixtape/street', 'Mixtape/Street'],
+			['should keep casing of DJ-mix', 'DJ-Mix', 'DJ-mix'],
 		];
 
 		passingCases.forEach(([description, input, expected]) => {

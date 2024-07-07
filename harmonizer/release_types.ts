@@ -43,10 +43,15 @@ export function guessLiveRelease(tracks: HarmonyTrack[]): boolean {
 /** Takes a release type as a string and turns it into a [ReleaseGroupType]. */
 export function capitalizeReleaseType(sourceType: string): ReleaseGroupType {
 	const type = sourceType.toLowerCase();
-	if (type == 'ep') {
-		return 'EP';
-	} else {
-		return type.charAt(0).toUpperCase() + type.slice(1) as ReleaseGroupType;
+	switch (type) {
+		case 'ep':
+			return 'EP';
+		case 'dj-mix':
+			return 'DJ-mix';
+		case 'mixtape/street':
+			return 'Mixtape/Street';
+		default:
+			return type.charAt(0).toUpperCase() + type.slice(1) as ReleaseGroupType;
 	}
 }
 
