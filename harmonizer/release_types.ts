@@ -3,10 +3,7 @@ import { primaryTypeIds } from '@kellnerd/musicbrainz/data/release-group';
 
 /** Guess the types for a release from release and track titles. */
 export function guessTypesForRelease(release: HarmonyRelease) {
-	let types = new Set<ReleaseGroupType>();
-	if (release.types) {
-		types = types.union(new Set(release.types));
-	}
+	let types = new Set(release.types);
 	types = types.union(guessTypesFromTitle(release.title));
 	if (!types.has('Live') && guessLiveRelease(release.media.flatMap((media) => media.tracklist))) {
 		types.add('Live');
@@ -23,21 +20,13 @@ const detectTypesPatterns = [
 	/\s(EP)(?:\s\(.*?\))?$/i,
 ];
 
-const typeMap: Map<string, ReleaseGroupType> = new Map([
-	['demo', 'Demo'],
-	['ep', 'EP'],
-	['live', 'Live'],
-	['single', 'Single'],
-]);
-
 /** Guesses a release type from a title. */
 export function guessTypesFromTitle(title: string): Set<ReleaseGroupType> {
 	const types = new Set<ReleaseGroupType>();
 	detectTypesPatterns.forEach((pattern) => {
 		const match = title.match(pattern);
 		if (match) {
-			const type = match[1].toLowerCase();
-			types.add(typeMap.get(type) as ReleaseGroupType);
+			types.add(capitalizeReleaseType(match[1]));
 		}
 	});
 	return types;
@@ -109,7 +98,8 @@ function isPrimaryType(type: ReleaseGroupType): boolean {
 	return primaryTypes.includes(type);
 }
 
-/** Reduce a list of primary */
+/** Reduce a list of primary types to a single type.
+ */
 function reducePrimaryTypes(types: Array<ReleaseGroupType>): ReleaseGroupType {
 	return types.reduce((previous, current) => {
 		if (previous == 'Album' || previous == 'Other') {

@@ -77,7 +77,7 @@ describe('release types', () => {
 				{ title: 'Dark As The Dungeon' },
 				{ title: 'I Still Miss Someone (Live)' },
 			], false],
-			['should be false for empty list', [], false],
+			['should be false for empty tracklist', [], false],
 		];
 
 		passingCases.forEach(([description, input, expected]) => {
