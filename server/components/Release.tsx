@@ -154,7 +154,13 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 				{types && types.length > 0 && (
 					<tr>
 						<th>Types</th>
-						<td>{types.join(' + ')}</td>
+						<td>
+							{types.join(' + ')}
+							<AlternativeValues
+								property={(release) => release.types}
+								display={(types) => types.join(' + ') || '[none]'}
+							/>
+						</td>
 					</tr>
 				)}
 				{info.providers.length > 1 && (
