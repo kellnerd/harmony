@@ -18,6 +18,7 @@ import type {
 	ProviderPreferences,
 	ProviderReleaseErrorMap,
 	ProviderReleaseMap,
+	ReleaseGroupType,
 	ResolvableEntity,
 } from './types.ts';
 
@@ -85,6 +86,9 @@ export function mergeRelease(
 	const availableRegions = new Set<CountryCode>();
 	const excludedRegions = new Set<CountryCode>();
 
+	// temporary list of all release group types
+	const releaseGroupTypes = new Array<Iterable<ReleaseGroupType>>();
+
 	orderByPreference(availableProviders, preferredProviders);
 
 	// Phase 1: Clone properties without specific provider preferences
@@ -127,7 +131,7 @@ export function mergeRelease(
 
 		// Merge release group types
 		if (sourceRelease.types) {
-			mergedRelease.types = mergeTypes(mergedRelease.types || [], sourceRelease.types);
+			releaseGroupTypes.push(sourceRelease.types);
 		}
 
 		// combine availabilities
@@ -143,8 +147,9 @@ export function mergeRelease(
 		});
 	}
 
-	// Extend the types with types guessed from titles
-	guessTypesForRelease(mergedRelease);
+	// guess types from titles and merge all release types
+	releaseGroupTypes.push(guessTypesForRelease(mergedRelease));
+	mergedRelease.types = mergeTypes(...releaseGroupTypes);
 
 	// assign temporary sets to the merge target
 	if (availableRegions.size) {

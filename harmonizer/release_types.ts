@@ -2,13 +2,13 @@ import { HarmonyRelease, HarmonyTrack, ReleaseGroupType } from './types.ts';
 import { primaryTypeIds } from '@kellnerd/musicbrainz/data/release-group';
 
 /** Guess the types for a release from release and track titles. */
-export function guessTypesForRelease(release: HarmonyRelease) {
+export function guessTypesForRelease(release: HarmonyRelease): Iterable<ReleaseGroupType> {
 	let types = new Set(release.types);
 	types = types.union(guessTypesFromTitle(release.title));
 	if (!types.has('Live') && guessLiveRelease(release.media.flatMap((media) => media.tracklist))) {
 		types.add('Live');
 	}
-	release.types = sortTypes(types);
+	return types;
 }
 
 const detectTypesPatterns = [
@@ -79,18 +79,18 @@ export function sortTypes(types: Iterable<ReleaseGroupType>): ReleaseGroupType[]
  *
  * The result is reduced to unique elements with only a single primary type.
  */
-export function mergeTypes(...typeLists: Array<ReleaseGroupType>[]): ReleaseGroupType[] {
+export function mergeTypes(...typeLists: Iterable<ReleaseGroupType>[]): ReleaseGroupType[] {
 	const primaryTypes = new Set<ReleaseGroupType>();
 	const resultTypes = new Set<ReleaseGroupType>();
-	typeLists.forEach((types) => {
-		types.forEach((type) => {
+	for (const types of typeLists) {
+		for (const type of types) {
 			if (isPrimaryType(type)) {
 				primaryTypes.add(type);
 			} else {
 				resultTypes.add(type);
 			}
-		});
-	});
+		}
+	}
 	if (primaryTypes.size) {
 		resultTypes.add(reducePrimaryTypes(Array.from(primaryTypes)));
 	}

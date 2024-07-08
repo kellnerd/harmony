@@ -28,8 +28,8 @@ describe('release types', () => {
 
 		passingCases.forEach(([description, release, expected]) => {
 			it(description, () => {
-				guessTypesForRelease(release);
-				assertEquals(release.types, expected);
+				const guessedTypes = guessTypesForRelease(release);
+				assertEquals(new Set(guessedTypes), new Set(expected));
 			});
 		});
 	});
