@@ -4,8 +4,8 @@ import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/provider
 import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { splitLabels } from '@/utils/label.ts';
-import { ResponseError } from '@/utils/errors.ts';
-import { formatGtin } from '@/utils/gtin.ts';
+import { ProviderError, ResponseError } from '@/utils/errors.ts';
+import { formatGtin, isEqualGTIN } from '@/utils/gtin.ts';
 
 import type { ApiError, MinimalArtist, Release, ReleaseTrack, Result, Track, TracklistItem } from './api_types.ts';
 import type {
@@ -134,6 +134,20 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 
 	protected async convertRawRelease(rawRelease: Release): Promise<HarmonyRelease> {
 		this.id = rawRelease.id.toString();
+		if (this.lookup.method === 'id' && this.id !== this.lookup.value) {
+			throw new ProviderError(
+				this.provider.name,
+				`API returned ${this.constructReleaseUrl(this.id, this.lookup)} instead of the requested ${
+					this.constructReleaseUrl(this.lookup.value, this.lookup)
+				}`,
+			);
+		} else if (this.lookup.method === 'gtin' && !isEqualGTIN(rawRelease.upc, this.lookup.value)) {
+			throw new ProviderError(
+				this.provider.name,
+				`API returned a release with GTIN ${rawRelease.upc} instead of the requested ${this.lookup.value}`,
+			);
+		}
+
 		const incompleteTracklist = rawRelease.nb_tracks > rawRelease.tracks.data.length;
 		const needToFetchIndividualTracks = this.options.withAllTrackArtists || this.options.withAvailability || false;
 		const needToFetchDetailedTracklist = incompleteTracklist ||
