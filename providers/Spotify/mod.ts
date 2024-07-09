@@ -2,9 +2,10 @@ import { ApiAccessToken, type CacheEntry, MetadataApiProvider, ReleaseApiLookup 
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
-import { splitLabels } from '@/utils/label.ts';
+import { formatCopyrightSymbols } from '@/utils/copyright.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { selectLargestImage } from '@/utils/image.ts';
+import { splitLabels } from '@/utils/label.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { availableRegions } from './regions.ts';
 
@@ -342,12 +343,8 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		// copyright those get often entered without the corresponding symbol.
 		// When only importing the text entry the information gets lost. Hence
 		// prefix the entries with the © or ℗ symbol if it is not already present.
-		let { text, type } = copyright;
-		text = text.replace(/\(c\)/i, '©').replace(/\(p\)/i, '℗');
-		if (!text.includes('©') && !text.includes('℗')) {
-			text = `${type === 'P' ? '℗' : '©'} ${text}`;
-		}
-		return text;
+		const symbol = copyright.type === 'P' ? '℗' : '©';
+		return formatCopyrightSymbols(copyright.text, symbol);
 	}
 }
 

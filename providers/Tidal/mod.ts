@@ -8,6 +8,7 @@ import {
 } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
+import { formatCopyrightSymbols } from '@/utils/copyright.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { selectLargestImage } from '@/utils/image.ts';
@@ -220,7 +221,7 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 			}],
 			media,
 			releaseDate: parseHyphenatedDate(rawRelease.releaseDate),
-			copyright: rawRelease.copyright,
+			copyright: formatCopyrightSymbols(rawRelease.copyright),
 			status: 'Official',
 			types: [capitalizeReleaseType(rawRelease.type)],
 			packaging: 'None',
