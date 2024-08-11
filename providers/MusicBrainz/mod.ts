@@ -1,4 +1,11 @@
-import type { ArtistCreditName, EntityId, HarmonyRelease, HarmonyTrack, MediumFormat } from '@/harmonizer/types.ts';
+import type {
+	ArtistCreditName,
+	EntityId,
+	HarmonyRelease,
+	HarmonyTrack,
+	MediumFormat,
+	ReleaseGroupType,
+} from '@/harmonizer/types.ts';
 import { CacheEntry, MetadataApiProvider, ProviderOptions, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
@@ -112,6 +119,12 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 	convertRawRelease(rawRelease: RawRelease): HarmonyRelease {
 		this.id = rawRelease.id;
 
+		const releaseGroup = rawRelease['release-group'];
+		const releaseTypes: ReleaseGroupType[] = [...releaseGroup['secondary-types']];
+		if (releaseGroup['primary-type']) {
+			releaseTypes.unshift(releaseGroup['primary-type']);
+		}
+
 		const release: HarmonyRelease = {
 			title: rawRelease.title,
 			artists: rawRelease['artist-credit'].map(this.convertRawArtist),
@@ -140,7 +153,8 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 			packaging: rawRelease.packaging ?? undefined,
 			availableIn: rawRelease['release-events']
 				?.flatMap((event) => event.area?.['iso-3166-1-codes']).filter(isDefined) ?? [],
-			releaseGroup: { mbid: rawRelease['release-group'].id },
+			releaseGroup: { mbid: releaseGroup.id },
+			types: releaseTypes,
 			info: this.generateReleaseInfo(),
 		};
 
