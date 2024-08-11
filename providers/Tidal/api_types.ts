@@ -29,7 +29,7 @@ export type Album = SimpleAlbum & {
 	numberOfVolumes: number;
 	numberOfTracks: number;
 	numberOfVideos: number;
-	type: string;
+	type: 'ALBUM' | 'EP' | 'SINGLE';
 	copyright: string;
 	mediaMetadata: MediaMetadata;
 	properties: Properties;

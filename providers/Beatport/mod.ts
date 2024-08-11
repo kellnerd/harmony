@@ -77,7 +77,7 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 		if (this.lookup.method === 'gtin') {
 			const id = await this.searchReleaseByGtin(this.lookup.value);
 			if (!id) {
-				throw new ProviderError(this.provider.name, 'Search returned no matching results');
+				throw new ProviderError(this.provider.name, `Search returned no matching results for '${this.lookup.value}'`);
 			}
 
 			releaseId = id;

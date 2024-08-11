@@ -2,6 +2,8 @@ import { immutableReleaseProperties, immutableTrackProperties } from './properti
 
 import type { EntityType } from '@kellnerd/musicbrainz';
 import type { ReleasePackaging, ReleaseStatus } from '@kellnerd/musicbrainz/data/release';
+import type { ReleaseGroupType } from '@kellnerd/musicbrainz/data/release-group';
+export type { ReleaseGroupType } from '@kellnerd/musicbrainz/data/release-group';
 import type { PartialDate } from '../utils/date.ts';
 import type { ScriptFrequency } from '../utils/script.ts';
 
@@ -47,6 +49,7 @@ export type HarmonyRelease = {
 	language?: Language;
 	script?: ScriptFrequency;
 	status?: ReleaseStatus;
+	types?: ReleaseGroupType[];
 	releaseDate?: PartialDate;
 	labels?: Label[];
 	packaging?: ReleasePackaging;

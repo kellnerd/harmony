@@ -296,6 +296,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			}],
 			status: 'Official',
 			packaging: 'None',
+			types: current.type == 'track' ? ['Single'] : undefined,
 			externalLinks: [{
 				url: releaseUrl,
 				types: linkTypes,

@@ -1,4 +1,5 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
+import { guessTypesForRelease, mergeTypes } from './release_types.ts';
 import { cloneInto, copyTo, filterErrorEntries, isFilled, uniqueMappedValues } from '@/utils/record.ts';
 import { similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
@@ -17,6 +18,7 @@ import type {
 	ProviderPreferences,
 	ProviderReleaseErrorMap,
 	ProviderReleaseMap,
+	ReleaseGroupType,
 	ResolvableEntity,
 } from './types.ts';
 
@@ -58,6 +60,7 @@ export function mergeRelease(
 		artists: [],
 		externalLinks: [],
 		media: [],
+		types: [],
 		info: {
 			providers: [],
 			messages: errorMessages,
@@ -82,6 +85,9 @@ export function mergeRelease(
 	// create temporary sets to speed up merging lists of regions
 	const availableRegions = new Set<CountryCode>();
 	const excludedRegions = new Set<CountryCode>();
+
+	// temporary list of all release group types
+	const releaseGroupTypes = new Array<Iterable<ReleaseGroupType>>();
 
 	orderByPreference(availableProviders, preferredProviders);
 
@@ -123,6 +129,11 @@ export function mergeRelease(
 		mergedRelease.info.providers.push(...sourceRelease.info.providers);
 		mergedRelease.info.messages.push(...sourceRelease.info.messages);
 
+		// Merge release group types
+		if (sourceRelease.types) {
+			releaseGroupTypes.push(sourceRelease.types);
+		}
+
 		// combine availabilities
 		sourceRelease.availableIn?.forEach((region) => {
 			availableRegions.add(region);
@@ -135,6 +146,10 @@ export function mergeRelease(
 			}
 		});
 	}
+
+	// guess types from titles and merge all release types
+	releaseGroupTypes.push(guessTypesForRelease(mergedRelease));
+	mergedRelease.types = mergeTypes(...releaseGroupTypes);
 
 	// assign temporary sets to the merge target
 	if (availableRegions.size) {
