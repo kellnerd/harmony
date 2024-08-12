@@ -1,6 +1,6 @@
 import { ArtistCredit } from '@/server/components/ArtistCredit.tsx';
 import { CoverImage } from '@/server/components/CoverImage.tsx';
-import { LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
+import { type EntityWithUrlRels, LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
 import { MagicISRC } from '@/server/components/ISRCSubmission.tsx';
 import { MessageBox } from '@/server/components/MessageBox.tsx';
 import { ProviderList } from '@/server/components/ProviderList.tsx';
@@ -28,6 +28,7 @@ export default defineRoute(async (req, ctx) => {
 	let releaseUrl: URL | undefined;
 	let isrcProvider: ProviderInfo | undefined;
 	let allArtists: ArtistCreditName[] = [];
+	let mbArtists: EntityWithUrlRels[] = [];
 	let allImages: Artwork[] = [];
 
 	try {
@@ -35,8 +36,16 @@ export default defineRoute(async (req, ctx) => {
 		if (!releaseMbid) {
 			throw new Error('Required query parameter `release_mbid` is missing');
 		}
+		releaseUrl = join(musicbrainzBaseUrl, 'release', releaseMbid);
 
-		const { gtin, urls, regions, providerIds, providers, snapshotMaxTimestamp } = extractReleaseLookupState(ctx.url);
+		const {
+			gtin,
+			urls,
+			regions,
+			providerIds,
+			providers,
+			snapshotMaxTimestamp,
+		} = extractReleaseLookupState(ctx.url);
 		const options: ReleaseOptions = {
 			withSeparateMedia: true,
 			withISRC: true,
@@ -68,7 +77,8 @@ export default defineRoute(async (req, ctx) => {
 			.flatMap((track) => track.artists)
 			.filter(isDefined);
 		allArtists = deduplicateEntities(release.artists.concat(trackArtists));
-
+		const mbArtistBrowseResult = await MB.get('artist', { release: releaseMbid, inc: 'url-rels' });
+		mbArtists = mbArtistBrowseResult.artists;
 		const providerReleaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
 		allImages = Object.entries(providerReleaseMap).flatMap(([provider, release]) =>
 			release.images?.map((image) => ({ ...image, provider })) ?? []
@@ -77,7 +87,6 @@ export default defineRoute(async (req, ctx) => {
 		const { info } = release;
 		const isrcSource = info.sourceMap?.isrc;
 		isrcProvider = info.providers.find((provider) => provider.name === isrcSource);
-		releaseUrl = join(musicbrainzBaseUrl, 'release', releaseMbid);
 	} catch (error) {
 		if (error instanceof AggregateError) {
 			errors.push(error, ...error.errors);
@@ -148,7 +157,12 @@ export default defineRoute(async (req, ctx) => {
 				)}
 				{releaseUrl &&
 					allArtists.map((artist) => (
-						<LinkWithMusicBrainz entity={artist} entityType='artist' sourceEntityUrl={releaseUrl} />
+						<LinkWithMusicBrainz
+							entity={artist}
+							entityType='artist'
+							sourceEntityUrl={releaseUrl}
+							entityCache={mbArtists}
+						/>
 					))}
 				{release?.labels?.map((label) => (
 					<LinkWithMusicBrainz entity={label} entityType='label' sourceEntityUrl={releaseUrl!} />
