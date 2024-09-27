@@ -10,7 +10,7 @@ export function MagicISRC({ release, targetMbid }: { release: HarmonyRelease; ta
 		allTracks.map((track, index) => [`isrc${index + 1}`, track.isrc ?? '']),
 	);
 	if (targetMbid) {
-		query.set('mbid', targetMbid);
+		query.set('musicbrainzid', targetMbid);
 	}
 	const submissionUrl = new URL('https://magicisrc.kepstin.ca');
 	submissionUrl.search = query.toString();
