@@ -44,7 +44,7 @@ export default class BeatportProvider extends MetadataProvider {
 
 	getLinkTypesForEntity(): LinkType[] {
 		/** See comment at {@linkcode BeatportReleaseLookup.convertRawRelease}. */
-		return ['paid streaming'];
+		return ['paid download'];
 	}
 
 	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
