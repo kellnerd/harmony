@@ -86,6 +86,9 @@ export default class BandcampProvider extends MetadataProvider {
 		if (title === undefined) {
 			title = type;
 			type = entity.type;
+			if (title === undefined) {
+				throw new ProviderError(this.name, `Incomplete album ID '${entity.id}' does not match format \`band/title\``);
+			}
 		}
 		// Use the entity type encoded in the ID, which defaults to 'album' if not specified,
 		// rather than `entity.type`, which is fixed to 'album' as the default Bandcamp release type.
