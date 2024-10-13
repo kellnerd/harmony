@@ -55,8 +55,12 @@ export class ProviderRegistry {
 			case 'all':
 				return [...this.#internalNames];
 			case 'default':
-				// Providers which support inexpensive GTIN lookups are enabled by default.
-				return this.filterInternalNames((provider) => provider.getQuality('GTIN lookup') >= FeatureQuality.PRESENT);
+				return this.filterInternalNames((provider) =>
+					// Providers which support inexpensive GTIN lookups are enabled by default.
+					provider.getQuality('GTIN lookup') >= FeatureQuality.PRESENT &&
+					// Exclude "internal" providers like MusicBrainz.
+					provider.name !== 'MusicBrainz'
+				);
 			default:
 				// TODO: Add a real `categories` property to `MetadataProvider` and use it here.
 				return [];
