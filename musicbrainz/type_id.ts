@@ -54,6 +54,45 @@ export const artistUrlTypeIds = {
 
 export type ArtistUrlLinkType = keyof typeof artistUrlTypeIds;
 
+export const labelUrlTypeIds = {
+	'official site': 219,
+	'lyrics': 982,
+	'online data': 221,
+	'blog': 224,
+	'history site': 211,
+	'catalog site': 212,
+	'logo': 213,
+	'fanpage': 214,
+	'crowdfunding': 903,
+	'patronage': 899,
+	'ticketing': 1194,
+	'social network': 218,
+	'myspace': 215,
+	'soundcloud': 290,
+	'video channel': 304,
+	'youtube': 225,
+	'get the music': 957,
+	'purchase for mail-order': 960,
+	'purchase for download': 959,
+	'download for free': 958,
+	'free streaming': 997,
+	'streaming': 1005,
+	'apple music': 1130,
+	'bandcamp': 719,
+	'other databases': 222,
+	'BookBrainz': 851,
+	'IMDb': 313,
+	'VIAF': 311,
+	'discogs': 217,
+	'last.fm': 838,
+	'secondhandsongs': 977,
+	'vgmdb': 210,
+	'wikidata': 354,
+	'wikipedia': 216,
+};
+
+export type LabelUrlLinkType = keyof typeof labelUrlTypeIds;
+
 export const releaseUrlTypeIds = {
 	'production': 72,
 	'amazon asin': 77,
@@ -77,9 +116,10 @@ export const releaseUrlTypeIds = {
 
 export type ReleaseUrlLinkType = keyof typeof releaseUrlTypeIds;
 
-export type UrlLinkType = ArtistUrlLinkType | ReleaseUrlLinkType;
+export type UrlLinkType = ArtistUrlLinkType | LabelUrlLinkType | ReleaseUrlLinkType;
 
 export const urlTypeIds: Partial<Record<EntityType, Partial<Record<UrlLinkType, number>>>> = {
 	artist: artistUrlTypeIds,
+	label: labelUrlTypeIds,
 	release: releaseUrlTypeIds,
 };
