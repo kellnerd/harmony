@@ -70,7 +70,8 @@ export default defineRoute(async (req, ctx) => {
 		providerIds.push(['MusicBrainz', releaseMbid]);
 
 		const lookup = new CombinedReleaseLookup({ urls, gtin, providerIds }, options);
-		release = await lookup.getMergedRelease();
+		// Since the release has already been imported and has MBIDs, prefer MB data as merge target.
+		release = await lookup.getMergedRelease(['MusicBrainz']);
 
 		// Combine and deduplicate release and track artists.
 		const trackArtists = release.media
