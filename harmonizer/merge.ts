@@ -157,49 +157,47 @@ export function mergeRelease(
 		mergedRelease.excludedFrom = Array.from(excludedRegions);
 	}
 
-	// when all properties should be taken from the same provider, we are done
-	if (preferSameProvider) {
-		return mergedRelease;
+	// Phase 2: Clone individual properties from their preferred providers
+	if (!preferSameProvider) {
+		(Object.entries(preferences) as [PreferenceProperty, ProviderName[]][])
+			.forEach(([property, preferredProviders]) => {
+				if (property === 'media' || property === 'externalId') {
+					// handled during phase 1 and phase 3
+					return;
+				}
+
+				orderByPreference(availableProviders, preferredProviders);
+
+				for (const providerName of availableProviders) {
+					const sourceRelease = releaseMap[providerName] as HarmonyRelease;
+
+					if (isTrackProperty(property)) {
+						if (!sourceRelease.media.length) continue;
+
+						mergedRelease.media.forEach((medium, mediumIndex) => {
+							medium.tracklist.forEach((track, trackIndex) => {
+								copyTo(track, sourceRelease.media[mediumIndex].tracklist[trackIndex], property);
+							});
+						});
+
+						if (mergedRelease.media.some((medium) => medium.tracklist.some((track) => isFilled(track[property])))) {
+							mergedRelease.info.sourceMap![property] = providerName;
+							break;
+						}
+					} else {
+						const value = cloneInto(mergedRelease, sourceRelease, property);
+
+						if (isFilled(value)) {
+							mergedRelease.info.sourceMap![property] = providerName;
+							break;
+						}
+					}
+				}
+			});
 	}
 
-	// Phase 2: Clone individual properties from their preferred providers
-	(Object.entries(preferences) as [PreferenceProperty, ProviderName[]][]).forEach(([property, preferredProviders]) => {
-		if (property === 'media' || property === 'externalId') {
-			// handled during phase 1 and phase 3
-			return;
-		}
-
-		orderByPreference(availableProviders, preferredProviders);
-
-		for (const providerName of availableProviders) {
-			const sourceRelease = releaseMap[providerName] as HarmonyRelease;
-
-			if (isTrackProperty(property)) {
-				if (!sourceRelease.media.length) continue;
-
-				mergedRelease.media.forEach((medium, mediumIndex) => {
-					medium.tracklist.forEach((track, trackIndex) => {
-						copyTo(track, sourceRelease.media[mediumIndex].tracklist[trackIndex], property);
-					});
-				});
-
-				if (mergedRelease.media.some((medium) => medium.tracklist.some((track) => isFilled(track[property])))) {
-					mergedRelease.info.sourceMap![property] = providerName;
-					break;
-				}
-			} else {
-				const value = cloneInto(mergedRelease, sourceRelease, property);
-
-				if (isFilled(value)) {
-					mergedRelease.info.sourceMap![property] = providerName;
-					break;
-				}
-			}
-		}
-	});
-
 	// Phase 3: Merge properties which have a custom merge algorithm
-	if (preferences.externalId) {
+	if (!preferSameProvider && preferences.externalId) {
 		orderByPreference(availableProviders, preferences.externalId);
 	}
 	const availableSourceReleases = availableProviders.map((providerName) => releaseMap[providerName] as HarmonyRelease);
