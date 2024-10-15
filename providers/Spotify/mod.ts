@@ -216,8 +216,10 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			nextUrl = cacheEntry.content.next;
 		}
 
-		// Load full details including ISRCs
-		if (this.options.withISRC) {
+		// Load full details including ISRCs, except for no longer available releases.
+		// Spotify tries to substitute unavailable tracks with similar ones,
+		// so we have to avoid using inaccurate data from this API endpoint.
+		if (this.options.withISRC && rawRelease.available_markets.length) {
 			return this.getRawTrackDetails(allTracks);
 		} else {
 			return allTracks;
