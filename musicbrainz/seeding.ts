@@ -97,7 +97,7 @@ export function convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditS
 			const defaultJoinPhrase = (index !== lastIndex) ? (index === lastIndex - 1 ? ' & ' : ', ') : undefined;
 
 			return {
-				artist: artist.name !== artist.creditedName ? { name: artist.name } : undefined,
+				artist: !artist.mbid ? { name: artist.name } : undefined,
 				mbid: artist.mbid,
 				name: artist.creditedName,
 				join_phrase: artist.joinPhrase ?? defaultJoinPhrase,
