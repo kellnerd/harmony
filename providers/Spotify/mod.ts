@@ -201,11 +201,20 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 	}
 
 	private async getRawTracklist(rawRelease: Album): Promise<SimplifiedTrack[]> {
-		const allTracks: SimplifiedTrack[] = [...rawRelease.tracks.items];
+		const allTracks: SimplifiedTrack[] = [];
+		let nextUrl = rawRelease.tracks.href;
+
+		// We can only use the tracks from the initial response for releases which
+		// are still available, otherwise Spotify tries to be smart and substitute
+		// the original track IDs with those of similar but available tracks.
+		// These lead to wrong/different data once we load the full track details.
+		if (rawRelease.available_markets.length) {
+			allTracks.push(...rawRelease.tracks.items);
+			nextUrl = rawRelease.tracks.next;
+		}
 
 		// The initial response contains max. 50 tracks. Fetch the remaining
 		// tracks with separate requests if needed.
-		let nextUrl = rawRelease.tracks.next;
 		while (nextUrl && allTracks.length < rawRelease.tracks.total) {
 			const cacheEntry = await this.provider.query<ResultList<SimplifiedTrack>>(
 				new URL(nextUrl),
