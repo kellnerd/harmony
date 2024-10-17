@@ -31,7 +31,7 @@ export default class MusicBrainzProvider extends MetadataApiProvider {
 	});
 
 	readonly features: FeatureQualityMap = {
-		'duration precision': DurationPrecision.MS,
+		'duration precision': DurationPrecision.S_OR_MS,
 		'GTIN lookup': FeatureQuality.GOOD,
 		'MBID resolving': FeatureQuality.GOOD,
 		'release label': FeatureQuality.GOOD,

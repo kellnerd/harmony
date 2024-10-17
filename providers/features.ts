@@ -32,6 +32,7 @@ export enum FeatureQuality {
 export enum DurationPrecision {
 	UNKNOWN = 0,
 	SECONDS,
+	S_OR_MS,
 	MS,
 	US,
 }
