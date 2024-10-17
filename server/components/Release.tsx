@@ -20,7 +20,6 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 	const regions = release.availableIn;
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
-	const isMultiMedium = release.media.length > 1;
 	const { credits, copyright, labels, language, script, types, info } = release;
 
 	const AlternativeValues = setupAlternativeValues(releaseMap);
@@ -180,7 +179,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 				<Tracklist
 					medium={medium}
 					mediumMap={releaseMap && mapValues(releaseMap, (release) => release.media[index])}
-					showTitle={isMultiMedium}
+					showTitle={true}
 				/>
 			))}
 		</div>
