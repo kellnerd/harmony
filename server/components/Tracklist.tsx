@@ -17,13 +17,24 @@ export type TracklistProps = {
 	showTitle?: boolean;
 };
 
+function mediumCaption(medium?: HarmonyMedium) {
+	if (!medium) return;
+
+	let caption = `${medium.format ?? 'Medium'} ${medium.number}`;
+	if (medium.title) caption += `: ${medium.title}`;
+
+	return caption;
+}
+
 export function Tracklist({ medium, mediumMap, showTitle = false }: TracklistProps) {
+	const AlternativeValues = setupAlternativeValues(mediumMap);
+
 	return (
 		<table class='tracklist'>
 			{showTitle && (
 				<caption>
-					{medium.format ?? 'Medium'} {medium.number}
-					{medium.title && `: ${medium.title}`}
+					{mediumCaption(medium)}
+					<AlternativeValues property={mediumCaption} />
 				</caption>
 			)}
 			<thead>

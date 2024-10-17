@@ -198,6 +198,12 @@ td ul {
 	list-style: square;
 }
 
+caption > ul.alt-values {
+	text-align: left;
+	display: table;
+	margin: 0 auto;
+}
+
 /* CoverImage.tsx */
 
 figure.cover-image {
