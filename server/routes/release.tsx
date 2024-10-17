@@ -50,7 +50,7 @@ export default defineRoute(async (req, ctx) => {
 			const mbInfo = release.info.providers.find((provider) => provider.name === 'MusicBrainz');
 			if (mbInfo) {
 				release.info.messages.push({
-					text: `Release already exists on MusicBrainz ([show actions](release/actions?release_mbid=${mbInfo.id}))`,
+					text: `Release with GTIN ${release.gtin} already exists on MusicBrainz ([show actions](release/actions?release_mbid=${mbInfo.id}))`,
 					type: 'info',
 				});
 			}
