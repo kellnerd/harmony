@@ -21,8 +21,9 @@ describe('GTIN validator', () => {
 		['numeric GTIN-14 with invalid check digit', 95135725845671, 'Checksum'],
 		['string GTIN-14 with invalid check digit', '95135725845671', 'Checksum'],
 		['11 digit number which is a valid GTIN with leading zero', 93624738626, 'invalid length'],
-		['empty string', '', 'invalid length'],
+		['empty string', '', 'empty'],
 		['non-numeric string', 'A0123456789B', 'invalid non-numeric characters'],
+		['random text', 'certainly not a GTIN', 'invalid non-numeric characters'],
 	];
 
 	passingCases.forEach(([description, input]) => {
