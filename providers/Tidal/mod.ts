@@ -226,7 +226,7 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 			}],
 			media,
 			releaseDate: parseHyphenatedDate(rawRelease.releaseDate),
-			copyright: formatCopyrightSymbols(rawRelease.copyright),
+			copyright: rawRelease.copyright ? formatCopyrightSymbols(rawRelease.copyright) : undefined,
 			status: 'Official',
 			types: [capitalizeReleaseType(rawRelease.type)],
 			packaging: 'None',

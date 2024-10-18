@@ -30,7 +30,7 @@ export type Album = SimpleAlbum & {
 	numberOfTracks: number;
 	numberOfVideos: number;
 	type: 'ALBUM' | 'EP' | 'SINGLE';
-	copyright: string;
+	copyright?: string;
 	mediaMetadata: MediaMetadata;
 	properties: Properties;
 	tidalUrl: string;
@@ -52,7 +52,7 @@ export type CommonAlbumItem = {
 	trackNumber: number;
 	volumeNumber: number;
 	isrc: string;
-	copyright: string;
+	copyright?: string;
 	mediaMetadata: MediaMetadata;
 	tidalUrl: string;
 	providerInfo: ProviderInfo;
