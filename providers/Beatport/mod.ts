@@ -1,5 +1,6 @@
 import type { Artist, BeatportNextData, BeatportRelease, Release, Track } from './json_types.ts';
 import type { ArtistCreditName, EntityId, HarmonyRelease, HarmonyTrack, LinkType } from '@/harmonizer/types.ts';
+import { variousArtists } from '@/musicbrainz/special_entities.ts';
 import { CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
@@ -130,7 +131,11 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 
 		return {
 			title: rawRelease.name,
-			artists: rawRelease.artists.map(this.makeArtistCreditName.bind(this)),
+			// Beatport accumulates all track artists as release artist, even if it should be VA instead.
+			// @todo Properly differentiate between VA and releases with main and many featured artists.
+			artists: rawRelease.artists.length > 4
+				? [variousArtists]
+				: rawRelease.artists.map(this.makeArtistCreditName.bind(this)),
 			labels: [{
 				name: rawRelease.label.name,
 				catalogNumber: rawRelease.catalog_number,
