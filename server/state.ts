@@ -18,7 +18,13 @@ export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
 		providersLookedUpById.map((provider) => [provider.internalName, provider.id]),
 	);
 	if (providersLookedUpByGtin.length) {
-		state.append('gtin', providersLookedUpByGtin[0].lookup.value);
+		// In an ideal world, a GTIN is just a number, but we have providers where zero-padding matters.
+		// By choosing the variant with the most zeros, more GTIN lookups should succeed on first try.
+		// This is crucial to make permalinks as efficient as possible by using only cached requests.
+		const gtinVariantsByLength = providersLookedUpByGtin
+			.map((provider) => provider.lookup.value)
+			.sort((a, b) => b.length - a.length);
+		state.append('gtin', gtinVariantsByLength[0]);
 		// Add all enabled providers which were looked up by GTIN (with empty provider ID value).
 		for (const provider of providersLookedUpByGtin) {
 			state.append(provider.internalName, '');
