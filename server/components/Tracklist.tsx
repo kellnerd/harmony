@@ -20,7 +20,8 @@ export type TracklistProps = {
 function mediumCaption(medium?: HarmonyMedium) {
 	if (!medium) return;
 
-	let caption = `${medium.format ?? 'Medium'} ${medium.number}`;
+	let caption = medium.format ?? 'Medium';
+	if (medium.number) caption += ` ${medium.number}`;
 	if (medium.title) caption += `: ${medium.title}`;
 
 	return caption;
