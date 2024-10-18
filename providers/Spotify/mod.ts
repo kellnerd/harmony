@@ -226,7 +226,12 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 
 	private async getRawTrackDetails(simplifiedTracks: SimplifiedTrack[]): Promise<Track[]> {
 		const allTracks: Track[] = [];
-		const trackIds = simplifiedTracks.map((track) => track.id);
+
+		// For unavailable releases, Spotify tries to be smart and substitute track
+		// IDs with those of similar but available tracks, for which we have no use.
+		// In that case (and only then) the original IDs can be obtained from the
+		// optional `linked_from` track, otherwise we fall back to the regular ID.
+		const trackIds = simplifiedTracks.map((track) => track.linked_from?.id ?? track.id);
 
 		// The SimplifiedTrack entries do not contain ISRCs.
 		// Perform track queries to obtain the full details of all tracks.
