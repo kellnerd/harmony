@@ -1,9 +1,11 @@
 import { FeatureQuality, type FeatureQualityMap, type ProviderFeature } from './features.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
+import { pluralWithCount } from '@/utils/plural.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 import { rateLimit } from 'utils/async/rateLimit.js';
 import { simplifyName } from 'utils/string/simplify.js';
 
+import type { AppInfo } from '@/app.ts';
 import type {
 	CountryCode,
 	EntityId,
@@ -22,9 +24,10 @@ import type { PartialDate } from '@/utils/date.ts';
 import type { CacheOptions, Snapshot, SnapStorage } from 'snap-storage';
 import type { MaybePromise } from 'utils/types.d.ts';
 import type { Logger } from 'std/log/logger.ts';
-import { pluralWithCount } from '@/utils/plural.ts';
 
 export type ProviderOptions = Partial<{
+	/** Information about the application. */
+	appInfo: AppInfo;
 	/** Duration of one rate-limiting interval for requests (in ms). */
 	rateLimitInterval: number | null;
 	/** Maximum number of requests within the interval. */

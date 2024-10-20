@@ -1,13 +1,23 @@
 import type { MetadataProvider, MetadataProviderConstructor } from './base.ts';
 import { FeatureQuality, type ProviderFeature } from './features.ts';
+import type { AppInfo } from '@/app.ts';
 import type { ExternalEntityId } from '@/harmonizer/types.ts';
 import { SnapStorage } from 'snap-storage';
 
+export interface ProviderRegistryOptions {
+	/** Information about the application which is passed to each provider. */
+	appInfo?: AppInfo;
+}
+
 /** Registry for metadata providers. */
 export class ProviderRegistry {
+	constructor(options: ProviderRegistryOptions = {}) {
+		this.#appInfo = options.appInfo;
+	}
+
 	/** Adds an instance of the given provider to the registry. */
 	add(Provider: MetadataProviderConstructor) {
-		const provider = new Provider({ snaps: this.#snaps });
+		const provider = new Provider({ snaps: this.#snaps, appInfo: this.#appInfo });
 
 		const { name, internalName } = provider;
 		if (this.#displayNames.has(name)) {
@@ -109,6 +119,7 @@ export class ProviderRegistry {
 		return this.#displayToInternal[name];
 	}
 
+	#appInfo: AppInfo | undefined;
 	#providerList: MetadataProvider[] = [];
 	#providerMap: Record<string, MetadataProvider> = {};
 	#displayNames = new Set<string>();

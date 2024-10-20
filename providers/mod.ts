@@ -1,4 +1,5 @@
 import { ProviderRegistry } from './registry.ts';
+import { appInfo } from '@/app.ts';
 import type { ProviderPreferences } from '@/harmonizer/types.ts';
 
 import BandcampProvider from './Bandcamp/mod.ts';
@@ -10,7 +11,9 @@ import SpotifyProvider from './Spotify/mod.ts';
 import TidalProvider from './Tidal/mod.ts';
 
 /** Registry with all supported providers. */
-export const providers = new ProviderRegistry();
+export const providers = new ProviderRegistry({
+	appInfo: appInfo,
+});
 
 // Register all providers which should be used.
 providers.addMultiple(
