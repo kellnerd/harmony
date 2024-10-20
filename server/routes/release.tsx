@@ -46,7 +46,12 @@ export default defineRoute(async (req, ctx) => {
 			const lookup = new CombinedReleaseLookup({ gtin, providerIds, urls }, options);
 			releaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
 			release = await lookup.getMergedRelease(defaultProviderPreferences);
-			await resolveReleaseMbids(release);
+
+			// Resolving MBIDs is expensive, skip this step for fast permalinks.
+			if (snapshotMaxTimestamp === undefined) {
+				await resolveReleaseMbids(release);
+			}
+
 			const mbInfo = release.info.providers.find((provider) => provider.name === 'MusicBrainz');
 			if (mbInfo) {
 				release.info.messages.push({
