@@ -21,6 +21,16 @@ export default class MusicBrainzProvider extends MetadataApiProvider {
 			concurrentRequests: 5,
 			...options,
 		});
+
+		if (options.appInfo) {
+			const { name, version, contact } = options.appInfo;
+			this.userAgent = `${name}/${version}`;
+			if (contact) {
+				this.userAgent += ` ( ${contact} )`;
+			}
+		} else {
+			this.userAgent = 'Harmony';
+		}
 	}
 
 	readonly name = 'MusicBrainz';
@@ -57,6 +67,7 @@ export default class MusicBrainzProvider extends MetadataApiProvider {
 			requestInit: {
 				headers: {
 					'Accept': 'application/json',
+					'User-Agent': this.userAgent,
 				},
 			},
 		});
@@ -67,6 +78,8 @@ export default class MusicBrainzProvider extends MetadataApiProvider {
 		}
 		return cacheEntry;
 	}
+
+	private userAgent: string;
 }
 
 export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvider, RawRelease> {
