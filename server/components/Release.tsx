@@ -7,6 +7,7 @@ import { ProviderList } from './ProviderList.tsx';
 import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import RegionList from '@/server/islands/RegionList.tsx';
+import ReleaseDate from '@/server/islands/ReleaseDate.tsx';
 
 import { determineReleaseEventCountries } from '@/musicbrainz/release_countries.ts';
 import { formatPartialDate } from '@/utils/date.ts';
@@ -47,7 +48,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 				<tr>
 					<th>Release date</th>
 					<td>
-						{formatPartialDate(release.releaseDate ?? {}) || '[unknown]'}
+						<ReleaseDate releaseDate={release.releaseDate} />
 						<AlternativeValues
 							property={(release) => release.releaseDate}
 							display={formatPartialDate}

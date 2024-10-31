@@ -1,4 +1,5 @@
 import { zipObject } from 'utils/object/zipObject.js';
+import { IS_BROWSER } from "$fresh/runtime.ts";
 
 export type PartialDate = Partial<{
 	day: number;
@@ -6,20 +7,18 @@ export type PartialDate = Partial<{
 	year: number;
 }>;
 
-export function formatPartialDate(date: PartialDate) {
-	const dateComponents: string[] = [];
-
-	if (date.year) {
-		dateComponents.push(date.year.toString().padStart(4, '0'));
-		if (date.month) {
-			dateComponents.push(date.month.toString().padStart(2, '0'));
-			if (date.day) {
-				dateComponents.push(date.day.toString().padStart(2, '0'));
-			}
-		}
+export function formatPartialDate(releaseDate: PartialDate) {
+	
+	// we return null for flashing Release date
+	if(!releaseDate || !IS_BROWSER) {
+		return null
 	}
-
-	return dateComponents.join('-');
+	
+	if(IS_BROWSER){
+        const {day, month, year} = releaseDate
+        return new Date(Date.UTC(year, month, day)).toLocaleDateString() 
+    }
+	
 }
 
 /** Parses `YYYY-MM-DD` date strings */
