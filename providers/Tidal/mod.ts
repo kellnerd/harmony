@@ -12,6 +12,7 @@ import { formatCopyrightSymbols } from '@/utils/copyright.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { selectLargestImage } from '@/utils/image.ts';
+import { ResponseError as SnapResponseError } from 'snap-storage';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 
 import type { Album, AlbumItem, ApiError, Resource, Result, SimpleArtist } from './api_types.ts';
@@ -101,9 +102,16 @@ export default class TidalProvider extends MetadataApiProvider {
 			}
 			return cacheEntry;
 		} catch (error) {
-			// Clone the response so the body of the original response can be
-			// consumed later if the error gets re-thrown.
-			const apiError = await error.response?.clone().json() as ApiError;
+			let apiError: ApiError | undefined;
+			if (error instanceof SnapResponseError) {
+				try {
+					// Clone the response so the body of the original response can be
+					// consumed later if the error gets re-thrown.
+					apiError = await error.response.clone().json();
+				} catch {
+					// Ignore secondary JSON parsing error, rethrow original error.
+				}
+			}
 			if (apiError?.errors) {
 				throw new TidalResponseError(apiError, apiUrl);
 			} else {
