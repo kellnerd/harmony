@@ -60,7 +60,9 @@ export default defineRoute(async (req, ctx) => {
 			const mbRelease = await MB.lookup('release', releaseMbid, { inc: ['url-rels'] });
 			const uniqueResources = new Set<string>(mbRelease.relations.map((rel) => rel.url.resource));
 			for (const resource of uniqueResources) {
-				if (providerRegistry.findByUrl(resource)) {
+				const matchingProvider = providerRegistry.findByUrl(resource);
+				// Use all supported URLs or only those from requested providers if these are specified.
+				if (matchingProvider && (!providers?.size || providers.has(matchingProvider.internalName))) {
 					urls.push(new URL(resource));
 				}
 			}
