@@ -6,6 +6,7 @@ import { formatCopyrightSymbols } from '@/utils/copyright.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { selectLargestImage } from '@/utils/image.ts';
 import { splitLabels } from '@/utils/label.ts';
+import { ResponseError as SnapResponseError } from 'snap-storage';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { availableRegions } from './regions.ts';
 
@@ -91,9 +92,16 @@ export default class SpotifyProvider extends MetadataApiProvider {
 			}
 			return cacheEntry;
 		} catch (error) {
-			// Clone the response so the body of the original response can be
-			// consumed later if the error gets re-thrown.
-			const apiError = await error.response?.clone().json() as ApiError;
+			let apiError: ApiError | undefined;
+			if (error instanceof SnapResponseError) {
+				try {
+					// Clone the response so the body of the original response can be
+					// consumed later if the error gets re-thrown.
+					apiError = await error.response.clone().json();
+				} catch {
+					// Ignore secondary JSON parsing error, rethrow original error.
+				}
+			}
 			if (apiError?.error) {
 				throw new SpotifyResponseError(apiError, apiUrl);
 			} else {
