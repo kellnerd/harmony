@@ -40,7 +40,7 @@ export default class MusicBrainzProvider extends MetadataApiProvider {
 		pathname: '/:type(artist|release)/:id',
 	});
 
-	readonly features: FeatureQualityMap = {
+	override readonly features: FeatureQualityMap = {
 		'duration precision': DurationPrecision.S_OR_MS,
 		'GTIN lookup': FeatureQuality.GOOD,
 		'MBID resolving': FeatureQuality.GOOD,

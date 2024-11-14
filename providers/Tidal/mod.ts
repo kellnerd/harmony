@@ -48,7 +48,7 @@ export default class TidalProvider extends MetadataApiProvider {
 		pathname: String.raw`{/browse}?/:type(album|artist)/:id(\d+)`,
 	});
 
-	readonly features: FeatureQualityMap = {
+	override readonly features: FeatureQualityMap = {
 		'cover size': 1280,
 		'duration precision': DurationPrecision.SECONDS,
 		'GTIN lookup': FeatureQuality.GOOD,
@@ -63,11 +63,11 @@ export default class TidalProvider extends MetadataApiProvider {
 
 	readonly defaultRegion: CountryCode = 'US';
 
-	readonly availableRegions = new Set(availableRegions);
+	override readonly availableRegions = new Set(availableRegions);
 
 	readonly releaseLookup = TidalReleaseLookup;
 
-	readonly launchDate: PartialDate = {
+	override readonly launchDate: PartialDate = {
 		year: 2014,
 		month: 10,
 		day: 28,
@@ -79,7 +79,7 @@ export default class TidalProvider extends MetadataApiProvider {
 		return new URL([entity.type, entity.id].join('/'), 'https://tidal.com/');
 	}
 
-	getLinkTypesForEntity(): LinkType[] {
+	override getLinkTypesForEntity(): LinkType[] {
 		return ['paid streaming'];
 	}
 

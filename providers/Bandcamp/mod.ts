@@ -34,7 +34,7 @@ export default class BandcampProvider extends MetadataProvider {
 		pathname: '/{music}?',
 	});
 
-	readonly features: FeatureQualityMap = {
+	override readonly features: FeatureQualityMap = {
 		'cover size': 3000,
 		'duration precision': DurationPrecision.MS,
 		'GTIN lookup': FeatureQuality.MISSING,
@@ -48,7 +48,7 @@ export default class BandcampProvider extends MetadataProvider {
 
 	readonly releaseLookup = BandcampReleaseLookup;
 
-	extractEntityFromUrl(url: URL): EntityId {
+	override extractEntityFromUrl(url: URL): EntityId {
 		const albumResult = this.supportedUrls.exec(url);
 		if (albumResult) {
 			const artist = albumResult.hostname.groups.artist!;
@@ -95,7 +95,7 @@ export default class BandcampProvider extends MetadataProvider {
 		return new URL([type, title].join('/'), artistUrl);
 	}
 
-	getLinkTypesForEntity(): LinkType[] {
+	override getLinkTypesForEntity(): LinkType[] {
 		// MB has special handling for Bandcamp artist URLs
 		return ['discography page'];
 	}

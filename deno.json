@@ -25,7 +25,7 @@
 		"std/": "https://deno.land/std@0.216.0/",
 		"tabler-icons/": "https://deno.land/x/tabler_icons_tsx@0.0.6/tsx/",
 		"ts-custom-error": "https://esm.sh/ts-custom-error@3.3.1",
-		"utils/": "https://deno.land/x/es_utils@v0.2.0/"
+		"utils/": "https://deno.land/x/es_utils@v0.2.1/"
 	},
 	"tasks": {
 		"check": "deno check server/fresh.gen.ts cli.ts",

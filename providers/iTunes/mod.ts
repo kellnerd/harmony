@@ -28,7 +28,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 		pathname: String.raw`/:region(\w{2})?/:type(album|artist)/:slug?/{id}?:id(\d+)`,
 	});
 
-	features: FeatureQualityMap = {
+	override readonly features: FeatureQualityMap = {
 		'cover size': 3000,
 		'duration precision': DurationPrecision.MS,
 		'GTIN lookup': FeatureQuality.PRESENT,
@@ -40,11 +40,11 @@ export default class iTunesProvider extends MetadataApiProvider {
 		release: 'album',
 	};
 
-	readonly availableRegions = new Set(availableRegions);
+	override readonly availableRegions = new Set(availableRegions);
 
 	readonly releaseLookup = iTunesReleaseLookup;
 
-	readonly launchDate: PartialDate = {
+	override readonly launchDate: PartialDate = {
 		year: 2003,
 		month: 4,
 		day: 28,
@@ -60,7 +60,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 		return new URL([region.toLowerCase(), entity.type, entity.id].join('/'), 'https://music.apple.com');
 	}
 
-	extractEntityFromUrl(url: URL): EntityId | undefined {
+	override extractEntityFromUrl(url: URL): EntityId | undefined {
 		const entity = super.extractEntityFromUrl(url);
 		if (entity && !entity.region) {
 			entity.region = this.defaultRegion;
@@ -68,7 +68,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 		return entity;
 	}
 
-	getLinkTypesForEntity(): LinkType[] {
+	override getLinkTypesForEntity(): LinkType[] {
 		// There is no way to appropriately determine this for an artist page.
 		return ['paid streaming'];
 	}

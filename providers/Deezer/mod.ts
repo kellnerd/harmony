@@ -37,7 +37,7 @@ export default class DeezerProvider extends MetadataApiProvider {
 		pathname: String.raw`/:language(\w{2})?/:type(album|artist)/:id(\d+)`,
 	});
 
-	readonly features: FeatureQualityMap = {
+	override readonly features: FeatureQualityMap = {
 		'cover size': 1400,
 		'duration precision': DurationPrecision.SECONDS,
 		'GTIN lookup': FeatureQuality.GOOD,
@@ -49,11 +49,11 @@ export default class DeezerProvider extends MetadataApiProvider {
 		release: 'album',
 	};
 
-	readonly availableRegions = new Set(availableRegions);
+	override readonly availableRegions = new Set(availableRegions);
 
 	readonly releaseLookup = DeezerReleaseLookup;
 
-	readonly launchDate: PartialDate = {
+	override readonly launchDate: PartialDate = {
 		year: 2007,
 		month: 8,
 		day: 22,
@@ -65,7 +65,7 @@ export default class DeezerProvider extends MetadataApiProvider {
 		return new URL([entity.type, entity.id].join('/'), 'https://www.deezer.com');
 	}
 
-	getLinkTypesForEntity(): LinkType[] {
+	override getLinkTypesForEntity(): LinkType[] {
 		return ['free streaming'];
 	}
 

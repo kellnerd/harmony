@@ -410,7 +410,7 @@ export abstract class MetadataApiProvider extends MetadataProvider {
 export abstract class ReleaseApiLookup<Provider extends MetadataApiProvider, RawRelease>
 	extends ReleaseLookup<Provider, RawRelease> {
 	/** Constructs an API URL for a release using the specified lookup options. */
-	abstract constructReleaseApiUrl(): URL;
+	abstract override constructReleaseApiUrl(): URL;
 
 	/** Performs the query for the URL returned by {@linkcode constructReleaseApiUrl} for all configured regions until valid data is returned. */
 	protected async queryAllRegions<Data>(

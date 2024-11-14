@@ -132,7 +132,7 @@ export class CombinedReleaseLookup {
 		} catch (error) {
 			this.messages.push({
 				type: 'error',
-				text: error.message,
+				text: (error as Error).message,
 			});
 			return false;
 		}

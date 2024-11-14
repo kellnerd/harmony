@@ -43,7 +43,7 @@ export default class SpotifyProvider extends MetadataApiProvider {
 		pathname: '{/intl-:language}?/:type(artist|album)/:id',
 	});
 
-	readonly features: FeatureQualityMap = {
+	override readonly features: FeatureQualityMap = {
 		'cover size': 640,
 		'duration precision': DurationPrecision.MS,
 		'GTIN lookup': FeatureQuality.GOOD,
@@ -56,11 +56,11 @@ export default class SpotifyProvider extends MetadataApiProvider {
 		release: 'album',
 	};
 
-	readonly availableRegions = new Set(availableRegions);
+	override readonly availableRegions = new Set(availableRegions);
 
 	readonly releaseLookup = SpotifyReleaseLookup;
 
-	readonly launchDate: PartialDate = {
+	override readonly launchDate: PartialDate = {
 		year: 2008,
 		month: 10,
 	};
@@ -71,7 +71,7 @@ export default class SpotifyProvider extends MetadataApiProvider {
 		return new URL([entity.type, entity.id].join('/'), 'https://open.spotify.com');
 	}
 
-	getLinkTypesForEntity(): LinkType[] {
+	override getLinkTypesForEntity(): LinkType[] {
 		return ['free streaming'];
 	}
 

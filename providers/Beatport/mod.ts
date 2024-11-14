@@ -15,7 +15,7 @@ export default class BeatportProvider extends MetadataProvider {
 		pathname: '/:language(\\w{2})?/:type(artist|label|release)/:slug/:id',
 	});
 
-	readonly features: FeatureQualityMap = {
+	override readonly features: FeatureQualityMap = {
 		'cover size': 1400,
 		'duration precision': DurationPrecision.MS,
 		'GTIN lookup': FeatureQuality.EXPENSIVE,
@@ -31,7 +31,7 @@ export default class BeatportProvider extends MetadataProvider {
 
 	readonly releaseLookup = BeatportReleaseLookup;
 
-	readonly launchDate: PartialDate = {
+	override readonly launchDate: PartialDate = {
 		year: 2005,
 		month: 1,
 		day: 7,
@@ -43,7 +43,7 @@ export default class BeatportProvider extends MetadataProvider {
 		return new URL([entity.type, entity.slug ?? '-', entity.id].join('/'), this.baseUrl);
 	}
 
-	getLinkTypesForEntity(): LinkType[] {
+	override getLinkTypesForEntity(): LinkType[] {
 		/** See comment at {@linkcode BeatportReleaseLookup.convertRawRelease}. */
 		return ['paid download'];
 	}
