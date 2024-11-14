@@ -2,9 +2,9 @@ name: Deno
 
 on:
   push:
-    tags: ["v*"]
+    tags: ['v*']
   pull_request:
-    branches: ["main"]
+    branches: ['main']
   workflow_dispatch:
     inputs:
       perform_deploy:
@@ -60,13 +60,13 @@ jobs:
         uses: easingthemes/ssh-deploy@v5.0.3
         with:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
-          ARGS: "-cilrvz --delete"
+          ARGS: '-cilrvz --delete'
           SOURCE: ${{ env.WORK_DIR }}/
           REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
           REMOTE_PORT: ${{ secrets.DEPLOY_PORT || 22 }}
           REMOTE_USER: ${{ secrets.DEPLOY_USER }}
           TARGET: ${{ secrets.DEPLOY_TARGET }}
-          EXCLUDE: "/deno.lock, /.env, /snaps.db, /snaps/"
+          EXCLUDE: '/deno.lock, /.env, /snaps.db, /snaps/'
           SCRIPT_BEFORE_REQUIRED: true
           SCRIPT_BEFORE: |
             set -e
