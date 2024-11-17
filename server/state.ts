@@ -84,7 +84,7 @@ export function extractReleaseLookupState(lookupUrl: URL, headers?: Headers): Re
 	let regions = searchParams.getAll('region').filter(isNotEmpty)
 		.flatMap(parseRegions);
 	if (!regions.length) {
-		regions = cookies.region ? parseRegions(cookies.region) : defaultRegions;
+		regions = cookies.region ? parseRegions(decodeURIComponent(cookies.region)) : defaultRegions;
 	}
 	for (const countryCode of regions) {
 		assertCountryCode(countryCode);
