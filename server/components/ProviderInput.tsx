@@ -28,7 +28,7 @@ export function ProviderCheckbox({
 			<ProviderIcon providerName={providerName} />
 			{providerName}
 			{(persistent && !disabled)
-				? <PersistentCheckbox name={internalName} id={id} initialValue={enabled} trueValue='' />
+				? <PersistentCheckbox name={internalName} id={id} initialValue={enabled} trueValue='' useCookie />
 				: <input type='checkbox' name={internalName} id={id} checked={enabled} value='' disabled={disabled} />}
 		</label>
 	);

@@ -59,8 +59,12 @@ export class ProviderRegistry {
 			.map((provider) => provider.internalName);
 	}
 
-	/** Returns a list of internal provider names that belong to the given category. */
-	filterInternalNamesByCategory(category: string): string[] {
+	/**
+	 * Returns a list of internal provider names that belong to the given category.
+	 *
+	 * Optionally accepts a record of cookies with the user's preferences.
+	 */
+	filterInternalNamesByCategory(category: string, preferences: Record<string, string> = {}): string[] {
 		switch (category) {
 			case 'all':
 				return [...this.#internalNames];
@@ -71,6 +75,10 @@ export class ProviderRegistry {
 					// Exclude "internal" providers like MusicBrainz.
 					provider.name !== 'MusicBrainz'
 				);
+			case 'preferred':
+				// Get all providers for which the preference is enabled.
+				// The value of an enabled preference is defined by `ProviderCheckbox`.
+				return this.filterInternalNames((provider) => preferences[provider.internalName] === '');
 			default:
 				// TODO: Add a real `categories` property to `MetadataProvider` and use it here.
 				return [];

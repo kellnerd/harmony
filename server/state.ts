@@ -91,7 +91,7 @@ export function extractReleaseLookupState(lookupUrl: URL, headers?: Headers): Re
 	}
 
 	const category = searchParams.get('category');
-	const requestedProviders = new Set(category ? providers.filterInternalNamesByCategory(category) : undefined);
+	const requestedProviders = new Set(category ? providers.filterInternalNamesByCategory(category, cookies) : undefined);
 
 	const providerNames = providers.internalNames;
 	const providerIds: ProviderNameAndId[] = [];
