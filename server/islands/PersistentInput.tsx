@@ -18,7 +18,7 @@ function persistInStorage(key: string, value: Signal<string>) {
 
 function persistAsCookie(name: string, value: Signal<string>) {
 	// Set persistent cookie (for 1 year) every time the value changes.
-	useSignalEffect(() => setCookie(name, value.value, 'Max-Age=31536000'));
+	useSignalEffect(() => setCookie(name, value.value, 'Max-Age=31536000', 'SameSite=Lax'));
 }
 
 export interface PersistentInputProps extends JSX.HTMLAttributes<HTMLInputElement> {
