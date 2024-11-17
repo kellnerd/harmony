@@ -3,30 +3,22 @@ import type { JSX } from 'preact';
 import { type Signal, useSignal, useSignalEffect } from '@preact/signals';
 import { setCookie } from '@/utils/cookie.ts';
 
-function usePersisted(key: string, initialValue: string) {
-	const value = useSignal(initialValue);
+function persistInStorage(key: string, value: Signal<string>) {
+	const storageKey = ['persist', key].join('.');
 
-	if (IS_BROWSER) {
-		const storageKey = ['persist', key].join('.');
-
-		// Try to get persisted input value from storage.
-		const storedValue = localStorage.getItem(storageKey);
-		if (storedValue !== null) {
-			value.value = storedValue;
-		}
-
-		// Persist input value every time it changes.
-		useSignalEffect(() => localStorage.setItem(storageKey, value.value));
+	// Try to get persisted input value from storage.
+	const storedValue = localStorage.getItem(storageKey);
+	if (storedValue !== null) {
+		value.value = storedValue;
 	}
 
-	return value;
+	// Persist input value every time it changes.
+	useSignalEffect(() => localStorage.setItem(storageKey, value.value));
 }
 
-/** Set persistent cookie (for 1 year) every time the value changes. */
-function useCookieEffect(name: string, value: Signal<string>) {
-	if (IS_BROWSER) {
-		useSignalEffect(() => setCookie(name, value.value, 'Max-Age=31536000'));
-	}
+function persistAsCookie(name: string, value: Signal<string>) {
+	// Set persistent cookie (for 1 year) every time the value changes.
+	useSignalEffect(() => setCookie(name, value.value, 'Max-Age=31536000'));
 }
 
 export interface PersistentInputProps extends JSX.HTMLAttributes<HTMLInputElement> {
@@ -59,9 +51,12 @@ export function PersistentCheckbox({
 	useCookie = false,
 	...props
 }: PersistentCheckboxProps) {
-	const persistedValue = usePersisted(id ?? name, initialValue ? trueValue : falseValue);
-	if (useCookie) {
-		useCookieEffect(name, persistedValue);
+	const persistedValue = useSignal(initialValue ? trueValue : falseValue);
+	if (IS_BROWSER) {
+		persistInStorage(id ?? name, persistedValue);
+		if (useCookie) {
+			persistAsCookie(name, persistedValue);
+		}
 	}
 
 	return (
@@ -89,9 +84,12 @@ export function PersistentTextInput({
 	useCookie = false,
 	...props
 }: PersistentTextInputProps) {
-	const persistedValue = usePersisted(id ?? name, initialValue);
-	if (useCookie) {
-		useCookieEffect(name, persistedValue);
+	const text = useSignal(initialValue);
+	if (IS_BROWSER) {
+		persistInStorage(id ?? name, text);
+		if (useCookie) {
+			persistAsCookie(name, text);
+		}
 	}
 
 	return (
@@ -100,8 +98,8 @@ export function PersistentTextInput({
 			name={name}
 			id={id}
 			{...props}
-			value={persistedValue}
-			onChange={(event) => persistedValue.value = event.currentTarget.value}
+			value={text}
+			onChange={(event) => text.value = event.currentTarget.value}
 		/>
 	);
 }
