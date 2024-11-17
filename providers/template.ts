@@ -11,15 +11,18 @@ import type { EntityId, HarmonyRelease } from '@/harmonizer/types.ts';
 import { MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { FeatureQualityMap } from '@/providers/features.ts';
 
+// Providers which use an API should extend `MetadataApiProvider` instead.
 export default class TemplateProvider extends MetadataProvider {
-	readonly name = '';
+	// TODO: Fill out all properties and implement the required methods.
+	readonly name = 'Template';
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'www.example.com',
 		pathname: '/:type(artist|release)/:id',
 	});
 
-	readonly features: FeatureQualityMap = {};
+	// TODO: Also try to override optional properties which are (or return) empty arrays/objects in the base class.
+	override readonly features: FeatureQualityMap = {};
 
 	readonly entityTypeMap = {
 		artist: '',
@@ -33,6 +36,7 @@ export default class TemplateProvider extends MetadataProvider {
 	}
 }
 
+// Providers which use an API should extend `ReleaseApiLookup` instead.
 export class TemplateReleaseLookup extends ReleaseLookup<TemplateProvider, Release> {
 	constructReleaseApiUrl(): URL | undefined {
 		throw new Error('Method not implemented.');
@@ -47,5 +51,5 @@ export class TemplateReleaseLookup extends ReleaseLookup<TemplateProvider, Relea
 	}
 }
 
-// Type of raw release data from the provider (for example an API result).
+// TODO: Type of raw release data from the provider (for example an API result).
 export type Release = unknown;
