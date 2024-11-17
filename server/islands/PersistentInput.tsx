@@ -43,8 +43,10 @@ export interface PersistentCheckboxProps extends PersistentInputProps {
 	initialValue?: boolean;
 	/** String value which will be persisted for an unchecked input. */
 	falseValue?: string;
-	/** String value which will be used in forms and persisted for a checked input. */
+	/** String value which will be persisted for a checked input. */
 	trueValue?: string;
+	/** String value which will be used in forms for a checked input. */
+	formValue?: string;
 }
 
 export function PersistentCheckbox({
@@ -53,6 +55,7 @@ export function PersistentCheckbox({
 	initialValue = false,
 	trueValue = '1',
 	falseValue = '0',
+	formValue = '1',
 	useCookie = false,
 	...props
 }: PersistentCheckboxProps) {
@@ -67,7 +70,7 @@ export function PersistentCheckbox({
 			name={name}
 			id={id}
 			{...props}
-			value={trueValue}
+			value={formValue}
 			checked={persistedValue.value !== falseValue}
 			onChange={(event) => persistedValue.value = event.currentTarget.checked ? trueValue : falseValue}
 		/>

@@ -78,7 +78,7 @@ export class ProviderRegistry {
 			case 'preferred':
 				// Get all providers for which the preference is enabled.
 				// The value of an enabled preference is defined by `ProviderCheckbox`.
-				return this.filterInternalNames((provider) => preferences[provider.internalName] === '');
+				return this.filterInternalNames((provider) => preferences[provider.internalName] === '1');
 			default:
 				// TODO: Add a real `categories` property to `MetadataProvider` and use it here.
 				return [];
