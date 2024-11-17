@@ -54,6 +54,7 @@ export default function ReleaseLookup({
 								id='region-input'
 								initialValue={regionValue}
 								placeholder='Region (Country Code)'
+								useCookie
 							/>
 						),
 				)}

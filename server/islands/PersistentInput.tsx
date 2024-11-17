@@ -1,6 +1,7 @@
 import { IS_BROWSER } from 'fresh/runtime.ts';
 import type { JSX } from 'preact';
-import { useSignal, useSignalEffect } from '@preact/signals';
+import { type Signal, useSignal, useSignalEffect } from '@preact/signals';
+import { setCookie } from '@/utils/cookie.ts';
 
 function usePersisted(key: string, initialValue: string) {
 	const value = useSignal(initialValue);
@@ -21,11 +22,20 @@ function usePersisted(key: string, initialValue: string) {
 	return value;
 }
 
+/** Set persistent cookie (for 1 year) every time the value changes. */
+function useCookieEffect(name: string, value: Signal<string>) {
+	if (IS_BROWSER) {
+		useSignalEffect(() => setCookie(name, value.value, 'Max-Age=31536000'));
+	}
+}
+
 export interface PersistentInputProps extends JSX.HTMLAttributes<HTMLInputElement> {
 	/** Name of the form input. */
 	name: string;
 	/** ID of the HTML element. */
 	id?: string;
+	/** Store the value as cookie, making it available to the server. */
+	useCookie?: boolean;
 }
 
 export interface PersistentCheckboxProps extends PersistentInputProps {
@@ -43,9 +53,13 @@ export function PersistentCheckbox({
 	initialValue = false,
 	trueValue = '1',
 	falseValue = '0',
+	useCookie = false,
 	...props
 }: PersistentCheckboxProps) {
 	const persistedValue = usePersisted(id ?? name, initialValue ? trueValue : falseValue);
+	if (useCookie) {
+		useCookieEffect(name, persistedValue);
+	}
 
 	return (
 		<input
@@ -69,9 +83,13 @@ export function PersistentTextInput({
 	name,
 	id,
 	initialValue = '',
+	useCookie = false,
 	...props
 }: PersistentTextInputProps) {
-	const text = usePersisted(id ?? name, initialValue);
+	const persistedValue = usePersisted(id ?? name, initialValue);
+	if (useCookie) {
+		useCookieEffect(name, persistedValue);
+	}
 
 	return (
 		<input
@@ -79,8 +97,8 @@ export function PersistentTextInput({
 			name={name}
 			id={id}
 			{...props}
-			value={text}
-			onChange={(event) => text.value = event.currentTarget.value}
+			value={persistedValue}
+			onChange={(event) => persistedValue.value = event.currentTarget.value}
 		/>
 	);
 }

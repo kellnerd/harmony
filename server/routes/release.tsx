@@ -28,7 +28,14 @@ export default defineRoute(async (req, ctx) => {
 	let gtinInput: GTIN = '', urlInput = '', regionsInput: string[] = [];
 
 	try {
-		const { gtin, urls, regions, providerIds, providers, snapshotMaxTimestamp } = extractReleaseLookupState(ctx.url);
+		const {
+			gtin,
+			urls,
+			regions,
+			providerIds,
+			providers,
+			snapshotMaxTimestamp,
+		} = extractReleaseLookupState(ctx.url, req.headers);
 		const options: ReleaseOptions = {
 			withSeparateMedia: true,
 			withAllTrackArtists: true,

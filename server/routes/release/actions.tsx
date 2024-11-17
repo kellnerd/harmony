@@ -46,7 +46,7 @@ export default defineRoute(async (req, ctx) => {
 			providerIds,
 			providers,
 			snapshotMaxTimestamp,
-		} = extractReleaseLookupState(ctx.url);
+		} = extractReleaseLookupState(ctx.url, req.headers);
 		const options: ReleaseOptions = {
 			withSeparateMedia: true,
 			withISRC: true,

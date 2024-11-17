@@ -1,10 +1,11 @@
 import type { ReleaseLookupParameters } from '@/lookup.ts';
-import type { ProviderNameAndId, ReleaseInfo, ReleaseOptions } from '@/harmonizer/types.ts';
+import type { CountryCode, ProviderNameAndId, ReleaseInfo, ReleaseOptions } from '@/harmonizer/types.ts';
 import { providers } from '@/providers/mod.ts';
 import { ensureValidGTIN } from '@/utils/gtin.ts';
 import { isDefined, isNotEmpty } from '@/utils/predicate.ts';
 import { assertCountryCode } from '@/utils/regions.ts';
 import { assertTimestamp } from '@/utils/time.ts';
+import { getCookies } from 'std/http/cookie.ts';
 
 /** Encodes the given release info into release lookup state query parameters. */
 export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
@@ -56,12 +57,21 @@ export function createReleasePermalink(info: ReleaseInfo, baseUrl: URL): URL {
 export const defaultRegions = ['GB', 'US', 'DE', 'JP'];
 
 /**
+ * Parses a region string from an HTML form.
+ * Also accepts comma-separated regions for convenience.
+ */
+function parseRegions(region: string): CountryCode[] {
+	return region.toUpperCase().split(',').map((code) => code.trim());
+}
+
+/**
  * Extracts all release state (parameters and options) from the given lookup URL.
  *
  * Parses and validates all form parameters and permalink parameters.
  */
-export function extractReleaseLookupState(lookupUrl: URL): ReleaseLookupParameters & ReleaseOptions {
+export function extractReleaseLookupState(lookupUrl: URL, headers?: Headers): ReleaseLookupParameters & ReleaseOptions {
 	const { searchParams } = lookupUrl;
+	const cookies = headers ? getCookies(headers) : {};
 
 	const gtin = searchParams.get('gtin')?.trim() ?? undefined;
 	if (gtin) {
@@ -71,11 +81,10 @@ export function extractReleaseLookupState(lookupUrl: URL): ReleaseLookupParamete
 	const urls = searchParams.getAll('url').filter(isNotEmpty)
 		.map((url) => new URL(url));
 
-	// Also accept comma-separated regions from HTML form for convenience.
 	let regions = searchParams.getAll('region').filter(isNotEmpty)
-		.flatMap((value) => value.toUpperCase().split(',').map((s) => s.trim()));
+		.flatMap(parseRegions);
 	if (!regions.length) {
-		regions = defaultRegions;
+		regions = cookies.region ? parseRegions(cookies.region) : defaultRegions;
 	}
 	for (const countryCode of regions) {
 		assertCountryCode(countryCode);
