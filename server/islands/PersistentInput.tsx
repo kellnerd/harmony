@@ -54,6 +54,11 @@ export function PersistentCheckbox({
 	const persistedValue = useSignal(initialValue ? trueValue : falseValue);
 	if (IS_BROWSER) {
 		persistInStorage(id ?? name, persistedValue);
+		// Temporary migration from old true value (form value) to the cookie-compatible new one.
+		// TODO: Remove the following code block again after a while.
+		if (persistedValue.peek() === formValue) {
+			persistedValue.value = trueValue;
+		}
 		if (useCookie) {
 			persistAsCookie(name, persistedValue);
 		}
