@@ -15,6 +15,7 @@ import type {
 	HarmonyRelease,
 	HarmonyTrack,
 	LinkType,
+	ReleaseGroupType,
 	ReleaseOptions,
 	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
@@ -197,7 +198,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 			releaseDate: parseHyphenatedDate(rawRelease.release_date),
 			labels: splitLabels(rawRelease.label),
 			status: 'Official',
-			types: [capitalizeReleaseType(rawRelease.record_type)],
+			types: [this.convertReleaseType(rawRelease.record_type)],
 			packaging: 'None',
 			images: [{
 				url: new URL(rawRelease.cover_xl ?? fallbackCoverUrl),
@@ -269,6 +270,10 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 			creditedName: artist.name,
 			externalIds: this.provider.makeExternalIds({ type: 'artist', id: artist.id.toString() }),
 		};
+	}
+
+	private convertReleaseType(sourceType: string): ReleaseGroupType {
+		return capitalizeReleaseType(sourceType.replace('COMPILE', 'COMPILATION'));
 	}
 
 	private determineAvailability(media: HarmonyMedium[]): string[] | undefined {
