@@ -365,25 +365,25 @@ label.provider-input {
 	gap: 0.5em;
 }
 
-label.bandcamp {
+label.bandcamp, td.bandcamp {
 	background-color: var(--bandcamp);
 }
-label.beatport {
+label.beatport, td.beatport {
 	background-color: var(--beatport);
 }
-label.deezer {
+label.deezer, td.deezer {
 	background-color: var(--deezer);
 }
-label.itunes {
+label.itunes, td.itunes {
 	background-color: var(--apple);
 }
-label.musicbrainz {
+label.musicbrainz, td.musicbrainz {
 	background-color: var(--musicbrainz);
 }
-label.spotify {
+label.spotify, td.spotify {
 	background-color: var(--spotify);
 }
-label.tidal {
+label.tidal, td.tidal {
 	background-color: var(--tidal);
 }
 
