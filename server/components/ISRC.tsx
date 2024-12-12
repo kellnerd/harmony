@@ -19,7 +19,7 @@ export function ISRC({ code }: { code: string }) {
 						title='ifpi ISRC search'
 						href={'https://isrcsearch.ifpi.org/?tab="code"&itemsPerPage=100&showReleases=true&isrcCode=' + code}
 					>
-						<SpriteIconWidth name='brand-ifpi' width={32} height={16} stroke={1.5} />
+						<SpriteIcon name='brand-ifpi' stroke={1.5} />
 					</a>
 				</span>
 				<code class='isrc'>
