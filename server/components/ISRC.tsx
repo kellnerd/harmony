@@ -1,7 +1,6 @@
-import { ProviderIcon } from '@/server/components/ProviderIcon.tsx';
+import { ProviderIcon } from './ProviderIcon.tsx';
+import { SpriteIcon } from './SpriteIcon.tsx';
 import { join } from 'std/url/join.ts';
-import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
-import { SpriteIconWidth } from '@/server/components/SpriteIconWidth.tsx';
 
 const isrcPattern = /^([A-Z]{2})-?([A-Z0-9]{3})-?(\d{2})-?(\d{5})$/i;
 
