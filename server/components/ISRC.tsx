@@ -10,7 +10,7 @@ export function ISRC({ code }: { code: string }) {
 
 	return codeMatch
 		? (
-			<span>
+			<>
 				<span class='entity-links'>
 					<a href={join('https://musicbrainz.org/isrc/', code).href}>
 						<ProviderIcon providerName='MusicBrainz' size={16} stroke={1.5} />
@@ -28,7 +28,7 @@ export function ISRC({ code }: { code: string }) {
 					<span class='year'>{codeMatch[3]}</span>
 					<span class='designation'>{codeMatch[4]}</span>
 				</code>
-			</span>
+			</>
 		)
 		: <code class='invalid-isrc'>{code}</code>;
 }
