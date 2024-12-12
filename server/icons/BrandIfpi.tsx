@@ -14,15 +14,13 @@ export default function IconBrandIfpi({
 			stroke-width={stroke}
 			stroke={color}
 			fill='none'
-			stroke-linecap='butt'
-			stroke-linejoin='butt'
 			{...props}
 		>
-			<g transform='translate(-343.3 -311.3)'>
+			<g transform='translate(-343.3 -311.3)' stroke-linecap='butt' stroke-linejoin='butt'>
 				<path d='m345.8 315.8v14.25' />
 				<path d='m364.7 315.8v14.25' />
 				<path d='m354.5 316.9h-4.875v13.12' />
-				<path d='m348.5 323h5.25' />
+				<path d='m349.3 323h4.5' />
 				<path d='m356.8 330v-13.12h3l1.125 1.125v4.5l-1.125 1.125h-3' />
 			</g>
 		</svg>

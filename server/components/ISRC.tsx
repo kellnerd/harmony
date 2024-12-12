@@ -11,14 +11,14 @@ export function ISRC({ code }: { code: string }) {
 		? (
 			<>
 				<span class='entity-links'>
-					<a href={join('https://musicbrainz.org/isrc/', code).href}>
-						<ProviderIcon providerName='MusicBrainz' size={18} stroke={1.5} />
-					</a>
 					<a
 						title='ifpi ISRC search'
 						href={'https://isrcsearch.ifpi.org/?tab="code"&itemsPerPage=100&showReleases=true&isrcCode=' + code}
 					>
-						<SpriteIcon name='brand-ifpi' stroke={1.5} />
+						<SpriteIcon size={18} name='brand-ifpi' stroke={1.5} />
+					</a>
+					<a href={join('https://musicbrainz.org/isrc/', code).href}>
+						<ProviderIcon providerName='MusicBrainz' size={18} stroke={1.5} />
 					</a>
 				</span>
 				<code class='isrc'>
