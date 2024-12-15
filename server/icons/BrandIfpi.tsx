@@ -16,7 +16,7 @@ export default function IconBrandIfpi({
 			fill='none'
 			{...props}
 		>
-			<g transform='translate(-343.3 -311.3)' stroke-linecap='butt' stroke-linejoin='butt'>
+			<g transform='translate(-343.3 -311.3)' stroke-linecap='butt' stroke-linejoin='miter'>
 				<path d='m345.8 315.8v14.25' />
 				<path d='m364.7 315.8v14.25' />
 				<path d='m354.5 316.9h-4.875v13.12' />
