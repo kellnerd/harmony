@@ -1,66 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   sodipodi:docname="ifpi.svg"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
-   id="svg14940"
-   version="1.1"
-   viewBox="0 0 23.999999 24.000002"
-   height="24"
-   width="24"
-   xml:space="preserve"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:dc="http://purl.org/dc/elements/1.1/"><defs
-     id="defs14934" /><sodipodi:namedview
-     inkscape:window-maximized="1"
-     inkscape:window-y="60"
-     inkscape:window-x="3840"
-     inkscape:window-height="1060"
-     inkscape:window-width="1920"
-     units="px"
-     showgrid="true"
-     inkscape:document-rotation="0"
-     inkscape:current-layer="layer1"
-     inkscape:document-units="px"
-     inkscape:cy="12.370228"
-     inkscape:cx="8.2542753"
-     inkscape:zoom="44.704106"
-     inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
-     borderopacity="1.0"
-     bordercolor="#666666"
-     pagecolor="#ffffff"
-     id="base"
-     inkscape:showpageshadow="0"
-     inkscape:pagecheckerboard="true"
-     inkscape:deskcolor="#d1d1d1"
-     showguides="false"><inkscape:grid
-       type="xygrid"
-       id="grid289"
-       originx="16.094905"
-       originy="15.968353" /></sodipodi:namedview><metadata
-     id="metadata14937"><rdf:RDF><cc:Work
-         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><g
-     id="layer1"
-     inkscape:groupmode="layer"
-     inkscape:label="Layer 1"><path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-dasharray:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-width:2.25"
-       d="M 2.50004 4.49974 L 2.50004 18.7497"
-       id="path293" /><path
-       style="fill:none;fill-opacity:1;fill-rule:evenodd;font-variation-settings:normal;opacity:1;stop-color:#000000;stop-opacity:1;stroke:#000000;stroke-dasharray:none;stroke-dashoffset:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-width:2.25"
-       d="M 21.375 4.49974 L 21.375 18.7497"
-       id="i1" /><path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-dasharray:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-width:2.25"
-       d="M 11.25 5.62474 L 6.37504 5.62474 L 6.37504 18.7497"
-       id="path293-7" /><path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-dasharray:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-width:2.25"
-       d="M 6.00004 11.7497 L 10.5 11.7497"
-       id="path293-35-6" /><path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-dasharray:none;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-width:2.25"
-       d="M 13.5 18.7497 L 13.5 5.62474 L 16.5 5.62474 L 17.625 6.74974 L 17.625 11.2497 L 16.5 12.3747 L 13.5 12.3747"
-       id="p" /></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-brand-ifpi">
+  <path id="curve" d="m10.4 5.6c-0.5 2.6-3.9 13.1-8 10.5-3.7-2.3 6.7-10.3 20-9.7"/>
+  <g stroke-width="1">
+    <path id="i1-dot" d="m11.8 10.9v0.01"/>
+    <path id="i1-line" d="m11.5 12.7-0.5 3.8"/>
+    <path id="f" d="m13.4 16.7 0.6-5.2c0.1-1 0.6-1.4 1.3-1.4m-0.5 2.5h-1.7"/>
+    <path id="p" d="m15.8 18.6 0.8-6c4-1.4 3.5 4.6-0.5 4"/>
+    <path id="i2-dot" d="m21.8 10.8v0.01"/>
+    <path id="i2-line" d="m21.5 12.6-0.5 3.8"/>
+  </g>
+</svg>
