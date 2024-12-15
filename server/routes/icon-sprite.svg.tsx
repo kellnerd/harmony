@@ -58,7 +58,15 @@ const icons: Icon[] = [
 
 function makeSvgSymbol(icon: Icon) {
 	// Inherit properties of the SVG <symbol> element from the <svg> element.
-	const { children, class: className, fill, stroke, viewBox } = icon({}).props as JSX.SVGAttributes<SVGSVGElement>;
+	const {
+		children,
+		class: className,
+		fill,
+		stroke,
+		'stroke-linecap': strokeLinecap,
+		'stroke-linejoin': strokeLinejoin,
+		viewBox,
+	} = icon({}).props as JSX.SVGAttributes<SVGSVGElement>;
 	const iconName = className!.toString().replace('icon icon-tabler icon-tabler-', '');
 
 	return (
@@ -67,8 +75,8 @@ function makeSvgSymbol(icon: Icon) {
 			viewBox={viewBox}
 			fill={fill}
 			stroke={stroke}
-			stroke-linecap='round'
-			stroke-linejoin='round'
+			stroke-linecap={strokeLinecap}
+			stroke-linejoin={strokeLinejoin}
 		>
 			{children}
 		</symbol>
