@@ -1,7 +1,7 @@
 export default function IconBrandIfpi({
 	size = 24,
 	color = 'currentColor',
-	stroke = 2.,
+	stroke = 2,
 	...props
 }) {
 	return (
@@ -16,13 +16,11 @@ export default function IconBrandIfpi({
 			fill='none'
 			{...props}
 		>
-			<g transform='translate(-343.3 -311.3)' stroke-linecap='butt' stroke-linejoin='miter'>
-				<path d='m345.8 315.8v14.25' />
-				<path d='m364.7 315.8v14.25' />
-				<path d='m354.5 316.9h-4.875v13.12' />
-				<path d='m349.3 323h4.5' />
-				<path d='m356.8 330v-13.12h3l1.125 1.125v4.5l-1.125 1.125h-3' />
-			</g>
+			<path d='m2.5 4.5v14.2' />
+			<path d='m21.4 4.5v14.2' />
+			<path d='m11.2 5.6h-4.9v13.1' />
+			<path d='m6 11.7h4.5' />
+			<path d='m13.5 18.7v-13.1h3l1.1 1.1v4.5l-1.1 1.1h-3' />
 		</svg>
 	);
 }
