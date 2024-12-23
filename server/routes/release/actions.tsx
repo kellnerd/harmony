@@ -157,15 +157,10 @@ export default defineRoute(async (req, ctx) => {
 				{release && isrcProvider && (
 					<div class='message'>
 						<SpriteIcon name='disc' />
-						<div>
-							<p>
-								Submit ISRCs from {isrcProvider.name} to MusicBrainz:{' '}
-								<MagicISRC release={release} targetMbid={releaseMbid!} />
-							</p>
-							<p>
-								<small>Submit ISRCs from {isrcProvider.url.href} to {releaseUrl!.href}</small>
-							</p>
-						</div>
+						<p>
+							<MagicISRC release={release} targetMbid={releaseMbid!} />
+							: Submit ISRCs from <a href={isrcProvider.url.href}>{isrcProvider.name}</a> to MusicBrainz
+						</p>
 					</div>
 				)}
 				{releaseUrl &&
