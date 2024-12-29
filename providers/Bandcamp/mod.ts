@@ -262,7 +262,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		if (current.minimum_price > 0 || current.download_pref === DownloadPreference.PAID) {
 			linkTypes.push('paid download');
 		}
-		if (rawRelease.freeDownloadPage || current.minimum_price === 0.0) {
+		if (rawRelease.freeDownloadPage || (current.minimum_price === 0.0 && !current.is_set_price)) {
 			linkTypes.push('free download');
 		}
 		if (rawRelease.trackinfo.every((track) => track.streaming)) {

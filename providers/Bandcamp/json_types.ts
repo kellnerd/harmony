@@ -97,9 +97,11 @@ interface TrAlbumCurrent {
 	killed: null;
 	download_pref: DownloadPreference | null;
 	require_email: null;
-	is_set_price: null;
+	/** Indicates whether the price is fixed. */
+	is_set_price: 1 | null;
+	/** Price of the release (fixed). */
 	set_price: number;
-	/** Minimum price of the release. */
+	/** Minimum price of the release (Name Your Price). */
 	minimum_price: number;
 	/** Value can be `null` if {@linkcode minimum_price} is `0.0`. */
 	minimum_price_nonzero: number | null;
