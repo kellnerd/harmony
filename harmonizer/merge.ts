@@ -1,7 +1,7 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
 import { guessTypesForRelease, mergeTypes } from './release_types.ts';
 import { cloneInto, copyTo, filterErrorEntries, isFilled, uniqueMappedValues } from '@/utils/record.ts';
-import { similarNames } from '@/utils/similarity.ts';
+import { matchBySimilarName, similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
 import { assert } from 'std/assert/assert.ts';
 
@@ -233,10 +233,17 @@ function mergeLabels(target: Label[], sources: Array<Label[] | undefined>) {
 	mergeResolvableEntityArray(target, sources);
 }
 
-/** Combines the external IDs of matching resolvable entities. */
-function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T[], sources: Array<T[] | undefined>) {
+/**
+ * Combines the external IDs of matching resolvable entities.
+ *
+ * All entity arrays must have the same length and order.
+ */
+export function mergeSortedResolvableEntityArray<T extends ResolvableEntity>(
+	target: T[],
+	sources: Array<T[] | undefined>,
+) {
 	target.forEach((targetItem, index) => {
-		const externalIds = new Set<ExternalEntityId>();
+		const externalIds = new Set<ExternalEntityId>(targetItem.externalIds);
 		for (const source of sources) {
 			if (!source || source.length !== target.length) continue;
 			const sourceItem = source[index];
@@ -245,8 +252,29 @@ function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T[], sou
 				sourceItem.name && targetItem.name &&
 				similarNames(sourceItem.name, targetItem.name)
 			) {
-				for (const artistId of sourceItem.externalIds) {
-					externalIds.add(artistId);
+				for (const externalId of sourceItem.externalIds) {
+					externalIds.add(externalId);
+				}
+			}
+		}
+		targetItem.externalIds = [...externalIds];
+	});
+}
+
+/**
+ * Combines the external IDs of matching resolvable entities.
+ *
+ * Entity arrays can have an arbitrary length and order as long as the names of individual entities can be matched.
+ */
+export function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T[], sources: Array<T[] | undefined>) {
+	target.forEach((targetItem) => {
+		const externalIds = new Set<ExternalEntityId>(targetItem.externalIds);
+		for (const source of sources) {
+			if (!source?.length) continue;
+			const matchingSourceItem = matchBySimilarName(targetItem, source, (item) => item.name);
+			if (matchingSourceItem?.externalIds?.length) {
+				for (const externalId of matchingSourceItem.externalIds) {
+					externalIds.add(externalId);
 				}
 			}
 		}
