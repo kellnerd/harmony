@@ -7,9 +7,24 @@ import lande from 'lande';
 export function detectLanguageAndScript(release: HarmonyRelease): void {
 	const allTitles = release.media.flatMap((medium) => medium.tracklist.map((track) => track.title));
 	allTitles.push(release.title);
+	const textInput = allTitles.join('\n');
+	const letters = textInput.replaceAll(/\P{Letter}/gu, '');
+
+	if (!letters.length) {
+		release.info.messages.push({
+			type: 'debug',
+			text: 'Titles contain no letters in any script',
+		});
+
+		// Set language to [No linguistic content] and exit early.
+		release.language = {
+			code: 'zxx',
+		};
+		return;
+	}
 
 	if (!release.script) {
-		const scripts = detectScripts(allTitles.join('\n'), scriptCodes);
+		const scripts = detectScripts(textInput, scriptCodes);
 
 		if (scripts.length) {
 			const mainScript = scripts[0];
@@ -32,7 +47,7 @@ export function detectLanguageAndScript(release: HarmonyRelease): void {
 
 	// Guesses for single track releases are wrong more often than not, skip them.
 	if (!release.language && allTitles.length > 2) {
-		const guessedLanguages = lande(allTitles.join('\n'));
+		const guessedLanguages = lande(textInput);
 		const topLanguage = guessedLanguages[0];
 
 		const formattedList = guessedLanguages

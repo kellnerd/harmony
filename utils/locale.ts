@@ -30,6 +30,8 @@ export function formatLanguageConfidence({ code, confidence }: Language): string
 	// https://github.com/denoland/deno/issues/13257#issuecomment-2132257563
 	if (formattedLanguage === 'rn') {
 		formattedLanguage = 'Rundi';
+	} else if (formattedLanguage === 'zxx') {
+		formattedLanguage = '[No linguistic content]';
 	}
 
 	if (confidence) {
