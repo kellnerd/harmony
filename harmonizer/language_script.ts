@@ -10,15 +10,23 @@ export function detectLanguageAndScript(release: HarmonyRelease): void {
 
 	if (!release.script) {
 		const scripts = detectScripts(allTitles.join('\n'), scriptCodes);
-		const mainScript = scripts[0];
 
-		release.info.messages.push({
-			type: 'debug',
-			text: `Detected scripts of the titles: ${scripts.map(formatScriptFrequency).join(', ')}`,
-		});
+		if (scripts.length) {
+			const mainScript = scripts[0];
 
-		if (mainScript?.frequency > 0.7) {
-			release.script = mainScript;
+			release.info.messages.push({
+				type: 'debug',
+				text: `Detected scripts of the titles: ${scripts.map(formatScriptFrequency).join(', ')}`,
+			});
+
+			if (mainScript.frequency > 0.7) {
+				release.script = mainScript;
+			}
+		} else {
+			release.info.messages.push({
+				type: 'warning',
+				text: 'Titles are written in an unsupported script, please report',
+			});
 		}
 	}
 
