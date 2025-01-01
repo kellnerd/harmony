@@ -25,11 +25,10 @@ const sortedEntityArrayCases: Array<[string, EntityParams[], EntityParams[][], E
 		[['Jane', 'B1'], ['Jöhn', 'B2'], ['TEST']],
 		[['Ja-ne', 'C1'], ['"John"'], ['test', 'C3']],
 	], [['Jané', 'A1', 'B1', 'C1'], ['John', 'A2', 'B2'], ['T.E.S.T.', 'A3', 'C3']]],
-	// TODO: There is no deduplication by value, only by reference (which is sufficient for now).
-	// ['one entity (same name) with duplicate identifier', [['Test', 'A']], [
-	// 	[['Test', 'A']],
-	// 	[['Test', 'B']],
-	// ], [['Test', 'A', 'B']]],
+	['one entity (same name) with duplicate identifiers', [['Test', 'A']], [
+		[['Test', 'A']],
+		[['Test', 'B', 'B']],
+	], [['Test', 'A', 'B']]],
 ];
 
 const unorderedEntityArrayCases: Array<[string, EntityParams[], EntityParams[][], EntityParams[]]> = [
@@ -50,7 +49,7 @@ describe('mergeSortedResolvableEntityArray', () => {
 		});
 	});
 
-	// Proves that deduplication by reference is sufficient for now.
+	// Proves that deduplication by reference works (which is sufficient for now).
 	it('merges identifiers without duplicates when the target entity is among the sources', () => {
 		const targetEntityArray = [fakeEntity('Test', 'A')];
 		const sourceEntityArrays = [targetEntityArray, [fakeEntity('Test', 'B')]];

@@ -243,7 +243,12 @@ export function mergeSortedResolvableEntityArray<T extends ResolvableEntity>(
 	sources: Array<T[] | undefined>,
 ) {
 	target.forEach((targetItem, index) => {
-		const externalIds = new Set<ExternalEntityId>(targetItem.externalIds);
+		const externalIds = new Map<string, ExternalEntityId>();
+		if (targetItem.externalIds?.length) {
+			for (const externalId of targetItem.externalIds) {
+				externalIds.set(makeEntityIdKey(externalId), externalId);
+			}
+		}
 		for (const source of sources) {
 			if (!source || source.length !== target.length) continue;
 			const sourceItem = source[index];
@@ -253,11 +258,11 @@ export function mergeSortedResolvableEntityArray<T extends ResolvableEntity>(
 				similarNames(sourceItem.name, targetItem.name)
 			) {
 				for (const externalId of sourceItem.externalIds) {
-					externalIds.add(externalId);
+					externalIds.set(makeEntityIdKey(externalId), externalId);
 				}
 			}
 		}
-		targetItem.externalIds = [...externalIds];
+		targetItem.externalIds = [...externalIds.values()];
 	});
 }
 
@@ -268,18 +273,28 @@ export function mergeSortedResolvableEntityArray<T extends ResolvableEntity>(
  */
 export function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T[], sources: Array<T[] | undefined>) {
 	target.forEach((targetItem) => {
-		const externalIds = new Set<ExternalEntityId>(targetItem.externalIds);
+		const externalIds = new Map<string, ExternalEntityId>();
+		if (targetItem.externalIds?.length) {
+			for (const externalId of targetItem.externalIds) {
+				externalIds.set(makeEntityIdKey(externalId), externalId);
+			}
+		}
 		for (const source of sources) {
 			if (!source?.length) continue;
 			const matchingSourceItem = matchBySimilarName(targetItem, source, (item) => item.name);
 			if (matchingSourceItem?.externalIds?.length) {
 				for (const externalId of matchingSourceItem.externalIds) {
-					externalIds.add(externalId);
+					externalIds.set(makeEntityIdKey(externalId), externalId);
 				}
 			}
 		}
-		targetItem.externalIds = [...externalIds];
+		targetItem.externalIds = [...externalIds.values()];
 	});
+}
+
+function makeEntityIdKey(entityId: ExternalEntityId): string {
+	const { provider, type, id } = entityId;
+	return [provider, type, id].join('\n');
 }
 
 /** Ensures that the given releases are compatible and can be merged. */
