@@ -48,7 +48,7 @@ export default class BandcampProvider extends MetadataProvider {
 
 	readonly releaseLookup = BandcampReleaseLookup;
 
-	override extractEntityFromUrl(url: URL): EntityId {
+	override extractEntityFromUrl(url: URL): EntityId | undefined {
 		const albumResult = this.supportedUrls.exec(url);
 		if (albumResult) {
 			const artist = albumResult.hostname.groups.artist!;
@@ -70,8 +70,6 @@ export default class BandcampProvider extends MetadataProvider {
 				id: artistResult.hostname.groups.artist!,
 			};
 		}
-
-		throw new ProviderError(this.name, `Failed to extract ID from ${url}`);
 	}
 
 	constructUrl(entity: EntityId): URL {
