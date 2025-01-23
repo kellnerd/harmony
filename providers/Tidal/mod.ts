@@ -14,6 +14,7 @@ import { ResponseError } from '@/utils/errors.ts';
 import { selectLargestImage } from '@/utils/image.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
 import { encodeBase64 } from 'std/encoding/base64.ts';
+import { join } from 'std/url/join.ts';
 
 import type { Album, AlbumItem, ApiError, Resource, Result, SimpleArtist } from './api_types.ts';
 import type {
@@ -76,7 +77,7 @@ export default class TidalProvider extends MetadataApiProvider {
 	readonly apiBaseUrl = 'https://openapi.tidal.com';
 
 	constructUrl(entity: EntityId): URL {
-		return new URL([entity.type, entity.id].join('/'), 'https://tidal.com/');
+		return join('https://tidal.com', entity.type, entity.id);
 	}
 
 	override getLinkTypesForEntity(): LinkType[] {
@@ -153,10 +154,10 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 			countryCode: region || this.provider.defaultRegion,
 		});
 		if (method === 'gtin') {
-			lookupUrl = new URL(`/albums/byBarcodeId`, this.provider.apiBaseUrl);
+			lookupUrl = join(this.provider.apiBaseUrl, `albums/byBarcodeId`);
 			query.append('barcodeId', value);
 		} else { // if (method === 'id')
-			lookupUrl = new URL(`albums/${value}`, this.provider.apiBaseUrl);
+			lookupUrl = join(this.provider.apiBaseUrl, 'albums', value);
 		}
 
 		lookupUrl.search = query.toString();
@@ -192,7 +193,7 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 
 	private async getRawTracklist(albumId: string): Promise<AlbumItem[]> {
 		const tracklist: AlbumItem[] = [];
-		const url = new URL(`albums/${albumId}/items`, this.provider.apiBaseUrl);
+		const url = join(this.provider.apiBaseUrl, 'albums', albumId, 'items');
 		const limit = 100;
 		let offset = 0;
 		const query = new URLSearchParams({
