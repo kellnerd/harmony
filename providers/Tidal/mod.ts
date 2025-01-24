@@ -10,7 +10,7 @@ import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/provider
 import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
 import { formatCopyrightSymbols } from '@/utils/copyright.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
-import { ResponseError } from '@/utils/errors.ts';
+import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { selectLargestImage } from '@/utils/image.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
 import { encodeBase64 } from 'std/encoding/base64.ts';
@@ -165,6 +165,14 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 	}
 
 	protected async getRawRelease(): Promise<Album> {
+		// Abort new lookups which would fail anyway, permalinks which use cached data should still work.
+		if (!this.options.snapshotMaxTimestamp) {
+			throw new ProviderError(
+				this.provider.name,
+				'New lookups stopped working after Tidal have silently removed their v1 API',
+			);
+		}
+
 		if (!this.options.regions?.size) {
 			this.options.regions = new Set([this.provider.defaultRegion]);
 		}
