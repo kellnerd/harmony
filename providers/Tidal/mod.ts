@@ -8,7 +8,7 @@ import { encodeBase64 } from 'std/encoding/base64.ts';
 import { join } from 'std/url/join.ts';
 
 import type { ApiError } from './v1/api_types.ts';
-import { TidalV1ReleaseLookup } from '@/providers/Tidal/v1/lookup.ts';
+import { TidalV2ReleaseLookup } from '@/providers/Tidal/v2/lookup.ts';
 import type { CountryCode, EntityId, LinkType } from '@/harmonizer/types.ts';
 
 // See https://developer.tidal.com/reference/web-api
@@ -49,7 +49,7 @@ export default class TidalProvider extends MetadataApiProvider {
 
 	override readonly availableRegions = new Set(availableRegions);
 
-	readonly releaseLookup = TidalV1ReleaseLookup;
+	readonly releaseLookup = TidalV2ReleaseLookup;
 
 	override readonly launchDate: PartialDate = {
 		year: 2014,
@@ -73,10 +73,7 @@ export default class TidalProvider extends MetadataApiProvider {
 			const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
 				policy: { maxTimestamp },
 				requestInit: {
-					headers: {
-						'Authorization': `Bearer ${accessToken}`,
-						'Content-Type': 'application/vnd.tidal.v1+json',
-					},
+					headers: { 'Authorization': `Bearer ${accessToken}` },
 				},
 			});
 			const apiError = cacheEntry.content as ApiError;
