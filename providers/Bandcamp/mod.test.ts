@@ -28,5 +28,8 @@ describe('Bandcamp provider', () => {
 			description: 'URLs without subdomain',
 			url: new URL('https://bandcamp.com/discover'),
 		}],
+		releaseLookup: [{
+			release: new URL('https://mortimer3.bandcamp.com/album/grey-to-white'),
+		}],
 	});
 });

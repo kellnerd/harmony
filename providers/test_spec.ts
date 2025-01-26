@@ -1,8 +1,9 @@
 import type { MetadataProvider } from './base.ts';
-import type { EntityId } from '@/harmonizer/types.ts';
+import type { EntityId, ReleaseOptions, ReleaseSpecifier } from '@/harmonizer/types.ts';
 
 import { assertEquals } from 'std/assert/assert_equals.ts';
 import { describe, it } from 'std/testing/bdd.ts';
+import { assertSnapshot } from 'std/testing/snapshot.ts';
 
 /** Specification which describes the expected behavior of a {@linkcode MetadataProvider}. */
 export interface ProviderSpecification {
@@ -13,22 +14,32 @@ export interface ProviderSpecification {
 	 * All other tests describe unsupported URLs which are ignored by the provider.
 	 */
 	urls: EntityUrlTest[];
+	/**
+	 * Releases which the provider should be able to lookup.
+	 *
+	 * Each looked up and harmonized release is compared against a reference [snapshot] from a snapshot file.
+	 * You can create new snapshots or update them by passing the `--update` flag when running the test.
+	 *
+	 * [snapshot]: https://jsr.io/@std/testing/doc/snapshot
+	 */
+	releaseLookup: ReleaseLookupTest[];
 }
 
 /** Registers test suites to compare the given provider against its specification. */
 export function describeProvider(provider: MetadataProvider, spec: ProviderSpecification) {
 	describeEntityUrlExtraction(provider, spec.urls);
 	describeEntityUrlConstruction(provider, spec.urls);
+	describeReleaseLookups(provider, spec.releaseLookup);
 }
 
 /** Test case specification for a provider URL. */
 export interface EntityUrlTest {
+	/** Short description of the URL format. */
+	description?: string;
 	/** Provider URL of an entity. */
 	url: URL;
 	/** ID of the entity which can be extracted from the URL. */
 	id?: EntityId | undefined;
-	/** Short description of the URL format. */
-	description?: string;
 	/** Indicates that the URL is canonical and can be reconstructed from the ID. */
 	isCanonical?: boolean;
 }
@@ -52,6 +63,47 @@ function describeEntityUrlConstruction(provider: MetadataProvider, tests: Entity
 					assertEquals(provider.constructUrl(id), test.url);
 				});
 			}
+		}
+	});
+}
+
+/** Test case specification for a release lookup. */
+export interface ReleaseLookupTest {
+	/** Short description of the test case. */
+	description?: string;
+	/** Specifies the release which should be looked up with the provider. */
+	release: ReleaseSpecifier;
+	/** Lookup options which should be passed to the provider. */
+	options?: ReleaseOptions;
+}
+
+function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookupTest[]) {
+	describe('release lookup', () => {
+		for (const test of tests) {
+			let { description, release } = test;
+			if (!description) {
+				if (Array.isArray(release)) {
+					description = `looks up ${release[0].toUpperCase()} ${release[1]}`;
+				} else if (typeof release === 'string') {
+					description = `looks up ID ${release}`;
+				} else if (typeof release === 'number') {
+					description = `looks up GTIN ${release}`;
+				} else { // release specifier should be an URL
+					description = `looks up ${release}`;
+				}
+			}
+
+			it(description, async (t) => {
+				const actualRelease = await provider.getRelease(release, test.options);
+
+				// Remove properties which are not stable across multiple runs.
+				actualRelease.info.providers.forEach((providerInfo) => {
+					delete providerInfo.cacheTime;
+					delete providerInfo.processingTime;
+				});
+
+				await assertSnapshot(t, actualRelease);
+			});
 		}
 	});
 }
