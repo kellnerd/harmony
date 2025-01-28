@@ -19,7 +19,7 @@ const tidalClientSecret = Deno.env.get('HARMONY_TIDAL_CLIENT_SECRET') || '';
 export default class TidalProvider extends MetadataApiProvider {
 	constructor(options: ProviderOptions = {}) {
 		super({
-			rateLimitInterval: 1000,
+			rateLimitInterval: 10000,
 			concurrentRequests: 2,
 			...options,
 		});
