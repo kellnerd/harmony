@@ -12,7 +12,7 @@ import BandcampProvider from './mod.ts';
 // But `deno check mod.test.ts`, `deno run mod.test.ts` and `deno test --no-check mod.test.ts` run just fine!?
 
 describe('Bandcamp provider', () => {
-	const fetchStub = stubFetchWithCache();
+	using _fetchStub = stubFetchWithCache();
 	const bc = new BandcampProvider();
 
 	describeProvider(bc, {
@@ -34,6 +34,4 @@ describe('Bandcamp provider', () => {
 			release: new URL('https://mortimer3.bandcamp.com/album/grey-to-white'),
 		}],
 	});
-
-	fetchStub.restore();
 });
