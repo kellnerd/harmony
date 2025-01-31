@@ -1,7 +1,9 @@
 import type { MetadataProvider } from './base.ts';
 import type { EntityId, ReleaseOptions, ReleaseSpecifier } from '@/harmonizer/types.ts';
+import { isDefined } from '@/utils/predicate.ts';
 
 import { assertEquals } from 'std/assert/assert_equals.ts';
+import { filterValues } from '@std/collections/filter-values';
 import { describe, it } from '@std/testing/bdd';
 import { assertSnapshot } from '@std/testing/snapshot';
 
@@ -48,7 +50,12 @@ function describeEntityUrlExtraction(provider: MetadataProvider, tests: EntityUr
 	describe('extraction of entity type and ID from an URL', () => {
 		for (const test of tests) {
 			it(`${test.id ? 'supports' : 'ignores'} ${test.description ?? test.url}`, () => {
-				assertEquals(provider.extractEntityFromUrl(test.url), test.id);
+				let actualId = provider.extractEntityFromUrl(test.url);
+				if (actualId) {
+					// @ts-ignore-error -- `EntityId` is a valid `Record`
+					actualId = filterValues(actualId, isDefined);
+				}
+				assertEquals(actualId, test.id);
 			});
 		}
 	});
