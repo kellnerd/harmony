@@ -1,7 +1,7 @@
 import { sanitizeFilename } from './sanitize.ts';
 import { dirname } from 'std/path/dirname.ts';
 import { join } from 'std/path/join.ts';
-import { stub } from 'std/testing/mock.ts';
+import { stub } from '@std/testing/mock';
 
 /**
  * Stubs {@linkcode fetch} to load the response from a cache instead of making a network request.

@@ -1,6 +1,6 @@
 import { describeProvider } from '@/providers/test_spec.ts';
 import { stubFetchWithCache } from '@/utils/stub.ts';
-import { describe } from 'std/testing/bdd.ts';
+import { describe } from '@std/testing/bdd';
 
 import BandcampProvider from './mod.ts';
 

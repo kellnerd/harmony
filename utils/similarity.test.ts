@@ -1,6 +1,6 @@
 import { matchBySimilarName, similarNames } from './similarity.ts';
 
-import { describe, it } from 'std/testing/bdd.ts';
+import { describe, it } from '@std/testing/bdd';
 import { assert } from 'std/assert/assert.ts';
 import { assertEquals } from 'std/assert/assert_equals.ts';
 import { assertFalse } from 'std/assert/assert_false.ts';

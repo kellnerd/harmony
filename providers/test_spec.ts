@@ -2,8 +2,8 @@ import type { MetadataProvider } from './base.ts';
 import type { EntityId, ReleaseOptions, ReleaseSpecifier } from '@/harmonizer/types.ts';
 
 import { assertEquals } from 'std/assert/assert_equals.ts';
-import { describe, it } from 'std/testing/bdd.ts';
-import { assertSnapshot } from 'std/testing/snapshot.ts';
+import { describe, it } from '@std/testing/bdd';
+import { assertSnapshot } from '@std/testing/snapshot';
 
 /** Specification which describes the expected behavior of a {@linkcode MetadataProvider}. */
 export interface ProviderSpecification {
