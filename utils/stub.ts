@@ -1,6 +1,6 @@
 import { sanitizeFilename } from './sanitize.ts';
-import { dirname } from 'std/path/dirname.ts';
-import { join } from 'std/path/join.ts';
+import { dirname } from '@std/path/dirname';
+import { join } from '@std/path/join';
 import { stub } from '@std/testing/mock';
 
 /**
@@ -14,7 +14,7 @@ export function stubFetchWithCache(cacheDir = 'testdata') {
 
 	return stub(globalThis, 'fetch', async function (input, init) {
 		const url = new URL(input instanceof Request ? input.url : input);
-		const pathSegments = url.href.split('/').map((segment) => sanitizeFilename(segment, '!'));
+		const pathSegments = url.href.split('/').map((segment) => sanitizeFilename(decodeURIComponent(segment), '!'));
 		const path = join(cacheDir, ...pathSegments);
 
 		if (downloadMode) {
