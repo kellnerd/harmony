@@ -1,6 +1,7 @@
-import type { MetadataProvider } from './base.ts';
+import type { MetadataProvider, ProviderOptions } from './base.ts';
 import type { EntityId, ReleaseOptions, ReleaseSpecifier } from '@/harmonizer/types.ts';
 import { isDefined } from '@/utils/predicate.ts';
+import { downloadMode } from '@/utils/stub.ts';
 
 import { assertEquals } from 'std/assert/assert_equals.ts';
 import { filterValues } from '@std/collections/filter-values';
@@ -113,4 +114,18 @@ function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookup
 			});
 		}
 	});
+}
+
+/**
+ * Creates sensible provider default options for testing:
+ * - Disable rate limiting, except in {@linkcode downloadMode}
+ */
+export function makeProviderOptions(): ProviderOptions {
+	const options: ProviderOptions = {};
+
+	if (!downloadMode) {
+		options.rateLimitInterval = null;
+	}
+
+	return options;
 }

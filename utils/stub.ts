@@ -3,14 +3,16 @@ import { dirname } from '@std/path/dirname';
 import { join } from '@std/path/join';
 import { stub } from '@std/testing/mock';
 
+/** CLI flag (`--download`) which allows {@linkcode stubFetchWithCache} to make network requests. */
+export const downloadMode = Deno.args.includes('--download');
+
 /**
  * Stubs {@linkcode fetch} to load the response from a cache instead of making a network request.
  *
- * Only in download mode (`--download`) the resource will be fetched and written to the cache (as a file).
+ * Only in {@linkcode downloadMode} the resource will be fetched and written to the cache (as a file).
  */
 export function stubFetchWithCache(cacheDir = 'testdata') {
 	const originalFetch = globalThis.fetch;
-	const downloadMode = Deno.args.includes('--download');
 
 	return stub(globalThis, 'fetch', async function (input, init) {
 		const url = new URL(input instanceof Request ? input.url : input);

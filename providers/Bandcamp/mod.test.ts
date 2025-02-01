@@ -1,4 +1,4 @@
-import { describeProvider } from '@/providers/test_spec.ts';
+import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
 import { stubFetchWithCache } from '@/utils/stub.ts';
 import { describe } from '@std/testing/bdd';
 
@@ -13,7 +13,7 @@ import BandcampProvider from './mod.ts';
 
 describe('Bandcamp provider', () => {
 	using _fetchStub = stubFetchWithCache();
-	const bc = new BandcampProvider();
+	const bc = new BandcampProvider(makeProviderOptions());
 
 	describeProvider(bc, {
 		urls: [{

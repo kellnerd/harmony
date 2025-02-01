@@ -1,14 +1,12 @@
 import { stubFetchWithCache } from '@/utils/stub.ts';
-import { describeProvider } from '@/providers/test_spec.ts';
+import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
 import { describe } from '@std/testing/bdd';
 
 import DeezerProvider from './mod.ts';
 
 describe('Deezer provider', () => {
 	using _fetchStub = stubFetchWithCache();
-	const deezer = new DeezerProvider({
-		rateLimitInterval: null, // TODO: only if fetch is stubbed!
-	});
+	const deezer = new DeezerProvider(makeProviderOptions());
 
 	describeProvider(deezer, {
 		urls: [{
