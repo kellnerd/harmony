@@ -1,5 +1,5 @@
 import type { MetadataProvider, ProviderOptions } from './base.ts';
-import type { EntityId, ReleaseOptions, ReleaseSpecifier } from '@/harmonizer/types.ts';
+import type { EntityId, HarmonyRelease, ReleaseOptions, ReleaseSpecifier } from '@/harmonizer/types.ts';
 import { isDefined } from '@/utils/predicate.ts';
 import { downloadMode } from '@/utils/stub.ts';
 
@@ -22,6 +22,8 @@ export interface ProviderSpecification {
 	 *
 	 * Each looked up and harmonized release is compared against a reference [snapshot] from a snapshot file.
 	 * You can create new snapshots or update them by passing the `--update` flag when running the test.
+	 *
+	 * Custom assertions for the looked up release can be specified as well.
 	 *
 	 * [snapshot]: https://jsr.io/@std/testing/doc/snapshot
 	 */
@@ -83,6 +85,8 @@ export interface ReleaseLookupTest {
 	release: ReleaseSpecifier;
 	/** Lookup options which should be passed to the provider. */
 	options?: ReleaseOptions;
+	/** Custom assertion(s) which should be performed for the looked up release. */
+	assert?: (actualRelease: HarmonyRelease) => asserts actualRelease;
 }
 
 function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookupTest[]) {
@@ -110,6 +114,7 @@ function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookup
 					delete providerInfo.processingTime;
 				});
 
+				test.assert?.(actualRelease);
 				await assertSnapshot(t, actualRelease);
 			});
 		}

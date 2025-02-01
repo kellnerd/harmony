@@ -1,5 +1,7 @@
-import { stubFetchWithCache } from '@/utils/stub.ts';
+import type { ReleaseOptions } from '@/harmonizer/types.ts';
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
+import { stubFetchWithCache } from '@/utils/stub.ts';
+import { assert } from 'std/assert/assert.ts';
 import { describe } from '@std/testing/bdd';
 
 import DeezerProvider from './mod.ts';
@@ -7,6 +9,13 @@ import DeezerProvider from './mod.ts';
 describe('Deezer provider', () => {
 	using _fetchStub = stubFetchWithCache();
 	const deezer = new DeezerProvider(makeProviderOptions());
+
+	// Standard options which have an effect for Deezer.
+	const releaseOptions: ReleaseOptions = {
+		withSeparateMedia: true,
+		withAllTrackArtists: true,
+		withISRC: true,
+	};
 
 	describeProvider(deezer, {
 		urls: [{
@@ -34,6 +43,12 @@ describe('Deezer provider', () => {
 		releaseLookup: [{
 			description: 'single by two artists',
 			release: new URL('https://www.deezer.com/en/album/629506181'),
+			options: releaseOptions,
+			assert: (release) => {
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
+				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
+			},
 		}],
 	});
 });
