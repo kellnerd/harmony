@@ -38,7 +38,7 @@ jobs:
 
       - name: Run tests
         # CI tests should run offline and only request minimal permissions
-        run: deno test --deny-net --allow-read
+        run: deno test --deny-net --allow-read --allow-env
 
   deploy:
     if: >-
