@@ -20,7 +20,7 @@ export interface ProviderSpecification {
 	/**
 	 * Releases which the provider should be able to lookup.
 	 *
-	 * Each looked up and harmonized release is compared against a reference [snapshot] from a snapshot file.
+	 * Each looked up and harmonized release is compared against a reference [snapshot] from a snapshot file by default.
 	 * You can create new snapshots or update them by passing the `--update` flag when running the test.
 	 *
 	 * Custom assertions for the looked up release can be specified as well.
@@ -87,6 +87,8 @@ export interface ReleaseLookupTest {
 	options?: ReleaseOptions;
 	/** Custom assertion(s) which should be performed for the looked up release. */
 	assert?: (actualRelease: HarmonyRelease) => asserts actualRelease;
+	/** Skip snapshot testing. Should be replaced by custom assertions. */
+	skipSnapshot?: boolean;
 }
 
 function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookupTest[]) {
@@ -115,7 +117,9 @@ function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookup
 				});
 
 				test.assert?.(actualRelease);
-				await assertSnapshot(t, actualRelease);
+				if (!test.skipSnapshot) {
+					await assertSnapshot(t, actualRelease);
+				}
 			});
 		}
 	});

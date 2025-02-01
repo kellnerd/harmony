@@ -49,6 +49,15 @@ describe('Deezer provider', () => {
 				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
 			},
+		}, {
+			description: 'single by two artists (without additional lookup options)',
+			release: '629506181', // same single as the previous one
+			skipSnapshot: true, // just a subset of the previous one
+			assert: (release) => {
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assert(allTracks.every((track) => track.artists?.length === 1), 'Tracks should not have multiple artists');
+				assert(allTracks.every((track) => !track.isrc), 'Tracks should not have an ISRC');
+			},
 		}],
 	});
 });
