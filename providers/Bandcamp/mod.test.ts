@@ -17,17 +17,31 @@ describe('Bandcamp provider', () => {
 
 	describeProvider(bc, {
 		urls: [{
-			description: 'artist subdomains',
-			url: new URL('https://example.bandcamp.com'),
-			id: { type: 'artist', id: 'example' },
+			description: 'album page',
+			url: new URL('https://theuglykings.bandcamp.com/album/darkness-is-my-home'),
+			id: { type: 'album', id: 'theuglykings/darkness-is-my-home' },
 			isCanonical: true,
 		}, {
-			description: 'artist /music pages',
-			url: new URL('https://example.bandcamp.com/music'),
-			id: { type: 'artist', id: 'example' },
+			description: 'album page with tracking parameter',
+			url: new URL('https://hiroshi-yoshimura.bandcamp.com/album/flora?from=discover_page'),
+			id: { type: 'album', id: 'hiroshi-yoshimura/flora' },
+		}, {
+			description: 'standalone track page',
+			url: new URL('https://zeug.bandcamp.com/track/yeltsa-kcir'),
+			id: { type: 'track', id: 'zeug/track/yeltsa-kcir' },
+			isCanonical: true,
+		}, {
+			description: 'artist page/subdomain',
+			url: new URL('https://taxikebab.bandcamp.com/'),
+			id: { type: 'artist', id: 'taxikebab' },
+			isCanonical: true,
+		}, {
+			description: 'artist /music page',
+			url: new URL('https://theuglykings.bandcamp.com/music'),
+			id: { type: 'artist', id: 'theuglykings' },
 			isCanonical: false,
 		}, {
-			description: 'URLs without subdomain',
+			description: 'URL without subdomain',
 			url: new URL('https://bandcamp.com/discover'),
 		}],
 		releaseLookup: [{
