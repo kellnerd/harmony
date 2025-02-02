@@ -16,7 +16,9 @@ export default function Home() {
 					Release Lookup{' '}
 					<Tooltip style={{ width: '25rem' }}>
 						<ol>
-							<li>Enter a release URL for one of the supported providers and/or a barcode.</li>
+							<li>
+								Enter a release URL for one of the <a href='about'>supported providers</a> and/or a barcode.
+							</li>
 							<li>Optionally specify a country code	(two letters) for providers with region-specific pages.</li>
 							<li>Select (additional) providers which should be looked up by barcode.</li>
 						</ol>

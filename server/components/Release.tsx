@@ -1,8 +1,9 @@
+import { setupAlternativeValues } from './AlternativeValues.tsx';
 import { ArtistCredit } from './ArtistCredit.tsx';
 import { CoverImage } from './CoverImage.tsx';
 import { LinkedEntity } from './LinkedEntity.tsx';
 import { MessageBox } from './MessageBox.tsx';
-import { ProviderIcon } from './ProviderIcon.tsx';
+import { ProviderList } from './ProviderList.tsx';
 import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import RegionList from '@/server/islands/RegionList.tsx';
@@ -10,56 +11,59 @@ import RegionList from '@/server/islands/RegionList.tsx';
 import { determineReleaseEventCountries } from '@/musicbrainz/release_countries.ts';
 import { formatPartialDate } from '@/utils/date.ts';
 import { formatLanguageConfidence, formatScriptFrequency, regionName } from '@/utils/locale.ts';
+import { mapValues } from '@/utils/record.ts';
 import { flagEmoji } from '@/utils/regions.ts';
-import { formatTimestampAsISOString } from '@/utils/time.ts';
 
-import type { HarmonyRelease } from '@/harmonizer/types.ts';
+import type { HarmonyRelease, ProviderReleaseMap } from '@/harmonizer/types.ts';
 
-export function Release({ release }: { release: HarmonyRelease }) {
+export function Release({ release, releaseMap }: { release: HarmonyRelease; releaseMap?: ProviderReleaseMap }) {
 	const regions = release.availableIn;
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
-	const isMultiMedium = release.media.length > 1;
-	const { credits, copyright, language, script, info } = release;
+	const { credits, copyright, labels, language, script, types, info } = release;
+
+	const AlternativeValues = setupAlternativeValues(releaseMap);
 
 	return (
 		<div class='release'>
 			{info.messages.map((message) => <MessageBox message={message} />)}
 			<h2 class='release-title'>{release.title}</h2>
-			<p class='release-artist'>
+			<AlternativeValues property={(release) => release.title} />
+			<div class='release-artist'>
 				by <ArtistCredit artists={release.artists} />
-			</p>
+			</div>
+			<AlternativeValues
+				property={(release) => release.artists}
+				display={(artists) => <ArtistCredit artists={artists} />}
+				identifier={(artists) => artists.map((artist) => artist.creditedName ?? artist.name).join('\n')}
+			/>
 			<table class='release-info'>
 				<tr>
 					<th>Providers</th>
 					<td>
-						<ul>
-							{info.providers.map((provider) => (
-								<li>
-									<ProviderIcon providerName={provider.name} size={20} stroke={1.5} />
-									{provider.name}: <a href={provider.url.href} target='_blank'>{provider.id}</a>
-									{provider.apiUrl && <a class='label ml-2' href={provider.apiUrl.href} target='_blank'>API</a>}
-									{provider.cacheTime && (
-										<span class='label ml-2'>Cached: {formatTimestampAsISOString(provider.cacheTime)}</span>
-									)}
-									{provider.processingTime && <span class='label ml-2'>{provider.processingTime.toFixed(0)} ms</span>}
-								</li>
-							))}
-						</ul>
+						<ProviderList providers={info.providers} />
 					</td>
 				</tr>
 				<tr>
 					<th>Release date</th>
-					<td>{formatPartialDate(release.releaseDate ?? {}) || '[unknown]'}</td>
+					<td>
+						{formatPartialDate(release.releaseDate ?? {}) || '[unknown]'}
+						<AlternativeValues
+							property={(release) => release.releaseDate}
+							display={formatPartialDate}
+							identifier={formatPartialDate}
+						/>
+					</td>
 				</tr>
-				{release.labels && (
+				{labels && labels.length > 0 && (
 					<tr>
 						<th>Labels</th>
 						<td>
 							<ul>
-								{release.labels?.map((label) => (
+								{labels?.map((label) => (
 									<li>
-										<LinkedEntity entity={label} entityType='label' displayName={label.name} /> {label.catalogNumber}
+										<LinkedEntity entity={label} entityType='label' displayName={label.name ?? '[unknown]'} />{' '}
+										{label.catalogNumber}
 									</li>
 								))}
 							</ul>
@@ -120,6 +124,10 @@ export function Release({ release }: { release: HarmonyRelease }) {
 						<th>Copyright</th>
 						<td>
 							<TextWithLineBreaks lines={copyright.split('\n')} />
+							<AlternativeValues
+								property={(release) => release.copyright}
+								display={(copyright) => <TextWithLineBreaks lines={copyright.split('\n')} />}
+							/>
 						</td>
 					</tr>
 				)}
@@ -143,6 +151,18 @@ export function Release({ release }: { release: HarmonyRelease }) {
 						<td>{formatScriptFrequency(script)}</td>
 					</tr>
 				)}
+				{types && types.length > 0 && (
+					<tr>
+						<th>Types</th>
+						<td>
+							{types.join(' + ')}
+							<AlternativeValues
+								property={(release) => release.types}
+								display={(types) => types.join(' + ') || '[none]'}
+							/>
+						</td>
+					</tr>
+				)}
 				{info.providers.length > 1 && (
 					<tr>
 						<th>Sources</th>
@@ -155,7 +175,13 @@ export function Release({ release }: { release: HarmonyRelease }) {
 				)}
 			</table>
 			{release.images?.map((artwork) => <CoverImage artwork={artwork} />)}
-			{release.media.map((medium) => <Tracklist medium={medium} showTitle={isMultiMedium} />)}
+			{release.media.map((medium, index) => (
+				<Tracklist
+					medium={medium}
+					mediumMap={releaseMap && mapValues(releaseMap, (release) => release.media[index])}
+					showTitle={true}
+				/>
+			))}
 		</div>
 	);
 }

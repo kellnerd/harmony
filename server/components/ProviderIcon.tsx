@@ -9,6 +9,8 @@ const providerIconMap: Record<string, string> = {
 	hspforscher: 'brand-hoerspielforscher',
 	itunes: 'brand-apple',
 	musicbrainz: 'brand-metabrainz',
+	spotify: 'brand-spotify',
+	tidal: 'brand-tidal',
 };
 
 export type ProviderIconProps = Omit<SpriteIconProps, 'name'> & {
@@ -16,14 +18,8 @@ export type ProviderIconProps = Omit<SpriteIconProps, 'name'> & {
 };
 
 export function ProviderIcon({ providerName, ...iconProps }: ProviderIconProps) {
-	let internalName = providers.toInternalName(providerName);
-	let displayName = providers.toDisplayName(providerName);
-
-	// TODO: Remove workaround once MB is a properly supported MetadataProvider.
-	if (providerName === 'MusicBrainz') {
-		internalName = providerName.toLowerCase();
-		displayName = providerName;
-	}
+	const internalName = providers.toInternalName(providerName);
+	const displayName = providers.toDisplayName(providerName);
 
 	const iconName = internalName && providerIconMap[internalName];
 	const fallbackIcon = 'puzzle';

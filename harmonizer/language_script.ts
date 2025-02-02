@@ -7,23 +7,47 @@ import lande from 'lande';
 export function detectLanguageAndScript(release: HarmonyRelease): void {
 	const allTitles = release.media.flatMap((medium) => medium.tracklist.map((track) => track.title));
 	allTitles.push(release.title);
+	const textInput = allTitles.join('\n');
+	const letters = textInput.replaceAll(/\P{Letter}/gu, '');
 
-	if (!release.script) {
-		const scripts = detectScripts(allTitles.join('\n'), scriptCodes);
-		const mainScript = scripts[0];
-
+	if (!letters.length) {
 		release.info.messages.push({
 			type: 'debug',
-			text: `Detected scripts of the titles: ${scripts.map(formatScriptFrequency).join(', ')}`,
+			text: 'Titles contain no letters in any script',
 		});
 
-		if (mainScript?.frequency > 0.7) {
-			release.script = mainScript;
+		// Set language to [No linguistic content] and exit early.
+		release.language = {
+			code: 'zxx',
+		};
+		return;
+	}
+
+	if (!release.script) {
+		const scripts = detectScripts(textInput, scriptCodes);
+
+		if (scripts.length) {
+			const mainScript = scripts[0];
+
+			release.info.messages.push({
+				type: 'debug',
+				text: `Detected scripts of the titles: ${scripts.map(formatScriptFrequency).join(', ')}`,
+			});
+
+			if (mainScript.frequency > 0.7) {
+				release.script = mainScript;
+			}
+		} else {
+			release.info.messages.push({
+				type: 'warning',
+				text: 'Titles are written in an unsupported script, please report',
+			});
 		}
 	}
 
-	if (!release.language) {
-		const guessedLanguages = lande(allTitles.join('\n'));
+	// Guesses for single track releases are wrong more often than not, skip them.
+	if (!release.language && allTitles.length > 2) {
+		const guessedLanguages = lande(textInput);
 		const topLanguage = guessedLanguages[0];
 
 		const formattedList = guessedLanguages

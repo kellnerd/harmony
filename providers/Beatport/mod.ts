@@ -1,6 +1,8 @@
 import type { Artist, BeatportNextData, BeatportRelease, Release, Track } from './json_types.ts';
 import type { ArtistCreditName, EntityId, HarmonyRelease, HarmonyTrack, LinkType } from '@/harmonizer/types.ts';
-import { CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { variousArtists } from '@/musicbrainz/special_entities.ts';
+import { CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { extractTextFromHtml } from '@/utils/html.ts';
@@ -10,8 +12,16 @@ export default class BeatportProvider extends MetadataProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'www.beatport.com',
-		pathname: '/:type(artist|label|release)/:slug/:id',
+		pathname: '/:language(\\w{2})?/:type(artist|label|release)/:slug/:id',
 	});
+
+	override readonly features: FeatureQualityMap = {
+		'cover size': 1400,
+		'duration precision': DurationPrecision.MS,
+		'GTIN lookup': FeatureQuality.EXPENSIVE,
+		'MBID resolving': FeatureQuality.PRESENT,
+		'release label': FeatureQuality.GOOD,
+	};
 
 	readonly entityTypeMap = {
 		artist: 'artist',
@@ -21,20 +31,21 @@ export default class BeatportProvider extends MetadataProvider {
 
 	readonly releaseLookup = BeatportReleaseLookup;
 
-	readonly durationPrecision = DurationPrecision.MS;
-
-	readonly launchDate: PartialDate = {
+	override readonly launchDate: PartialDate = {
 		year: 2005,
 		month: 1,
 		day: 7,
 	};
 
-	readonly artworkQuality = 1400;
-
 	readonly baseUrl = 'https://www.beatport.com';
 
 	constructUrl(entity: EntityId): URL {
 		return new URL([entity.type, entity.slug ?? '-', entity.id].join('/'), this.baseUrl);
+	}
+
+	override getLinkTypesForEntity(): LinkType[] {
+		/** See comment at {@linkcode BeatportReleaseLookup.convertRawRelease}. */
+		return ['paid download'];
 	}
 
 	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
@@ -67,7 +78,7 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 		if (this.lookup.method === 'gtin') {
 			const id = await this.searchReleaseByGtin(this.lookup.value);
 			if (!id) {
-				throw new ProviderError(this.provider.name, 'Search returned no matching results');
+				throw new ProviderError(this.provider.name, `Search returned no matching results for '${this.lookup.value}'`);
 			}
 
 			releaseId = id;
@@ -120,7 +131,11 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 
 		return {
 			title: rawRelease.name,
-			artists: rawRelease.artists.map(this.makeArtistCreditName.bind(this)),
+			// Beatport accumulates all track artists as release artist, even if it should be VA instead.
+			// @todo Properly differentiate between VA and releases with main and many featured artists.
+			artists: rawRelease.artists.length > 4
+				? [variousArtists]
+				: rawRelease.artists.map(this.makeArtistCreditName.bind(this)),
 			labels: [{
 				name: rawRelease.label.name,
 				catalogNumber: rawRelease.catalog_number,
@@ -130,7 +145,7 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 					slug: rawRelease.label.slug,
 				}),
 			}],
-			gtin: rawRelease.upc,
+			gtin: rawRelease.upc ?? undefined,
 			releaseDate: parseHyphenatedDate(rawRelease.new_release_date),
 			media: [{
 				format: 'Digital Media',

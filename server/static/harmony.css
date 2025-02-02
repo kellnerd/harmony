@@ -21,8 +21,12 @@
 	--apple: #fc3c44;
 	--bandcamp: #1da0c3;
 	--beatport: #00e586;
+	--brainz: #eb743b;
 	--deezer: #a238ff;
 	--hspforscher: #c20910;
+	--musicbrainz: #ba478f;
+	--spotify: #1db954;
+	--tidal: #000000;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -57,7 +61,7 @@ main {
 header {
 	background-color: var(--theme-fill);
 	color: var(--theme-text);
-	font-family: "Roboto", sans-serif;
+	font-family: 'Roboto', sans-serif;
 	padding: 1.5rem;
 }
 header > h1 {
@@ -85,7 +89,7 @@ ul.inline > li {
 	display: inline;
 }
 ul.inline > li:not(:last-child)::after {
-	content: " · ";
+	content: ' · ';
 }
 
 .ml-1 {
@@ -119,6 +123,25 @@ a.label {
 	background-color: #209cee;
 }
 
+ul.alt-values {
+	font-size: 0.8rem;
+	opacity: 0.7;
+	margin: 0;
+	padding-left: 1.2em;
+	list-style: square;
+}
+
+span.label svg.icon, ul.alt-values svg.icon {
+	height: 16px;
+	width: 16px;
+}
+
+a > svg.icon {
+	vertical-align: top;
+	height: 18px;
+	width: 18px;
+}
+
 /* forms */
 
 div.row {
@@ -133,7 +156,11 @@ input {
 	box-sizing: border-box;
 }
 
-input[type=text] {
+input:disabled {
+	cursor: not-allowed;
+}
+
+input[type='text'] {
 	width: 25em;
 	max-width: 100%;
 }
@@ -162,6 +189,9 @@ td.numeric {
 	text-align: right;
 	font-variant: tabular-nums;
 }
+td.numeric > ul {
+	text-align: left;
+}
 
 td ul {
 	margin: 0;
@@ -169,10 +199,21 @@ td ul {
 	list-style: square;
 }
 
+caption > ul.alt-values {
+	text-align: left;
+	display: table;
+	margin: 0 auto;
+}
+
 /* CoverImage.tsx */
 
 figure.cover-image {
 	width: min-content;
+	display: inline-block;
+}
+
+figure.cover-image img {
+	height: 200px;
 }
 
 figure.cover-image > figcaption {
@@ -233,7 +274,7 @@ div.message {
 	border-radius: 5px;
 }
 
-div.message svg.icon {
+div.message > svg.icon {
 	min-width: fit-content;
 	margin-right: 0.3em;
 }
@@ -325,20 +366,29 @@ label.provider-input {
 	gap: 0.5em;
 }
 
-label.bandcamp {
+label.bandcamp, td.bandcamp {
 	background-color: var(--bandcamp);
 }
-label.beatport {
+label.beatport, td.beatport {
 	background-color: var(--beatport);
 }
-label.deezer {
+label.deezer, td.deezer {
 	background-color: var(--deezer);
 }
-label.hspforscher {
+label.hspforscher, td.hspforscher {
 	background-color: var(--hspforscher);
 }
-label.itunes {
+label.itunes, td.itunes {
 	background-color: var(--apple);
+}
+label.musicbrainz, td.musicbrainz {
+	background-color: var(--musicbrainz);
+}
+label.spotify, td.spotify {
+	background-color: var(--spotify);
+}
+label.tidal, td.tidal {
+	background-color: var(--tidal);
 }
 
 /* ProviderIcon.tsx */
@@ -358,9 +408,6 @@ div.region-list > button {
 h2.release-title {
 	margin-bottom: 0;
 }
-p.release-artist {
-	margin-top: 0;
-}
 
 /* Tooltip.tsx */
 
@@ -374,10 +421,11 @@ span.tooltip-anchor {
 }
 
 span.tooltip-anchor > svg.icon {
+	height: var(--icon-size);
 	width: var(--icon-size);
 }
 
-div[role=tooltip] {
+div[role='tooltip'] {
 	position: absolute;
 	display: none;
 	background-color: var(--tooltip-fill);
@@ -388,12 +436,12 @@ div[role=tooltip] {
 	text-align: center;
 	cursor: initial;
 	/* Center tooltip above the tooltip anchor icon. */
-	transform: translateX(calc(-50% - var(--icon-size)/2));
+	transform: translateX(calc(-50% - var(--icon-size) / 2));
 	bottom: calc(var(--arrow-length) + var(--icon-size));
 }
-div[role=tooltip]:after {
+div[role='tooltip']:after {
 	position: absolute;
-	content: "";
+	content: '';
 	border: var(--arrow-length) solid transparent;
 	border-top-color: var(--tooltip-fill);
 	border-bottom: 0;
@@ -402,11 +450,11 @@ div[role=tooltip]:after {
 	left: calc(50% - var(--arrow-length));
 }
 
-span.tooltip-anchor:hover > div[role=tooltip] {
+span.tooltip-anchor:hover > div[role='tooltip'] {
 	display: inline-block;
 }
 
-div[role=tooltip] > ol {
+div[role='tooltip'] > ol {
 	margin: 0;
 	padding-inline-start: 1.5em;
 	text-align: left;
@@ -423,7 +471,7 @@ div[role=tooltip] > ol {
 	span.tooltip-anchor {
 		display: block;
 	}
-	div[role=tooltip] {
+	div[role='tooltip'] {
 		max-width: 100%;
 	}
 }

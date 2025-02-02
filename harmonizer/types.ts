@@ -2,6 +2,8 @@ import { immutableReleaseProperties, immutableTrackProperties } from './properti
 
 import type { EntityType } from '@kellnerd/musicbrainz';
 import type { ReleasePackaging, ReleaseStatus } from '@kellnerd/musicbrainz/data/release';
+import type { ReleaseGroupType } from '@kellnerd/musicbrainz/data/release-group';
+export type { ReleaseGroupType } from '@kellnerd/musicbrainz/data/release-group';
 import type { PartialDate } from '../utils/date.ts';
 import type { ScriptFrequency } from '../utils/script.ts';
 
@@ -32,11 +34,12 @@ export interface ExternalEntityId extends EntityId {
 
 /** Entity which may have external IDs which can be resolved to its MBID. */
 export interface ResolvableEntity {
-	name: string;
+	name?: string;
 	externalIds?: ExternalEntityId[];
 	mbid?: string;
 }
 
+// New properties also have to be added to `properties.ts` to be considered by the merge algorithm!
 export type HarmonyRelease = {
 	title: string;
 	artists: ArtistCredit;
@@ -46,6 +49,7 @@ export type HarmonyRelease = {
 	language?: Language;
 	script?: ScriptFrequency;
 	status?: ReleaseStatus;
+	types?: ReleaseGroupType[];
 	releaseDate?: PartialDate;
 	labels?: Label[];
 	packaging?: ReleasePackaging;
@@ -54,6 +58,7 @@ export type HarmonyRelease = {
 	copyright?: string;
 	availableIn?: CountryCode[];
 	excludedFrom?: CountryCode[];
+	releaseGroup?: ResolvableEntity;
 	info: ReleaseInfo;
 };
 
@@ -64,17 +69,22 @@ export type HarmonyMedium = {
 	tracklist: HarmonyTrack[];
 };
 
+// New properties also have to be added to `properties.ts` to be considered by the merge algorithm!
 export type HarmonyTrack = {
 	title: string;
 	artists?: ArtistCredit;
 	number?: number | string;
 	/** Track length in milliseconds. */
 	length?: number;
+	/** Type of the track, defaults to `audio`. */
+	type?: TrackType;
 	isrc?: string;
 	availableIn?: CountryCode[];
+	recording?: ResolvableEntity;
 };
 
 export type ArtistCreditName = ResolvableEntity & {
+	name: string;
 	creditedName?: string;
 	joinPhrase?: string;
 };
@@ -90,9 +100,10 @@ export type Artwork = {
 	thumbUrl?: URL;
 	types?: ArtworkType[];
 	comment?: string;
+	provider?: ProviderName;
 };
 
-export type ArtworkType = 'front' | 'back';
+export type ArtworkType = 'front' | 'back' | 'track';
 
 export type ExternalLink = {
 	url: URL;
@@ -105,7 +116,8 @@ export type LinkType =
 	| 'free streaming'
 	| 'mail order'
 	| 'paid download'
-	| 'paid streaming';
+	| 'paid streaming'
+	| 'license';
 
 /** MusicBrainz medium formats (incomplete). */
 export type MediumFormat =
@@ -120,6 +132,9 @@ export type MediumFormat =
 	| 'Vinyl'
 	| '7" Vinyl'
 	| '12" Vinyl';
+
+/** Type of the track on a medium. */
+export type TrackType = 'audio' | 'video';
 
 /** Global Trade Item Number with 8 (EAN-8), 12 (UPC), 13 (EAN-13) or 14 digits. */
 export type GTIN = number | string;
@@ -177,7 +192,10 @@ export type ProviderName = string;
 export type ProviderNameAndId = [string, string];
 
 /** Mapping from the provider's name to the release returned by that provider. */
-export type ProviderReleaseMapping = Record<ProviderName, HarmonyRelease | Error>;
+export type ProviderReleaseMap = Record<ProviderName, HarmonyRelease>;
+
+/** Mapping from the provider's name to the release or error returned by that provider. */
+export type ProviderReleaseErrorMap = Record<ProviderName, HarmonyRelease | Error>;
 
 export type ImmutableTrackProperty = typeof immutableTrackProperties[number];
 

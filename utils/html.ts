@@ -19,7 +19,7 @@ export function extractAttribute(
  * Extracts the value of the data attribute with the given key from HTML.
  */
 export function extractDataAttribute(html: string, key: string): string | undefined {
-	return extractTextFromHtml(html, new RegExp(`data-${key}=["'](.+?)["']`, 'i'));
+	return extractTextFromHtml(html, new RegExp(`data-${key}=["'](.+?)["']`, 'is'));
 }
 
 /** Extracts the `content` value of the meta tag with the given name from HTML. */

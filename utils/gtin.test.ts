@@ -4,7 +4,7 @@ import { assert } from 'std/assert/assert.ts';
 import { assertFalse } from 'std/assert/assert_false.ts';
 import { assertStrictEquals } from 'std/assert/assert_strict_equals.ts';
 import { assertThrows } from 'std/assert/assert_throws.ts';
-import { describe, it } from 'std/testing/bdd.ts';
+import { describe, it } from '@std/testing/bdd';
 
 import type { FunctionSpec, ParameterSpec, ThrowSpec } from './test_spec.ts';
 
@@ -21,8 +21,9 @@ describe('GTIN validator', () => {
 		['numeric GTIN-14 with invalid check digit', 95135725845671, 'Checksum'],
 		['string GTIN-14 with invalid check digit', '95135725845671', 'Checksum'],
 		['11 digit number which is a valid GTIN with leading zero', 93624738626, 'invalid length'],
-		['empty string', '', 'invalid length'],
+		['empty string', '', 'empty'],
 		['non-numeric string', 'A0123456789B', 'invalid non-numeric characters'],
+		['random text', 'certainly not a GTIN', 'invalid non-numeric characters'],
 	];
 
 	passingCases.forEach(([description, input]) => {

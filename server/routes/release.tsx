@@ -2,34 +2,44 @@ import { MessageBox } from '@/server/components/MessageBox.tsx';
 import { Release } from '@/server/components/Release.tsx';
 import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
 import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
+import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
 import { CombinedReleaseLookup } from '@/lookup.ts';
 import { resolveReleaseMbids } from '@/musicbrainz/mbid_mapping.ts';
 import { defaultProviderPreferences } from '@/providers/mod.ts';
 import { codeUrl, musicbrainzBaseUrl } from '@/server/config.ts';
-import { extractReleaseLookupState } from '@/server/state.ts';
+import { createReleasePermalink, extractReleaseLookupState } from '@/server/state.ts';
+import { filterErrorEntries } from '@/utils/record.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 
-import type { GTIN, HarmonyRelease, ReleaseOptions } from '@/harmonizer/types.ts';
+import type { GTIN, HarmonyRelease, ProviderReleaseMap, ReleaseOptions } from '@/harmonizer/types.ts';
 import { LookupError, type ProviderError } from '@/utils/errors.ts';
 
 const seederTargetUrl = new URL('release/add', musicbrainzBaseUrl);
 
 export default defineRoute(async (req, ctx) => {
-	// Only set seeder URL (used for permalinks) in production servers.
-	const seederSourceUrl = ctx.config.dev ? undefined : ctx.url;
+	const seederSourceUrl = ctx.url;
 	const errors: Error[] = [];
 	let release: HarmonyRelease | undefined;
+	let releaseMap: ProviderReleaseMap | undefined;
 	let enabledProviders: Set<string> | undefined = undefined;
 	let gtinInput: GTIN = '', urlInput = '', regionsInput: string[] = [];
 
 	try {
-		const { gtin, urls, regions, providerIds, providers, snapshotMaxTimestamp } = extractReleaseLookupState(ctx.url);
+		const {
+			gtin,
+			urls,
+			regions,
+			providerIds,
+			providers,
+			snapshotMaxTimestamp,
+		} = extractReleaseLookupState(ctx.url, req.headers);
 		const options: ReleaseOptions = {
 			withSeparateMedia: true,
 			withAllTrackArtists: true,
+			withISRC: true,
 			regions,
 			providers,
 			snapshotMaxTimestamp,
@@ -41,8 +51,22 @@ export default defineRoute(async (req, ctx) => {
 
 		if (providerIds.length || urls.length || gtin && providers?.size) {
 			const lookup = new CombinedReleaseLookup({ gtin, providerIds, urls }, options);
+			releaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
 			release = await lookup.getMergedRelease(defaultProviderPreferences);
-			await resolveReleaseMbids(release);
+
+			// Resolving MBIDs is expensive, skip this step for fast permalinks.
+			if (snapshotMaxTimestamp === undefined) {
+				await resolveReleaseMbids(release);
+			}
+
+			const mbInfo = release.info.providers.find((provider) => provider.name === 'MusicBrainz');
+			if (mbInfo) {
+				release.info.messages.push({
+					text:
+						`Release with GTIN ${release.gtin} already exists on MusicBrainz ([show actions](release/actions?release_mbid=${mbInfo.id}))`,
+					type: 'info',
+				});
+			}
 		}
 	} catch (error) {
 		if (error instanceof AggregateError) {
@@ -76,6 +100,13 @@ export default defineRoute(async (req, ctx) => {
 					externalUrl={urlInput}
 					regions={regionsInput}
 				/>
+				{release && (
+					<p class='center'>
+						<a href={createReleasePermalink(release.info, ctx.url).href}>
+							<SpriteIcon name='link' />Permalink
+						</a>
+					</p>
+				)}
 				{errors.map((error) => (
 					<MessageBox
 						message={{
@@ -85,7 +116,7 @@ export default defineRoute(async (req, ctx) => {
 						}}
 					/>
 				))}
-				{release && <Release release={release} />}
+				{release && <Release release={release} releaseMap={releaseMap} />}
 				{release && (
 					<ReleaseSeeder
 						release={release}

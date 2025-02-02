@@ -1,11 +1,7 @@
 import { MusicBrainzClient } from '@kellnerd/musicbrainz';
-import { codeUrl, shortRevision } from '@/server/config.ts';
+import { appInfo } from '@/app.ts';
 
 export const MB = new MusicBrainzClient({
-	app: {
-		name: 'Harmony',
-		version: shortRevision,
-		contact: codeUrl.href,
-	},
+	app: appInfo,
 	maxQueueSize: 20,
 });

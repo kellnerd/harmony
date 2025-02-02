@@ -1,9 +1,10 @@
-import { ApiError, type EntityWithMbid } from '@kellnerd/musicbrainz';
+import { ApiError, type EntityWithMbid, RateLimitError } from '@kellnerd/musicbrainz';
 import type { RelatableEntityType } from '@kellnerd/musicbrainz/data/entity';
 import type { ExternalEntityId, HarmonyRelease, ResolvableEntity } from '@/harmonizer/types.ts';
 import { MB } from '@/musicbrainz/api_client.ts';
 import { providers } from '@/providers/mod.ts';
 import { isDevServer } from '@/server/config.ts';
+import { encodeReleaseLookupState } from '@/server/state.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 
 /**
@@ -44,7 +45,15 @@ export async function resolveToMbid(
 				inc: [`${entityType}-rels`],
 			});
 			const rels = result.relations.filter((rel) => rel['target-type'] === entityType);
-			if (rels.length !== 1) {
+			const targetEntityMbids = rels.map((rel) => {
+				// @ts-ignore: `entityType` is not narrowed, but every specific value is a valid key here.
+				const targetEntity = rel[entityType] as EntityWithMbid;
+				return targetEntity.id;
+			});
+
+			const uniqueTargetCount = new Set(targetEntityMbids).size;
+			if (uniqueTargetCount !== 1) {
+				log.debug(`${result.resource} has rels to ${uniqueTargetCount} ${entityType} entities`);
 				// External URL can not be used as a unique identifier of one entity.
 				if (contextCache) {
 					// Only writes to the context cache to indicate that further requests for this URL should be skipped.
@@ -53,10 +62,7 @@ export async function resolveToMbid(
 				continue;
 			}
 
-			const uniqueRel = rels[0];
-			// @ts-ignore: `entityType` is not narrowed, but every specific value is a valid key here.
-			const targetEntity = uniqueRel[entityType] as EntityWithMbid;
-			const mbid = targetEntity.id;
+			const mbid = targetEntityMbids[0];
 			log.debug(`Resolved ${externalUrl.href} to ${entityType} ${mbid}`);
 			setCachedMbid(entityId, mbid, contextCache);
 
@@ -88,30 +94,46 @@ export async function resolveReleaseMbids(release: HarmonyRelease) {
 		}
 	}
 
-	await resolveMbidsForMultipleEntities(artists, 'artist', contextCache);
-	if (labels) {
-		await resolveMbidsForMultipleEntities(labels, 'label', contextCache);
-	}
-	for (const medium of media) {
-		for (const track of medium.tracklist) {
-			if (track.artists) {
-				// Reuse external artist IDs of release artists for identically named track artists.
-				for (const artist of track.artists) {
-					if (!artist.externalIds?.length) {
-						artist.externalIds = externalArtistIds.get(artist.name);
+	try {
+		await resolveMbidsForMultipleEntities(artists, 'artist', contextCache);
+		if (labels) {
+			await resolveMbidsForMultipleEntities(labels, 'label', contextCache);
+		}
+		for (const medium of media) {
+			for (const track of medium.tracklist) {
+				if (track.artists) {
+					// Reuse external artist IDs of release artists for identically named track artists.
+					for (const artist of track.artists) {
+						if (!artist.externalIds?.length) {
+							artist.externalIds = externalArtistIds.get(artist.name);
+						}
 					}
+					await resolveMbidsForMultipleEntities(track.artists, 'artist', contextCache);
 				}
-				await resolveMbidsForMultipleEntities(track.artists, 'artist', contextCache);
 			}
 		}
-	}
 
-	const elapsedTime = performance.now() - startTime;
-	const requestCount = Object.keys(contextCache).length;
-	release.info.messages.push({
-		type: 'debug',
-		text: `Resolving external IDs to MBIDs took ${elapsedTime.toFixed(0)} ms and ${requestCount} API requests`,
-	});
+		const elapsedTime = performance.now() - startTime;
+		const requestCount = Object.keys(contextCache).length;
+		release.info.messages.push({
+			type: 'debug',
+			text: `Resolving external IDs to MBIDs took ${elapsedTime.toFixed(0)} ms and ${requestCount} API requests`,
+		});
+	} catch (error) {
+		if (error instanceof RateLimitError) {
+			const log = getLogger('harmony.mbid');
+			log.info(`${error.message}: ${encodeReleaseLookupState(release.info)}`);
+			release.info.messages.push({
+				type: 'warning',
+				text: `Some MusicBrainz URL lookups were skipped because the API rate limit was hit:
+- Please wait before trying again to resolve the remaining URLs to MBIDs.
+- Consider adding more external links to MusicBrainz to reduce the number of failing lookups.
+			`.trim(),
+			});
+		} else {
+			throw error;
+		}
+	}
 }
 
 async function resolveMbidForEntity(

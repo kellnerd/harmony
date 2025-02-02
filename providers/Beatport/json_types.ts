@@ -113,7 +113,7 @@ export interface Release extends MinimalRelease {
 	tracks: string[];
 	track_count: number;
 	type: Entity;
-	upc: string;
+	upc: string | null;
 	updated: string;
 }
 

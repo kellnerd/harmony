@@ -1,6 +1,7 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
-import { isNotError } from '@/utils/predicate.ts';
-import { similarNames } from '@/utils/similarity.ts';
+import { guessTypesForRelease, mergeTypes } from './release_types.ts';
+import { cloneInto, copyTo, filterErrorEntries, isFilled, uniqueMappedValues } from '@/utils/record.ts';
+import { matchBySimilarName, similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
 import { assert } from 'std/assert/assert.ts';
 
@@ -15,7 +16,9 @@ import type {
 	ProviderMessage,
 	ProviderName,
 	ProviderPreferences,
-	ProviderReleaseMapping,
+	ProviderReleaseErrorMap,
+	ProviderReleaseMap,
+	ReleaseGroupType,
 	ResolvableEntity,
 } from './types.ts';
 
@@ -26,10 +29,10 @@ import type {
  * @returns Merged release (with immutable properties from their preferred providers as well as some combined properties).
  */
 export function mergeRelease(
-	releaseMap: ProviderReleaseMapping,
+	releaseMap: ProviderReleaseErrorMap,
 	preferences: ProviderPreferences | ProviderName[] = {},
 ): HarmonyRelease {
-	assertReleaseCompatibility(releaseMap);
+	assertReleaseCompatibility(filterErrorEntries(releaseMap));
 
 	const availableProviders: ProviderName[] = Object.entries(releaseMap)
 		.filter(([_providerName, releaseOrError]) => !(releaseOrError instanceof Error))
@@ -57,6 +60,7 @@ export function mergeRelease(
 		artists: [],
 		externalLinks: [],
 		media: [],
+		types: [],
 		info: {
 			providers: [],
 			messages: errorMessages,
@@ -82,15 +86,18 @@ export function mergeRelease(
 	const availableRegions = new Set<CountryCode>();
 	const excludedRegions = new Set<CountryCode>();
 
+	// temporary list of all release group types
+	const releaseGroupTypes = new Array<Iterable<ReleaseGroupType>>();
+
 	orderByPreference(availableProviders, preferredProviders);
 
-	// Phase 1: Copy properties without specific provider preferences
+	// Phase 1: Clone properties without specific provider preferences
 	for (const providerName of availableProviders) {
 		const sourceRelease = releaseMap[providerName] as HarmonyRelease;
 
-		// copy missing properties into the merge target and keep track of their sources
+		// Clone missing properties into the merge target and keep track of their sources.
 		missingReleaseProperties.forEach((property) => {
-			const value = copyTo(mergedRelease, sourceRelease, property);
+			const value = cloneInto(mergedRelease, sourceRelease, property);
 
 			if (isFilled(value)) {
 				mergedRelease.info.sourceMap![property] = providerName;
@@ -98,8 +105,8 @@ export function mergeRelease(
 			}
 		});
 
-		// as long as the merged release does not have media, nothing will happen here
-		if (mergedRelease.media.length) {
+		// As long as the merged release does not have media, nothing will happen here.
+		if (mergedRelease.media.length && sourceRelease.media.length) {
 			missingTrackProperties.forEach((property) => {
 				mergedRelease.media.forEach((medium, mediumIndex) => {
 					medium.tracklist.forEach((track, trackIndex) => {
@@ -122,6 +129,11 @@ export function mergeRelease(
 		mergedRelease.info.providers.push(...sourceRelease.info.providers);
 		mergedRelease.info.messages.push(...sourceRelease.info.messages);
 
+		// Merge release group types
+		if (sourceRelease.types) {
+			releaseGroupTypes.push(sourceRelease.types);
+		}
+
 		// combine availabilities
 		sourceRelease.availableIn?.forEach((region) => {
 			availableRegions.add(region);
@@ -135,53 +147,57 @@ export function mergeRelease(
 		});
 	}
 
+	// guess types from titles and merge all release types
+	releaseGroupTypes.push(guessTypesForRelease(mergedRelease));
+	mergedRelease.types = mergeTypes(...releaseGroupTypes);
+
 	// assign temporary sets to the merge target
 	if (availableRegions.size) {
 		mergedRelease.availableIn = Array.from(availableRegions);
 		mergedRelease.excludedFrom = Array.from(excludedRegions);
 	}
 
-	// when all properties should be taken from the same provider, we are done
-	if (preferSameProvider) {
-		return mergedRelease;
+	// Phase 2: Clone individual properties from their preferred providers
+	if (!preferSameProvider) {
+		(Object.entries(preferences) as [PreferenceProperty, ProviderName[]][])
+			.forEach(([property, preferredProviders]) => {
+				if (property === 'media' || property === 'externalId') {
+					// handled during phase 1 and phase 3
+					return;
+				}
+
+				orderByPreference(availableProviders, preferredProviders);
+
+				for (const providerName of availableProviders) {
+					const sourceRelease = releaseMap[providerName] as HarmonyRelease;
+
+					if (isTrackProperty(property)) {
+						if (!sourceRelease.media.length) continue;
+
+						mergedRelease.media.forEach((medium, mediumIndex) => {
+							medium.tracklist.forEach((track, trackIndex) => {
+								copyTo(track, sourceRelease.media[mediumIndex].tracklist[trackIndex], property);
+							});
+						});
+
+						if (mergedRelease.media.some((medium) => medium.tracklist.some((track) => isFilled(track[property])))) {
+							mergedRelease.info.sourceMap![property] = providerName;
+							break;
+						}
+					} else {
+						const value = cloneInto(mergedRelease, sourceRelease, property);
+
+						if (isFilled(value)) {
+							mergedRelease.info.sourceMap![property] = providerName;
+							break;
+						}
+					}
+				}
+			});
 	}
 
-	// Phase 2: Copy individual properties from their preferred providers
-	(Object.entries(preferences) as [PreferenceProperty, ProviderName[]][]).forEach(([property, preferredProviders]) => {
-		if (property === 'media' || property === 'externalId') {
-			// handled during phase 1 and phase 3
-			return;
-		}
-
-		orderByPreference(availableProviders, preferredProviders);
-
-		for (const providerName of availableProviders) {
-			const sourceRelease = releaseMap[providerName] as HarmonyRelease;
-
-			if (isTrackProperty(property)) {
-				mergedRelease.media.forEach((medium, mediumIndex) => {
-					medium.tracklist.forEach((track, trackIndex) => {
-						copyTo(track, sourceRelease.media[mediumIndex].tracklist[trackIndex], property);
-					});
-				});
-
-				if (mergedRelease.media.some((medium) => medium.tracklist.some((track) => isFilled(track[property])))) {
-					mergedRelease.info.sourceMap![property] = providerName;
-					break;
-				}
-			} else {
-				const value = copyTo(mergedRelease, sourceRelease, property);
-
-				if (isFilled(value)) {
-					mergedRelease.info.sourceMap![property] = providerName;
-					break;
-				}
-			}
-		}
-	});
-
 	// Phase 3: Merge properties which have a custom merge algorithm
-	if (preferences.externalId) {
+	if (!preferSameProvider && preferences.externalId) {
 		orderByPreference(availableProviders, preferences.externalId);
 	}
 	const availableSourceReleases = availableProviders.map((providerName) => releaseMap[providerName] as HarmonyRelease);
@@ -193,7 +209,9 @@ export function mergeRelease(
 			if (track.artists) {
 				mergeArtistCredit(
 					track.artists,
-					availableSourceReleases.map((release) => release.media[mediumIndex].tracklist[trackIndex].artists),
+					availableSourceReleases
+						.filter((release) => release.media.length)
+						.map((release) => release.media[mediumIndex].tracklist[trackIndex].artists),
 				);
 			}
 		});
@@ -215,55 +233,73 @@ function mergeLabels(target: Label[], sources: Array<Label[] | undefined>) {
 	mergeResolvableEntityArray(target, sources);
 }
 
-/** Combines the external IDs of matching resolvable entities. */
-function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T[], sources: Array<T[] | undefined>) {
+/**
+ * Combines the external IDs of matching resolvable entities.
+ *
+ * All entity arrays must have the same length and order.
+ */
+export function mergeSortedResolvableEntityArray<T extends ResolvableEntity>(
+	target: T[],
+	sources: Array<T[] | undefined>,
+) {
 	target.forEach((targetItem, index) => {
-		const externalIds = new Set<ExternalEntityId>();
+		const externalIds = new Map<string, ExternalEntityId>();
+		if (targetItem.externalIds?.length) {
+			for (const externalId of targetItem.externalIds) {
+				externalIds.set(makeEntityIdKey(externalId), externalId);
+			}
+		}
 		for (const source of sources) {
 			if (!source || source.length !== target.length) continue;
 			const sourceItem = source[index];
 			if (
 				sourceItem.externalIds?.length &&
+				sourceItem.name && targetItem.name &&
 				similarNames(sourceItem.name, targetItem.name)
 			) {
-				for (const artistId of sourceItem.externalIds) {
-					externalIds.add(artistId);
+				for (const externalId of sourceItem.externalIds) {
+					externalIds.set(makeEntityIdKey(externalId), externalId);
 				}
 			}
 		}
-		targetItem.externalIds = [...externalIds];
+		targetItem.externalIds = [...externalIds.values()];
 	});
 }
 
-/** Returns pairs of unique values and providers which use this value for the given release property. */
-export function uniqueReleasePropertyValues<Value extends string | number>(
-	releaseMap: ProviderReleaseMapping,
-	propertyAccessor: (release: HarmonyRelease) => Value | undefined,
-): Array<[Value, ProviderName[]]> {
-	const uniqueValues = new Set<Value>();
-	const providersByUniqueValue: Partial<Record<Value, string[]>> = {};
-
-	for (const [providerName, release] of Object.entries(releaseMap)) {
-		if (release instanceof Error) continue;
-
-		const value = propertyAccessor(release);
-		if (value === undefined) continue;
-
-		if (uniqueValues.has(value)) {
-			providersByUniqueValue[value]!.push(providerName);
-		} else {
-			uniqueValues.add(value);
-			providersByUniqueValue[value] = [providerName];
+/**
+ * Combines the external IDs of matching resolvable entities.
+ *
+ * Entity arrays can have an arbitrary length and order as long as the names of individual entities can be matched.
+ */
+export function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T[], sources: Array<T[] | undefined>) {
+	target.forEach((targetItem) => {
+		const externalIds = new Map<string, ExternalEntityId>();
+		if (targetItem.externalIds?.length) {
+			for (const externalId of targetItem.externalIds) {
+				externalIds.set(makeEntityIdKey(externalId), externalId);
+			}
 		}
-	}
+		for (const source of sources) {
+			if (!source?.length) continue;
+			const matchingSourceItem = matchBySimilarName(targetItem, source, (item) => item.name);
+			if (matchingSourceItem?.externalIds?.length) {
+				for (const externalId of matchingSourceItem.externalIds) {
+					externalIds.set(makeEntityIdKey(externalId), externalId);
+				}
+			}
+		}
+		targetItem.externalIds = [...externalIds.values()];
+	});
+}
 
-	return Object.entries(providersByUniqueValue) as Array<[Value, ProviderName[]]>;
+function makeEntityIdKey(entityId: ExternalEntityId): string {
+	const { provider, type, id } = entityId;
+	return [provider, type, id].join('\n');
 }
 
 /** Ensures that the given releases are compatible and can be merged. */
-function assertReleaseCompatibility(releaseMap: ProviderReleaseMapping) {
-	const releases = Object.values(releaseMap).filter(isNotError);
-	if (!releases.length) return;
+function assertReleaseCompatibility(releaseMap: ProviderReleaseMap) {
+	if (!Object.keys(releaseMap).length) return;
 
 	assertUniquePropertyValue(
 		(release) => (release.gtin) ? Number(release.gtin) : undefined,
@@ -280,7 +316,7 @@ function assertReleaseCompatibility(releaseMap: ProviderReleaseMapping) {
 		propertyAccessor: (release: HarmonyRelease) => Value | undefined,
 		errorDescription: string,
 	) {
-		const uniqueValues = uniqueReleasePropertyValues(releaseMap, propertyAccessor);
+		const uniqueValues = uniqueMappedValues(releaseMap, propertyAccessor);
 		assert(
 			uniqueValues.length <= 1,
 			`${errorDescription}: ${
@@ -290,20 +326,6 @@ function assertReleaseCompatibility(releaseMap: ProviderReleaseMapping) {
 			}`,
 		);
 	}
-}
-
-/** Copies properties between records of the same type. Helper to prevent type errors. */
-function copyTo<T>(target: T, source: T, property: keyof T) {
-	return target[property] = source[property];
-}
-
-/** Checks whether the given value is an empty object (or array). */
-function isEmptyObject(value: unknown): boolean {
-	return typeof value === 'object' && value !== null && Object.keys(value).length === 0;
-}
-
-function isFilled(value: unknown): boolean {
-	return value !== undefined && !isEmptyObject(value);
 }
 
 function isTrackProperty(property: PreferenceProperty): property is ImmutableTrackProperty {

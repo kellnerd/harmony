@@ -17,12 +17,16 @@ function checksum(gtin: string) {
 export function ensureValidGTIN(gtin: GTIN): void {
 	gtin = gtin.toString();
 
-	if (!gtinLengths.includes(gtin.length)) {
-		throw new TypeError(`GTIN '${gtin}' has an invalid length`);
+	if (!gtin.length) {
+		throw new TypeError('GTIN is empty');
 	}
 
 	if (!gtinFormat.test(gtin)) {
 		throw new TypeError(`GTIN '${gtin}' contains invalid non-numeric characters`);
+	}
+
+	if (!gtinLengths.includes(gtin.length)) {
+		throw new TypeError(`GTIN '${gtin}' has an invalid length`);
 	}
 
 	// the checksum of the whole code (including the check digit) has to be a multiple of 10

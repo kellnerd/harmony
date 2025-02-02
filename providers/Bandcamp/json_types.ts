@@ -1,10 +1,12 @@
-export interface AlbumPage {
+export interface ReleasePage {
 	/** Information about the release. */
-	tralbum: TrAlbum;
+	tralbum: Track | Album;
 	/** Information about the band account (artist/label). */
 	band: Band;
 	/** OpenGraph description, contains the number of tracks (including hidden tracks). */
 	'og:description'?: string;
+	/** License URL. */
+	licenseUrl?: string;
 }
 
 interface Band {
@@ -50,20 +52,35 @@ interface TrAlbum {
 	package_associated_license_id: null;
 	has_video: null;
 	tralbum_subscriber_only: boolean;
-	featured_track_id: number;
-	initial_track_num: null;
-	/** Indicates whether the release is currently available for pre-ordered. */
-	is_preorder: boolean;
-	/** Same as {@linkcode is_preorder}? */
-	album_is_preorder: boolean;
-	/** GMT date string when the release is/was released. */
-	album_release_date: string;
+	/** Indicates whether the release is currently available for pre-order (`null` for standalone tracks). */
+	album_is_preorder: boolean | null;
+	/** GMT date string when the release is/was released (`null` for standalone tracks). */
+	album_release_date: string | null;
 	/** Tracklist of the download release. */
 	trackinfo: TrackInfo[];
-	playing_from: 'album page';
 	/** URL of the release page, might be a custom domain. */
 	url: string;
+}
+
+interface Album extends TrAlbum {
+	current: AlbumCurrent;
+	item_type: 'album';
+	featured_track_id: number;
+	initial_track_num: null;
+	/** Indicates whether the release is currently available for pre-order. */
+	is_preorder: boolean;
+	playing_from: 'album page';
 	use_expando_lyrics: boolean;
+}
+
+interface Track extends TrAlbum {
+	current: TrackCurrent;
+	item_type: 'track';
+	playing_from: 'track page';
+	/** Relative URL of the release this track is part of (`null` for standalone tracks). */
+	album_url: string | null;
+	/** Same as {@linkcode album_url}? */
+	album_upsell_url: string | null;
 }
 
 interface TrAlbumCurrent {
@@ -80,10 +97,14 @@ interface TrAlbumCurrent {
 	killed: null;
 	download_pref: DownloadPreference | null;
 	require_email: null;
-	is_set_price: null;
+	/** Indicates whether the price is fixed. */
+	is_set_price: 1 | null;
+	/** Price of the release (fixed). */
 	set_price: number;
+	/** Minimum price of the release (Name Your Price). */
 	minimum_price: number;
-	minimum_price_nonzero: number;
+	/** Value can be `null` if {@linkcode minimum_price} is `0.0`. */
+	minimum_price_nonzero: number | null;
 	require_email_0: null;
 	/** Credited name of the artist. Can be `null` if it is the same as the Bandcamp account. */
 	artist: string | null;
@@ -99,6 +120,13 @@ interface TrAlbumCurrent {
 	selling_band_id: number;
 	art_id: number;
 	download_desc_id: null;
+	/** ID of the release. */
+	id: number;
+	/** Type of the release. */
+	type: ReleaseType;
+}
+
+export interface AlbumCurrent extends TrAlbumCurrent {
 	/** GMT date string when the release is/was released. */
 	release_date: string;
 	/** UPC/EAN barcode of the download release. */
@@ -106,13 +134,28 @@ interface TrAlbumCurrent {
 	purchase_url: null;
 	purchase_title: null;
 	featured_track_id: number;
-	/** ID of the release */
-	id: number;
-	/** Type of the release. */
-	type: ReleaseType;
+	type: 'album';
 }
 
-enum DownloadPreference {
+export interface TrackCurrent extends TrAlbumCurrent {
+	/** Number of the track (`null` for standalone tracks). */
+	track_number: number | null;
+	release_date: null;
+	file_name: null;
+	lyrics: string | null;
+	/** ID of the release this track is part of (`null` for standalone tracks). */
+	album_id: number | null;
+	encodings_id: number;
+	pending_encodings_id: null;
+	license_type: 1; // TODO
+	/** ISRC of the track. */
+	isrc: string | null;
+	preorder_download: null;
+	streaming: 1; // = boolean `1 | null`?
+	type: 'track';
+}
+
+export enum DownloadPreference {
 	FREE = 1,
 	PAID = 2,
 }
@@ -124,16 +167,16 @@ export interface TrackInfo {
 	track_id: number;
 	/** Maps file formats to download URLs (`null` for unreleased tracks). */
 	file: FileUrls | null;
-	/** @todo Is this not `null` if the track artist is different from the release artist? */
-	artist: null;
+	/** Credited name of the track artist. Can be `null` if it is the same as the release artist. */
+	artist: string | null;
 	/** Title of the track. */
 	title: string;
 	encodings_id: number;
 	license_type: 1; // TODO
 	private: null;
-	/** Number of the track. */
-	track_num: number;
-	/** Indicates whether the release can be pre-ordered. @todo Does this change upon release? */
+	/** Number of the track (`null` for standalone tracks). */
+	track_num: number | null;
+	/** Indicates whether the release is currently available for pre-order. */
 	album_preorder: boolean;
 	/** Indicates whether the track is still unreleased. */
 	unreleased_track: boolean;
@@ -150,8 +193,8 @@ export interface TrackInfo {
 	free_album_download: boolean;
 	/** Duration in seconds (floating point, `0.0` for unreleased tracks). */
 	duration: number;
-	/** Always `null` on release pages, even if lyrics exist on the track page. */
-	lyrics: null;
+	/** Lyrics of the track. Always `null` on release pages, even if lyrics exist on the track page. */
+	lyrics: string | null;
 	/** Size of the lyrics (in bytes). */
 	sizeof_lyrics: number;
 	is_draft: boolean;
@@ -165,8 +208,8 @@ export interface TrackInfo {
 	alt_link: null;
 	encoding_error: null;
 	encoding_pending: null;
-	play_count: null;
-	is_capped: null;
+	play_count: number | null;
+	is_capped: boolean | null;
 	track_license_id: null;
 }
 
@@ -215,15 +258,15 @@ export interface PlayerData {
 }
 
 export interface PlayerTrack {
-	/** Name of the release(?) artist. @todo Can this be set per track at all? */
+	/** Credited name of the track artist. Or the release artist if the band was lazy. */
 	artist: string;
 	/** Title of the track. */
 	title: string;
 	/** ID of the track. */
 	id: number;
 	encodings_id: number;
-	/** @todo Is this used for track art? */
-	art_id: null;
+	/** ID of the track art. */
+	art_id: number | null;
 	/** Duration in seconds (floating point, also set for unreleased tracks). */
 	duration: number;
 	/** Number of the track (zero-based index). */
@@ -236,6 +279,10 @@ export interface PlayerTrack {
 	track_streaming: boolean;
 	/** Indicates whether the track is included in the pre-order. */
 	preorder_download_track: boolean;
+	/** URL of the track art (small). */
+	art?: string;
+	/** URL of the track art (large). */
+	art_lg?: string;
 }
 
 type FileUrls = Record<'mp3-128', string>;
@@ -395,8 +442,13 @@ const packageTypes = {
 	1: 'Compact Disc (CD)',
 	2: 'Vinyl LP',
 	3: 'Cassette',
+	10: 'Poster/Print',
+	11: 'T-Shirt/Apparel',
+	14: 'Bag',
 	15: '2 x Vinyl LP',
 	16: '7" Vinyl',
+	17: 'Vinyl Box Set',
+	23: 'Book/Magazine',
 } as const;
 
 type PackageType = typeof packageTypes[keyof typeof packageTypes];

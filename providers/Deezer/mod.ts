@@ -1,14 +1,11 @@
 import { availableRegions } from './regions.ts';
-import {
-	type CacheEntry,
-	DurationPrecision,
-	MetadataProvider,
-	type ProviderOptions,
-	ReleaseLookup,
-} from '@/providers/base.ts';
+import { type CacheEntry, MetadataApiProvider, type ProviderOptions, ReleaseApiLookup } from '@/providers/base.ts';
+import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
+import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
-import { ResponseError } from '@/utils/errors.ts';
-import { formatGtin } from '@/utils/gtin.ts';
+import { splitLabels } from '@/utils/label.ts';
+import { ProviderError, ResponseError } from '@/utils/errors.ts';
+import { formatGtin, isEqualGTIN } from '@/utils/gtin.ts';
 
 import type { ApiError, MinimalArtist, Release, ReleaseTrack, Result, Track, TracklistItem } from './api_types.ts';
 import type {
@@ -17,13 +14,15 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	HarmonyTrack,
+	LinkType,
+	ReleaseGroupType,
 	ReleaseOptions,
 	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
 
 // See https://developers.deezer.com/api
 
-export default class DeezerProvider extends MetadataProvider {
+export default class DeezerProvider extends MetadataApiProvider {
 	constructor(options: ProviderOptions = {}) {
 		super({
 			rateLimitInterval: 5000,
@@ -35,33 +34,40 @@ export default class DeezerProvider extends MetadataProvider {
 	readonly name = 'Deezer';
 
 	readonly supportedUrls = new URLPattern({
-		hostname: 'www.deezer.com',
+		hostname: '{www.}?deezer.com',
 		pathname: String.raw`/:language(\w{2})?/:type(album|artist)/:id(\d+)`,
 	});
+
+	override readonly features: FeatureQualityMap = {
+		'cover size': 1400,
+		'duration precision': DurationPrecision.SECONDS,
+		'GTIN lookup': FeatureQuality.GOOD,
+		'MBID resolving': FeatureQuality.GOOD,
+	};
 
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: 'album',
 	};
 
-	readonly availableRegions = new Set(availableRegions);
+	override readonly availableRegions = new Set(availableRegions);
 
 	readonly releaseLookup = DeezerReleaseLookup;
 
-	readonly launchDate: PartialDate = {
+	override readonly launchDate: PartialDate = {
 		year: 2007,
 		month: 8,
 		day: 22,
 	};
 
-	readonly durationPrecision = DurationPrecision.SECONDS;
-
-	readonly artworkQuality = 1400;
-
 	readonly apiBaseUrl = 'https://api.deezer.com';
 
 	constructUrl(entity: EntityId): URL {
 		return new URL([entity.type, entity.id].join('/'), 'https://www.deezer.com');
+	}
+
+	override getLinkTypesForEntity(): LinkType[] {
+		return ['free streaming'];
 	}
 
 	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
@@ -77,7 +83,7 @@ export default class DeezerProvider extends MetadataProvider {
 	}
 }
 
-export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> {
+export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Release> {
 	constructor(provider: DeezerProvider, specifier: ReleaseSpecifier, options: ReleaseOptions = {}) {
 		super(provider, specifier, options);
 
@@ -134,6 +140,20 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 
 	protected async convertRawRelease(rawRelease: Release): Promise<HarmonyRelease> {
 		this.id = rawRelease.id.toString();
+		if (this.lookup.method === 'id' && this.id !== this.lookup.value) {
+			throw new ProviderError(
+				this.provider.name,
+				`API returned ${this.constructReleaseUrl(this.id, this.lookup)} instead of the requested ${
+					this.constructReleaseUrl(this.lookup.value, this.lookup)
+				}`,
+			);
+		} else if (this.lookup.method === 'gtin' && !isEqualGTIN(rawRelease.upc, this.lookup.value)) {
+			throw new ProviderError(
+				this.provider.name,
+				`API returned a release with GTIN ${rawRelease.upc} instead of the requested ${this.lookup.value}`,
+			);
+		}
+
 		const incompleteTracklist = rawRelease.nb_tracks > rawRelease.tracks.data.length;
 		const needToFetchIndividualTracks = this.options.withAllTrackArtists || this.options.withAvailability || false;
 		const needToFetchDetailedTracklist = incompleteTracklist ||
@@ -172,15 +192,13 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 			gtin: rawRelease.upc,
 			externalLinks: [{
 				url: releaseUrl,
-				types: ['free streaming'],
+				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,
 			releaseDate: parseHyphenatedDate(rawRelease.release_date),
-			// split label string using slashes if the results have at least 3 characters
-			labels: rawRelease.label.split(/(?<=[^/]{3,})\/(?=[^/]{3,})/).map((label) => ({
-				name: label.trim(),
-			})),
+			labels: splitLabels(rawRelease.label),
 			status: 'Official',
+			types: [this.convertReleaseType(rawRelease.record_type)],
 			packaging: 'None',
 			images: [{
 				url: new URL(rawRelease.cover_xl ?? fallbackCoverUrl),
@@ -252,6 +270,10 @@ export class DeezerReleaseLookup extends ReleaseLookup<DeezerProvider, Release> 
 			creditedName: artist.name,
 			externalIds: this.provider.makeExternalIds({ type: 'artist', id: artist.id.toString() }),
 		};
+	}
+
+	private convertReleaseType(sourceType: string): ReleaseGroupType {
+		return capitalizeReleaseType(sourceType.replace('COMPILE', 'COMPILATION'));
 	}
 
 	private determineAvailability(media: HarmonyMedium[]): string[] | undefined {

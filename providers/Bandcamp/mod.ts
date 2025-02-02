@@ -1,4 +1,5 @@
-import type { AlbumPage, PlayerData, PlayerTrack, TrackInfo } from './json_types.ts';
+import { DownloadPreference } from './json_types.ts';
+import type { AlbumCurrent, PlayerData, PlayerTrack, ReleasePage, TrackInfo } from './json_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -9,13 +10,15 @@ import type {
 	Label,
 	LinkType,
 } from '@/harmonizer/types.ts';
-import { type CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
-import { extractDataAttribute, extractMetadataTag } from '@/utils/html.ts';
-import { pluralWithCount } from '@/utils/plural.ts';
+import { extractDataAttribute, extractMetadataTag, extractTextFromHtml } from '@/utils/html.ts';
+import { plural, pluralWithCount } from '@/utils/plural.ts';
 import { isNotNull } from '@/utils/predicate.ts';
 import { similarNames } from '@/utils/similarity.ts';
+import { toTrackRanges } from '@/utils/tracklist.ts';
 import { simplifyName } from 'utils/string/simplify.js';
 
 export default class BandcampProvider extends MetadataProvider {
@@ -23,7 +26,7 @@ export default class BandcampProvider extends MetadataProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: ':artist.bandcamp.com',
-		pathname: '/:type(album)/:album',
+		pathname: '/:type(album|track)/:title',
 	});
 
 	readonly artistUrlPattern = new URLPattern({
@@ -31,26 +34,31 @@ export default class BandcampProvider extends MetadataProvider {
 		pathname: '/{music}?',
 	});
 
+	override readonly features: FeatureQualityMap = {
+		'cover size': 3000,
+		'duration precision': DurationPrecision.MS,
+		'GTIN lookup': FeatureQuality.MISSING,
+		'MBID resolving': FeatureQuality.PRESENT,
+	};
+
 	readonly entityTypeMap = {
 		artist: 'artist',
-		release: 'album',
+		release: ['album', 'track'],
 	};
 
 	readonly releaseLookup = BandcampReleaseLookup;
 
-	readonly durationPrecision = DurationPrecision.MS;
-
-	readonly artworkQuality = 3000;
-
-	extractEntityFromUrl(url: URL): EntityId | undefined {
+	override extractEntityFromUrl(url: URL): EntityId | undefined {
 		const albumResult = this.supportedUrls.exec(url);
 		if (albumResult) {
 			const artist = albumResult.hostname.groups.artist!;
-			const { type, album } = albumResult.pathname.groups;
-			if (type && album) {
+			const { type, title } = albumResult.pathname.groups;
+			if (type && title) {
 				return {
 					type,
-					id: [artist, album].join('/'),
+					// 'album' is assumed by default, so we only encode the `type` for tracks
+					// to save space.
+					id: (type === 'album' ? [artist, title] : [artist, type, title]).join('/'),
 				};
 			}
 		}
@@ -65,13 +73,29 @@ export default class BandcampProvider extends MetadataProvider {
 	}
 
 	constructUrl(entity: EntityId): URL {
-		const [artist, album] = entity.id.split('/', 2);
+		let [artist, type, title] = entity.id.split('/', 3);
 		const artistUrl = new URL(`https://${artist}.bandcamp.com`);
 
 		if (entity.type === 'artist') return artistUrl;
 
-		// else if (entity.type === 'album')
-		return new URL(['album', album].join('/'), artistUrl);
+		// else if (type === 'album' || type === 'track')
+
+		// Only tracks include their `type` in the ID; we default to 'album' otherwise.
+		if (title === undefined) {
+			title = type;
+			type = entity.type;
+			if (title === undefined) {
+				throw new ProviderError(this.name, `Incomplete album ID '${entity.id}' does not match format \`band/title\``);
+			}
+		}
+		// Use the entity type encoded in the ID, which defaults to 'album' if not specified,
+		// rather than `entity.type`, which is fixed to 'album' as the default Bandcamp release type.
+		return new URL([type, title].join('/'), artistUrl);
+	}
+
+	override getLinkTypesForEntity(): LinkType[] {
+		// MB has special handling for Bandcamp artist URLs
+		return ['discography page'];
 	}
 
 	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
@@ -104,6 +128,11 @@ export default class BandcampProvider extends MetadataProvider {
 						jsonEntries.push(['og:description', `"${description}"`]);
 					}
 
+					const licenseUrl = extractTextFromHtml(html, /class="cc-icons"\s+href="([^"]+)"/i);
+					if (licenseUrl) {
+						jsonEntries.push(['licenseUrl', `"${licenseUrl}"`]);
+					}
+
 					const json = `{${jsonEntries.map(([key, serializedValue]) => `"${key}":${serializedValue}`).join(',')}}`;
 					return new Response(json, response);
 				}
@@ -112,18 +141,21 @@ export default class BandcampProvider extends MetadataProvider {
 	}
 }
 
-export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, AlbumPage> {
+export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, ReleasePage> {
+	rawReleaseUrl: URL | undefined;
+
 	constructReleaseApiUrl(): URL | undefined {
 		return undefined;
 	}
 
-	async getRawRelease(): Promise<AlbumPage> {
+	async getRawRelease(): Promise<ReleasePage> {
 		if (this.lookup.method === 'gtin') {
 			throw new ProviderError(this.provider.name, 'GTIN lookups are not supported');
 		}
 
-		const webUrl = this.constructReleaseUrl(this.lookup.value);
-		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<AlbumPage>(
+		const webUrl = this.constructReleaseUrl(this.lookup.value, this.lookup);
+		this.rawReleaseUrl = webUrl;
+		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<ReleasePage>(
 			webUrl,
 			this.options.snapshotMaxTimestamp,
 		);
@@ -132,19 +164,19 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		return release;
 	}
 
-	async convertRawRelease(albumPage: AlbumPage): Promise<HarmonyRelease> {
+	async convertRawRelease(albumPage: ReleasePage): Promise<HarmonyRelease> {
 		const { tralbum: rawRelease } = albumPage;
 		const { current, packages } = rawRelease;
 
-		// Main release URL might use a custom domain, fallback to URL of first package.
+		// Main release URL might use a custom domain, fallback to the cached `rawReleaseUrl`.
 		let releaseUrl = new URL(rawRelease.url);
-		if (!releaseUrl.hostname.endsWith('bandcamp.com') && packages?.length) {
-			releaseUrl = new URL(packages[0].url);
+		if (!releaseUrl.hostname.endsWith('bandcamp.com')) {
+			releaseUrl = this.rawReleaseUrl!;
 		}
 
-		this.id = this.provider.extractEntityFromUrl(releaseUrl)?.id;
-		if (!this.id) {
-			throw new ProviderError(this.provider.name, `Failed to extract ID from ${releaseUrl}`);
+		if (rawRelease.item_type === 'track' && rawRelease.album_url) {
+			const albumUrl = new URL(rawRelease.album_url, releaseUrl);
+			this.addMessage(`Please import the full release from ${albumUrl}`, 'warning');
 		}
 
 		// The "band" can be the artist or a label.
@@ -162,7 +194,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		const physicalLabels = packages?.map((pkg) => pkg.label).filter(isNotNull);
 		if (new Set(physicalLabels).size === 1) {
 			label = { name: physicalLabels![0] };
-			if (similarNames(label.name, bandName)) {
+			if (similarNames(label.name!, bandName)) {
 				bandIsLabel = true;
 				label.externalIds = externalBandIds;
 			}
@@ -185,14 +217,32 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			}
 		}
 
+		const images = [this.getArtwork(rawRelease.art_id, ['front'])];
 		let tracks: Array<TrackInfo | PlayerTrack> = rawRelease.trackinfo;
-		if (rawRelease.is_preorder) {
+		if (rawRelease.item_type === 'album' && rawRelease.album_is_preorder) {
 			// Fetch embedded player JSON which already has all track durations for pre-orders.
 			const embeddedPlayerRelease = await this.getEmbeddedPlayerRelease(rawRelease.id);
 			tracks = embeddedPlayerRelease.tracks;
 			this.addMessage('This is a pre-order release, so the metadata may change', 'warning');
+
+			// Extract track artwork.
+			const tracksWithArt = embeddedPlayerRelease.tracks.filter((track) => track.art_id);
+			if (tracksWithArt.length) {
+				this.addMessage(
+					`Release has track artwork for ${plural(tracksWithArt.length, 'track')} ${
+						toTrackRanges(tracksWithArt.map((track) => track.tracknum + 1)).join(', ')
+					}`,
+				);
+				images.push(...tracksWithArt.map(
+					(track) => this.getArtwork(track.art_id!, ['track'], `Track ${track.tracknum + 1}`),
+				));
+			}
 		}
 		const tracklist = tracks.map(this.convertRawTrack.bind(this));
+
+		if (current.type === 'track' && current.isrc) {
+			tracklist[0].isrc = current.isrc;
+		}
 
 		const realTrackCount = albumPage['og:description']?.match(/(\d+) track/i)?.[1];
 		if (realTrackCount) {
@@ -207,29 +257,39 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		}
 
 		const linkTypes: LinkType[] = [];
-		if (current.minimum_price > 0) {
+		if (current.minimum_price > 0 || current.download_pref === DownloadPreference.PAID) {
 			linkTypes.push('paid download');
-		} else {
+		}
+		if (rawRelease.freeDownloadPage || (current.minimum_price === 0.0 && !current.is_set_price)) {
 			linkTypes.push('free download');
 		}
 		if (rawRelease.trackinfo.every((track) => track.streaming)) {
 			linkTypes.push('free streaming');
 		}
 
+		let gtin = (current as AlbumCurrent).upc ?? undefined;
 		if (packages?.length) {
 			const packageInfo = packages.map(({ title, type_name, edition_size, upc }) =>
 				`- **${title}**: ${type_name} (edition of ${edition_size}, GTIN: ${upc})`
 			);
 			packageInfo.unshift('Available physical release packages:');
 			this.addMessage(packageInfo.join('\n'));
+
+			if (gtin && packages.some((physicalRelease) => gtin === physicalRelease.upc)) {
+				this.addMessage(
+					`GTIN ${gtin} was not used for the digital release as it belongs to one of the physical release packages`,
+					'warning',
+				);
+				gtin = undefined;
+			}
 		}
 
 		const release: HarmonyRelease = {
 			title: current.title,
 			artists: [artist],
 			labels: label ? [label] : undefined,
-			gtin: current.upc ?? undefined,
-			releaseDate: parseISODateTime(current.release_date),
+			gtin: gtin,
+			releaseDate: current.release_date ? parseISODateTime(current.release_date) : undefined,
 			availableIn: ['XW'],
 			media: [{
 				format: 'Digital Media',
@@ -237,23 +297,45 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 			}],
 			status: 'Official',
 			packaging: 'None',
+			types: current.type == 'track' ? ['Single'] : undefined,
 			externalLinks: [{
 				url: releaseUrl,
 				types: linkTypes,
 			}],
-			images: [this.getArtwork(rawRelease.art_id, ['front'])],
+			images: images,
 			credits: current.credits?.replaceAll('\r', ''),
 			info: this.generateReleaseInfo(),
 		};
 
+		if (albumPage.licenseUrl) {
+			release.externalLinks.push({
+				url: new URL(albumPage.licenseUrl),
+				types: ['license'],
+			});
+		}
+
 		return release;
 	}
 
-	convertRawTrack(rawTrack: TrackInfo | PlayerTrack): HarmonyTrack {
+	convertRawTrack(rawTrack: TrackInfo | PlayerTrack, index: number): HarmonyTrack {
+		const { artist } = rawTrack;
+		let { title } = rawTrack;
+		let trackNumber: number;
+
+		if ('track_num' in rawTrack) {
+			trackNumber = rawTrack.track_num ?? index + 1;
+			if (artist) {
+				// Track title is prefixed by the track artist (if filled).
+				title = title.replace(`${artist} - `, '');
+			}
+		} else {
+			trackNumber = rawTrack.tracknum + 1;
+		}
+
 		return {
-			number: 'track_num' in rawTrack ? rawTrack.track_num : rawTrack.tracknum + 1,
-			title: rawTrack.title,
-			artists: rawTrack.artist ? [this.makeArtistCreditName(rawTrack.artist)] : undefined,
+			number: trackNumber,
+			title,
+			artists: artist ? [this.makeArtistCreditName(artist)] : undefined,
 			length: rawTrack.duration * 1000,
 		};
 	}
@@ -265,12 +347,13 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Album
 		};
 	}
 
-	getArtwork(artworkId: number, types?: ArtworkType[]): Artwork {
+	getArtwork(artworkId: number, types?: ArtworkType[], comment?: string): Artwork {
 		const baseUrl = 'https://f4.bcbits.com/img/';
 		return {
 			url: new URL(`a${artworkId}_0.jpg`, baseUrl),
 			thumbUrl: new URL(`a${artworkId}_9.jpg`, baseUrl), // 210x210
 			types,
+			comment,
 		};
 	}
 

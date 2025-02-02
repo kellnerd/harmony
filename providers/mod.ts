@@ -1,40 +1,40 @@
 import { ProviderRegistry } from './registry.ts';
+import { appInfo } from '@/app.ts';
 import type { ProviderPreferences } from '@/harmonizer/types.ts';
 
 import BandcampProvider from './Bandcamp/mod.ts';
 import BeatportProvider from './Beatport/mod.ts';
 import DeezerProvider from './Deezer/mod.ts';
 import iTunesProvider from './iTunes/mod.ts';
+import MusicBrainzProvider from './MusicBrainz/mod.ts';
+import SpotifyProvider from './Spotify/mod.ts';
+import TidalProvider from './Tidal/mod.ts';
 
 /** Registry with all supported providers. */
-export const providers = new ProviderRegistry();
+export const providers = new ProviderRegistry({
+	appInfo: appInfo,
+});
 
 // Register all providers which should be used.
 providers.addMultiple(
+	MusicBrainzProvider,
 	DeezerProvider,
 	iTunesProvider,
+	SpotifyProvider,
+	TidalProvider,
 	BandcampProvider,
 	BeatportProvider,
 );
 
 /** Internal names of providers which are enabled by default (for GTIN lookups). */
-export const defaultProviders = new Set([
-	'Deezer',
-	'iTunes',
-].map((name) => {
-	const internalName = providers.toInternalName(name);
-	if (!internalName) {
-		throw new Error(`Invalid provider name "${name}"`);
-	}
-	return internalName;
-}));
+export const defaultProviders = new Set(
+	providers.filterInternalNamesByCategory('default'),
+);
 
 /** Recommended default preferences which sort providers by quality. */
 export const defaultProviderPreferences: ProviderPreferences = {
-	// Get track lengths from the provider with the highest precision.
-	length: providers.sortNamesByQuality('durationPrecision'),
-	// Get cover art from the provider with the highest quality (currently: image resolution).
-	images: providers.sortNamesByQuality('artworkQuality'),
-	// Use region-specific external URLs last (TODO: derive this from provider properties).
-	externalId: ['Deezer', 'Bandcamp', 'Beatport', 'iTunes'],
+	labels: providers.sortNamesByQuality('release label'),
+	length: providers.sortNamesByQuality('duration precision'),
+	images: providers.sortNamesByQuality('cover size'),
+	externalId: providers.sortNamesByQuality('MBID resolving'),
 };

@@ -1,11 +1,10 @@
 import { availableRegions } from './regions.ts';
-import { type CacheEntry, DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
+import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
-import { ResponseError } from '@/utils/errors.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
-import { pluralWithCount } from '@/utils/plural.ts';
 
-import type { Collection, ReleaseResult, Result, Track } from './api_types.ts';
+import type { Collection, Kind, ReleaseResult, Track } from './api_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -16,36 +15,40 @@ import type {
 	HarmonyMedium,
 	HarmonyRelease,
 	LinkType,
+	ReleaseGroupType,
 } from '@/harmonizer/types.ts';
 
 // See https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI
 
-export default class iTunesProvider extends MetadataProvider {
+export default class iTunesProvider extends MetadataApiProvider {
 	readonly name = 'iTunes';
 
 	readonly supportedUrls = new URLPattern({
-		hostname: '(itunes|music).apple.com',
-		pathname: String.raw`/:region(\w{2})?/:type(album|artist)/:slug?/:id(\d+)`,
+		hostname: '{geo.}?(itunes|music).apple.com',
+		pathname: String.raw`/:region(\w{2})?/:type(album|artist)/:slug?/{id}?:id(\d+)`,
 	});
+
+	override readonly features: FeatureQualityMap = {
+		'cover size': 3000,
+		'duration precision': DurationPrecision.MS,
+		'GTIN lookup': FeatureQuality.PRESENT,
+		'MBID resolving': FeatureQuality.EXPENSIVE,
+	};
 
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: 'album',
 	};
 
-	readonly availableRegions = new Set(availableRegions);
+	override readonly availableRegions = new Set(availableRegions);
 
 	readonly releaseLookup = iTunesReleaseLookup;
 
-	readonly launchDate: PartialDate = {
+	override readonly launchDate: PartialDate = {
 		year: 2003,
 		month: 4,
 		day: 28,
 	};
-
-	readonly durationPrecision = DurationPrecision.MS;
-
-	readonly artworkQuality = 3000;
 
 	readonly apiBaseUrl = 'https://itunes.apple.com';
 
@@ -57,7 +60,7 @@ export default class iTunesProvider extends MetadataProvider {
 		return new URL([region.toLowerCase(), entity.type, entity.id].join('/'), 'https://music.apple.com');
 	}
 
-	extractEntityFromUrl(url: URL): EntityId | undefined {
+	override extractEntityFromUrl(url: URL): EntityId | undefined {
 		const entity = super.extractEntityFromUrl(url);
 		if (entity && !entity.region) {
 			entity.region = this.defaultRegion;
@@ -65,36 +68,20 @@ export default class iTunesProvider extends MetadataProvider {
 		return entity;
 	}
 
-	async query<Data extends Result<unknown>>(
-		apiUrl: URL,
-		preferredRegions?: Set<CountryCode>,
-		maxTimestamp?: number,
-	): Promise<CacheEntry<Data>> {
-		if (!preferredRegions?.size) {
-			// Use the default region of the API (which would also be used if none was specified).
-			preferredRegions = new Set([this.defaultRegion]);
-		}
+	override getLinkTypesForEntity(): LinkType[] {
+		// There is no way to appropriately determine this for an artist page.
+		return ['paid streaming'];
+	}
 
-		const query = apiUrl.searchParams;
-
-		for (const region of preferredRegions) {
-			query.set('country', region.toLowerCase());
-			apiUrl.search = query.toString();
-
-			const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
-				policy: { maxTimestamp },
-			});
-			if (cacheEntry.content.resultCount) {
-				cacheEntry.region = region;
-				return cacheEntry;
-			}
-		}
-
-		throw new ResponseError(this.name, 'API returned no results', apiUrl);
+	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
+			policy: { maxTimestamp },
+		});
+		return cacheEntry;
 	}
 }
 
-export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseResult> {
+export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, ReleaseResult> {
 	constructReleaseApiUrl(): URL {
 		const { method, value, region } = this.lookup;
 		const lookupUrl = new URL('lookup', this.provider.apiBaseUrl);
@@ -118,27 +105,34 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 	}
 
 	protected async getRawRelease(): Promise<ReleaseResult> {
-		const apiUrl = this.constructReleaseApiUrl();
-		const { content, timestamp, region } = await this.provider.query<ReleaseResult>(
-			apiUrl,
-			this.options.regions,
-			this.options.snapshotMaxTimestamp,
-		);
-
-		// Overwrite optional property with the actually used region (in order to build the accurate API URL).
-		this.lookup.region = region;
-		this.updateCacheTime(timestamp);
-
-		return content;
+		if (!this.options.regions?.size) {
+			this.options.regions = new Set([this.provider.defaultRegion]);
+		}
+		const isValidData = (data: ReleaseResult) => {
+			return Boolean(data?.resultCount);
+		};
+		return await this.queryAllRegions<ReleaseResult>(isValidData);
 	}
 
 	protected convertRawRelease(data: ReleaseResult): HarmonyRelease {
-		// API also returns other release variants for GTIN lookups, only use the first collection result
-		const collection = data.results.find((result) => result.wrapperType === 'collection') as Collection;
+		// API sometimes also returns other release variants for GTIN lookups, only use the first collection result.
+		const collections = data.results.filter((result) => result.wrapperType === 'collection') as Collection[];
+		let collection = collections[0];
+		if (collections.length > 1 && this.lookup.method === 'gtin') {
+			// Try to select the correct collection by GTIN instead, if applicable.
+			const lookupGtin = this.lookup.value;
+			collection = collections.find((candidate) => {
+				const gtin = this.extractGTINFromUrl(candidate.artworkUrl100);
+				return gtin ? isEqualGTIN(gtin, lookupGtin) : false;
+			}) ?? collection;
+		}
 		this.id = collection.collectionId.toString();
+
+		// Skip bonus items like booklets.
+		const validTrackKinds: Kind[] = ['song', 'music-video'];
 		const tracks = data.results.filter((result) =>
-			// skip bonus items (e.g. booklets or videos)
-			result.wrapperType === 'track' && result.kind === 'song' && result.collectionId === collection.collectionId
+			result.wrapperType === 'track' && result.collectionId === collection.collectionId &&
+			validTrackKinds.includes(result.kind)
 		) as Track[];
 
 		// Warn about releases without returned tracks.
@@ -153,13 +147,10 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 			const skippedUrls = uniqueSkippedIds.map((id) =>
 				this.cleanViewUrl(skippedResults.find((result) => result.collectionId === id)!.collectionViewUrl)
 			);
-			this.addMessage(
-				`The API also returned ${
-					pluralWithCount(skippedUrls.length, 'other result, which was skipped', 'other results, which were skipped')
-				}:\n- ${skippedUrls.join('\n- ')}`,
-				'warning',
-			);
+			this.warnMultipleResults(skippedUrls);
 		}
+
+		const { title, types } = this.getTypesFromTitle(collection.collectionName);
 
 		const linkTypes: LinkType[] = [];
 		if (collection.collectionPrice) {
@@ -185,8 +176,8 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 			this.addMessage(`Successfully extracted GTIN ${gtin} from artwork URL`);
 		}
 
-		return {
-			title: collection.collectionName,
+		const release: HarmonyRelease = {
+			title,
 			artists: [this.convertRawArtist(collection.artistName, collection.artistViewUrl)],
 			gtin: gtin,
 			externalLinks: [{
@@ -196,11 +187,14 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 			media: this.convertRawTracklist(tracks),
 			releaseDate: parseISODateTime(collection.releaseDate),
 			status: 'Official',
+			types,
 			packaging: 'None',
 			images: [this.processImage(collection.artworkUrl100, ['front'])],
 			copyright: collection.copyright,
 			info: this.generateReleaseInfo(),
 		};
+
+		return release;
 	}
 
 	private convertRawTracklist(tracklist: Track[]): HarmonyMedium[] {
@@ -230,6 +224,7 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 				title,
 				length: track.trackTimeMillis,
 				artists: [this.convertRawArtist(track.artistName, track.artistViewUrl)],
+				type: track.kind === 'music-video' ? 'video' : undefined,
 			});
 		});
 
@@ -268,6 +263,18 @@ export class iTunesReleaseLookup extends ReleaseLookup<iTunesProvider, ReleaseRe
 		url.pathname = url.pathname.replace(/(?<=\/(artist|album))\/[^/]+(?=\/\d+)/, '');
 
 		return url;
+	}
+
+	private getTypesFromTitle(title: string): { title: string; types: ReleaseGroupType[] } {
+		const re = /\s- (EP|Single)$/;
+		const match = title.match(re);
+		const types: ReleaseGroupType[] = [];
+		if (match) {
+			title = title.replace(re, '');
+			types.push(match[1] as ReleaseGroupType);
+		}
+
+		return { title, types };
 	}
 }
 

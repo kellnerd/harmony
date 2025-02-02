@@ -1,57 +1,80 @@
-import { createReleasePermalink } from '@/server/state.ts';
+import { createReleasePermalink, encodeReleaseLookupState } from '@/server/state.ts';
 import { determineReleaseEventCountries } from './release_countries.ts';
 import { urlTypeIds } from './type_id.ts';
 import { preferArray } from 'utils/array/scalar.js';
 import { flatten } from 'utils/object/flatten.js';
 import { transform } from 'utils/string/transform.js';
 
-import type { ArtistCreditSeed, ReleaseSeed } from '@kellnerd/musicbrainz/seeding/release';
-import type { UrlLinkTypeId } from './type_id.ts';
+import type { EntityType } from '@kellnerd/musicbrainz/data/entity';
+import type {
+	ArtistCreditNameSeed,
+	ArtistCreditSeed,
+	MediumSeed,
+	ReleaseEventSeed,
+	ReleaseLabelSeed,
+	ReleaseSeed,
+	ReleaseUrlSeed,
+	TrackSeed,
+} from '@kellnerd/musicbrainz/seeding/release';
 import type { ArtistCreditName, HarmonyRelease, LinkType, ReleaseInfo } from '@/harmonizer/types.ts';
 import type { FormDataRecord } from 'utils/types.d.ts';
 
 export interface ReleaseSeedOptions {
 	/** URL of the project which was used to seed the release, for edit notes. */
 	projectUrl: URL;
+	/** URL to which MusicBrainz should redirect, permalink query parameters will be set automatically. */
+	redirectUrl?: URL;
 	/** Base URL of the Harmony instance which was used to seed the release, for permalinks. */
 	seederUrl?: URL;
 }
 
 export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedOptions): FormDataRecord {
 	const countries = preferArray(determineReleaseEventCountries(release));
+	const { redirectUrl } = options;
+
+	if (redirectUrl) {
+		// Preserve lookup parameters such as the used providers.
+		const lookupState = encodeReleaseLookupState(release.info);
+		// Timestamp `ts` is not needed and may even lead to cache misses when different lookup options are used.
+		lookupState.delete('ts');
+		redirectUrl.search = lookupState.toString();
+	}
 
 	const seed: ReleaseSeed = {
 		name: release.title,
 		artist_credit: convertArtistCredit(release.artists),
+		release_group: release.releaseGroup?.mbid,
 		barcode: release.gtin?.toString(),
-		events: countries.map((country) => ({
+		events: countries.map<ReleaseEventSeed>((country) => ({
 			date: release.releaseDate,
 			country,
 		})),
-		labels: release.labels?.map((label) => ({
+		labels: release.labels?.map<ReleaseLabelSeed>((label) => ({
 			name: label.name,
 			catalog_number: label.catalogNumber,
 			mbid: label.mbid,
 		})),
 		status: release.status,
+		type: release.types,
 		packaging: release.packaging,
-		mediums: release.media.map((medium) => ({
+		mediums: release.media.map<MediumSeed>((medium) => ({
 			format: medium.format,
 			name: medium.title,
-			track: medium.tracklist.map((track) => ({
+			track: medium.tracklist.map<TrackSeed>((track) => ({
 				name: track.title,
 				artist_credit: convertArtistCredit(track.artists),
 				number: track.number?.toString(),
 				length: track.length,
+				recording: track.recording?.mbid,
 			})),
 		})),
 		language: release.language?.code,
 		script: release.script?.code,
-		urls: release.externalLinks.flatMap((link) =>
+		urls: release.externalLinks.flatMap<ReleaseUrlSeed>((link) =>
 			link.types?.length
 				? link.types.map((type) => ({
 					url: link.url.href,
-					link_type: convertLinkType(type, link.url),
+					link_type: convertLinkType('release', type, link.url),
 				}))
 				: ({
 					url: link.url.href,
@@ -59,6 +82,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 		),
 		annotation: buildAnnotation(release),
 		edit_note: buildEditNote(release.info, options),
+		redirect_uri: redirectUrl?.href,
 	};
 
 	return flatten(seed);
@@ -69,11 +93,11 @@ export function convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditS
 
 	const lastIndex = artists.length - 1;
 	return {
-		names: artists.map((artist, index) => {
+		names: artists.map<ArtistCreditNameSeed>((artist, index) => {
 			const defaultJoinPhrase = (index !== lastIndex) ? (index === lastIndex - 1 ? ' & ' : ', ') : undefined;
 
 			return {
-				artist: { name: artist.name },
+				artist: !artist.mbid ? { name: artist.name } : undefined,
 				mbid: artist.mbid,
 				name: artist.creditedName,
 				join_phrase: artist.joinPhrase ?? defaultJoinPhrase,
@@ -82,22 +106,29 @@ export function convertArtistCredit(artists?: ArtistCreditName[]): ArtistCreditS
 	};
 }
 
-// deno-lint-ignore no-unused-vars
-function convertLinkType(linkType: LinkType, url?: URL): UrlLinkTypeId | undefined {
+export function convertLinkType(entityType: EntityType, linkType: LinkType, url?: URL): number | undefined {
+	const typeIds = urlTypeIds[entityType];
+	if (!typeIds) return;
+
 	switch (linkType) {
 		case 'free streaming':
-			return urlTypeIds['free streaming'];
+			return typeIds['free streaming'];
 		case 'paid streaming':
-			return urlTypeIds.streaming;
+			return typeIds.streaming;
 		case 'free download':
-			return urlTypeIds['download for free'];
+			return typeIds['download for free'];
 		case 'paid download':
-			return urlTypeIds['purchase for download'];
+			return typeIds['purchase for download'];
 		case 'mail order':
-			return urlTypeIds['purchase for mail-order'];
+			return typeIds['purchase for mail-order'];
 		case 'discography page':
-			// TODO: handle special cases based on their URLs
-			return urlTypeIds['discography entry'];
+			// Handle URLs which MB treats as special cases
+			if (url?.hostname.endsWith('.bandcamp.com')) {
+				return typeIds.bandcamp;
+			}
+			return typeIds['discography page'] ?? typeIds['discography entry'];
+		case 'license':
+			return typeIds['license'];
 	}
 }
 

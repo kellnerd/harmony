@@ -1,12 +1,23 @@
 import type { MetadataProvider, MetadataProviderConstructor } from './base.ts';
+import { FeatureQuality, type ProviderFeature } from './features.ts';
+import type { AppInfo } from '@/app.ts';
 import type { ExternalEntityId } from '@/harmonizer/types.ts';
 import { SnapStorage } from 'snap-storage';
 
+export interface ProviderRegistryOptions {
+	/** Information about the application which is passed to each provider. */
+	appInfo?: AppInfo;
+}
+
 /** Registry for metadata providers. */
 export class ProviderRegistry {
+	constructor(options: ProviderRegistryOptions = {}) {
+		this.#appInfo = options.appInfo;
+	}
+
 	/** Adds an instance of the given provider to the registry. */
 	add(Provider: MetadataProviderConstructor) {
-		const provider = new Provider({ snaps: this.#snaps });
+		const provider = new Provider({ snaps: this.#snaps, appInfo: this.#appInfo });
 
 		const { name, internalName } = provider;
 		if (this.#displayNames.has(name)) {
@@ -41,6 +52,39 @@ export class ProviderRegistry {
 		return provider.constructUrl(entityId);
 	}
 
+	/** Returns a list of internal provider names that meet the given condition. */
+	filterInternalNames(predicate: (provider: MetadataProvider) => boolean): string[] {
+		return this.#providerList
+			.filter((provider) => predicate(provider))
+			.map((provider) => provider.internalName);
+	}
+
+	/**
+	 * Returns a list of internal provider names that belong to the given category.
+	 *
+	 * Optionally accepts a record of cookies with the user's preferences.
+	 */
+	filterInternalNamesByCategory(category: string, preferences: Record<string, string> = {}): string[] {
+		switch (category) {
+			case 'all':
+				return [...this.#internalNames];
+			case 'default':
+				return this.filterInternalNames((provider) =>
+					// Providers which support inexpensive GTIN lookups are enabled by default.
+					provider.getQuality('GTIN lookup') >= FeatureQuality.PRESENT &&
+					// Exclude "internal" providers like MusicBrainz.
+					provider.name !== 'MusicBrainz'
+				);
+			case 'preferred':
+				// Get all providers for which the preference is enabled.
+				// The value of an enabled preference is defined by `ProviderCheckbox`.
+				return this.filterInternalNames((provider) => preferences[provider.internalName] === '1');
+			default:
+				// TODO: Add a real `categories` property to `MetadataProvider` and use it here.
+				return [];
+		}
+	}
+
 	/** Finds a registered provider by name (internal name or display name). */
 	findByName(name: string): MetadataProvider | undefined {
 		const internalName = this.toInternalName(name);
@@ -48,7 +92,7 @@ export class ProviderRegistry {
 	}
 
 	/** Finds a registered provider which supports the domain of the given URL. */
-	findByUrl(url: URL): MetadataProvider | undefined {
+	findByUrl(url: URL | string): MetadataProvider | undefined {
 		return this.#providerList.find((provider) => provider.supportsDomain(url));
 	}
 
@@ -62,12 +106,12 @@ export class ProviderRegistry {
 		return this.#internalNames;
 	}
 
-	/** Returns a list of provider names sorted by the value of the given numeric property (descending). */
-	sortNamesByQuality(property: NumericKeys<MetadataProvider>): string[] {
+	/** Returns a list of provider names sorted by the quality value of the given feature (descending). */
+	sortNamesByQuality(feature: ProviderFeature): string[] {
 		return this.#providerList
 			.map((provider) => ({
 				name: provider.name,
-				quality: provider[property],
+				quality: provider.getQuality(feature),
 			}))
 			.sort((a, b) => b.quality - a.quality)
 			.map((provider) => provider.name);
@@ -83,6 +127,7 @@ export class ProviderRegistry {
 		return this.#displayToInternal[name];
 	}
 
+	#appInfo: AppInfo | undefined;
 	#providerList: MetadataProvider[] = [];
 	#providerMap: Record<string, MetadataProvider> = {};
 	#displayNames = new Set<string>();
@@ -91,7 +136,3 @@ export class ProviderRegistry {
 	#internalToDisplay: Record<string, string | undefined> = {};
 	#snaps = new SnapStorage();
 }
-
-type NumericKeys<T> = {
-	[K in keyof T]-?: T[K] extends number ? K : never;
-}[keyof T];

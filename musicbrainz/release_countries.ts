@@ -31,11 +31,18 @@ const dependentTerritories = [
 	'FK', // Falkland Islands -> Great Britain
 	'NF', // Norfolk Island -> Australia
 	'NU', // Niue -> New Zealand
+	'PR', // Puerto Rico -> United States
 	'SJ', // Svalbard and Jan Mayen -> Norway
 	'TK', // Tokelau -> New Zealand
+];
+
+const boycottedRegions = [
+	'BY', // Belarus
+	'RU', // Russia
 ];
 
 const ignoredExcludedRegions = new Set([
 	...uninhabitedRegions,
 	...dependentTerritories,
+	...boycottedRegions,
 ]);
