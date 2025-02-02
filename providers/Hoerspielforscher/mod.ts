@@ -1,7 +1,8 @@
 import type { EpisodeData, Release } from './json_types.ts';
 import { mediumFormatMap, twoSidedFormats } from './mapping.ts';
 import type { EntityId, HarmonyMedium, HarmonyRelease } from '@/harmonizer/types.ts';
-import { DurationPrecision, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { DurationPrecision } from '@/providers/features.ts';
 import { parseGermanDate } from '@/utils/date.ts';
 import { ProviderError } from '@/utils/errors.ts';
 import {
@@ -19,7 +20,7 @@ import { parseDuration } from '@/utils/time.ts';
 export default class HörspielforscherProvider extends MetadataProvider {
 	readonly name = 'Hörspielforscher';
 
-	get internalName() {
+	override get internalName() {
 		return 'hspforscher';
 	}
 
@@ -49,7 +50,7 @@ export default class HörspielforscherProvider extends MetadataProvider {
 		return entityUrl;
 	}
 
-	extractEntityFromUrl(url: URL): EntityId | undefined {
+	override extractEntityFromUrl(url: URL): EntityId | undefined {
 		const match = this.supportedUrls.exec(url);
 		if (match) {
 			const { type } = match.pathname.groups;
