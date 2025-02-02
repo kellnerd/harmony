@@ -1,3 +1,4 @@
+import { encodeHex } from 'std/encoding/hex.ts';
 import { join } from 'std/path/join.ts';
 
 /**
@@ -11,12 +12,27 @@ export function sanitizeFilename(basename: string, replacement = '_') {
 	return basename.replaceAll(/[\u0000-\u001F<>:"/\\|?*]/g, replacement);
 }
 
+const encoder = new TextEncoder();
+
 /** Converts an URL into a safe file path. */
-export function urlToFilePath(url: URL, {
+export async function urlToFilePath(url: URL, {
 	baseDir = '.',
-} = {}): string {
-	const pathSegments = url.href.split('/').map((segment) => {
-		return sanitizeFilename(decodeURIComponent(segment), '!');
+	segmentMaxLength = 64,
+} = {}): Promise<string> {
+	const pathSegments = url.href.split('/').map(async (segment) => {
+		segment = sanitizeFilename(decodeURIComponent(segment), '!');
+		if (segment.length <= segmentMaxLength) {
+			return segment;
+		} else {
+			// Git uses SHA-1, a representation of 7 hex digits is usually unique enough.
+			const hash = await crypto.subtle.digest('SHA-1', encoder.encode(segment));
+			const hashLength = 7;
+			// Shorten overlong path segment and append a short hash instead.
+			return [
+				segment.substring(0, segmentMaxLength - hashLength - 1),
+				encodeHex(hash).substring(0, hashLength),
+			].join('#');
+		}
 	});
-	return join(baseDir, ...pathSegments);
+	return join(baseDir, ...await Promise.all(pathSegments));
 }
