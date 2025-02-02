@@ -1,15 +1,21 @@
 // Automatically load .env environment variable file (before anything else).
 import 'std/dotenv/load.ts';
 
+import type { ReleaseOptions } from '@/harmonizer/types.ts';
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
 import { stubFetchWithCache } from '@/utils/stub.ts';
 import { describe } from '@std/testing/bdd';
 
 import SpotifyProvider from './mod.ts';
 
-describe('Deezer provider', () => {
+describe('Spotify provider', () => {
 	using _fetchStub = stubFetchWithCache();
 	const spotify = new SpotifyProvider(makeProviderOptions());
+
+	// Standard options which have an effect for Spotify.
+	const releaseOptions: ReleaseOptions = {
+		withISRC: true,
+	};
 
 	describeProvider(spotify, {
 		urls: [{
@@ -34,6 +40,8 @@ describe('Deezer provider', () => {
 			description: 'track page',
 			url: new URL('https://open.spotify.com/track/1EDPVGbyPKJPeGqATwXZvN'),
 		}],
-		releaseLookup: [],
+		releaseLookup: [
+			// { release: '3b4E89rxzZQ9zkhgKpj8N4', options: releaseOptions },
+		],
 	});
 });
