@@ -1,6 +1,5 @@
-import { sanitizeFilename } from './sanitize.ts';
+import { urlToFilePath } from './file_path.ts';
 import { dirname } from '@std/path/dirname';
-import { join } from '@std/path/join';
 import { stub } from '@std/testing/mock';
 
 /** CLI flag (`--download`) which allows {@linkcode stubFetchWithCache} to make network requests. */
@@ -16,8 +15,7 @@ export function stubFetchWithCache(cacheDir = 'testdata') {
 
 	return stub(globalThis, 'fetch', async function (input, init) {
 		const url = new URL(input instanceof Request ? input.url : input);
-		const pathSegments = url.href.split('/').map((segment) => sanitizeFilename(decodeURIComponent(segment), '!'));
-		const path = join(cacheDir, ...pathSegments);
+		const path = await urlToFilePath(url, { baseDir: cacheDir });
 
 		if (downloadMode) {
 			const response = await originalFetch(input, init);
