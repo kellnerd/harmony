@@ -11,6 +11,8 @@ import TidalProvider from '@/providers/Tidal/mod.ts';
 import { Album, AlbumItem, Resource, Result, SimpleArtist } from '@/providers/Tidal/v1/api_types.ts';
 
 export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
+	readonly apiBaseUrl = 'https://openapi.tidal.com/';
+
 	constructReleaseApiUrl(): URL {
 		const { method, value, region } = this.lookup;
 		let lookupUrl: URL;
@@ -18,10 +20,10 @@ export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album>
 			countryCode: region || this.provider.defaultRegion,
 		});
 		if (method === 'gtin') {
-			lookupUrl = join(this.provider.apiBaseUrl, `albums/byBarcodeId`);
+			lookupUrl = join(this.apiBaseUrl, `albums/byBarcodeId`);
 			query.append('barcodeId', value);
 		} else { // if (method === 'id')
-			lookupUrl = join(this.provider.apiBaseUrl, 'albums', value);
+			lookupUrl = join(this.apiBaseUrl, 'albums', value);
 		}
 
 		lookupUrl.search = query.toString();
@@ -65,7 +67,7 @@ export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album>
 
 	private async getRawTracklist(albumId: string): Promise<AlbumItem[]> {
 		const tracklist: AlbumItem[] = [];
-		const url = join(this.provider.apiBaseUrl, 'albums', albumId, 'items');
+		const url = join(this.apiBaseUrl, 'albums', albumId, 'items');
 		const limit = 100;
 		let offset = 0;
 		const query = new URLSearchParams({

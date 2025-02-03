@@ -20,9 +20,11 @@ import type {
 } from '@/providers/Tidal/v2/api_types.ts';
 
 export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, SingleDataDocument<AlbumsResource>> {
+	readonly apiBaseUrl = 'https://openapi.tidal.com/v2/';
+
 	constructReleaseApiUrl(): URL {
 		const { method, value, region } = this.lookup;
-		const lookupUrl = join(this.provider.apiBaseUrl, `v2/albums`);
+		const lookupUrl = join(this.apiBaseUrl, `albums`);
 		const query = new URLSearchParams({
 			countryCode: region || this.provider.defaultRegion,
 			include: ['artists', 'items', 'providers'].join(','),
@@ -89,7 +91,9 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 
 		let next = rawRelease.data.relationships.items.links.next;
 		while (next) {
-			const url = new URL('/v2' + next, this.provider.apiBaseUrl);
+			// The next URL does contain a query string. Hence url/join cannot be used,
+			// as it only works with paths and does not preserve the query string.
+			const url = new URL(next.replace(/^\//, ''), this.apiBaseUrl);
 			const { content, timestamp } = await this.provider
 				.query<MultiDataDocument<AlbumItemResourceIdentifier>>(
 					url,
@@ -158,7 +162,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		// Fetch full track details, including track artists, for up to 20 tracks in one call.
 		const maxResults = 20;
 		for (let index = 0; index < trackIds.length; index += maxResults) {
-			const apiUrl = new URL(`v2/${type}`, this.provider.apiBaseUrl);
+			const apiUrl = join(this.apiBaseUrl, type);
 			apiUrl.searchParams.set('countryCode', this.lookup.region || this.provider.defaultRegion);
 			apiUrl.searchParams.set('include', 'artists');
 			apiUrl.searchParams.set('filter[id]', trackIds.slice(index, index + maxResults).join(','));

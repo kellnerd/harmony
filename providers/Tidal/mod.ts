@@ -8,8 +8,16 @@ import { encodeBase64 } from 'std/encoding/base64.ts';
 import { join } from 'std/url/join.ts';
 
 import type { ApiError } from './v1/api_types.ts';
+import { TidalV1ReleaseLookup } from '@/providers/Tidal/v1/lookup.ts';
 import { TidalV2ReleaseLookup } from '@/providers/Tidal/v2/lookup.ts';
-import type { CountryCode, EntityId, LinkType } from '@/harmonizer/types.ts';
+import type {
+	CountryCode,
+	EntityId,
+	HarmonyRelease,
+	LinkType,
+	ReleaseOptions,
+	ReleaseSpecifier,
+} from '@/harmonizer/types.ts';
 
 // See https://developer.tidal.com/reference/web-api
 
@@ -49,7 +57,11 @@ export default class TidalProvider extends MetadataApiProvider {
 
 	override readonly availableRegions = new Set(availableRegions);
 
-	readonly releaseLookup = TidalV2ReleaseLookup;
+	private realReleaseLookup: typeof TidalV1ReleaseLookup | typeof TidalV2ReleaseLookup = TidalV2ReleaseLookup;
+
+	get releaseLookup() {
+		return this.realReleaseLookup;
+	}
 
 	override readonly launchDate: PartialDate = {
 		year: 2014,
@@ -57,7 +69,15 @@ export default class TidalProvider extends MetadataApiProvider {
 		day: 28,
 	};
 
-	readonly apiBaseUrl = 'https://openapi.tidal.com';
+	override getRelease(specifier: ReleaseSpecifier, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
+		if (!options.snapshotMaxTimestamp) {
+			this.realReleaseLookup = TidalV2ReleaseLookup;
+		} else {
+			this.realReleaseLookup = TidalV1ReleaseLookup;
+		}
+
+		return super.getRelease(specifier, options);
+	}
 
 	constructUrl(entity: EntityId): URL {
 		return join('https://tidal.com', entity.type, entity.id);
