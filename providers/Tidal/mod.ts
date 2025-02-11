@@ -24,6 +24,9 @@ import type {
 const tidalClientId = Deno.env.get('HARMONY_TIDAL_CLIENT_ID') || '';
 const tidalClientSecret = Deno.env.get('HARMONY_TIDAL_CLIENT_SECRET') || '';
 
+// The Tidal API v1 was deprecated and stopped working shortly after this timestamp.
+const tidalV1MaxTimestamp = 1737454946; // 2025-01-21 10:22:26 UTC
+
 export default class TidalProvider extends MetadataApiProvider {
 	constructor(options: ProviderOptions = {}) {
 		super({
@@ -70,7 +73,7 @@ export default class TidalProvider extends MetadataApiProvider {
 	};
 
 	override getRelease(specifier: ReleaseSpecifier, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
-		if (!options.snapshotMaxTimestamp) {
+		if (!options.snapshotMaxTimestamp || options.snapshotMaxTimestamp > tidalV1MaxTimestamp) {
 			this.realReleaseLookup = TidalV2ReleaseLookup;
 		} else {
 			this.realReleaseLookup = TidalV1ReleaseLookup;
