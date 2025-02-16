@@ -60,11 +60,7 @@ export default class TidalProvider extends MetadataApiProvider {
 
 	override readonly availableRegions = new Set(availableRegions);
 
-	private realReleaseLookup: typeof TidalV1ReleaseLookup | typeof TidalV2ReleaseLookup = TidalV2ReleaseLookup;
-
-	get releaseLookup() {
-		return this.realReleaseLookup;
-	}
+	protected releaseLookup: typeof TidalV1ReleaseLookup | typeof TidalV2ReleaseLookup = TidalV2ReleaseLookup;
 
 	override readonly launchDate: PartialDate = {
 		year: 2014,
@@ -74,9 +70,9 @@ export default class TidalProvider extends MetadataApiProvider {
 
 	override getRelease(specifier: ReleaseSpecifier, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
 		if (!options.snapshotMaxTimestamp || options.snapshotMaxTimestamp > tidalV1MaxTimestamp) {
-			this.realReleaseLookup = TidalV2ReleaseLookup;
+			this.releaseLookup = TidalV2ReleaseLookup;
 		} else {
-			this.realReleaseLookup = TidalV1ReleaseLookup;
+			this.releaseLookup = TidalV1ReleaseLookup;
 		}
 
 		return super.getRelease(specifier, options);

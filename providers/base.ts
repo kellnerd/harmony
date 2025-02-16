@@ -94,7 +94,7 @@ export abstract class MetadataProvider {
 	/** Maps MusicBrainz entity types to the corresponding entity types of the provider. */
 	abstract readonly entityTypeMap: Record<HarmonyEntityType, string | string[]>;
 
-	abstract readonly releaseLookup: ReleaseLookupConstructor;
+	protected abstract releaseLookup: ReleaseLookupConstructor;
 
 	/** Country codes of regions in which the provider offers its services (optional). */
 	readonly availableRegions?: Set<CountryCode>;
