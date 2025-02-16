@@ -270,7 +270,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			artists: rawRelease.artists.map(this.convertRawArtist.bind(this)),
 			gtin: rawRelease.external_ids.ean || rawRelease.external_ids.upc,
 			externalLinks: [{
-				url: new URL(rawRelease.external_urls.spotify),
+				url: rawRelease.external_urls.spotify,
 				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,

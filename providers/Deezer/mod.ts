@@ -183,7 +183,6 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 			}];
 		}
 
-		const releaseUrl = new URL(rawRelease.link);
 		const fallbackCoverUrl = new URL(`album/${this.id}/image`, this.provider.apiBaseUrl);
 
 		return {
@@ -191,7 +190,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 			artists: rawRelease.contributors.map(this.convertRawArtist.bind(this)),
 			gtin: rawRelease.upc,
 			externalLinks: [{
-				url: releaseUrl,
+				url: rawRelease.link,
 				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,
@@ -201,8 +200,8 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 			types: [this.convertReleaseType(rawRelease.record_type)],
 			packaging: 'None',
 			images: [{
-				url: new URL(rawRelease.cover_xl ?? fallbackCoverUrl),
-				thumbUrl: new URL(rawRelease.cover_medium ?? fallbackCoverUrl),
+				url: rawRelease.cover_xl ?? fallbackCoverUrl.href,
+				thumbUrl: rawRelease.cover_medium ?? fallbackCoverUrl.href,
 				types: ['front'],
 			}],
 			availableIn: this.determineAvailability(media),

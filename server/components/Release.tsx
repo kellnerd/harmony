@@ -82,7 +82,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 						<ul>
 							{release.externalLinks.map((link) => (
 								<li>
-									<a href={link.url.href}>{link.url.hostname}</a>
+									<a href={link.url}>{new URL(link.url).hostname}</a>
 									{link.types?.map((type) => <span class='label ml-1'>{type}</span>)}
 								</li>
 							))}

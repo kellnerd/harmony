@@ -299,7 +299,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			packaging: 'None',
 			types: current.type == 'track' ? ['Single'] : undefined,
 			externalLinks: [{
-				url: releaseUrl,
+				url: releaseUrl.href,
 				types: linkTypes,
 			}],
 			images: images,
@@ -309,7 +309,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 
 		if (albumPage.licenseUrl) {
 			release.externalLinks.push({
-				url: new URL(albumPage.licenseUrl),
+				url: albumPage.licenseUrl,
 				types: ['license'],
 			});
 		}
@@ -350,8 +350,8 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 	getArtwork(artworkId: number, types?: ArtworkType[], comment?: string): Artwork {
 		const baseUrl = 'https://f4.bcbits.com/img/';
 		return {
-			url: new URL(`a${artworkId}_0.jpg`, baseUrl),
-			thumbUrl: new URL(`a${artworkId}_9.jpg`, baseUrl), // 210x210
+			url: new URL(`a${artworkId}_0.jpg`, baseUrl).href,
+			thumbUrl: new URL(`a${artworkId}_9.jpg`, baseUrl).href, // 210x210
 			types,
 			comment,
 		};

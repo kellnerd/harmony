@@ -238,7 +238,7 @@ export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 			artists: rawRelease.artists.map(this.convertRawArtist.bind(this)),
 			gtin: rawRelease.barcodeId,
 			externalLinks: [{
-				url: new URL(rawRelease.tidalUrl),
+				url: rawRelease.tidalUrl,
 				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,

@@ -13,7 +13,7 @@ export function MagicISRC({ release, targetMbid }: { release: HarmonyRelease; ta
 	const query = new URLSearchParams(
 		allTracks.map((track, index) => [`isrc${index + 1}`, track.isrc ?? '']),
 	);
-	let editNote = `Import ISRCs from ${isrcProvider.url.href}`;
+	let editNote = `Import ISRCs from ${isrcProvider.url}`;
 	if (targetMbid) {
 		const releaseUrl = join(musicbrainzBaseUrl, 'release', targetMbid);
 		editNote += ` to ${releaseUrl.href}`;

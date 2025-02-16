@@ -96,8 +96,8 @@ export type Label = ResolvableEntity & {
 };
 
 export type Artwork = {
-	url: URL;
-	thumbUrl?: URL;
+	url: string;
+	thumbUrl?: string;
 	types?: ArtworkType[];
 	comment?: string;
 	provider?: ProviderName;
@@ -106,7 +106,7 @@ export type Artwork = {
 export type ArtworkType = 'front' | 'back' | 'track';
 
 export type ExternalLink = {
-	url: URL;
+	url: string;
 	types?: LinkType[];
 };
 
@@ -214,9 +214,9 @@ export type ProviderInfo = {
 	/** Provider ID of the entity. */
 	id: string;
 	/** Provider URL of the entity. */
-	url: URL;
+	url: string;
 	/** Provider API URL of the entity, if applicable. */
-	apiUrl?: URL;
+	apiUrl?: string;
 	/** Parameters which were used to look up the entity. */
 	lookup: ReleaseLookupParameters;
 	/** Processing time of the provider in milliseconds, filled automatically. */

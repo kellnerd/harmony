@@ -36,10 +36,10 @@ export function LinkWithMusicBrainz({ entity, entityType, sourceEntityUrl, entit
 	const externalLinks: ExternalLink[] = entity.externalIds.map((externalId) => {
 		const provider = providers.findByName(externalId.provider)!;
 		return {
-			url: provider.constructUrl(externalId),
+			url: provider.constructUrl(externalId).href,
 			types: provider.getLinkTypesForEntity(externalId),
 		};
-	}).filter((link) => !existingLinks.has(link.url.href));
+	}).filter((link) => !existingLinks.has(link.url));
 
 	if (!externalLinks.length) return null;
 
@@ -50,10 +50,10 @@ export function LinkWithMusicBrainz({ entity, entityType, sourceEntityUrl, entit
 			url: externalLinks.flatMap((link) =>
 				link.types?.length
 					? link.types.map((type) => ({
-						text: link.url.href,
-						link_type_id: convertLinkType(entityType, type, link.url),
+						text: link.url,
+						link_type_id: convertLinkType(entityType, type, new URL(link.url)),
 					}))
-					: ({ text: link.url.href })
+					: ({ text: link.url })
 			),
 			edit_note: `Matched ${entityType} while importing ${sourceEntityUrl} with Harmony`,
 		},

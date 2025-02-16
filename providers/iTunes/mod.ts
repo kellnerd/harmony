@@ -181,7 +181,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 			artists: [this.convertRawArtist(collection.artistName, collection.artistViewUrl)],
 			gtin: gtin,
 			externalLinks: [{
-				url: releaseUrl,
+				url: releaseUrl.href,
 				types: linkTypes,
 			}],
 			media: this.convertRawTracklist(tracks),
@@ -242,8 +242,8 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 
 	private processImage(url: string, types?: ArtworkType[]): Artwork {
 		return {
-			url: getSourceImage(url),
-			thumbUrl: new URL(url.replace('100x100bb', '250x250bb')),
+			url: getSourceImage(url).href,
+			thumbUrl: url.replace('100x100bb', '250x250bb'),
 			types,
 		};
 	}

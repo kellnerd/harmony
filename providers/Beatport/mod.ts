@@ -152,14 +152,14 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 				tracklist: rawRelease.track_objects.map(this.convertRawTrack.bind(this)),
 			}],
 			externalLinks: [{
-				url: releaseUrl,
+				url: releaseUrl.href,
 				types: linkTypes,
 			}],
 			status: 'Official',
 			packaging: 'None',
 			images: [{
-				url: new URL(rawRelease.image.uri),
-				thumbUrl: new URL(rawRelease.image.dynamic_uri.replace('{w}x{h}', '250x250')),
+				url: rawRelease.image.uri,
+				thumbUrl: rawRelease.image.dynamic_uri.replace('{w}x{h}', '250x250'),
 				types: ['front'],
 			}],
 			info: this.generateReleaseInfo(),

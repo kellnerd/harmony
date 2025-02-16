@@ -73,11 +73,11 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 		urls: release.externalLinks.flatMap<ReleaseUrlSeed>((link) =>
 			link.types?.length
 				? link.types.map((type) => ({
-					url: link.url.href,
-					link_type: convertLinkType('release', type, link.url),
+					url: link.url,
+					link_type: convertLinkType('release', type, new URL(link.url)),
 				}))
 				: ({
-					url: link.url.href,
+					url: link.url,
 				})
 		),
 		annotation: buildAnnotation(release),

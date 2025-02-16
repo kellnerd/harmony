@@ -27,8 +27,8 @@ export function selectLargestImage(images: ImageObject[], types: ArtworkType[]):
 	});
 	if (!largestImage) return;
 	return {
-		url: new URL(largestImage.url),
-		thumbUrl: thumbnail ? new URL(thumbnail.url) : undefined,
+		url: largestImage.url,
+		thumbUrl: thumbnail?.url,
 		types,
 	};
 }
