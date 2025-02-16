@@ -7,6 +7,7 @@ import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
 import { selectLargestImage } from '@/utils/image.ts';
 import { ProviderError } from '@/utils/errors.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
+import { parseISODuration } from '@/utils/time.ts';
 
 import type {
 	AlbumItemResourceIdentifier,
@@ -142,7 +143,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			medium.tracklist.push({
 				number: item.meta.trackNumber,
 				title: track.attributes.title,
-				length: parseDuration(track.attributes.duration),
+				length: parseISODuration(track.attributes.duration),
 				isrc: track.attributes.isrc,
 				artists: this.getTrackArtists(track, trackDetails.artists),
 				type: item.type === 'videos' ? 'video' : 'audio',
@@ -250,18 +251,6 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		return rawRelease.included
 			.filter((resource) => resource.type === resourceType && relatedIds.has(resource.id)) as T[];
 	}
-}
-
-function parseDuration(duration: string): number {
-	// Convert ISO-8601 duration (e.g. PT41M5S) to milliseconds
-	const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-	if (!match) {
-		return 0;
-	}
-	const hours = match[1] ? parseInt(match[1], 10) : 0;
-	const minutes = match[2] ? parseInt(match[2], 10) : 0;
-	const seconds = match[3] ? parseInt(match[3], 10) : 0;
-	return (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
 }
 
 type TrackDetails = {
