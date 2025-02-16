@@ -88,29 +88,51 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 	}
 
 	private async getFullTracklist(rawRelease: SingleDataDocument<AlbumsResource>): Promise<HarmonyMedium[]> {
+		const needToFetchIndividualTracks = this.options.withAllTrackArtists || false;
+
 		const items: AlbumItemResourceIdentifier[] = rawRelease.data.relationships.items.data;
+		const tracks: (TracksResource | VideosResource)[] = [];
+
+		if (!needToFetchIndividualTracks) {
+			tracks.push(
+				...rawRelease.included.filter((resource) => resource.type === 'tracks' || resource.type === 'videos'),
+			);
+		}
 
 		let next = rawRelease.data.relationships.items.links.next;
 		while (next) {
 			// The next URL does contain a query string. Hence url/join cannot be used,
 			// as it only works with paths and does not preserve the query string.
 			const url = new URL(next.replace(/^\//, ''), this.apiBaseUrl);
+			if (!needToFetchIndividualTracks) {
+				url.searchParams.set('include', 'items');
+			}
 			const { content, timestamp } = await this.provider
 				.query<MultiDataDocument<AlbumItemResourceIdentifier>>(
 					url,
 					this.options.snapshotMaxTimestamp,
 				);
 			items.push(...content.data);
+			if (!needToFetchIndividualTracks) {
+				tracks.push(...content.included.filter((resource) => resource.type === 'tracks' || resource.type === 'videos'));
+			}
 			this.updateCacheTime(timestamp);
 			next = content.links.next;
 		}
 
-		const trackIds = items.filter((i) => i.type == 'tracks').map((item) => item.id);
-		const trackDetails = await this.loadTrackDetails(trackIds, 'tracks');
-		const videoIds = items.filter((i) => i.type == 'videos').map((item) => item.id);
-		const videoDetails = await this.loadTrackDetails(videoIds, 'videos');
-		trackDetails.tracks = new Map([...trackDetails.tracks, ...videoDetails.tracks]);
-		trackDetails.artists = new Map([...trackDetails.artists, ...videoDetails.artists]);
+		let trackDetails: TrackDetails;
+		if (needToFetchIndividualTracks) {
+			const trackIds = items.filter((i) => i.type == 'tracks').map((item) => item.id);
+			trackDetails = await this.loadTrackDetails(trackIds, 'tracks');
+			const videoIds = items.filter((i) => i.type == 'videos').map((item) => item.id);
+			const videoDetails = await this.loadTrackDetails(videoIds, 'videos');
+			trackDetails.tracks = new Map([...trackDetails.tracks, ...videoDetails.tracks]);
+			trackDetails.artists = new Map([...trackDetails.artists || [], ...videoDetails.artists || []]);
+		} else {
+			trackDetails = {
+				tracks: new Map(tracks.map((track) => [track.id, track])),
+			};
+		}
 
 		const result: HarmonyMedium[] = [];
 		let medium: HarmonyMedium = {
@@ -145,7 +167,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 				title: track.attributes.title,
 				length: parseISODuration(track.attributes.duration),
 				isrc: track.attributes.isrc,
-				artists: this.getTrackArtists(track, trackDetails.artists),
+				artists: trackDetails.artists ? this.getTrackArtists(track, trackDetails.artists) : this.getArtists(rawRelease),
 				type: item.type === 'videos' ? 'video' : 'audio',
 			});
 		});
@@ -255,5 +277,5 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 
 type TrackDetails = {
 	tracks: Map<string, TracksResource | VideosResource>;
-	artists: Map<string, ArtistsResource>;
+	artists?: Map<string, ArtistsResource>;
 };
