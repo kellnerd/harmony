@@ -104,9 +104,8 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			// The next URL does contain a query string. Hence url/join cannot be used,
 			// as it only works with paths and does not preserve the query string.
 			const url = new URL(next.replace(/^\//, ''), this.apiBaseUrl);
-			if (!needToFetchIndividualTracks) {
-				url.searchParams.set('include', 'items');
-			}
+			url.searchParams.set('include', 'items');
+
 			const { content, timestamp } = await this.provider
 				.query<MultiDataDocument<AlbumItemResourceIdentifier>>(
 					url,
