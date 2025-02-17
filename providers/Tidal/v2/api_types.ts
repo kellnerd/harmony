@@ -206,3 +206,22 @@ export type ExternalLinkMeta = {
 		| 'SNAPCHAT'
 		| 'HOMEPAGE';
 };
+
+export type Error = {
+	code: string;
+	detail: string;
+	meta: ErrorMeta;
+	source?: ErrorSource;
+};
+
+export type ErrorMeta = {
+	category: string;
+};
+
+export type ErrorSource = {
+	parameter: string;
+};
+
+export type ApiError = {
+	errors: Error[];
+};

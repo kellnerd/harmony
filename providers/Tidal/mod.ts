@@ -6,10 +6,11 @@ import { ResponseError } from '@/utils/errors.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { join } from 'std/url/join.ts';
-
-import type { ApiError } from './v1/api_types.ts';
 import { TidalV1ReleaseLookup } from '@/providers/Tidal/v1/lookup.ts';
 import { TidalV2ReleaseLookup } from '@/providers/Tidal/v2/lookup.ts';
+
+import type { ApiError as ApiErrorV1 } from './v1/api_types.ts';
+import type { ApiError as ApiErrorV2 } from './v2/api_types.ts';
 import type {
 	CountryCode,
 	EntityId,
@@ -147,7 +148,14 @@ export default class TidalProvider extends MetadataApiProvider {
 
 class TidalResponseError extends ResponseError {
 	constructor(readonly details: ApiError, url: URL) {
-		const msg = details.errors.map((e) => `${e.field ?? e.category}: ${e.detail}`).join(', ');
-		super('Tidal', msg, url);
+		const messages = details.errors.map((error) => {
+			const errorDomain = 'meta' in error
+				? error.source?.parameter ?? error.meta.category // ApiErrorV2
+				: error.field ?? error.category; // ApiErrorV1
+			return `${errorDomain}: ${error.detail}`;
+		});
+		super('Tidal', messages.join(', '), url);
 	}
 }
+
+type ApiError = ApiErrorV1 | ApiErrorV2;
