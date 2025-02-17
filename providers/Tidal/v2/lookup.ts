@@ -1,7 +1,6 @@
 import { join } from 'std/url/join.ts';
 import { ReleaseApiLookup } from '@/providers/base.ts';
 import TidalProvider from '@/providers/Tidal/mod.ts';
-import { ArtistCreditName, Artwork, HarmonyMedium, HarmonyRelease, Label } from '@/harmonizer/types.ts';
 import { formatCopyrightSymbols } from '@/utils/copyright.ts';
 import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
 import { selectLargestImage } from '@/utils/image.ts';
@@ -19,6 +18,7 @@ import type {
 	TracksResource,
 	VideosResource,
 } from '@/providers/Tidal/v2/api_types.ts';
+import type { ArtistCreditName, Artwork, HarmonyMedium, HarmonyRelease, Label } from '@/harmonizer/types.ts';
 
 export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, SingleDataDocument<AlbumsResource>> {
 	readonly apiBaseUrl = 'https://openapi.tidal.com/v2/';

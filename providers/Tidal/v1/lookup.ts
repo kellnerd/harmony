@@ -1,14 +1,14 @@
 import { join } from 'std/url/join.ts';
-import { CacheEntry, ReleaseApiLookup } from '@/providers/base.ts';
+import { type CacheEntry, ReleaseApiLookup } from '@/providers/base.ts';
 import { ProviderError } from '@/utils/errors.ts';
 import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
-import { ArtistCreditName, HarmonyMedium, HarmonyRelease, HarmonyTrack } from '@/harmonizer/types.ts';
 import { formatCopyrightSymbols } from '@/utils/copyright.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
 import { selectLargestImage } from '@/utils/image.ts';
-import { Label } from '@/harmonizer/types.ts';
 import TidalProvider from '@/providers/Tidal/mod.ts';
-import { Album, AlbumItem, Resource, Result, SimpleArtist } from '@/providers/Tidal/v1/api_types.ts';
+
+import type { Album, AlbumItem, Resource, Result, SimpleArtist } from '@/providers/Tidal/v1/api_types.ts';
+import type { ArtistCreditName, HarmonyMedium, HarmonyRelease, HarmonyTrack, Label } from '@/harmonizer/types.ts';
 
 export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 	readonly apiBaseUrl = 'https://openapi.tidal.com/';

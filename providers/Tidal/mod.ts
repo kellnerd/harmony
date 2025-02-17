@@ -1,7 +1,6 @@
 import { availableRegions } from './regions.ts';
 import { ApiAccessToken, type CacheEntry, MetadataApiProvider, type ProviderOptions } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
-import { PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
 import { encodeBase64 } from 'std/encoding/base64.ts';
@@ -11,6 +10,7 @@ import { TidalV2ReleaseLookup } from '@/providers/Tidal/v2/lookup.ts';
 
 import type { ApiError as ApiErrorV1 } from './v1/api_types.ts';
 import type { ApiError as ApiErrorV2 } from './v2/api_types.ts';
+import type { PartialDate } from '@/utils/date.ts';
 import type {
 	CountryCode,
 	EntityId,
