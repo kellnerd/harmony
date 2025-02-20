@@ -1,16 +1,14 @@
-import { availableRegions } from './regions.ts';
 import { ApiAccessToken, type CacheEntry, MetadataApiProvider, type ProviderOptions } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
+import { getFromEnv } from '@/utils/config.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { join } from 'std/url/join.ts';
-import { TidalV1ReleaseLookup } from '@/providers/Tidal/v1/lookup.ts';
-import { TidalV2ReleaseLookup } from '@/providers/Tidal/v2/lookup.ts';
+import { availableRegions } from './regions.ts';
+import { TidalV1ReleaseLookup } from './v1/lookup.ts';
+import { TidalV2ReleaseLookup } from './v2/lookup.ts';
 
-import type { ApiError as ApiErrorV1 } from './v1/api_types.ts';
-import type { ApiError as ApiErrorV2 } from './v2/api_types.ts';
-import type { PartialDate } from '@/utils/date.ts';
 import type {
 	CountryCode,
 	EntityId,
@@ -19,11 +17,14 @@ import type {
 	ReleaseOptions,
 	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
+import type { PartialDate } from '@/utils/date.ts';
+import type { ApiError as ApiErrorV1 } from './v1/api_types.ts';
+import type { ApiError as ApiErrorV2 } from './v2/api_types.ts';
 
 // See https://developer.tidal.com/reference/web-api
 
-const tidalClientId = Deno.env.get('HARMONY_TIDAL_CLIENT_ID') || '';
-const tidalClientSecret = Deno.env.get('HARMONY_TIDAL_CLIENT_SECRET') || '';
+const tidalClientId = getFromEnv('HARMONY_TIDAL_CLIENT_ID') || '';
+const tidalClientSecret = getFromEnv('HARMONY_TIDAL_CLIENT_SECRET') || '';
 
 // The Tidal API v1 was deprecated and stopped working shortly after this timestamp.
 const tidalV1MaxTimestamp = 1737454946; // 2025-01-21 10:22:26 UTC

@@ -1,8 +1,11 @@
+import { getBooleanFromEnv, getFromEnv, getUrlFromEnv } from '@/utils/config.ts';
+import { join } from 'std/url/join.ts';
+
 /** Source code URL. */
-export const codeUrl = getUrlFromEnv('HARMONY_CODE_URL', 'https://github.com/kellnerd/harmony/');
+export const codeUrl = getUrlFromEnv('HARMONY_CODE_URL', 'https://github.com/kellnerd/harmony');
 
 /** User support URL. */
-export const supportUrl = getUrlFromEnv('HARMONY_SUPPORT_URL', new URL('issues', codeUrl));
+export const supportUrl = getUrlFromEnv('HARMONY_SUPPORT_URL', join(codeUrl, 'issues'));
 
 /** Base URL of the MusicBrainz server which should be used (for seeding and API requests). */
 export const musicbrainzBaseUrl = getUrlFromEnv('MUSICBRAINZ_URL', 'https://musicbrainz.org/');
@@ -17,27 +20,11 @@ export const shortRevision = revision
 
 /** Source code URL for the current git revision. */
 export const codeRevisionUrl = (revision && codeUrl.hostname === 'github.com')
-	? new URL(`tree/${revision}`, codeUrl)
+	? join(codeUrl, 'tree', revision)
 	: undefined;
-
-/** Indicates whether the protocol of a client from the `X-Forwarded-Proto` proxy header should be used. */
-export const forwardProto = getBooleanFromEnv('FORWARD_PROTO');
 
 /** Indicates whether the current app runs in development mode. */
 export const inDevMode = !revision;
 
-
-function getFromEnv(key: string): string | undefined {
-	if ('Deno' in self) {
-		return Deno.env.get(key);
-	}
-}
-
-function getBooleanFromEnv(key: string): boolean {
-	const value = getFromEnv(key);
-	return value !== undefined && ['1', 'true', 'yes'].includes(value.toLowerCase());
-}
-
-function getUrlFromEnv(key: string, fallback: string | URL): URL {
-	return new URL(getFromEnv(key) || fallback);
-}
+/** Indicates whether the protocol of a client from the `X-Forwarded-Proto` proxy header should be used. */
+export const forwardProto = getBooleanFromEnv('FORWARD_PROTO');
