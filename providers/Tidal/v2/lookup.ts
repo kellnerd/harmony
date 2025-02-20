@@ -18,14 +18,25 @@ import type {
 	TracksResource,
 	VideosResource,
 } from '@/providers/Tidal/v2/api_types.ts';
-import type { ArtistCreditName, Artwork, HarmonyMedium, HarmonyRelease, Label } from '@/harmonizer/types.ts';
+import type {
+	ArtistCreditName,
+	Artwork,
+	HarmonyMedium,
+	HarmonyRelease,
+	HarmonyTrack,
+	Label,
+	ReleaseGroupType,
+} from '@/harmonizer/types.ts';
 
-export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, SingleDataDocument<AlbumsResource>> {
+type ReleaseResource = AlbumsResource | VideosResource;
+
+export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, SingleDataDocument<ReleaseResource>> {
 	readonly apiBaseUrl = 'https://openapi.tidal.com/v2/';
 
 	constructReleaseApiUrl(): URL {
 		const { method, value, region } = this.lookup;
-		const lookupUrl = join(this.apiBaseUrl, `albums`);
+		const resource = this.entity?.type == 'video' ? 'videos' : 'albums';
+		const lookupUrl = join(this.apiBaseUrl, resource);
 		const query = new URLSearchParams({
 			countryCode: region || this.provider.defaultRegion,
 			include: ['artists', 'items.artists', 'providers'].join(','),
@@ -40,19 +51,17 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		return lookupUrl;
 	}
 
-	protected async getRawRelease(): Promise<SingleDataDocument<AlbumsResource>> {
+	protected async getRawRelease(): Promise<SingleDataDocument<ReleaseResource>> {
 		if (!this.options.regions?.size) {
 			this.options.regions = new Set([this.provider.defaultRegion]);
 		}
-		const isValidData = (data: MultiDataDocument<AlbumsResource>) => {
+		const isValidData = (data: MultiDataDocument<ReleaseResource>) => {
 			return Boolean(data?.data?.length);
 		};
-		const result = await this.queryAllRegions<MultiDataDocument<AlbumsResource>>(isValidData);
+		const result = await this.queryAllRegions<MultiDataDocument<ReleaseResource>>(isValidData);
 		if (result.data.length > 1) {
 			this.warnMultipleResults(
-				result.data.slice(1).map((release) => {
-					return this.provider.constructUrl({ type: 'album', id: release.id });
-				}),
+				result.data.slice(1).map((release) => this.constructReleaseUrlFromRelease(release)),
 			);
 		}
 		return {
@@ -62,24 +71,31 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		};
 	}
 
-	protected async convertRawRelease(rawRelease: SingleDataDocument<AlbumsResource>): Promise<HarmonyRelease> {
+	protected async convertRawRelease(rawRelease: SingleDataDocument<ReleaseResource>): Promise<HarmonyRelease> {
 		this.id = rawRelease.data.id;
 		const attributes = rawRelease.data.attributes;
 		const media = await this.getFullTracklist(rawRelease);
 		const artwork = this.getArtwork(rawRelease);
+		let types: ReleaseGroupType[] = [];
+		if (rawRelease.data.type === 'videos') {
+			types = ['Single'];
+		} else if ('type' in attributes && attributes.type) {
+			types = [capitalizeReleaseType(attributes.type)];
+		}
+
 		return {
 			title: attributes.title,
 			artists: this.getArtists(rawRelease),
-			gtin: attributes.barcodeId,
+			gtin: 'barcodeId' in attributes ? attributes.barcodeId : undefined,
 			externalLinks: [{
-				url: this.provider.constructUrl({ type: 'album', id: rawRelease.data.id }),
+				url: this.constructReleaseUrlFromRelease(rawRelease.data),
 				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,
 			releaseDate: parseHyphenatedDate(attributes.releaseDate),
 			copyright: attributes.copyright ? formatCopyrightSymbols(attributes.copyright) : undefined,
 			status: 'Official',
-			types: [capitalizeReleaseType(attributes.type)],
+			types,
 			packaging: 'None',
 			images: artwork ? [artwork] : [],
 			labels: this.getLabels(rawRelease),
@@ -87,7 +103,30 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		};
 	}
 
-	private async getFullTracklist(rawRelease: SingleDataDocument<AlbumsResource>): Promise<HarmonyMedium[]> {
+	private async getFullTracklist(rawRelease: SingleDataDocument<ReleaseResource>): Promise<HarmonyMedium[]> {
+		if (rawRelease.data.type === 'videos') {
+			return this.getFullVideoTracklist(rawRelease as SingleDataDocument<VideosResource>);
+		} else {
+			return await this.getFullAlbumTracklist(rawRelease as SingleDataDocument<AlbumsResource>);
+		}
+	}
+
+	private getFullVideoTracklist(rawRelease: SingleDataDocument<VideosResource>): HarmonyMedium[] {
+		const artistMap = new Map(
+			this.getRelatedItems<ArtistsResource>(rawRelease, 'artists').map((artist) => [artist.id, artist]),
+		);
+
+		// A video only contains a single track
+		return [{
+			number: 1,
+			format: 'Digital Media',
+			tracklist: [
+				this.convertTrack(1, rawRelease.data, artistMap),
+			],
+		}];
+	}
+
+	private async getFullAlbumTracklist(rawRelease: SingleDataDocument<AlbumsResource>): Promise<HarmonyMedium[]> {
 		const items: AlbumItemResourceIdentifier[] = rawRelease.data.relationships.items.data;
 		const tracksMap = new Map<string, TracksResource | VideosResource>();
 		const artistMap = new Map<string, ArtistsResource>();
@@ -161,20 +200,30 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 				};
 			}
 
-			medium.tracklist.push({
-				number: item.meta.trackNumber,
-				title: track.attributes.title,
-				length: parseISODuration(track.attributes.duration),
-				isrc: track.attributes.isrc,
-				artists: this.getTrackArtists(track, artistMap),
-				type: item.type === 'videos' ? 'video' : 'audio',
-			});
+			medium.tracklist.push(
+				this.convertTrack(item.meta.trackNumber, track, artistMap),
+			);
 		});
 
 		// store the final medium
 		result.push(medium);
 
 		return result;
+	}
+
+	private convertTrack(
+		number: number,
+		track: TracksResource | VideosResource,
+		artistMap: Map<string, ArtistsResource>,
+	): HarmonyTrack {
+		return {
+			number: number,
+			title: track.attributes.title,
+			length: parseISODuration(track.attributes.duration),
+			isrc: track.attributes.isrc,
+			artists: this.getTrackArtists(track, artistMap),
+			type: track.type === 'videos' ? 'video' : 'audio',
+		};
 	}
 
 	private getTrackArtists(
@@ -198,7 +247,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		});
 	}
 
-	private getArtists(rawRelease: SingleDataDocument<AlbumsResource>): ArtistCreditName[] {
+	private getArtists(rawRelease: SingleDataDocument<ReleaseResource>): ArtistCreditName[] {
 		const artists = this.getRelatedItems<ArtistsResource>(rawRelease, 'artists');
 		return artists
 			.map((resource) => {
@@ -210,7 +259,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			});
 	}
 
-	private getArtwork(rawRelease: SingleDataDocument<AlbumsResource>): Artwork | undefined {
+	private getArtwork(rawRelease: SingleDataDocument<ReleaseResource>): Artwork | undefined {
 		const allImages = rawRelease.data.attributes.imageLinks.map((link) => {
 			return {
 				url: link.href,
@@ -221,7 +270,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		return selectLargestImage(allImages, ['front']);
 	}
 
-	private getLabels(rawRelease: SingleDataDocument<AlbumsResource>): Label[] {
+	private getLabels(rawRelease: SingleDataDocument<ReleaseResource>): Label[] {
 		const providers = this.getRelatedItems<ProvidersResource>(rawRelease, 'providers');
 		return providers
 			.map((resource) => {
@@ -236,12 +285,19 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 	}
 
 	private getRelatedItems<T>(
-		rawRelease: SingleDataDocument<AlbumsResource>,
+		rawRelease: SingleDataDocument<ReleaseResource>,
 		resourceType: 'artists' | 'providers',
 	): T[] {
 		const relatedIds = new Set(rawRelease.data.relationships[resourceType].data.map((item) => item.id));
 
 		return rawRelease.included
 			.filter((resource) => resource.type === resourceType && relatedIds.has(resource.id)) as T[];
+	}
+
+	private constructReleaseUrlFromRelease(release: ReleaseResource): URL {
+		return this.provider.constructUrl({
+			type: release.type === 'videos' ? 'video' : 'album',
+			id: release.id,
+		});
 	}
 }
