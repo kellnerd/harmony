@@ -125,6 +125,14 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			next = content.links.next;
 		}
 
+		const realTrackCount = rawRelease.data.attributes.numberOfItems;
+		if (items.length < realTrackCount) {
+			this.addMessage(
+				`The API returned only ${items.length} of ${realTrackCount} tracks for ${this.lookup.region}, other regions may have more`,
+				'warning',
+			);
+		}
+
 		const result: HarmonyMedium[] = [];
 		let medium: HarmonyMedium = {
 			number: 1,
