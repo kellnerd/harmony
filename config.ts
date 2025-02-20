@@ -26,5 +26,8 @@ export const codeRevisionUrl = (revision && codeUrl.hostname === 'github.com')
 /** Indicates whether the current app runs in development mode. */
 export const inDevMode = !revision;
 
+/** Path to the directory where the app should persist data like snapshots. */
+export const dataDir = getFromEnv('HARMONY_DATA_DIR') || '.';
+
 /** Indicates whether the protocol of a client from the `X-Forwarded-Proto` proxy header should be used. */
 export const forwardProto = getBooleanFromEnv('FORWARD_PROTO');
