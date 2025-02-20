@@ -123,11 +123,9 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 		});
 
 		const linkTypes: LinkType[] = ['paid download'];
-		// @todo paid streaming is not currently permitted for Beatport links
-		// see https://tickets.metabrainz.org/browse/STYLE-2141
-		// if (rawRelease.is_available_for_streaming) {
-		//	linkTypes.push('paid streaming');
-		//}
+		if (rawRelease.is_available_for_streaming) {
+			linkTypes.push('paid streaming');
+		}
 
 		return {
 			title: rawRelease.name,
