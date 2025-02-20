@@ -1,6 +1,6 @@
+import { forwardProto } from '@/config.ts';
 import type { FreshContext } from 'fresh/server.ts';
 import { getLogger } from 'std/log/get_logger.ts';
-import { forwardProto } from '@/server/config.ts';
 
 /** Ensures that generated links are correct when the app is hosted behind a HTTPS reverse proxy. */
 function forwardProtoHandler(req: Request, ctx: FreshContext) {

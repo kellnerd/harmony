@@ -1,5 +1,5 @@
+import { codeRevisionUrl, codeUrl, shortRevision, supportUrl } from '@/config.ts';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
-import { codeRevisionUrl, codeUrl, shortRevision, supportUrl } from '@/server/config.ts';
 
 export default function Footer() {
 	return (

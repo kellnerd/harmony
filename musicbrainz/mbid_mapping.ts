@@ -1,10 +1,10 @@
-import { ApiError, type EntityWithMbid, RateLimitError } from '@kellnerd/musicbrainz';
-import type { RelatableEntityType } from '@kellnerd/musicbrainz/data/entity';
+import { inDevMode } from '@/config.ts';
 import type { ExternalEntityId, HarmonyRelease, ResolvableEntity } from '@/harmonizer/types.ts';
 import { MB } from '@/musicbrainz/api_client.ts';
 import { providers } from '@/providers/mod.ts';
-import { isDevServer } from '@/server/config.ts';
 import { encodeReleaseLookupState } from '@/server/state.ts';
+import { ApiError, type EntityWithMbid, RateLimitError } from '@kellnerd/musicbrainz';
+import type { RelatableEntityType } from '@kellnerd/musicbrainz/data/entity';
 import { getLogger } from 'std/log/get_logger.ts';
 
 /**
@@ -158,7 +158,7 @@ function resolveMbidsForMultipleEntities(
 }
 
 // Use persistent local storage in development (watch mode) when the server frequently restarts.
-const cache = isDevServer ? localStorage : sessionStorage;
+const cache = inDevMode ? localStorage : sessionStorage;
 const cacheKeySeparator = ':';
 const mbidCachePrefix = 'mbid';
 

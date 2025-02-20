@@ -1,8 +1,8 @@
-import { isDevServer } from '@/server/config.ts';
+import { inDevMode } from '@/config.ts';
 import { blue, bold, green, magenta, red, yellow } from 'std/fmt/colors.ts';
-import { setup } from 'std/log/setup.ts';
 import { ConsoleHandler } from 'std/log/console_handler.ts';
 import type { LevelName } from 'std/log/levels.ts';
+import { setup } from 'std/log/setup.ts';
 
 setup({
 	handlers: {
@@ -28,7 +28,7 @@ setup({
 		},
 		'harmony.provider': {
 			handlers: ['default'],
-			level: isDevServer ? 'DEBUG' : 'INFO',
+			level: inDevMode ? 'DEBUG' : 'INFO',
 		},
 		'harmony.server': {
 			handlers: ['default'],
@@ -36,7 +36,7 @@ setup({
 		},
 		'requests': {
 			handlers: ['request'],
-			level: isDevServer ? 'INFO' : 'WARN',
+			level: inDevMode ? 'INFO' : 'WARN',
 		},
 	},
 });

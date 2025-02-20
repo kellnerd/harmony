@@ -1,5 +1,5 @@
+import { musicbrainzBaseUrl } from '@/config.ts';
 import type { HarmonyRelease } from '@/harmonizer/types.ts';
-import { musicbrainzBaseUrl } from '@/server/config.ts';
 import { join } from 'std/url/join.ts';
 
 export function MagicISRC({ release, targetMbid }: { release: HarmonyRelease; targetMbid?: string }) {

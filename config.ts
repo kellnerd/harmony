@@ -7,7 +7,7 @@ export const supportUrl = getUrlFromEnv('HARMONY_SUPPORT_URL', new URL('issues',
 /** Base URL of the MusicBrainz server which should be used (for seeding and API requests). */
 export const musicbrainzBaseUrl = getUrlFromEnv('MUSICBRAINZ_URL', 'https://musicbrainz.org/');
 
-/** Current git revision. */
+/** Current git revision of the app. */
 export const revision = getFromEnv('DENO_DEPLOYMENT_ID');
 
 /** Current git revision, shortened if it is a hash, or "unknown". */
@@ -23,8 +23,9 @@ export const codeRevisionUrl = (revision && codeUrl.hostname === 'github.com')
 /** Indicates whether the protocol of a client from the `X-Forwarded-Proto` proxy header should be used. */
 export const forwardProto = getBooleanFromEnv('FORWARD_PROTO');
 
-/** Indicates whether the current server runs in development mode. */
-export const isDevServer = !revision;
+/** Indicates whether the current app runs in development mode. */
+export const inDevMode = !revision;
+
 
 function getFromEnv(key: string): string | undefined {
 	if ('Deno' in self) {

@@ -1,4 +1,4 @@
-import { codeUrl, shortRevision } from '@/server/config.ts';
+import { codeUrl, shortRevision } from './config.ts';
 
 /** Information about the application. */
 export interface AppInfo {

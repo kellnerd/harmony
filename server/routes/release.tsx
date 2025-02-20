@@ -4,18 +4,18 @@ import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
 import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
+import { codeUrl, musicbrainzBaseUrl } from '@/config.ts';
 import { CombinedReleaseLookup } from '@/lookup.ts';
 import { resolveReleaseMbids } from '@/musicbrainz/mbid_mapping.ts';
 import { defaultProviderPreferences } from '@/providers/mod.ts';
-import { codeUrl, musicbrainzBaseUrl } from '@/server/config.ts';
 import { createReleasePermalink, extractReleaseLookupState } from '@/server/state.ts';
+import { LookupError, type ProviderError } from '@/utils/errors.ts';
 import { filterErrorEntries } from '@/utils/record.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 
 import type { GTIN, HarmonyRelease, ProviderReleaseMap, ReleaseOptions } from '@/harmonizer/types.ts';
-import { LookupError, type ProviderError } from '@/utils/errors.ts';
 
 const seederTargetUrl = new URL('release/add', musicbrainzBaseUrl);
 

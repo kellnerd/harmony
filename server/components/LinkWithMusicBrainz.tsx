@@ -1,9 +1,10 @@
 import { LinkedEntity } from './LinkedEntity.tsx';
 import { SpriteIcon } from './SpriteIcon.tsx';
+
+import { musicbrainzBaseUrl } from '@/config.ts';
 import type { ExternalLink, ResolvableEntity } from '@/harmonizer/types.ts';
 import { convertLinkType } from '@/musicbrainz/seeding.ts';
 import { providers } from '@/providers/mod.ts';
-import { musicbrainzBaseUrl } from '@/server/config.ts';
 import type { EntityWithMbid } from '@kellnerd/musicbrainz/api-types';
 import type { EntityType } from '@kellnerd/musicbrainz/data/entity';
 import { join } from 'std/url/join.ts';
