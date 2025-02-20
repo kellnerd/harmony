@@ -1,7 +1,7 @@
 import { LinkedEntity } from './LinkedEntity.tsx';
 import { SpriteIcon } from './SpriteIcon.tsx';
 
-import { musicbrainzBaseUrl } from '@/config.ts';
+import { musicbrainzTargetServer } from '@/config.ts';
 import type { ExternalLink, ResolvableEntity } from '@/harmonizer/types.ts';
 import { convertLinkType } from '@/musicbrainz/seeding.ts';
 import { providers } from '@/providers/mod.ts';
@@ -45,7 +45,7 @@ export function LinkWithMusicBrainz({ entity, entityType, sourceEntityUrl, entit
 	if (!externalLinks.length) return null;
 
 	// Construct link to seed the MB entity editor.
-	const mbEditLink = join(musicbrainzBaseUrl, entityType, entity.mbid, 'edit');
+	const mbEditLink = join(musicbrainzTargetServer, entityType, entity.mbid, 'edit');
 	mbEditLink.search = new URLSearchParams(flatten({
 		[`edit-${entityType}`]: {
 			url: externalLinks.flatMap((link) =>

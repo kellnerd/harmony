@@ -6,7 +6,7 @@ import { MessageBox } from '@/server/components/MessageBox.tsx';
 import { ProviderList } from '@/server/components/ProviderList.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
-import { musicbrainzBaseUrl } from '@/config.ts';
+import { musicbrainzTargetServer } from '@/config.ts';
 import { deduplicateEntities } from '@/harmonizer/deduplicate.ts';
 import type { ArtistCreditName, Artwork, HarmonyRelease, ProviderInfo, ReleaseOptions } from '@/harmonizer/types.ts';
 import { CombinedReleaseLookup } from '@/lookup.ts';
@@ -37,7 +37,7 @@ export default defineRoute(async (req, ctx) => {
 		if (!releaseMbid) {
 			throw new Error('Required query parameter `release_mbid` is missing');
 		}
-		releaseUrl = join(musicbrainzBaseUrl, 'release', releaseMbid);
+		releaseUrl = join(musicbrainzTargetServer, 'release', releaseMbid);
 
 		const {
 			gtin,
