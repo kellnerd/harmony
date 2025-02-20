@@ -7,6 +7,9 @@ export const codeUrl = getUrlFromEnv('HARMONY_CODE_URL', 'https://github.com/kel
 /** User support URL. */
 export const supportUrl = getUrlFromEnv('HARMONY_SUPPORT_URL', join(codeUrl, 'issues'));
 
+/** Base URL of the MusicBrainz server which should be used to request data. */
+export const musicbrainzSourceServer = getUrlFromEnv('HARMONY_MB_SOURCE_URL', 'https://musicbrainz.org/');
+
 /** Base URL of the MusicBrainz server which should be targeted (by links and for seeding). */
 export const musicbrainzTargetServer = getUrlFromEnv('HARMONY_MB_TARGET_URL', 'https://musicbrainz.org/');
 
