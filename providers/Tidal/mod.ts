@@ -42,7 +42,7 @@ export default class TidalProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '{(www|listen).}?tidal.com',
-		pathname: String.raw`{/browse}?/:type(album|artist)/:id(\d+)`,
+		pathname: String.raw`{/browse}?/:type(album|artist|video)/:id(\d+)`,
 	});
 
 	override readonly features: FeatureQualityMap = {
@@ -55,7 +55,7 @@ export default class TidalProvider extends MetadataApiProvider {
 
 	readonly entityTypeMap = {
 		artist: 'artist',
-		release: 'album',
+		release: ['album', 'video'],
 	};
 
 	readonly defaultRegion: CountryCode = 'US';

@@ -238,6 +238,7 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 				throw new ProviderError(this.provider.name, `${specifier} is not a release URL`);
 			}
 			this.id = entity.id;
+			this.entity = entity;
 			this.lookup = { method: 'id', value: entity.id };
 
 			// Prefer region of the given release URL over the standard preferences.
@@ -267,6 +268,9 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 	/** Date and time when the (last piece of) provider data was cached (in seconds since the UNIX epoch). */
 	private cacheTime: number | undefined;
 
+	/** Provider entity of the currently looked up release (initially undefined). */
+	protected entity: EntityId | undefined;
+
 	/** Updates {@linkcode cacheTime}, should be called after every cached request. */
 	protected updateCacheTime(timestamp: number) {
 		if (!this.cacheTime || timestamp > this.cacheTime) {
@@ -280,7 +284,7 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 	 * This is implemented using {@linkcode MetadataProvider.constructUrl} by default.
 	 */
 	constructReleaseUrl(id: string, lookup: ReleaseLookupParameters): URL {
-		let type = this.provider.entityTypeMap['release'];
+		let type = this.entity?.type || this.provider.entityTypeMap['release'];
 		if (Array.isArray(type)) {
 			// Use the first mapped type as the default `release` type of the provider.
 			// This should mean the actual type is encoded in the ID, but we'll default to this if not.
