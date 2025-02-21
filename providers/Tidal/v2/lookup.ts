@@ -34,8 +34,12 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 	readonly apiBaseUrl = 'https://openapi.tidal.com/v2/';
 
 	constructReleaseApiUrl(): URL {
-		const { method, value, region } = this.lookup;
-		const resource = this.entity?.type == 'video' ? 'videos' : 'albums';
+		let { method, value, region } = this.lookup;
+		let resource = 'albums';
+		if (method === 'id' && value.startsWith('video/')) {
+			resource = 'videos';
+			value = value.replace('video/', '');
+		}
 		const lookupUrl = join(this.apiBaseUrl, resource);
 		const query = new URLSearchParams({
 			countryCode: region || this.provider.defaultRegion,
@@ -72,7 +76,11 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 	}
 
 	protected async convertRawRelease(rawRelease: SingleDataDocument<ReleaseResource>): Promise<HarmonyRelease> {
-		this.id = rawRelease.data.id;
+		if (this.lookup.method === 'gtin') {
+			// Property is already prefilled for lookups by ID.
+			// GTIN lookups are not possible for videos, so we don't have to worry about these here.
+			this.id = rawRelease.data.id;
+		}
 		const attributes = rawRelease.data.attributes;
 		const media = await this.getFullTracklist(rawRelease);
 		const artwork = this.getArtwork(rawRelease);
