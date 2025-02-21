@@ -1,5 +1,5 @@
 import { DownloadPreference } from './json_types.ts';
-import type { AlbumCurrent, PlayerData, PlayerTrack, ReleasePage, TrackInfo } from './json_types.ts';
+import type { AlbumCurrent, PlayerData, PlayerTrack, ReleasePage, TrackCurrent, TrackInfo } from './json_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -12,7 +12,7 @@ import type {
 } from '@/harmonizer/types.ts';
 import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
-import { parseISODateTime } from '@/utils/date.ts';
+import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { extractDataAttribute, extractMetadataTag, extractTextFromHtml } from '@/utils/html.ts';
 import { plural, pluralWithCount } from '@/utils/plural.ts';
@@ -44,6 +44,11 @@ export default class BandcampProvider extends MetadataProvider {
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: ['album', 'track'],
+	};
+
+	override readonly launchDate: PartialDate = {
+		year: 2008,
+		month: 9,
 	};
 
 	readonly releaseLookup = BandcampReleaseLookup;
@@ -291,7 +296,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			artists: [artist],
 			labels: label ? [label] : undefined,
 			gtin: gtin,
-			releaseDate: current.release_date ? parseISODateTime(current.release_date) : undefined,
+			releaseDate: this.getReleaseDate(current),
 			availableIn: ['XW'],
 			media: [{
 				format: 'Digital Media',
@@ -357,6 +362,20 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			types,
 			comment,
 		};
+	}
+
+	getReleaseDate(current: AlbumCurrent | TrackCurrent): PartialDate | undefined {
+		let date = current.release_date ? parseISODateTime(current.release_date) : undefined;
+
+		// Use publish date if release date is before Bandcamp launch (2008-09)
+		const launchDate = this.provider.launchDate;
+		if (
+			!date?.year || date.year < launchDate.year! || (date.year === launchDate.year && date.month! < launchDate.month!)
+		) {
+			date = current.publish_date ? parseISODateTime(current.publish_date) : undefined;
+		}
+
+		return date;
 	}
 
 	async getEmbeddedPlayerRelease(albumId: number): Promise<PlayerData> {
