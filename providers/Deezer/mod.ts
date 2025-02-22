@@ -139,12 +139,17 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 	}
 
 	protected async convertRawRelease(rawRelease: Release): Promise<HarmonyRelease> {
-		this.id = rawRelease.id.toString();
-		if (this.lookup.method === 'id' && this.id !== this.lookup.value) {
+		this.entity = {
+			id: rawRelease.id.toString(),
+			type: 'album',
+		};
+		const releaseUrl = new URL(rawRelease.link);
+
+		if (this.lookup.method === 'id' && this.entity.id !== this.lookup.value) {
 			throw new ProviderError(
 				this.provider.name,
-				`API returned ${this.constructReleaseUrl(this.id, this.lookup)} instead of the requested ${
-					this.constructReleaseUrl(this.lookup.value, this.lookup)
+				`API returned ${releaseUrl} instead of the requested ${
+					this.provider.constructUrl({ id: this.lookup.value, type: 'album' })
 				}`,
 			);
 		} else if (this.lookup.method === 'gtin' && !isEqualGTIN(rawRelease.upc, this.lookup.value)) {
@@ -163,7 +168,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 		let media: HarmonyMedium[];
 
 		if (needToFetchDetailedTracklist) {
-			rawTracklist = await this.getRawTracklist(this.id);
+			rawTracklist = await this.getRawTracklist(this.entity.id);
 		} else {
 			rawTracklist = rawRelease.tracks.data;
 		}
@@ -183,8 +188,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 			}];
 		}
 
-		const releaseUrl = new URL(rawRelease.link);
-		const fallbackCoverUrl = new URL(`album/${this.id}/image`, this.provider.apiBaseUrl);
+		const fallbackCoverUrl = new URL(`album/${this.entity.id}/image`, this.provider.apiBaseUrl);
 
 		return {
 			title: rawRelease.title,

@@ -131,7 +131,10 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 	}
 
 	convertRawRelease(rawRelease: RawRelease): HarmonyRelease {
-		this.id = rawRelease.id;
+		this.entity = {
+			id: rawRelease.id,
+			type: 'release',
+		};
 
 		const releaseGroup = rawRelease['release-group'];
 		const releaseTypes: ReleaseGroupType[] = [...releaseGroup['secondary-types']];

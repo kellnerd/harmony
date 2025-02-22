@@ -12,6 +12,7 @@ import { TidalV2ReleaseLookup } from './v2/lookup.ts';
 import type {
 	CountryCode,
 	EntityId,
+	HarmonyEntityType,
 	HarmonyRelease,
 	LinkType,
 	ReleaseOptions,
@@ -80,17 +81,28 @@ export default class TidalProvider extends MetadataApiProvider {
 		return super.getRelease(specifier, options);
 	}
 
-	override extractEntityFromUrl(url: URL): EntityId | undefined {
-		const entity = super.extractEntityFromUrl(url);
-		// Encode 'video' type into the ID to distinguish them from 'album' releases.
-		if (entity?.type === 'video') {
-			entity.id = [entity.type, entity.id].join('/');
-		}
-		return entity;
+	constructUrl(entity: EntityId): URL {
+		return join('https://tidal.com', entity.type, entity.id);
 	}
 
-	constructUrl(entity: EntityId): URL {
-		return join('https://tidal.com', entity.id.startsWith('video/') ? '' : entity.type, entity.id);
+	override serializeProviderId(entity: EntityId): string {
+		if (entity.type === 'video') {
+			return [entity.type, entity.id].join('/');
+		} else {
+			return entity.id;
+		}
+	}
+
+	override parseProviderId(id: string, entityType: HarmonyEntityType): EntityId {
+		if (entityType === 'release') {
+			if (id.startsWith('video/')) {
+				return { id: id.replace('video/', ''), type: 'video' };
+			} else {
+				return { id, type: 'album' };
+			}
+		} else {
+			return { id, type: this.entityTypeMap[entityType] };
+		}
 	}
 
 	override getLinkTypesForEntity(): LinkType[] {

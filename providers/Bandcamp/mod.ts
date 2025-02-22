@@ -5,6 +5,7 @@ import type {
 	Artwork,
 	ArtworkType,
 	EntityId,
+	HarmonyEntityType,
 	HarmonyRelease,
 	HarmonyTrack,
 	Label,
@@ -61,9 +62,7 @@ export default class BandcampProvider extends MetadataProvider {
 			if (type && title) {
 				return {
 					type,
-					// 'album' is assumed by default, so we only encode the `type` for tracks
-					// to save space.
-					id: (type === 'album' ? [artist, title] : [artist, type, title]).join('/'),
+					id: [artist, title].join('/'),
 				};
 			}
 		}
@@ -80,24 +79,36 @@ export default class BandcampProvider extends MetadataProvider {
 	}
 
 	constructUrl(entity: EntityId): URL {
-		let [artist, type, title] = entity.id.split('/', 3);
+		const [artist, title] = entity.id.split('/', 2);
 		const artistUrl = new URL(`https://${artist}.bandcamp.com`);
 
 		if (entity.type === 'artist') return artistUrl;
 
 		// else if (type === 'album' || type === 'track')
-
-		// Only tracks include their `type` in the ID; we default to 'album' otherwise.
-		if (title === undefined) {
-			title = type;
-			type = entity.type;
-			if (title === undefined) {
-				throw new ProviderError(this.name, `Incomplete album ID '${entity.id}' does not match format \`band/title\``);
-			}
+		if (!title) {
+			throw new ProviderError(this.name, `Incomplete release ID '${entity.id}' does not match format \`band/title\``);
 		}
-		// Use the entity type encoded in the ID, which defaults to 'album' if not specified,
-		// rather than `entity.type`, which is fixed to 'album' as the default Bandcamp release type.
-		return new URL([type, title].join('/'), artistUrl);
+		return new URL([entity.type, title].join('/'), artistUrl);
+	}
+
+	override serializeProviderId(entity: EntityId): string {
+		if (entity.type === 'track') {
+			return entity.id.replace('/', '/track/');
+		} else {
+			return entity.id;
+		}
+	}
+
+	override parseProviderId(id: string, entityType: HarmonyEntityType): EntityId {
+		if (entityType === 'release') {
+			if (id.includes('/track/')) {
+				return { id: id.replace('/track/', '/'), type: 'track' };
+			} else {
+				return { id, type: 'album' };
+			}
+		} else {
+			return { id, type: this.entityTypeMap[entityType] };
+		}
 	}
 
 	override getLinkTypesForEntity(): LinkType[] {
@@ -160,7 +171,8 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			throw new ProviderError(this.provider.name, 'GTIN lookups are not supported');
 		}
 
-		const webUrl = this.constructReleaseUrl(this.lookup.value, this.lookup);
+		// Entity is already defined for ID/URL lookups.
+		const webUrl = this.provider.constructUrl(this.entity!);
 		this.rawReleaseUrl = webUrl;
 		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<ReleasePage>(
 			webUrl,

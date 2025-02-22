@@ -115,12 +115,12 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 	}
 
 	convertRawRelease(rawRelease: BeatportRelease): HarmonyRelease {
-		this.id = rawRelease.id.toString();
-		const releaseUrl = this.provider.constructUrl({
-			id: this.id,
-			type: 'release',
+		this.entity = {
+			id: rawRelease.id.toString(),
 			slug: rawRelease.slug,
-		});
+			type: 'release',
+		};
+		const releaseUrl = this.provider.constructUrl(this.entity);
 
 		const linkTypes: LinkType[] = ['paid download'];
 		if (rawRelease.is_available_for_streaming) {

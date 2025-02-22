@@ -76,11 +76,10 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 	}
 
 	protected async convertRawRelease(rawRelease: SingleDataDocument<ReleaseResource>): Promise<HarmonyRelease> {
-		if (this.lookup.method === 'gtin') {
-			// Property is already prefilled for lookups by ID.
-			// GTIN lookups are not possible for videos, so we don't have to worry about these here.
-			this.id = rawRelease.data.id;
-		}
+		this.entity = {
+			id: rawRelease.data.id,
+			type: rawRelease.data.type === 'videos' ? 'video' : 'album',
+		};
 		const attributes = rawRelease.data.attributes;
 		const media = await this.getFullTracklist(rawRelease);
 		const artwork = this.getArtwork(rawRelease);

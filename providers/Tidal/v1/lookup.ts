@@ -95,8 +95,11 @@ export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album>
 	}
 
 	protected async convertRawRelease(rawRelease: Album): Promise<HarmonyRelease> {
-		this.id = rawRelease.id;
-		const rawTracklist = await this.getRawTracklist(this.id);
+		this.entity = {
+			id: rawRelease.id,
+			type: 'album',
+		};
+		const rawTracklist = await this.getRawTracklist(rawRelease.id);
 		const media = this.convertRawTracklist(rawTracklist);
 		const artwork = selectLargestImage(rawRelease.imageCover, ['front']);
 		return {

@@ -262,7 +262,10 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 	}
 
 	protected async convertRawRelease(rawRelease: Album): Promise<HarmonyRelease> {
-		this.id = rawRelease.id;
+		this.entity = {
+			id: rawRelease.id,
+			type: 'album',
+		};
 		const rawTracklist = await this.getRawTracklist(rawRelease);
 		const media = this.convertRawTracklist(rawTracklist);
 		const artwork = selectLargestImage(rawRelease.images, ['front']);
