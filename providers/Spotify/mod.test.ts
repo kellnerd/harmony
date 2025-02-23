@@ -3,7 +3,8 @@ import 'std/dotenv/load.ts';
 
 import type { ReleaseOptions } from '@/harmonizer/types.ts';
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
-import { stubFetchWithCache } from '@/utils/stub.ts';
+import { stubTokenRetrieval } from '@/providers/test_stubs.ts';
+import { downloadMode, stubFetchWithCache } from '@/utils/stub.ts';
 import { describe } from '@std/testing/bdd';
 
 import SpotifyProvider from './mod.ts';
@@ -11,6 +12,10 @@ import SpotifyProvider from './mod.ts';
 describe('Spotify provider', () => {
 	using _fetchStub = stubFetchWithCache();
 	const spotify = new SpotifyProvider(makeProviderOptions());
+
+	if (!downloadMode) {
+		stubTokenRetrieval(spotify);
+	}
 
 	// Standard options which have an effect for Spotify.
 	const releaseOptions: ReleaseOptions = {
