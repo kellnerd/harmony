@@ -5,7 +5,7 @@ import { describe } from '@std/testing/bdd';
 import BandcampProvider from './mod.ts';
 
 describe('Bandcamp provider', () => {
-	using _fetchStub = stubFetchWithCache();
+	stubFetchWithCache();
 	const bc = new BandcampProvider(makeProviderOptions());
 
 	describeProvider(bc, {

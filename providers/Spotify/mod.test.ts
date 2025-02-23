@@ -10,7 +10,7 @@ import { describe } from '@std/testing/bdd';
 import SpotifyProvider from './mod.ts';
 
 describe('Spotify provider', () => {
-	using _fetchStub = stubFetchWithCache();
+	stubFetchWithCache();
 	const spotify = new SpotifyProvider(makeProviderOptions());
 
 	if (!downloadMode) {

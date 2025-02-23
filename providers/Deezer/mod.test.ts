@@ -7,7 +7,7 @@ import { describe } from '@std/testing/bdd';
 import DeezerProvider from './mod.ts';
 
 describe('Deezer provider', () => {
-	using _fetchStub = stubFetchWithCache();
+	stubFetchWithCache();
 	const deezer = new DeezerProvider(makeProviderOptions());
 
 	// Standard options which have an effect for Deezer.
