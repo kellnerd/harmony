@@ -5,6 +5,7 @@ import type { ProviderPreferences } from '@/harmonizer/types.ts';
 import BandcampProvider from './Bandcamp/mod.ts';
 import BeatportProvider from './Beatport/mod.ts';
 import DeezerProvider from './Deezer/mod.ts';
+import HörspielforscherProvider from './Hoerspielforscher/mod.ts';
 import iTunesProvider from './iTunes/mod.ts';
 import MusicBrainzProvider from './MusicBrainz/mod.ts';
 import SpotifyProvider from './Spotify/mod.ts';
@@ -24,6 +25,7 @@ providers.addMultiple(
 	TidalProvider,
 	BandcampProvider,
 	BeatportProvider,
+	HörspielforscherProvider,
 );
 
 /** Internal names of providers which are enabled by default (for GTIN lookups). */
