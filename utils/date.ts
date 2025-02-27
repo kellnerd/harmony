@@ -24,7 +24,7 @@ export function formatPartialDate(date: PartialDate) {
 
 /** Parses a German date with the month given as a string. */
 export function parseGermanDate(date: string): PartialDate | undefined {
-	const dateMatch = date.match(/^(?:(\d{1,2})\. )?(?:(\w+) )?(\d{4})$/);
+	const dateMatch = date.match(/^(?:(\d{1,2})\.\s+)?(?:(\p{Letter}+)\s+)?(\d{4})$/u);
 	if (!dateMatch) return;
 
 	const [_, day, monthName, year] = dateMatch;
