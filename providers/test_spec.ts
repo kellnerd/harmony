@@ -1,7 +1,7 @@
 import type { MetadataProvider, ProviderOptions } from './base.ts';
 import type { EntityId, HarmonyRelease, ReleaseOptions, ReleaseSpecifier } from '@/harmonizer/types.ts';
+import { downloadMode } from '@/utils/fetch_stub.ts';
 import { isDefined } from '@/utils/predicate.ts';
-import { downloadMode } from '@/utils/stub.ts';
 
 import { assertEquals } from 'std/assert/assert_equals.ts';
 import { filterValues } from '@std/collections/filter-values';

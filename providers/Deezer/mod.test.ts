@@ -1,14 +1,14 @@
 import type { ReleaseOptions } from '@/harmonizer/types.ts';
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
-import { stubFetchWithCache } from '@/utils/stub.ts';
+import { stubProviderLookups } from '@/providers/test_stubs.ts';
 import { assert } from 'std/assert/assert.ts';
-import { describe } from '@std/testing/bdd';
+import { afterAll, describe } from '@std/testing/bdd';
 
 import DeezerProvider from './mod.ts';
 
 describe('Deezer provider', () => {
-	stubFetchWithCache();
 	const deezer = new DeezerProvider(makeProviderOptions());
+	const lookupStub = stubProviderLookups(deezer);
 
 	// Standard options which have an effect for Deezer.
 	const releaseOptions: ReleaseOptions = {
@@ -59,5 +59,9 @@ describe('Deezer provider', () => {
 				assert(allTracks.every((track) => !track.isrc), 'Tracks should not have an ISRC');
 			},
 		}],
+	});
+
+	afterAll(() => {
+		lookupStub.restore();
 	});
 });

@@ -1,12 +1,12 @@
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
-import { stubFetchWithCache } from '@/utils/stub.ts';
-import { describe } from '@std/testing/bdd';
+import { stubProviderLookups } from '@/providers/test_stubs.ts';
+import { afterAll, describe } from '@std/testing/bdd';
 
 import BandcampProvider from './mod.ts';
 
 describe('Bandcamp provider', () => {
-	stubFetchWithCache();
 	const bc = new BandcampProvider(makeProviderOptions());
+	const lookupStub = stubProviderLookups(bc);
 
 	describeProvider(bc, {
 		urls: [{
@@ -40,5 +40,9 @@ describe('Bandcamp provider', () => {
 		releaseLookup: [
 			// { release: new URL('https://mortimer3.bandcamp.com/album/grey-to-white') },
 		],
+	});
+
+	afterAll(() => {
+		lookupStub.restore();
 	});
 });

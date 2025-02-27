@@ -3,18 +3,19 @@ import 'std/dotenv/load.ts';
 
 import type { ReleaseOptions } from '@/harmonizer/types.ts';
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
-import { stubTokenRetrieval } from '@/providers/test_stubs.ts';
-import { downloadMode, stubFetchWithCache } from '@/utils/stub.ts';
-import { describe } from '@std/testing/bdd';
+import { stubProviderLookups, stubTokenRetrieval } from '@/providers/test_stubs.ts';
+import { downloadMode } from '@/utils/fetch_stub.ts';
+import { afterAll, describe } from '@std/testing/bdd';
+import type { Stub } from '@std/testing/mock';
 
 import SpotifyProvider from './mod.ts';
 
 describe('Spotify provider', () => {
-	stubFetchWithCache();
 	const spotify = new SpotifyProvider(makeProviderOptions());
+	const stubs: Stub[] = [stubProviderLookups(spotify)];
 
 	if (!downloadMode) {
-		stubTokenRetrieval(spotify);
+		stubs.push(stubTokenRetrieval(spotify));
 	}
 
 	// Standard options which have an effect for Spotify.
@@ -48,5 +49,9 @@ describe('Spotify provider', () => {
 		releaseLookup: [
 			// { release: '3b4E89rxzZQ9zkhgKpj8N4', options: releaseOptions },
 		],
+	});
+
+	afterAll(() => {
+		stubs.forEach((stub) => stub.restore());
 	});
 });
