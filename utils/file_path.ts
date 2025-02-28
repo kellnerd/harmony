@@ -19,7 +19,15 @@ export async function urlToFilePath(url: URL, {
 	baseDir = '.',
 	segmentMaxLength = 64,
 } = {}): Promise<string> {
+	// Reverse domain names to allow hierarchical sorting of the resulting paths.
+	// Skip this step if the hostname is an IPv4 (which contains dots, but no letters).
+	const { hostname } = url;
+	if (/[a-z]/i.test(hostname)) {
+		url.hostname = hostname.split('.').reverse().join('.');
+	}
+
 	const pathSegments = url.href.split('/').map(async (segment) => {
+		if (!segment) return segment;
 		segment = sanitizeFilename(decodeURIComponent(segment), '!');
 		if (segment.length <= segmentMaxLength) {
 			return segment;
