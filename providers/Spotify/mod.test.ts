@@ -5,6 +5,7 @@ import type { ReleaseOptions } from '@/harmonizer/types.ts';
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
 import { stubProviderLookups, stubTokenRetrieval } from '@/providers/test_stubs.ts';
 import { downloadMode } from '@/utils/fetch_stub.ts';
+import { assert } from 'std/assert/assert.ts';
 import { afterAll, describe } from '@std/testing/bdd';
 import type { Stub } from '@std/testing/mock';
 
@@ -46,9 +47,25 @@ describe('Spotify provider', () => {
 			description: 'track page',
 			url: new URL('https://open.spotify.com/track/1EDPVGbyPKJPeGqATwXZvN'),
 		}],
-		releaseLookup: [
-			// { release: '3b4E89rxzZQ9zkhgKpj8N4', options: releaseOptions },
-		],
+		releaseLookup: [{
+			description: 'single by two artists',
+			release: new URL('https://open.spotify.com/album/10FLjwfpbxLmW8c25Xyc2N'),
+			options: releaseOptions,
+			assert: (release) => {
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
+				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
+			},
+		}, {
+			description: 'single by two artists (without additional lookup options)',
+			release: '10FLjwfpbxLmW8c25Xyc2N', // same single as the previous test
+			skipSnapshot: true, // just a subset of the previous one
+			assert: (release) => {
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
+				assert(allTracks.every((track) => !track.isrc), 'Tracks should not have an ISRC');
+			},
+		}],
 	});
 
 	afterAll(() => {
