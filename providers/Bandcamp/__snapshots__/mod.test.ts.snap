@@ -1,0 +1,100 @@
+export const snapshot = {};
+
+snapshot[`Bandcamp provider > release lookup > label release with fixed price (which is not free despite minimum_price of 0.0) 1`] = `
+{
+  artists: [
+    {
+      creditedName: "i miss you sis",
+      name: "i miss you sis",
+    },
+  ],
+  availableIn: [
+    "XW",
+  ],
+  credits: "i miss you sis
+
+suika.love",
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+        "free streaming",
+      ],
+      url: "https://thedarkthursday.bandcamp.com/album/and-it-was-a-burned-into-my-mind-yet-i-faltered-like-a-broken-record",
+    },
+  ],
+  gtin: undefined,
+  images: [
+    {
+      comment: undefined,
+      thumbUrl: "https://f4.bcbits.com/img/a1695876544_9.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://f4.bcbits.com/img/a1695876544_0.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "thedarkthursday/and-it-was-a-burned-into-my-mind-yet-i-faltered-like-a-broken-record",
+        internalName: "bandcamp",
+        lookup: {
+          method: "id",
+          value: "thedarkthursday/and-it-was-a-burned-into-my-mind-yet-i-faltered-like-a-broken-record",
+        },
+        name: "Bandcamp",
+        url: "https://thedarkthursday.bandcamp.com/album/and-it-was-a-burned-into-my-mind-yet-i-faltered-like-a-broken-record",
+      },
+    ],
+  },
+  labels: [
+    {
+      externalIds: [
+        {
+          id: "thedarkthursday",
+          provider: "bandcamp",
+          type: "artist",
+        },
+      ],
+      name: "The Dark Thursday",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          artists: undefined,
+          length: 81250,
+          number: 1,
+          title: "suomi lovely",
+        },
+        {
+          artists: undefined,
+          length: 72019.2,
+          number: 2,
+          title: "bittersweet desires to overdose on my prescriptions",
+        },
+        {
+          artists: undefined,
+          length: 60942.3,
+          number: 3,
+          title: "set fire to the space snow",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 17,
+    month: 7,
+    year: 2019,
+  },
+  status: "Official",
+  title: "and it was a burned into my mind! yet i faltered like a broken record",
+  types: undefined,
+}
+`;

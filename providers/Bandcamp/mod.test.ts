@@ -1,5 +1,6 @@
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
 import { stubProviderLookups } from '@/providers/test_stubs.ts';
+import { assert } from 'std/assert/assert.ts';
 import { afterAll, describe } from '@std/testing/bdd';
 
 import BandcampProvider from './mod.ts';
@@ -37,9 +38,23 @@ describe('Bandcamp provider', () => {
 			description: 'URL without subdomain',
 			url: new URL('https://bandcamp.com/discover'),
 		}],
-		releaseLookup: [
-			// { release: new URL('https://mortimer3.bandcamp.com/album/grey-to-white') },
-		],
+		releaseLookup: [{
+			description: 'label release with fixed price (which is not free despite minimum_price of 0.0)',
+			release: 'thedarkthursday/and-it-was-a-burned-into-my-mind-yet-i-faltered-like-a-broken-record',
+			assert: (release) => {
+				const isFree = release.externalLinks.some((link) => link.types?.includes('free download'));
+				assert(!isFree, 'Release should not be downloadable for free');
+				const accountName = 'thedarkthursday';
+				assert(
+					release.labels?.some((label) => label.externalIds?.some(({ id }) => id === accountName)),
+					'Bandcamp account should be linked to a label',
+				);
+				assert(
+					!release.artists?.some((artist) => artist.externalIds?.some(({ id }) => id === accountName)),
+					'Bandcamp account should not be linked to an artist',
+				);
+			},
+		}],
 	});
 
 	afterAll(() => {
