@@ -1,0 +1,439 @@
+export const snapshot = {};
+
+snapshot[`Tidal provider > release lookup > live album with video tracks and featured artist (v1 API) 1`] = `
+{
+  artists: [
+    {
+      creditedName: "JAY Z",
+      externalIds: [
+        {
+          id: "7804",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "JAY Z",
+    },
+  ],
+  copyright: "© 2012 S. Carter Enterprises, LLC.",
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+      ],
+      url: "https://tidal.com/browse/album/130201923",
+    },
+  ],
+  gtin: "00602508779602",
+  images: [
+    {
+      thumbUrl: "https://resources.tidal.com/images/bf26cf4f/1f9a/4f70/a485/e707c3c89079/320x320.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://resources.tidal.com/images/bf26cf4f/1f9a/4f70/a485/e707c3c89079/1280x1280.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://openapi.tidal.com/albums/130201923?countryCode=GB",
+        id: "130201923",
+        internalName: "tidal",
+        lookup: {
+          method: "id",
+          region: "GB",
+          value: "130201923",
+        },
+        name: "Tidal",
+        url: "https://tidal.com/album/130201923",
+      },
+    ],
+  },
+  labels: [],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200001",
+          length: 273000,
+          number: 1,
+          title: "Empire State Of Mind (Live)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200002",
+          length: 195000,
+          number: 2,
+          title: "Run This Town (Live)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200003",
+          length: 212000,
+          number: 3,
+          title: "On to the Next One (Live)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200004",
+          length: 247000,
+          number: 4,
+          title: "Give It To Me/Big Pimpin (Live)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200005",
+          length: 79000,
+          number: 5,
+          title: "03' Bonnie & Clyde (Live)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Beyoncé",
+              externalIds: [
+                {
+                  id: "1566",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Beyoncé",
+            },
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200006",
+          length: 187000,
+          number: 6,
+          title: "Crazy In Love (Live)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200007",
+          length: 152000,
+          number: 7,
+          title: "Public Service Announcement (Live)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+            {
+              creditedName: "Beyoncé",
+              externalIds: [
+                {
+                  id: "1566",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Beyoncé",
+            },
+          ],
+          isrc: "USJZ11200008",
+          length: 350000,
+          number: 8,
+          title: "Young Forever (Live)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200009",
+          length: 274000,
+          number: 9,
+          title: "Empire State Of Mind (Live)",
+          type: "video",
+        },
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200010",
+          length: 196000,
+          number: 10,
+          title: "Run This Town (Live)",
+          type: "video",
+        },
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200011",
+          length: 213000,
+          number: 11,
+          title: "On to the Next One (Live)",
+          type: "video",
+        },
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200012",
+          length: 248000,
+          number: 12,
+          title: "Give It 2 Me / Big Pimpin (Live)",
+          type: "video",
+        },
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200013",
+          length: 80000,
+          number: 13,
+          title: "03' Bonnie & Clyde (Live)",
+          type: "video",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Beyoncé",
+              externalIds: [
+                {
+                  id: "1566",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Beyoncé",
+            },
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200014",
+          length: 188000,
+          number: 14,
+          title: "Crazy In Love (Live)",
+          type: "video",
+        },
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+          ],
+          isrc: "USJZ11200015",
+          length: 153000,
+          number: 15,
+          title: "Public Service Announcement (Live)",
+          type: "video",
+        },
+        {
+          artists: [
+            {
+              creditedName: "JAY Z",
+              externalIds: [
+                {
+                  id: "7804",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "JAY Z",
+            },
+            {
+              creditedName: "Beyoncé",
+              externalIds: [
+                {
+                  id: "1566",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Beyoncé",
+            },
+          ],
+          isrc: "USJZ11200016",
+          length: 351000,
+          number: 16,
+          title: "Young Forever (Live)",
+          type: "video",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 1,
+    month: 1,
+    year: 2012,
+  },
+  status: "Official",
+  title: "Live In Brooklyn",
+  types: [
+    "Album",
+  ],
+}
+`;

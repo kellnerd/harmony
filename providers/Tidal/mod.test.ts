@@ -1,13 +1,22 @@
 // Automatically load .env environment variable file (before anything else).
 import 'std/dotenv/load.ts';
 
-import { describeProvider } from '@/providers/test_spec.ts';
-import { describe } from '@std/testing/bdd';
+import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
+import { stubProviderLookups, stubTokenRetrieval } from '@/providers/test_stubs.ts';
+import { downloadMode } from '@/utils/fetch_stub.ts';
+import { assert } from 'std/assert/assert.ts';
+import { afterAll, describe } from '@std/testing/bdd';
+import type { Stub } from '@std/testing/mock';
 
 import TidalProvider from './mod.ts';
 
 describe('Tidal provider', () => {
-	const tidal = new TidalProvider();
+	const tidal = new TidalProvider(makeProviderOptions());
+	const stubs: Stub[] = [stubProviderLookups(tidal)];
+
+	if (!downloadMode) {
+		stubs.push(stubTokenRetrieval(tidal));
+	}
 
 	describeProvider(tidal, {
 		urls: [{
@@ -40,6 +49,24 @@ describe('Tidal provider', () => {
 			description: 'track page',
 			url: new URL('https://tidal.com/browse/track/11343638'),
 		}],
-		releaseLookup: [],
+		releaseLookup: [{
+			description: 'live album with video tracks and featured artist (v1 API)',
+			release: new URL('https://tidal.com/album/130201923'),
+			options: {
+				// Use data from an old snapshot which was made when the v1 API was still live.
+				snapshotMaxTimestamp: 1717684821,
+				regions: new Set(['GB']),
+			},
+			assert: (release) => {
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assert(allTracks[5].artists?.length === 2, 'Track 6 should have two artists');
+				assert(allTracks[8].type === 'video', 'Track 9 should be a video');
+				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
+			},
+		}],
+	});
+
+	afterAll(() => {
+		stubs.forEach((stub) => stub.restore());
 	});
 });
