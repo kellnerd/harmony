@@ -46,6 +46,7 @@ describe('Spotify provider', () => {
 		}, {
 			description: 'track page',
 			url: new URL('https://open.spotify.com/track/1EDPVGbyPKJPeGqATwXZvN'),
+			id: undefined,
 		}],
 		releaseLookup: [{
 			description: 'single by two artists',

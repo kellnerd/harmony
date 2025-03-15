@@ -37,6 +37,7 @@ describe('Bandcamp provider', () => {
 		}, {
 			description: 'URL without subdomain',
 			url: new URL('https://bandcamp.com/discover'),
+			id: undefined,
 		}],
 		releaseLookup: [{
 			description: 'label release with fixed price (which is not free despite minimum_price of 0.0)',

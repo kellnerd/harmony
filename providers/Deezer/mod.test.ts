@@ -39,6 +39,7 @@ describe('Deezer provider', () => {
 		}, {
 			description: 'playlist page',
 			url: new URL('https://www.deezer.com/en/playlist/1976454162'),
+			id: undefined,
 		}],
 		releaseLookup: [{
 			description: 'single by two artists',

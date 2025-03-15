@@ -44,7 +44,7 @@ export interface EntityUrlTest {
 	/** Provider URL of an entity. */
 	url: URL;
 	/** ID of the entity which can be extracted from the URL. */
-	id?: EntityId | undefined;
+	id: EntityId | undefined;
 	/** Indicates that the URL is canonical and can be reconstructed from the ID. */
 	isCanonical?: boolean;
 }

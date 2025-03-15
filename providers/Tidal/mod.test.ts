@@ -48,6 +48,7 @@ describe('Tidal provider', () => {
 		}, {
 			description: 'track page',
 			url: new URL('https://tidal.com/browse/track/11343638'),
+			id: undefined,
 		}],
 		releaseLookup: [{
 			description: 'live album with video tracks and featured artist (v1 API)',
