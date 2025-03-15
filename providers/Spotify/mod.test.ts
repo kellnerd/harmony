@@ -8,6 +8,7 @@ import { downloadMode } from '@/utils/fetch_stub.ts';
 import { assert } from 'std/assert/assert.ts';
 import { afterAll, describe } from '@std/testing/bdd';
 import type { Stub } from '@std/testing/mock';
+import { assertSnapshot } from '@std/testing/snapshot';
 
 import SpotifyProvider from './mod.ts';
 
@@ -52,15 +53,15 @@ describe('Spotify provider', () => {
 			description: 'single by two artists',
 			release: new URL('https://open.spotify.com/album/10FLjwfpbxLmW8c25Xyc2N'),
 			options: releaseOptions,
-			assert: (release) => {
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
 				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
 			},
 		}, {
 			description: 'single by two artists (without additional lookup options)',
-			release: '10FLjwfpbxLmW8c25Xyc2N', // same single as the previous test
-			skipSnapshot: true, // just a subset of the previous one
+			release: '10FLjwfpbxLmW8c25Xyc2N', // same single as in the previous test
 			assert: (release) => {
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
 				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');

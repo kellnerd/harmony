@@ -2,6 +2,7 @@ import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts'
 import { stubProviderLookups } from '@/providers/test_stubs.ts';
 import { assert } from 'std/assert/assert.ts';
 import { afterAll, describe } from '@std/testing/bdd';
+import { assertSnapshot } from '@std/testing/snapshot';
 
 import BandcampProvider from './mod.ts';
 
@@ -42,7 +43,8 @@ describe('Bandcamp provider', () => {
 		releaseLookup: [{
 			description: 'label release with fixed price (which is not free despite minimum_price of 0.0)',
 			release: 'thedarkthursday/and-it-was-a-burned-into-my-mind-yet-i-faltered-like-a-broken-record',
-			assert: (release) => {
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
 				const isFree = release.externalLinks.some((link) => link.types?.includes('free download'));
 				assert(!isFree, 'Release should not be downloadable for free');
 				const accountName = 'thedarkthursday';

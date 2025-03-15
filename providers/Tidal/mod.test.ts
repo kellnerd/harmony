@@ -7,6 +7,7 @@ import { downloadMode } from '@/utils/fetch_stub.ts';
 import { assert } from 'std/assert/assert.ts';
 import { afterAll, describe } from '@std/testing/bdd';
 import type { Stub } from '@std/testing/mock';
+import { assertSnapshot } from '@std/testing/snapshot';
 
 import TidalProvider from './mod.ts';
 
@@ -58,7 +59,8 @@ describe('Tidal provider', () => {
 				snapshotMaxTimestamp: 1717684821,
 				regions: new Set(['GB']),
 			},
-			assert: (release) => {
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
 				assert(allTracks[5].artists?.length === 2, 'Track 6 should have two artists');
 				assert(allTracks[8].type === 'video', 'Track 9 should be a video');

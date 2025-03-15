@@ -3,6 +3,7 @@ import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts'
 import { stubProviderLookups } from '@/providers/test_stubs.ts';
 import { assert } from 'std/assert/assert.ts';
 import { afterAll, describe } from '@std/testing/bdd';
+import { assertSnapshot } from '@std/testing/snapshot';
 
 import DeezerProvider from './mod.ts';
 
@@ -45,15 +46,15 @@ describe('Deezer provider', () => {
 			description: 'single by two artists',
 			release: new URL('https://www.deezer.com/en/album/629506181'),
 			options: releaseOptions,
-			assert: (release) => {
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
 				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
 			},
 		}, {
 			description: 'single by two artists (without additional lookup options)',
-			release: '629506181', // same single as the previous one
-			skipSnapshot: true, // just a subset of the previous one
+			release: '629506181', // same single as in the previous test
 			assert: (release) => {
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
 				assert(allTracks.every((track) => track.artists?.length === 1), 'Tracks should not have multiple artists');

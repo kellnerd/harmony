@@ -6,7 +6,6 @@ import { isDefined } from '@/utils/predicate.ts';
 import { assertEquals } from 'std/assert/assert_equals.ts';
 import { filterValues } from '@std/collections/filter-values';
 import { describe, it } from '@std/testing/bdd';
-import { assertSnapshot } from '@std/testing/snapshot';
 
 /** Specification which describes the expected behavior of a {@linkcode MetadataProvider}. */
 export interface ProviderSpecification {
@@ -20,12 +19,7 @@ export interface ProviderSpecification {
 	/**
 	 * Releases which the provider should be able to lookup.
 	 *
-	 * Each looked up and harmonized release is compared against a reference [snapshot] from a snapshot file by default.
-	 * You can create new snapshots or update them by passing the `--update` flag when running the test.
-	 *
-	 * Custom assertions for the looked up release can be specified as well.
-	 *
-	 * [snapshot]: https://jsr.io/@std/testing/doc/snapshot
+	 * Custom assertions for the looked up release have to be specified.
 	 */
 	releaseLookup: ReleaseLookupTest[];
 }
@@ -86,9 +80,7 @@ export interface ReleaseLookupTest {
 	/** Lookup options which should be passed to the provider. */
 	options?: ReleaseOptions;
 	/** Custom assertion(s) which should be performed for the looked up release. */
-	assert?: (actualRelease: HarmonyRelease) => asserts actualRelease;
-	/** Skip snapshot testing. Should be replaced by custom assertions. */
-	skipSnapshot?: boolean;
+	assert: (actualRelease: HarmonyRelease, context: Deno.TestContext) => asserts actualRelease;
 }
 
 function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookupTest[]) {
@@ -107,7 +99,7 @@ function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookup
 				}
 			}
 
-			it(description, async (t) => {
+			it(description, async (context) => {
 				const actualRelease = await provider.getRelease(release, test.options);
 
 				// Remove properties which are not stable across multiple runs.
@@ -116,10 +108,7 @@ function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookup
 					delete providerInfo.processingTime;
 				});
 
-				test.assert?.(actualRelease);
-				if (!test.skipSnapshot) {
-					await assertSnapshot(t, actualRelease);
-				}
+				test.assert(actualRelease, context);
 			});
 		}
 	});
