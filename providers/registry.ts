@@ -7,12 +7,15 @@ import { SnapStorage } from 'snap-storage';
 export interface ProviderRegistryOptions {
 	/** Information about the application which is passed to each provider. */
 	appInfo?: AppInfo;
+	/** Path to the directory where providers should persist cached data. */
+	dataDir?: string;
 }
 
 /** Registry for metadata providers. */
 export class ProviderRegistry {
 	constructor(options: ProviderRegistryOptions = {}) {
 		this.#appInfo = options.appInfo;
+		this.#snaps = new SnapStorage(options.dataDir);
 	}
 
 	/** Adds an instance of the given provider to the registry. */
@@ -134,5 +137,5 @@ export class ProviderRegistry {
 	#internalNames = new Set<string>();
 	#displayToInternal: Record<string, string | undefined> = {};
 	#internalToDisplay: Record<string, string | undefined> = {};
-	#snaps = new SnapStorage();
+	#snaps: SnapStorage;
 }

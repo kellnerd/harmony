@@ -10,7 +10,7 @@ export function CoverImage({ artwork }: { artwork: Artwork }) {
 	}
 
 	return (
-		<figure class='cover-image'>
+		<figure class='cover-image' data-provider={provider}>
 			<a href={artwork.url}>
 				<img src={artwork.thumbUrl ?? artwork.url} alt={description} title={description} />
 			</a>

@@ -1,6 +1,7 @@
+import { musicbrainzTargetServer } from '@/config.ts';
+import { join } from 'std/url/join.ts';
 import { ProviderIcon } from './ProviderIcon.tsx';
 import { SpriteIcon } from './SpriteIcon.tsx';
-import { join } from 'std/url/join.ts';
 
 const isrcPattern = /^([A-Z]{2})-?([A-Z0-9]{3})-?(\d{2})-?(\d{5})$/i;
 
@@ -17,7 +18,7 @@ export function ISRC({ code }: { code: string }) {
 					>
 						<SpriteIcon size={18} name='brand-ifpi' stroke={1.5} />
 					</a>
-					<a href={join('https://musicbrainz.org/isrc/', code).href}>
+					<a href={join(musicbrainzTargetServer, 'isrc', code).href}>
 						<ProviderIcon providerName='MusicBrainz' size={18} stroke={1.5} />
 					</a>
 				</span>

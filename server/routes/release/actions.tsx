@@ -1,17 +1,17 @@
 import { ArtistCredit } from '@/server/components/ArtistCredit.tsx';
 import { CoverImage } from '@/server/components/CoverImage.tsx';
-import { type EntityWithUrlRels, LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
 import { MagicISRC } from '@/server/components/ISRCSubmission.tsx';
+import { type EntityWithUrlRels, LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
 import { MessageBox } from '@/server/components/MessageBox.tsx';
 import { ProviderList } from '@/server/components/ProviderList.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
-import { CombinedReleaseLookup } from '@/lookup.ts';
+import { musicbrainzTargetServer } from '@/config.ts';
 import { deduplicateEntities } from '@/harmonizer/deduplicate.ts';
 import type { ArtistCreditName, Artwork, HarmonyRelease, ProviderInfo, ReleaseOptions } from '@/harmonizer/types.ts';
+import { CombinedReleaseLookup } from '@/lookup.ts';
 import { MB } from '@/musicbrainz/api_client.ts';
 import { providers as providerRegistry } from '@/providers/mod.ts';
-import { musicbrainzBaseUrl } from '@/server/config.ts';
 import { extractReleaseLookupState } from '@/server/state.ts';
 import { LookupError, ProviderError } from '@/utils/errors.ts';
 import { isDefined } from '@/utils/predicate.ts';
@@ -37,7 +37,7 @@ export default defineRoute(async (req, ctx) => {
 		if (!releaseMbid) {
 			throw new Error('Required query parameter `release_mbid` is missing');
 		}
-		releaseUrl = join(musicbrainzBaseUrl, 'release', releaseMbid);
+		releaseUrl = join(musicbrainzTargetServer, 'release', releaseMbid);
 
 		const {
 			gtin,

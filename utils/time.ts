@@ -43,3 +43,15 @@ export function formatTimestampAsISOString(unixSeconds: number): string {
 export function assertTimestamp(ts: number) {
 	assert(Number.isSafeInteger(ts) && ts >= 0, 'Timestamp has to be a non-negative integer');
 }
+
+/** Converts an ISO-8601 duration (e.g. PT41M5S) to milliseconds. */
+export function parseISODuration(duration: string): number {
+	const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+	if (!match) {
+		return 0;
+	}
+	const hours = match[1] ? parseInt(match[1], 10) : 0;
+	const minutes = match[2] ? parseInt(match[2], 10) : 0;
+	const seconds = match[3] ? parseInt(match[3], 10) : 0;
+	return (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
+}

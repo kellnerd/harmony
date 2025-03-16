@@ -448,6 +448,9 @@ const packageTypes = {
 	15: '2 x Vinyl LP',
 	16: '7" Vinyl',
 	17: 'Vinyl Box Set',
+	19: 'T-Shirt/Shirt',
+	21: 'Hat',
+	22: 'Other Apparel',
 	23: 'Book/Magazine',
 } as const;
 

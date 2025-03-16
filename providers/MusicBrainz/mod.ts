@@ -1,3 +1,4 @@
+import { musicbrainzSourceServer } from '@/config.ts';
 import type {
 	ArtistCreditName,
 	EntityId,
@@ -55,7 +56,7 @@ export default class MusicBrainzProvider extends MetadataApiProvider {
 
 	readonly releaseLookup = MusicBrainzReleaseLookup;
 
-	readonly apiBaseUrl = 'https://musicbrainz.org/ws/2/';
+	readonly apiBaseUrl = join(musicbrainzSourceServer, 'ws/2');
 
 	constructUrl(entity: EntityId): URL {
 		return join('https://musicbrainz.org', entity.type, entity.id);
@@ -130,7 +131,10 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 	}
 
 	convertRawRelease(rawRelease: RawRelease): HarmonyRelease {
-		this.id = rawRelease.id;
+		this.entity = {
+			id: rawRelease.id,
+			type: 'release',
+		};
 
 		const releaseGroup = rawRelease['release-group'];
 		const releaseTypes: ReleaseGroupType[] = [...releaseGroup['secondary-types']];

@@ -1,42 +1,39 @@
-import { availableRegions } from './regions.ts';
-import {
-	ApiAccessToken,
-	type CacheEntry,
-	MetadataApiProvider,
-	type ProviderOptions,
-	ReleaseApiLookup,
-} from '@/providers/base.ts';
+import { ApiAccessToken, type CacheEntry, MetadataApiProvider, type ProviderOptions } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
-import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
-import { formatCopyrightSymbols } from '@/utils/copyright.ts';
-import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
-import { ProviderError, ResponseError } from '@/utils/errors.ts';
-import { selectLargestImage } from '@/utils/image.ts';
+import { getFromEnv } from '@/utils/config.ts';
+import { ResponseError } from '@/utils/errors.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { join } from 'std/url/join.ts';
+import { availableRegions } from './regions.ts';
+import { TidalV1ReleaseLookup } from './v1/lookup.ts';
+import { TidalV2ReleaseLookup } from './v2/lookup.ts';
 
-import type { Album, AlbumItem, ApiError, Resource, Result, SimpleArtist } from './api_types.ts';
 import type {
-	ArtistCreditName,
 	CountryCode,
 	EntityId,
-	HarmonyMedium,
+	HarmonyEntityType,
 	HarmonyRelease,
-	HarmonyTrack,
-	Label,
 	LinkType,
+	ReleaseOptions,
+	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
+import type { PartialDate } from '@/utils/date.ts';
+import type { ApiError as ApiErrorV1 } from './v1/api_types.ts';
+import type { ApiError as ApiErrorV2 } from './v2/api_types.ts';
 
 // See https://developer.tidal.com/reference/web-api
 
-const tidalClientId = Deno.env.get('HARMONY_TIDAL_CLIENT_ID') || '';
-const tidalClientSecret = Deno.env.get('HARMONY_TIDAL_CLIENT_SECRET') || '';
+const tidalClientId = getFromEnv('HARMONY_TIDAL_CLIENT_ID') || '';
+const tidalClientSecret = getFromEnv('HARMONY_TIDAL_CLIENT_SECRET') || '';
+
+// The Tidal API v1 was deprecated and stopped working shortly after this timestamp.
+const tidalV1MaxTimestamp = 1737454946; // 2025-01-21 10:22:26 UTC
 
 export default class TidalProvider extends MetadataApiProvider {
 	constructor(options: ProviderOptions = {}) {
 		super({
-			rateLimitInterval: 1000,
+			rateLimitInterval: 10000,
 			concurrentRequests: 2,
 			...options,
 		});
@@ -46,7 +43,7 @@ export default class TidalProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '{(www|listen).}?tidal.com',
-		pathname: String.raw`{/browse}?/:type(album|artist)/:id(\d+)`,
+		pathname: String.raw`{/browse}?/:type(album|artist|video)/:id(\d+)`,
 	});
 
 	override readonly features: FeatureQualityMap = {
@@ -59,14 +56,14 @@ export default class TidalProvider extends MetadataApiProvider {
 
 	readonly entityTypeMap = {
 		artist: 'artist',
-		release: 'album',
+		release: ['album', 'video'],
 	};
 
 	readonly defaultRegion: CountryCode = 'US';
 
 	override readonly availableRegions = new Set(availableRegions);
 
-	readonly releaseLookup = TidalReleaseLookup;
+	protected releaseLookup: typeof TidalV1ReleaseLookup | typeof TidalV2ReleaseLookup = TidalV2ReleaseLookup;
 
 	override readonly launchDate: PartialDate = {
 		year: 2014,
@@ -74,10 +71,38 @@ export default class TidalProvider extends MetadataApiProvider {
 		day: 28,
 	};
 
-	readonly apiBaseUrl = 'https://openapi.tidal.com';
+	override getRelease(specifier: ReleaseSpecifier, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
+		if (!options.snapshotMaxTimestamp || options.snapshotMaxTimestamp > tidalV1MaxTimestamp) {
+			this.releaseLookup = TidalV2ReleaseLookup;
+		} else {
+			this.releaseLookup = TidalV1ReleaseLookup;
+		}
+
+		return super.getRelease(specifier, options);
+	}
 
 	constructUrl(entity: EntityId): URL {
 		return join('https://tidal.com', entity.type, entity.id);
+	}
+
+	override serializeProviderId(entity: EntityId): string {
+		if (entity.type === 'video') {
+			return [entity.type, entity.id].join('/');
+		} else {
+			return entity.id;
+		}
+	}
+
+	override parseProviderId(id: string, entityType: HarmonyEntityType): EntityId {
+		if (entityType === 'release') {
+			if (id.startsWith('video/')) {
+				return { id: id.replace('video/', ''), type: 'video' };
+			} else {
+				return { id, type: 'album' };
+			}
+		} else {
+			return { id, type: this.entityTypeMap[entityType] };
+		}
 	}
 
 	override getLinkTypesForEntity(): LinkType[] {
@@ -90,10 +115,7 @@ export default class TidalProvider extends MetadataApiProvider {
 			const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
 				policy: { maxTimestamp },
 				requestInit: {
-					headers: {
-						'Authorization': `Bearer ${accessToken}`,
-						'Content-Type': 'application/vnd.tidal.v1+json',
-					},
+					headers: { 'Authorization': `Bearer ${accessToken}` },
 				},
 			});
 			const apiError = cacheEntry.content as ApiError;
@@ -146,182 +168,16 @@ export default class TidalProvider extends MetadataApiProvider {
 	}
 }
 
-export class TidalReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
-	constructReleaseApiUrl(): URL {
-		const { method, value, region } = this.lookup;
-		let lookupUrl: URL;
-		const query = new URLSearchParams({
-			countryCode: region || this.provider.defaultRegion,
-		});
-		if (method === 'gtin') {
-			lookupUrl = join(this.provider.apiBaseUrl, `albums/byBarcodeId`);
-			query.append('barcodeId', value);
-		} else { // if (method === 'id')
-			lookupUrl = join(this.provider.apiBaseUrl, 'albums', value);
-		}
-
-		lookupUrl.search = query.toString();
-		return lookupUrl;
-	}
-
-	protected async getRawRelease(): Promise<Album> {
-		// Abort new lookups which would fail anyway, permalinks which use cached data should still work.
-		if (!this.options.snapshotMaxTimestamp) {
-			throw new ProviderError(
-				this.provider.name,
-				'New lookups stopped working after Tidal have silently removed their v1 API',
-			);
-		}
-
-		if (!this.options.regions?.size) {
-			this.options.regions = new Set([this.provider.defaultRegion]);
-		}
-		if (this.lookup.method === 'gtin') {
-			const isValidData = (data: Result<Album>) => {
-				return Boolean(data?.data?.length);
-			};
-			const result = await this.queryAllRegions<Result<Album>>(isValidData);
-			if (result.data.length > 1) {
-				this.warnMultipleResults(result.data.slice(1).map((release) => release.resource.tidalUrl));
-			}
-			return result.data[0].resource;
-		} else {
-			const isValidData = (data: Resource<Album>) => {
-				return Boolean(data?.resource);
-			};
-			// If this was a 404 not found error, ignore it and try next region.
-			const isCriticalError = (error: unknown) => {
-				const { response } = error as { response?: Response };
-				return response?.status !== 404;
-			};
-			const result = await this.queryAllRegions<Resource<Album>>(isValidData, isCriticalError);
-			return result.resource;
-		}
-	}
-
-	private async getRawTracklist(albumId: string): Promise<AlbumItem[]> {
-		const tracklist: AlbumItem[] = [];
-		const url = join(this.provider.apiBaseUrl, 'albums', albumId, 'items');
-		const limit = 100;
-		let offset = 0;
-		const query = new URLSearchParams({
-			countryCode: this.lookup.region || this.provider.defaultRegion,
-			limit: String(limit),
-			offset: String(offset),
-		});
-
-		while (true) {
-			url.search = query.toString();
-			const { content, timestamp }: CacheEntry<Result<AlbumItem>> = await this.provider.query(
-				url,
-				this.options.snapshotMaxTimestamp,
-			);
-			tracklist.push(...content.data.map((r) => r.resource));
-			this.updateCacheTime(timestamp);
-			if (!content.metadata.total || content.metadata.total <= tracklist.length) {
-				break;
-			}
-			offset += limit;
-			query.set('offset', String(offset));
-		}
-
-		return tracklist;
-	}
-
-	protected async convertRawRelease(rawRelease: Album): Promise<HarmonyRelease> {
-		this.id = rawRelease.id;
-		const rawTracklist = await this.getRawTracklist(this.id);
-		const media = this.convertRawTracklist(rawTracklist);
-		const artwork = selectLargestImage(rawRelease.imageCover, ['front']);
-		return {
-			title: rawRelease.title,
-			artists: rawRelease.artists.map(this.convertRawArtist.bind(this)),
-			gtin: rawRelease.barcodeId,
-			externalLinks: [{
-				url: rawRelease.tidalUrl,
-				types: this.provider.getLinkTypesForEntity(),
-			}],
-			media,
-			releaseDate: parseHyphenatedDate(rawRelease.releaseDate),
-			copyright: rawRelease.copyright ? formatCopyrightSymbols(rawRelease.copyright) : undefined,
-			status: 'Official',
-			types: [capitalizeReleaseType(rawRelease.type)],
-			packaging: 'None',
-			images: artwork ? [artwork] : [],
-			labels: this.getLabels(rawRelease),
-			info: this.generateReleaseInfo(),
-		};
-	}
-
-	private convertRawTracklist(tracklist: AlbumItem[]): HarmonyMedium[] {
-		const result: HarmonyMedium[] = [];
-		let medium: HarmonyMedium = {
-			number: 1,
-			format: 'Digital Media',
-			tracklist: [],
-		};
-
-		// split flat tracklist into media
-		tracklist.forEach((item) => {
-			// store the previous medium and create a new one
-			if (item.volumeNumber !== medium.number) {
-				if (medium.number) {
-					result.push(medium);
-				}
-
-				medium = {
-					number: item.volumeNumber,
-					format: 'Digital Media',
-					tracklist: [],
-				};
-			}
-
-			medium.tracklist.push(this.convertRawTrack(item));
-		});
-
-		// store the final medium
-		result.push(medium);
-
-		return result;
-	}
-
-	private convertRawTrack(track: AlbumItem): HarmonyTrack {
-		const result: HarmonyTrack = {
-			number: track.trackNumber,
-			title: track.title,
-			length: track.duration * 1000,
-			isrc: track.isrc,
-			artists: track.artists.map(this.convertRawArtist.bind(this)),
-			type: track.artifactType === 'video' ? 'video' : 'audio',
-		};
-
-		return result;
-	}
-
-	private convertRawArtist(artist: SimpleArtist): ArtistCreditName {
-		return {
-			name: artist.name,
-			creditedName: artist.name,
-			externalIds: this.provider.makeExternalIds({ type: 'artist', id: artist.id.toString() }),
-		};
-	}
-
-	private getLabels(rawRelease: Album): Label[] {
-		// It is unsure whether providerInfo is actually used for some releases,
-		// but it is documented in the API schemas.
-		if (rawRelease.providerInfo?.providerName) {
-			return [{
-				name: rawRelease.providerInfo?.providerName,
-			}];
-		}
-
-		return [];
-	}
-}
-
 class TidalResponseError extends ResponseError {
 	constructor(readonly details: ApiError, url: URL) {
-		const msg = details.errors.map((e) => `${e.field ?? e.category}: ${e.detail}`).join(', ');
-		super('Tidal', msg, url);
+		const messages = details.errors.map((error) => {
+			const errorDomain = 'meta' in error
+				? error.source?.parameter ?? error.meta.category // ApiErrorV2
+				: error.field ?? error.category; // ApiErrorV1
+			return `${errorDomain}: ${error.detail}`;
+		});
+		super('Tidal', messages.join(', '), url);
 	}
 }
+
+type ApiError = ApiErrorV1 | ApiErrorV2;

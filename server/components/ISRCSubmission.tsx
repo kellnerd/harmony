@@ -1,5 +1,5 @@
+import { musicbrainzTargetServer } from '@/config.ts';
 import type { HarmonyRelease } from '@/harmonizer/types.ts';
-import { musicbrainzBaseUrl } from '@/server/config.ts';
 import { join } from 'std/url/join.ts';
 
 export function MagicISRC({ release, targetMbid }: { release: HarmonyRelease; targetMbid?: string }) {
@@ -15,7 +15,7 @@ export function MagicISRC({ release, targetMbid }: { release: HarmonyRelease; ta
 	);
 	let editNote = `Import ISRCs from ${isrcProvider.url}`;
 	if (targetMbid) {
-		const releaseUrl = join(musicbrainzBaseUrl, 'release', targetMbid);
+		const releaseUrl = join(musicbrainzTargetServer, 'release', targetMbid);
 		editNote += ` to ${releaseUrl.href}`;
 		query.set('musicbrainzid', targetMbid);
 	}

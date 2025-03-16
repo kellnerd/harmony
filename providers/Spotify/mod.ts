@@ -1,8 +1,9 @@
+import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
 import { ApiAccessToken, type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
-import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
-import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
+import { getFromEnv } from '@/utils/config.ts';
 import { formatCopyrightSymbols } from '@/utils/copyright.ts';
+import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import { selectLargestImage } from '@/utils/image.ts';
 import { splitLabels } from '@/utils/label.ts';
@@ -32,8 +33,8 @@ import type {
 
 // See https://developer.spotify.com/documentation/web-api
 
-const spotifyClientId = Deno.env.get('HARMONY_SPOTIFY_CLIENT_ID') || '';
-const spotifyClientSecret = Deno.env.get('HARMONY_SPOTIFY_CLIENT_SECRET') || '';
+const spotifyClientId = getFromEnv('HARMONY_SPOTIFY_CLIENT_ID') || '';
+const spotifyClientSecret = getFromEnv('HARMONY_SPOTIFY_CLIENT_SECRET') || '';
 
 export default class SpotifyProvider extends MetadataApiProvider {
 	readonly name = 'Spotify';
@@ -261,7 +262,10 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 	}
 
 	protected async convertRawRelease(rawRelease: Album): Promise<HarmonyRelease> {
-		this.id = rawRelease.id;
+		this.entity = {
+			id: rawRelease.id,
+			type: 'album',
+		};
 		const rawTracklist = await this.getRawTracklist(rawRelease);
 		const media = this.convertRawTracklist(rawTracklist);
 		const artwork = selectLargestImage(rawRelease.images, ['front']);

@@ -94,7 +94,7 @@ export abstract class MetadataProvider {
 	/** Maps MusicBrainz entity types to the corresponding entity types of the provider. */
 	abstract readonly entityTypeMap: Record<HarmonyEntityType, string | string[]>;
 
-	abstract readonly releaseLookup: ReleaseLookupConstructor;
+	protected abstract releaseLookup: ReleaseLookupConstructor;
 
 	/** Country codes of regions in which the provider offers its services (optional). */
 	readonly availableRegions?: Set<CountryCode>;
@@ -131,6 +131,32 @@ export abstract class MetadataProvider {
 
 	/** Constructs a canonical entity URL for the given provider ID. */
 	abstract constructUrl(entity: EntityId): URL;
+
+	/**
+	 * Maps the given entity ID to a unique provider ID for the corresponding MusicBrainz entity type.
+	 *
+	 * It is crucial that the entity ID can be reconstructed from the serialized ID using {@linkcode parseProviderId}.
+	 * This means when multiple provider types map to the same MB type, both of these functions have to be overridden.
+	 */
+	serializeProviderId(entity: EntityId): string {
+		return entity.id;
+	}
+
+	/**
+	 * Maps a provider ID of the given MusicBrainz entity type to provider entity type and ID.
+	 *
+	 * Accepts provider IDs which were serialized by {@linkcode serializeProviderId}.
+	 */
+	parseProviderId(id: string, entityType: HarmonyEntityType): EntityId {
+		const type = this.entityTypeMap[entityType];
+		if (Array.isArray(type)) {
+			throw new ProviderError(
+				this.name,
+				`Unable to parse provider ID as the provider supports multiple ${entityType} types, please override parser`,
+			);
+		}
+		return { id, type };
+	}
 
 	/** Returns the appropriate external link types for the given entity. */
 	// deno-lint-ignore no-unused-vars
@@ -237,8 +263,8 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 			) {
 				throw new ProviderError(this.provider.name, `${specifier} is not a release URL`);
 			}
-			this.id = entity.id;
-			this.lookup = { method: 'id', value: entity.id };
+			this.entity = entity;
+			this.lookup = { method: 'id', value: this.provider.serializeProviderId(entity) };
 
 			// Prefer region of the given release URL over the standard preferences.
 			if (entity.region) {
@@ -246,12 +272,15 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 				this.options.regions = new Set([entity.region]);
 			}
 		} else if (typeof specifier === 'string') {
-			this.id = specifier;
 			this.lookup = { method: 'id', value: specifier };
 		} else if (typeof specifier === 'number') {
 			this.lookup = { method: 'gtin', value: specifier.toString() };
 		} else {
 			this.lookup = { method: specifier[0], value: specifier[1] };
+		}
+
+		if (!this.entity && this.lookup.method === 'id') {
+			this.entity = this.provider.parseProviderId(this.lookup.value, 'release');
 		}
 	}
 
@@ -261,8 +290,8 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 	/** Release lookup options. */
 	protected options: ReleaseOptions;
 
-	/** Provider ID of the currently looked up release (initially undefined). */
-	protected id: string | undefined;
+	/** Provider entity ID of the currently looked up release (initially undefined). */
+	protected entity: EntityId | undefined;
 
 	/** Date and time when the (last piece of) provider data was cached (in seconds since the UNIX epoch). */
 	private cacheTime: number | undefined;
@@ -272,21 +301,6 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 		if (!this.cacheTime || timestamp > this.cacheTime) {
 			this.cacheTime = timestamp;
 		}
-	}
-
-	/**
-	 * Constructs a canonical release URL for the given provider ID and lookup parameters.
-	 *
-	 * This is implemented using {@linkcode MetadataProvider.constructUrl} by default.
-	 */
-	constructReleaseUrl(id: string, lookup: ReleaseLookupParameters): URL {
-		let type = this.provider.entityTypeMap['release'];
-		if (Array.isArray(type)) {
-			// Use the first mapped type as the default `release` type of the provider.
-			// This should mean the actual type is encoded in the ID, but we'll default to this if not.
-			type = type[0];
-		}
-		return this.provider.constructUrl({ id, type, region: lookup.region });
 	}
 
 	/** Constructs an optional API URL for a release using the specified lookup options. */
@@ -328,16 +342,16 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 	private messages: ProviderMessage[] = [];
 
 	protected generateReleaseInfo(): ReleaseInfo {
-		if (!this.id) {
-			throw new ProviderError(this.provider.name, 'Release info can only be generated with a defined provider ID');
+		if (!this.entity) {
+			throw new ProviderError(this.provider.name, 'Release info can only be generated with a defined entity ID');
 		}
 
 		return {
 			providers: [{
 				name: this.provider.name,
 				internalName: this.provider.internalName,
-				id: this.id,
-				url: this.constructReleaseUrl(this.id, this.lookup).href,
+				id: this.provider.serializeProviderId(this.entity),
+				url: this.provider.constructUrl(this.entity).href,
 				apiUrl: this.constructReleaseApiUrl()?.href,
 				lookup: this.lookup,
 				cacheTime: this.cacheTime,

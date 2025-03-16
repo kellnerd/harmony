@@ -126,7 +126,11 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 				return gtin ? isEqualGTIN(gtin, lookupGtin) : false;
 			}) ?? collection;
 		}
-		this.id = collection.collectionId.toString();
+		this.entity = {
+			id: collection.collectionId.toString(),
+			type: 'album',
+			region: this.lookup.region,
+		};
 
 		// Skip bonus items like booklets.
 		const validTrackKinds: Kind[] = ['song', 'music-video'];
@@ -137,7 +141,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 
 		// Warn about releases without returned tracks.
 		if (!tracks.length) {
-			this.addMessage(`The API returned no tracks, which usually happens for streaming-only releases`, 'warning');
+			this.addMessage('The API returned no tracks, which usually happens for streaming-only releases', 'warning');
 		}
 
 		// Warn about results which belong to a different collection.
