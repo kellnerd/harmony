@@ -90,7 +90,7 @@ export interface ReleaseLookupTest {
 	/** Lookup options which should be passed to the provider. */
 	options?: ReleaseOptions;
 	/** Custom assertion(s) which should be performed for the looked up release. */
-	assert: (actualRelease: HarmonyRelease, context: Deno.TestContext) => asserts actualRelease;
+	assert: (actualRelease: HarmonyRelease, context: Deno.TestContext) => void | Promise<void>;
 }
 
 function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookupTest[]) {
@@ -118,7 +118,7 @@ function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookup
 					delete providerInfo.processingTime;
 				});
 
-				test.assert(actualRelease, context);
+				await test.assert(actualRelease, context);
 			});
 		}
 	});
