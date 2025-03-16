@@ -39,6 +39,12 @@ export interface EntityUrlTest {
 	url: URL;
 	/** ID of the entity which can be extracted from the URL. */
 	id: EntityId | undefined;
+	/**
+	 * Serialized entity ID, if it is different from the extracted entity ID.
+	 *
+	 * @see {@linkcode MetadataProvider.serializeProviderId}
+	 */
+	serializedId?: string;
 	/** Indicates that the URL is canonical and can be reconstructed from the ID. */
 	isCanonical?: boolean;
 }
@@ -52,7 +58,11 @@ function describeEntityUrlExtraction(provider: MetadataProvider, tests: EntityUr
 					// @ts-ignore-error -- `EntityId` is a valid `Record`
 					actualId = filterValues(actualId, isDefined);
 				}
-				assertEquals(actualId, test.id);
+				assertEquals(actualId, test.id, 'Extracted entity is wrong');
+				const serializedId = test.serializedId ?? test.id?.id;
+				if (serializedId && actualId) {
+					assertEquals(provider.serializeProviderId(actualId), serializedId, 'Serialized entity ID is wrong');
+				}
 			});
 		}
 	});

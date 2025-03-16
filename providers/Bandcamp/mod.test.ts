@@ -23,7 +23,8 @@ describe('Bandcamp provider', () => {
 		}, {
 			description: 'standalone track page',
 			url: new URL('https://zeug.bandcamp.com/track/yeltsa-kcir'),
-			id: { type: 'track', id: 'zeug/track/yeltsa-kcir' },
+			id: { type: 'track', id: 'zeug/yeltsa-kcir' },
+			serializedId: 'zeug/track/yeltsa-kcir',
 			isCanonical: true,
 		}, {
 			description: 'artist page/subdomain',
