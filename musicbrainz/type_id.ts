@@ -93,6 +93,23 @@ export const labelUrlTypeIds = {
 
 export type LabelUrlLinkType = keyof typeof labelUrlTypeIds;
 
+export const recordingUrlTypeIds = {
+	'license': 302,
+	'production': 256,
+	'IMDB samples': 258,
+	'get the music': 257,
+	'purchase for download': 254,
+	'download for free': 255,
+	'free streaming': 268,
+	'streaming': 979,
+	'crowdfunding': 905,
+	'other databases': 306,
+	'allmusic': 285,
+	'secondhandsongs': 976,
+};
+
+export type RecordingUrlTypeIds = keyof typeof recordingUrlTypeIds;
+
 export const releaseUrlTypeIds = {
 	'production': 72,
 	'amazon asin': 77,
@@ -116,10 +133,11 @@ export const releaseUrlTypeIds = {
 
 export type ReleaseUrlLinkType = keyof typeof releaseUrlTypeIds;
 
-export type UrlLinkType = ArtistUrlLinkType | LabelUrlLinkType | ReleaseUrlLinkType;
+export type UrlLinkType = ArtistUrlLinkType | LabelUrlLinkType | RecordingUrlTypeIds | ReleaseUrlLinkType;
 
 export const urlTypeIds: Partial<Record<EntityType, Partial<Record<UrlLinkType, number>>>> = {
 	artist: artistUrlTypeIds,
 	label: labelUrlTypeIds,
+	recording: recordingUrlTypeIds,
 	release: releaseUrlTypeIds,
 };
