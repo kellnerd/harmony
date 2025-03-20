@@ -328,6 +328,9 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			isrc: (track as Track).external_ids?.isrc,
 			artists: track.artists.map(this.convertRawArtist.bind(this)),
 			availableIn: track.available_markets,
+			recording: {
+				externalIds: this.provider.makeExternalIds({ type: 'track', id: track.id }),
+			},
 		};
 
 		return result;

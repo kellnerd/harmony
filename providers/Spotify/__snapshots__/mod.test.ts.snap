@@ -474,6 +474,15 @@ snapshot[`Spotify provider > release lookup > single by two artists 1`] = `
           isrc: "USUM72409273",
           length: 251667,
           number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "2plbrEY59IikOBgBGLjaoe",
+                provider: "spotify",
+                type: "track",
+              },
+            ],
+          },
           title: "Die With A Smile",
         },
       ],

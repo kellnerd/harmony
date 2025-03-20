@@ -169,6 +169,12 @@ export abstract class MetadataProvider {
 		return entityIds.map((entityId) => ({ ...entityId, provider: this.internalName }));
 	}
 
+	/** Creates external entity IDs from the given provider entity URL. */
+	makeExternalIdsFromUrl(entityUrl: URL | string, baseUrl?: URL | string): ExternalEntityId[] {
+		const entityId = this.extractEntityFromUrl(new URL(entityUrl, baseUrl));
+		return entityId ? this.makeExternalIds(entityId) : [];
+	}
+
 	/** Returns the quality rating of the given feature. */
 	getQuality(feature: ProviderFeature): FeatureQuality {
 		return this.features[feature] ?? FeatureQuality.UNKNOWN;

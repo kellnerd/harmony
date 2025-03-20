@@ -70,18 +70,45 @@ suika.love",
           artists: undefined,
           length: 81250,
           number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "thedarkthursday/suomi-lovely",
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
           title: "suomi lovely",
         },
         {
           artists: undefined,
           length: 72019.2,
           number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "thedarkthursday/bittersweet-desires-to-overdose-on-my-prescriptions",
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
           title: "bittersweet desires to overdose on my prescriptions",
         },
         {
           artists: undefined,
           length: 60942.3,
           number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "thedarkthursday/set-fire-to-the-space-snow",
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
           title: "set fire to the space snow",
         },
       ],

@@ -497,6 +497,15 @@ snapshot[`Deezer provider > release lookup > single by two artists 1`] = `
           isrc: "USUM72409273",
           length: 250000,
           number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "2947516331",
+                provider: "deezer",
+                type: "track",
+              },
+            ],
+          },
           title: "Die With A Smile",
         },
       ],

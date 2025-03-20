@@ -248,6 +248,9 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 			number: index + 1,
 			title: track.title,
 			length: track.duration * 1000,
+			recording: {
+				externalIds: this.provider.makeExternalIds({ type: 'track', id: track.id.toString() }),
+			},
 		};
 
 		if ('isrc' in track) {

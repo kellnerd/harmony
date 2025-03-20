@@ -335,7 +335,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 	}
 
 	convertRawTrack(rawTrack: TrackInfo | PlayerTrack, index: number): HarmonyTrack {
-		const { artist } = rawTrack;
+		const { artist, title_link } = rawTrack;
 		let { title } = rawTrack;
 		let trackNumber: number;
 
@@ -354,6 +354,9 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			title,
 			artists: artist ? [this.makeArtistCreditName(artist)] : undefined,
 			length: rawTrack.duration * 1000,
+			recording: {
+				externalIds: title_link ? this.provider.makeExternalIdsFromUrl(title_link, this.rawReleaseUrl) : [],
+			},
 		};
 	}
 

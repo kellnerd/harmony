@@ -229,6 +229,13 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 				length: track.trackTimeMillis,
 				artists: [this.convertRawArtist(track.artistName, track.artistViewUrl)],
 				type: track.kind === 'music-video' ? 'video' : undefined,
+				recording: {
+					externalIds: this.provider.makeExternalIds({
+						type: 'song',
+						id: track.trackId.toString(),
+						region: this.lookup.region,
+					}),
+				},
 			});
 		});
 
