@@ -38,6 +38,11 @@ describe('Deezer provider', () => {
 			id: { type: 'artist', id: '8686' },
 			isCanonical: true,
 		}, {
+			description: 'track page',
+			url: new URL('https://www.deezer.com/track/3245455'),
+			id: { type: 'track', id: '3245455' },
+			isCanonical: true,
+		}, {
 			description: 'playlist page',
 			url: new URL('https://www.deezer.com/en/playlist/1976454162'),
 			id: undefined,

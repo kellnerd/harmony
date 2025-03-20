@@ -35,7 +35,7 @@ export default class DeezerProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '{www.}?deezer.com',
-		pathname: String.raw`/:language(\w{2})?/:type(album|artist)/:id(\d+)`,
+		pathname: String.raw`/:language(\w{2})?/:type(album|artist|track)/:id(\d+)`,
 	});
 
 	override readonly features: FeatureQualityMap = {

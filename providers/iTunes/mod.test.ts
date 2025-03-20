@@ -34,6 +34,15 @@ describe('iTunes provider', () => {
 			url: new URL('https://music.apple.com/us/artist/saint-motel/301341347?uo=4'),
 			id: { type: 'artist', id: '301341347', region: 'US', slug: 'saint-motel' },
 		}, {
+			description: 'Apple Music song URL',
+			url: new URL('https://music.apple.com/gb/song/1772318408'),
+			id: { type: 'song', id: '1772318408', region: 'GB' },
+			isCanonical: true,
+		}, {
+			description: 'Apple Music song URL with slug',
+			url: new URL('https://music.apple.com/fr/song/wet-cheese-delirium-2015-remaster/973594909'),
+			id: { type: 'song', id: '973594909', region: 'FR', slug: 'wet-cheese-delirium-2015-remaster' },
+		}, {
 			description: 'iTunes legacy album URL',
 			url: new URL('https://itunes.apple.com/gb/album/id1722294645'),
 			id: { type: 'album', id: '1722294645', region: 'GB' },

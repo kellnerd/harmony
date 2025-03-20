@@ -47,7 +47,8 @@ describe('Spotify provider', () => {
 		}, {
 			description: 'track page',
 			url: new URL('https://open.spotify.com/track/1EDPVGbyPKJPeGqATwXZvN'),
-			id: undefined,
+			id: { type: 'track', id: '1EDPVGbyPKJPeGqATwXZvN' },
+			isCanonical: true,
 		}],
 		releaseLookup: [{
 			description: 'single by two artists',
