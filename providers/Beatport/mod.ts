@@ -12,7 +12,7 @@ export default class BeatportProvider extends MetadataProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'www.beatport.com',
-		pathname: '/:language(\\w{2})?/:type(artist|label|release)/:slug/:id',
+		pathname: '/:language(\\w{2})?/:type(artist|label|release|track)/:slug/:id',
 	});
 
 	override readonly features: FeatureQualityMap = {

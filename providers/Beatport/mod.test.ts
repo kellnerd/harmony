@@ -22,6 +22,11 @@ describe('Beatport provider', () => {
 			url: new URL('https://www.beatport.com/label/physical-techno-recordings/41056'),
 			id: { type: 'label', id: '41056', slug: 'physical-techno-recordings' },
 			isCanonical: true,
+		}, {
+			description: 'track URL with slug',
+			url: new URL('https://www.beatport.com/track/tokyo-night/19209410'),
+			id: { type: 'track', id: '19209410', slug: 'tokyo-night' },
+			isCanonical: true,
 		}],
 		releaseLookup: [],
 	});
