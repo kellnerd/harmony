@@ -34,6 +34,10 @@ describe('Tidal provider', () => {
 			url: new URL('https://listen.tidal.com/album/11343637'),
 			id: { type: 'album', id: '11343637' },
 		}, {
+			description: 'release page with /track suffix',
+			url: new URL('https://listen.tidal.com/album/301366648/track/301366649'),
+			id: { type: 'album', id: '301366648' },
+		}, {
 			description: 'artist page',
 			url: new URL('https://tidal.com/artist/80'),
 			id: { type: 'artist', id: '80' },
