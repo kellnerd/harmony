@@ -8,7 +8,14 @@ import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
 import { musicbrainzTargetServer } from '@/config.ts';
 import { deduplicateEntities } from '@/harmonizer/deduplicate.ts';
-import type { ArtistCreditName, Artwork, HarmonyRelease, ProviderInfo, ReleaseOptions } from '@/harmonizer/types.ts';
+import type {
+	ArtistCreditName,
+	Artwork,
+	HarmonyRelease,
+	ProviderInfo,
+	ReleaseOptions,
+	ResolvableEntity,
+} from '@/harmonizer/types.ts';
 import { CombinedReleaseLookup } from '@/lookup.ts';
 import { MB } from '@/musicbrainz/api_client.ts';
 import { providers as providerRegistry } from '@/providers/mod.ts';
@@ -31,6 +38,7 @@ export default defineRoute(async (req, ctx) => {
 	let mbArtists: EntityWithUrlRels[] = [];
 	let mbLabels: EntityWithUrlRels[] = [];
 	let allImages: Artwork[] = [];
+	let allRecordings: ResolvableEntity[] = [];
 
 	try {
 		releaseMbid = ctx.url.searchParams.get('release_mbid') ?? undefined;
@@ -75,9 +83,13 @@ export default defineRoute(async (req, ctx) => {
 		// Since the release has already been imported and has MBIDs, prefer MB data as merge target.
 		release = await lookup.getMergedRelease(['MusicBrainz']);
 
+		const allTracks = release.media.flatMap((medium) => medium.tracklist);
+
+		// Fallback to track title, Harmony recordings are usually unnamed.
+		allRecordings = allTracks.map((track) => ({ name: track.title, ...track.recording }));
+
 		// Combine and deduplicate release and track artists.
-		const trackArtists = release.media
-			.flatMap((medium) => medium.tracklist)
+		const trackArtists = allTracks
 			.flatMap((track) => track.artists)
 			.filter(isDefined);
 		allArtists = deduplicateEntities(release.artists.concat(trackArtists));
@@ -188,6 +200,9 @@ export default defineRoute(async (req, ctx) => {
 					</div>
 				)}
 				{allImages.map((artwork) => <CoverImage artwork={artwork} />)}
+				{allRecordings.map((recording) => (
+					<LinkWithMusicBrainz entity={recording} entityType='recording' sourceEntityUrl={releaseUrl!} />
+				))}
 			</main>
 		</>
 	);
