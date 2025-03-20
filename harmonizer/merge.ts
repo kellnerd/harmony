@@ -1,5 +1,6 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
 import { guessTypesForRelease, mergeTypes } from './release_types.ts';
+import { isDefined } from '@/utils/predicate.ts';
 import { cloneInto, copyTo, filterErrorEntries, isFilled, uniqueMappedValues } from '@/utils/record.ts';
 import { matchBySimilarName, similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
@@ -221,6 +222,21 @@ export function mergeRelease(
 	if (mergedRelease.labels) {
 		mergeLabels(mergedRelease.labels, availableSourceReleases.map((release) => release.labels));
 	}
+
+	// Keep external recording IDs from all providers.
+	mergedRelease.media.forEach((medium, mediumIndex) => {
+		medium.tracklist.forEach((track, trackIndex) => {
+			if (track.recording) { // should exist by now
+				const recordingIds = availableSourceReleases
+					.filter((release) => release.media.length)
+					.flatMap((release) => release.media[mediumIndex].tracklist[trackIndex].recording?.externalIds)
+					.filter(isDefined);
+				if (recordingIds) {
+					track.recording.externalIds = recordingIds;
+				}
+			}
+		});
+	});
 
 	return mergedRelease;
 }
