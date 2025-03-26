@@ -37,6 +37,7 @@ export default defineRoute(async (req, ctx) => {
 	let allArtists: ArtistCreditName[] = [];
 	let mbArtists: EntityWithUrlRels[] = [];
 	let mbLabels: EntityWithUrlRels[] = [];
+	let mbRecordings: EntityWithUrlRels[] = [];
 	let allImages: Artwork[] = [];
 	let allRecordings: ResolvableEntity[] = [];
 
@@ -103,10 +104,12 @@ export default defineRoute(async (req, ctx) => {
 			.filter(isDefined);
 		allArtists = deduplicateEntities(release.artists.concat(trackArtists));
 
-		// Load URL relationships for related artists and labels of the release.
+		// Load URL relationships for related artists, recordings and labels of the release.
 		// These will be used to skip suggestions to seed external links which already exist.
 		const mbArtistBrowseResult = await MB.get('artist', { release: releaseMbid, inc: 'url-rels' });
 		mbArtists = mbArtistBrowseResult.artists;
+		const mbRecordingBrowseResult = await MB.get('recording', { release: releaseMbid, inc: 'url-rels' });
+		mbRecordings = mbRecordingBrowseResult.recordings;
 		// Labels often have no external links which could be linked, save pointless API call.
 		if (release.labels?.some((label) => label.externalIds?.length)) {
 			const mbLabelBrowseResult = await MB.get('label', { release: releaseMbid, inc: 'url-rels' });
@@ -201,7 +204,12 @@ export default defineRoute(async (req, ctx) => {
 				)}
 				{allImages.map((artwork) => <CoverImage artwork={artwork} />)}
 				{allRecordings.map((recording) => (
-					<LinkWithMusicBrainz entity={recording} entityType='recording' sourceEntityUrl={releaseUrl!} />
+					<LinkWithMusicBrainz
+						entity={recording}
+						entityType='recording'
+						sourceEntityUrl={releaseUrl!}
+						entityCache={mbRecordings}
+					/>
 				))}
 			</main>
 		</>
