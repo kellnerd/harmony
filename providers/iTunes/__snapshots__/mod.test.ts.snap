@@ -1,0 +1,737 @@
+export const snapshot = {};
+
+snapshot[`iTunes provider > release lookup > multi-disc download with video tracks 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Queen",
+      externalIds: [
+        {
+          id: "3296287",
+          provider: "itunes",
+          region: "GB",
+          slug: "queen",
+          type: "artist",
+        },
+      ],
+      name: "Queen",
+    },
+  ],
+  copyright: "℗ 2014 Queen Productions Ltd, under exclusive licence to Universal International Music BV",
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://music.apple.com/gb/album/1441458047",
+    },
+  ],
+  gtin: undefined,
+  images: [
+    {
+      thumbUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/11/c4/9f/11c49f00-8b2e-461e-c8b9-f88ec1f36e93/14UMGIM39390.rgb.jpg/250x250bb.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://a1.mzstatic.com/us/r1000/063/Music221/v4/11/c4/9f/11c49f00-8b2e-461e-c8b9-f88ec1f36e93/14UMGIM39390.rgb.jpg",
+    },
+  ],
+  info: {
+    messages: [
+      {
+        provider: "iTunes",
+        text: "Failed to extract GTIN from artwork URL",
+        type: "warning",
+      },
+    ],
+    providers: [
+      {
+        apiUrl: "https://itunes.apple.com/lookup?entity=song&limit=200&id=1441458047&country=gb",
+        id: "1441458047",
+        internalName: "itunes",
+        lookup: {
+          method: "id",
+          region: "GB",
+          value: "1441458047",
+        },
+        name: "iTunes",
+        url: "https://music.apple.com/gb/album/1441458047",
+      },
+    ],
+  },
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 223094,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458049",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "Death On Two Legs (Dedicated To...)",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 67226,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458050",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "Lazing On a Sunday Afternoon",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 185067,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458051",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "I'm In Love With My Car",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 172424,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458052",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "You're My Best Friend",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 210643,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458055",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "'39",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 243867,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458065",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "Sweet Lady",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 139879,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458067",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "Seaside Rendezvous",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 500786,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458071",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "The Prophet's Song",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 219055,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458079",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "Love of My Life",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 203440,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458080",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "Good Company",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 354320,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458081",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "Bohemian Rhapsody",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 75131,
+          number: 12,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458082",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "God Save the Queen",
+          type: undefined,
+        },
+      ],
+    },
+    {
+      format: "Digital Media",
+      number: 2,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 244227,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458084",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "Keep Yourself Alive (Long-Lost Retake / June 1975)",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 64969,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458085",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "Bohemian Rhapsody (Operatic Section A Cappella Mix, 2011)",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 178400,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458086",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "You're My Best Friend (Backing Track Mix, 2011)",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 200529,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458088",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "I'm In Love With My Car (Guitar & Vocal Mix, 2011)",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 227303,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458097",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "'39 (Live At Earl's Court, London / June 1977)",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 221561,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458098",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "Love of My Life (Live In Argentina / June 1979 / South American Single)",
+          type: undefined,
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 358483,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458100",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "Bohemian Rhapsody (No Flames Original Version / 1975)",
+          type: "video",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 135252,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458161",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "Seaside Rendezvous (A Night At The Opera, 30th Anniversary Version / 2005)",
+          type: "video",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Queen",
+              externalIds: [
+                {
+                  id: "3296287",
+                  provider: "itunes",
+                  region: "GB",
+                  slug: "queen",
+                  type: "artist",
+                },
+              ],
+              name: "Queen",
+            },
+          ],
+          length: 223807,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "1441458162",
+                provider: "itunes",
+                region: "GB",
+                type: "song",
+              },
+            ],
+          },
+          title: "Love Of My Life (Live At Milton Keynes Bowl / June 1982)",
+          type: "video",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 21,
+    month: 11,
+    year: 1975,
+  },
+  status: "Official",
+  title: "A Night at the Opera (Deluxe Edition)",
+  types: [],
+}
+`;

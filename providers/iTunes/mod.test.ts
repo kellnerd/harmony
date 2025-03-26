@@ -1,10 +1,14 @@
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
-import { describe } from '@std/testing/bdd';
+import { stubProviderLookups } from '@/providers/test_stubs.ts';
+import { assert } from 'std/assert/assert.ts';
+import { afterAll, describe } from '@std/testing/bdd';
+import { assertSnapshot } from '@std/testing/snapshot';
 
 import iTunesProvider from './mod.ts';
 
 describe('iTunes provider', () => {
 	const itunes = new iTunesProvider(makeProviderOptions());
+	const lookupStub = stubProviderLookups(itunes);
 
 	describeProvider(itunes, {
 		urls: [{
@@ -59,6 +63,20 @@ describe('iTunes provider', () => {
 			url: new URL('https://geo.itunes.apple.com/album/id1135913516'),
 			id: { type: 'album', id: '1135913516', region: 'US' },
 		}],
-		releaseLookup: [],
+		releaseLookup: [{
+			description: 'multi-disc download with video tracks',
+			release: new URL('https://music.apple.com/gb/album/a-night-at-the-opera-deluxe-edition/1441458047'),
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+				assert(release.media.length === 2, 'Release should have multiple discs');
+				assert(release.media[1].tracklist[6].type === 'video', 'Track 2.7 should be a video');
+				assert(release.externalLinks[0].types?.includes('paid download'), 'Release should be downloadable');
+				assert(release.info.providers[0].lookup.region === 'GB', 'Lookup should use the region from the URL');
+			},
+		}],
+	});
+
+	afterAll(() => {
+		lookupStub.restore();
 	});
 });
