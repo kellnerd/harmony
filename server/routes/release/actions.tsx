@@ -83,6 +83,15 @@ export default defineRoute(async (req, ctx) => {
 		// Since the release has already been imported and has MBIDs, prefer MB data as merge target.
 		release = await lookup.getMergedRelease(['MusicBrainz']);
 
+		const providerReleaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
+		allImages = Object.entries(providerReleaseMap).flatMap(([provider, release]) =>
+			release.images?.map((image) => ({ ...image, provider })) ?? []
+		);
+
+		const { info } = release;
+		const isrcSource = info.sourceMap?.isrc;
+		isrcProvider = info.providers.find((provider) => provider.name === isrcSource);
+
 		const allTracks = release.media.flatMap((medium) => medium.tracklist);
 
 		// Fallback to track title, Harmony recordings are usually unnamed.
@@ -103,15 +112,6 @@ export default defineRoute(async (req, ctx) => {
 			const mbLabelBrowseResult = await MB.get('label', { release: releaseMbid, inc: 'url-rels' });
 			mbLabels = mbLabelBrowseResult.labels;
 		}
-
-		const providerReleaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
-		allImages = Object.entries(providerReleaseMap).flatMap(([provider, release]) =>
-			release.images?.map((image) => ({ ...image, provider })) ?? []
-		);
-
-		const { info } = release;
-		const isrcSource = info.sourceMap?.isrc;
-		isrcProvider = info.providers.find((provider) => provider.name === isrcSource);
 	} catch (error) {
 		if (error instanceof AggregateError) {
 			errors.push(error, ...error.errors);
