@@ -231,7 +231,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 				type: track.kind === 'music-video' ? 'video' : undefined,
 				recording: {
 					externalIds: this.provider.makeExternalIds({
-						type: 'song',
+						type: track.kind,
 						id: track.trackId.toString(),
 						region: this.lookup.region,
 					}),
