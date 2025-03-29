@@ -2,16 +2,16 @@ import { Button } from '@/server/components/Button.tsx';
 import { regionName } from '@/utils/locale.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
 import { flagEmoji } from '@/utils/regions.ts';
-import { useState } from 'preact/hooks';
+import { useSignal } from '@preact/signals';
 
 import type { CountryCode } from '@/harmonizer/types.ts';
 
 export default function RegionList({ regions }: { regions: CountryCode[] }) {
-	const [isExpanded, setExpanded] = useState(false);
+	const isExpanded = useSignal(false);
 
 	return (
-		<div class={['region-list', isExpanded ? 'expanded' : 'collapsed'].join(' ')}>
-			{isExpanded
+		<div class={['region-list', isExpanded.value ? 'expanded' : 'collapsed'].join(' ')}>
+			{isExpanded.value
 				? (
 					<ul>
 						{regions.map((code) => (
@@ -29,8 +29,8 @@ export default function RegionList({ regions }: { regions: CountryCode[] }) {
 				))}
 			<span class='label'>{pluralWithCount(regions.length, 'region')}</span>
 			{regions.length > 0 && (
-				<Button onClick={() => setExpanded(!isExpanded)}>
-					{isExpanded ? 'Collapse' : 'Expand'}
+				<Button onClick={() => isExpanded.value = !isExpanded.value}>
+					{isExpanded.value ? 'Collapse' : 'Expand'}
 				</Button>
 			)}
 		</div>
