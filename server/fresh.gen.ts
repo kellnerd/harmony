@@ -11,6 +11,7 @@ import * as $release from './routes/release.tsx';
 import * as $release_actions from './routes/release/actions.tsx';
 import * as $PersistentInput from './islands/PersistentInput.tsx';
 import * as $RegionList from './islands/RegionList.tsx';
+import * as $ReleaseSeeder from './islands/ReleaseSeeder.tsx';
 import { type Manifest } from '$fresh/server.ts';
 
 const manifest = {
@@ -26,6 +27,7 @@ const manifest = {
 	islands: {
 		'./islands/PersistentInput.tsx': $PersistentInput,
 		'./islands/RegionList.tsx': $RegionList,
+		'./islands/ReleaseSeeder.tsx': $ReleaseSeeder,
 	},
 	baseUrl: import.meta.url,
 } satisfies Manifest;

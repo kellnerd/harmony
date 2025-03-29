@@ -1,14 +1,15 @@
 import { MessageBox } from '@/server/components/MessageBox.tsx';
 import { Release } from '@/server/components/Release.tsx';
 import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
-import { ReleaseSeeder } from '@/server/components/ReleaseSeeder.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
+import { ReleaseSeeder } from '@/server/islands/ReleaseSeeder.tsx';
 
 import { codeUrl, musicbrainzTargetServer } from '@/config.ts';
 import { CombinedReleaseLookup } from '@/lookup.ts';
 import { resolveReleaseMbids } from '@/musicbrainz/mbid_mapping.ts';
 import { defaultProviderPreferences } from '@/providers/mod.ts';
-import { createReleasePermalink, extractReleaseLookupState } from '@/server/state.ts';
+import { createReleasePermalink } from '@/server/permalink.ts';
+import { extractReleaseLookupState } from '@/server/state.ts';
 import { LookupError, type ProviderError } from '@/utils/errors.ts';
 import { filterErrorEntries } from '@/utils/record.ts';
 import { Head } from 'fresh/runtime.ts';
@@ -121,9 +122,9 @@ export default defineRoute(async (req, ctx) => {
 				{release && (
 					<ReleaseSeeder
 						release={release}
-						projectUrl={codeUrl}
-						sourceUrl={seederSourceUrl}
-						targetUrl={seederTargetUrl}
+						projectUrl={codeUrl.href}
+						sourceUrl={seederSourceUrl.href}
+						targetUrl={seederTargetUrl.href}
 					/>
 				)}
 			</main>

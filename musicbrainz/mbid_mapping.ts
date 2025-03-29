@@ -2,7 +2,7 @@ import { inDevMode } from '@/config.ts';
 import type { ExternalEntityId, HarmonyRelease, ResolvableEntity } from '@/harmonizer/types.ts';
 import { MB } from '@/musicbrainz/api_client.ts';
 import { providers } from '@/providers/mod.ts';
-import { encodeReleaseLookupState } from '@/server/state.ts';
+import { encodeReleaseLookupState } from '@/server/permalink.ts';
 import { ApiError, type EntityWithMbid, RateLimitError } from '@kellnerd/musicbrainz';
 import type { RelatableEntityType } from '@kellnerd/musicbrainz/data/entity';
 import { getLogger } from 'std/log/get_logger.ts';

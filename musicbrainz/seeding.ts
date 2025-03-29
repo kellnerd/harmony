@@ -1,4 +1,4 @@
-import { createReleasePermalink, encodeReleaseLookupState } from '@/server/state.ts';
+import { createReleasePermalink, encodeReleaseLookupState } from '@/server/permalink.ts';
 import { determineReleaseEventCountries } from './release_countries.ts';
 import { urlTypeIds } from './type_id.ts';
 import { preferArray } from 'utils/array/scalar.js';
