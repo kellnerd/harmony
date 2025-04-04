@@ -67,7 +67,9 @@ export default defineRoute(async (req, ctx) => {
 		// If only a release MBID is given, we have to get the URLs of the potential sources from the MB release itself.
 		if (!(providerIds.length || urls.length || gtin && providers?.size)) {
 			const mbRelease = await MB.lookup('release', releaseMbid, { inc: ['url-rels'] });
-			const uniqueResources = new Set<string>(mbRelease.relations.map((rel) => rel.url.resource));
+			// Ended URLs usually can no longer be looked up, or worse, their tracklist has been changed.
+			const validUrlRels = mbRelease.relations.filter((rel) => !rel.ended);
+			const uniqueResources = new Set<string>(validUrlRels.map((rel) => rel.url.resource));
 			for (const resource of uniqueResources) {
 				const matchingProvider = providerRegistry.findByUrl(resource);
 				// Use all supported URLs or only those from requested providers if these are specified.
