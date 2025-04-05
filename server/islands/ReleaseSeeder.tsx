@@ -2,6 +2,7 @@ import InputWithOverlay from '@/server/components/InputWithOverlay.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
 import { createReleaseSeed } from '@/musicbrainz/seeding.ts';
+import { getSetting } from '@/server/settings.ts';
 import { preferArray } from 'utils/array/scalar.js';
 
 import type { HarmonyRelease } from '@/harmonizer/types.ts';
@@ -20,7 +21,7 @@ export function ReleaseSeeder({ release, sourceUrl, targetUrl, projectUrl }: {
 	});
 
 	return (
-		<form action={targetUrl} method='post' target='_blank' name='release-seeder'>
+		<form action={targetUrl} method='post' target={getSetting('seeder.target', '_blank')} name='release-seeder'>
 			{Object.entries(seed).flatMap(([key, valueOrValues]) => {
 				return preferArray(valueOrValues).map((value) => <input type='hidden' name={key} value={value} />);
 			})}
