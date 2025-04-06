@@ -2,18 +2,21 @@ import { IS_BROWSER } from 'fresh/runtime.ts';
 import type { JSX } from 'preact';
 import { type Signal, useSignal, useSignalEffect } from '@preact/signals';
 import { setCookie } from '@/utils/cookie.ts';
+import { isDefined } from '@/utils/predicate.ts';
 
 function persistInStorage(key: string, value: Signal<string>) {
-	const storageKey = ['persist', key].join('.');
-
 	// Try to get persisted input value from storage.
-	const storedValue = localStorage.getItem(storageKey);
+	const storedValue = localStorage.getItem(key);
 	if (storedValue !== null) {
 		value.value = storedValue;
 	}
 
 	// Persist input value every time it changes.
-	useSignalEffect(() => localStorage.setItem(storageKey, value.value));
+	useSignalEffect(() => localStorage.setItem(key, value.value));
+}
+
+function makeKey(...names: Array<string | undefined>) {
+	return names.filter(isDefined).join('.');
 }
 
 function persistAsCookie(name: string, value: Signal<string>) {
@@ -26,6 +29,8 @@ export interface PersistentInputProps extends JSX.HTMLAttributes<HTMLInputElemen
 	name: string;
 	/** ID of the HTML element. */
 	id?: string;
+	/** A namespace will be used to prefix the storage key of this input. */
+	namespace?: string;
 	/** Store the value as cookie, making it available to the server. */
 	useCookie?: boolean;
 }
@@ -44,6 +49,7 @@ export interface PersistentCheckboxProps extends PersistentInputProps {
 export function PersistentCheckbox({
 	name,
 	id,
+	namespace,
 	initialValue = false,
 	trueValue = '1',
 	falseValue = '0',
@@ -53,7 +59,7 @@ export function PersistentCheckbox({
 }: PersistentCheckboxProps) {
 	const persistedValue = useSignal(initialValue ? trueValue : falseValue);
 	if (IS_BROWSER) {
-		persistInStorage(id ?? name, persistedValue);
+		persistInStorage(makeKey(namespace, id ?? name), persistedValue);
 		// Temporary migration from old true value (form value) to the cookie-compatible new one.
 		// TODO: Remove the following code block again after a while.
 		if (persistedValue.peek() === formValue) {
@@ -85,13 +91,14 @@ export interface PersistentTextInputProps extends PersistentInputProps {
 export function PersistentTextInput({
 	name,
 	id,
+	namespace,
 	initialValue = '',
 	useCookie = false,
 	...props
 }: PersistentTextInputProps) {
 	const text = useSignal(initialValue);
 	if (IS_BROWSER) {
-		persistInStorage(id ?? name, text);
+		persistInStorage(makeKey(namespace, id ?? name), text);
 		if (useCookie) {
 			persistAsCookie(name, text);
 		}

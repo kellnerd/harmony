@@ -52,6 +52,7 @@ export default function ReleaseLookup({
 							<PersistentTextInput
 								name='region'
 								id='region-input'
+								namespace='persist'
 								initialValue={regionValue}
 								placeholder='Region (Country Code)'
 								useCookie

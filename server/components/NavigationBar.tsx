@@ -11,6 +11,9 @@ export function NavigationBar() {
 				<li>
 					<a href='/release'>Release Lookup</a>
 				</li>
+				<li>
+					<a href='/settings'>Settings</a>
+				</li>
 			</ul>
 		</nav>
 	);

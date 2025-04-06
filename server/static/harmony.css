@@ -145,9 +145,13 @@ a > svg.icon {
 
 div.row {
 	display: flex;
-	justify-content: center;
 	flex-wrap: wrap;
+	align-items: center;
 	margin: 1em 0;
+	gap: 0.5em;
+}
+form.center > div.row {
+	justify-content: center;
 }
 
 input {
@@ -228,7 +232,6 @@ div.input-with-overlay {
 	color: initial;
 	position: relative;
 	display: inline-block;
-	margin: 0.3em;
 	max-width: 100%;
 }
 
@@ -357,7 +360,6 @@ nav img.icon-logo {
 label.provider-input {
 	background-color: var(--badge-fill);
 	color: var(--badge-text);
-	margin: 0.3em;
 	padding: 0.2em 0.4em;
 	border-radius: 5px;
 	display: flex;
@@ -428,7 +430,7 @@ div[role='tooltip'] {
 	color: var(--tooltip-text);
 	padding: 0.5em;
 	border-radius: 0.3em;
-	min-width: 10rem;
+	min-width: 15rem;
 	text-align: center;
 	cursor: initial;
 	/* Center tooltip above the tooltip anchor icon. */
@@ -450,7 +452,7 @@ span.tooltip-anchor:hover > div[role='tooltip'] {
 	display: inline-block;
 }
 
-div[role='tooltip'] > ol {
+div[role='tooltip'] > ol, div[role='tooltip'] > ul {
 	margin: 0;
 	padding-inline-start: 1.5em;
 	text-align: left;

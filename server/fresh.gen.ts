@@ -9,6 +9,7 @@ import * as $icon_sprite_svg from './routes/icon-sprite.svg.tsx';
 import * as $index from './routes/index.tsx';
 import * as $release from './routes/release.tsx';
 import * as $release_actions from './routes/release/actions.tsx';
+import * as $settings from './routes/settings.tsx';
 import * as $PersistentInput from './islands/PersistentInput.tsx';
 import * as $RegionList from './islands/RegionList.tsx';
 import * as $ReleaseSeeder from './islands/ReleaseSeeder.tsx';
@@ -23,6 +24,7 @@ const manifest = {
 		'./routes/index.tsx': $index,
 		'./routes/release.tsx': $release,
 		'./routes/release/actions.tsx': $release_actions,
+		'./routes/settings.tsx': $settings,
 	},
 	islands: {
 		'./islands/PersistentInput.tsx': $PersistentInput,
