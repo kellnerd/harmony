@@ -1,6 +1,6 @@
 import { defaultProviders } from '@/providers/mod.ts';
 import { ProviderCheckboxes } from '@/server/components/ProviderInput.tsx';
-import { TextSettingRow } from '@/server/components/SettingRow.tsx';
+import { CheckboxSettingRow, TextSettingRow } from '@/server/components/SettingRow.tsx';
 import { Tooltip } from '@/server/components/Tooltip.tsx';
 import { PersistentTextInput } from '@/server/islands/PersistentInput.tsx';
 import { defaultRegions } from '@/server/state.ts';
@@ -45,6 +45,7 @@ export default function Settings() {
 					</ul>
 				</Tooltip>
 			</TextSettingRow>
+			<CheckboxSettingRow name='seeder.redirect' label='Redirect to Release Actions after import' defaultValue={true} />
 		</main>
 	);
 }

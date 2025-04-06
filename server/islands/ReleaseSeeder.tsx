@@ -2,7 +2,7 @@ import InputWithOverlay from '@/server/components/InputWithOverlay.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
 import { createReleaseSeed } from '@/musicbrainz/seeding.ts';
-import { getSetting } from '@/server/settings.ts';
+import { checkSetting, getSetting } from '@/server/settings.ts';
 import { preferArray } from 'utils/array/scalar.js';
 
 import type { HarmonyRelease } from '@/harmonizer/types.ts';
@@ -16,7 +16,9 @@ export function ReleaseSeeder({ release, sourceUrl, targetUrl, projectUrl }: {
 	const seederSourceUrl = sourceUrl ? new URL(sourceUrl) : undefined;
 	const seed = createReleaseSeed(release, {
 		projectUrl: new URL(projectUrl),
-		redirectUrl: seederSourceUrl && new URL('release/actions', seederSourceUrl),
+		redirectUrl: (seederSourceUrl && checkSetting('seeder.redirect', true))
+			? new URL('release/actions', seederSourceUrl)
+			: undefined,
 		seederUrl: seederSourceUrl,
 	});
 
