@@ -154,6 +154,10 @@ form.center > div.row {
 	justify-content: center;
 }
 
+div.row > label.col {
+	width: 10em;
+}
+
 input {
 	padding: var(--input-padding);
 	box-sizing: border-box;
@@ -413,14 +417,14 @@ span.tooltip-anchor {
 	position: relative;
 	font-size: 1rem;
 	font-weight: normal;
-	cursor: pointer;
+	height: var(--icon-size);
+	width: var(--icon-size);
 	--arrow-length: 15px;
 	--icon-size: 24px;
 }
 
 span.tooltip-anchor > svg.icon {
-	height: var(--icon-size);
-	width: var(--icon-size);
+	cursor: pointer;
 }
 
 div[role='tooltip'] {
