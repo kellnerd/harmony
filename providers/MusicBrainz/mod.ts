@@ -1,4 +1,4 @@
-import { musicbrainzSourceServer } from '@/config.ts';
+import { musicbrainzApiBaseUrl } from '@/config.ts';
 import type {
 	ArtistCreditName,
 	EntityId,
@@ -56,7 +56,7 @@ export default class MusicBrainzProvider extends MetadataApiProvider {
 
 	readonly releaseLookup = MusicBrainzReleaseLookup;
 
-	readonly apiBaseUrl = join(musicbrainzSourceServer, 'ws/2');
+	readonly apiBaseUrl = musicbrainzApiBaseUrl;
 
 	constructUrl(entity: EntityId): URL {
 		return join('https://musicbrainz.org', entity.type, entity.id);
