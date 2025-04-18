@@ -30,6 +30,10 @@ export default function Settings() {
 					useCookie
 				/>
 			</div>
+			<h3>Annotation Content</h3>
+			<p>Select additional information which can’t be imported directly and should be added to the annotation.</p>
+			<CheckboxSettingRow name='annotation.copyright' label='Copyright lines' defaultValue={true} />
+			<CheckboxSettingRow name='annotation.credits' label='Release credits' defaultValue={true} />
 			<h3>Importer Behavior</h3>
 			<TextSettingRow name='seeder.target' label='Seeder target' defaultValue='_blank'>
 				<Tooltip>

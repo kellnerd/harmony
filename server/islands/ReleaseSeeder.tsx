@@ -20,6 +20,10 @@ export function ReleaseSeeder({ release, sourceUrl, targetUrl, projectUrl }: {
 			? new URL('release/actions', seederSourceUrl)
 			: undefined,
 		seederUrl: seederSourceUrl,
+		annotation: {
+			copyright: checkSetting('annotation.copyright', true),
+			textCredits: checkSetting('annotation.credits', true),
+		},
 	});
 
 	return (

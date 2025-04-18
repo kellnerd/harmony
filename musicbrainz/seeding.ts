@@ -26,6 +26,16 @@ export interface ReleaseSeedOptions {
 	redirectUrl?: URL;
 	/** Base URL of the Harmony instance which was used to seed the release, for permalinks. */
 	seederUrl?: URL;
+	/** Options for the annotation builder. */
+	annotation?: AnnotationIncludes;
+}
+
+/** Information which should be included in the annotation. */
+interface AnnotationIncludes {
+	/** Include copyright lines. */
+	copyright?: boolean;
+	/** Include text-based release credits. */
+	textCredits?: boolean;
 }
 
 export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedOptions): FormDataRecord {
@@ -80,7 +90,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 					url: link.url,
 				})
 		),
-		annotation: buildAnnotation(release),
+		annotation: buildAnnotation(release, options.annotation),
 		edit_note: buildEditNote(release.info, options),
 		redirect_uri: redirectUrl?.href,
 	};
@@ -132,13 +142,13 @@ export function convertLinkType(entityType: EntityType, linkType: LinkType, url?
 	}
 }
 
-function buildAnnotation(release: HarmonyRelease): string {
+function buildAnnotation(release: HarmonyRelease, include: AnnotationIncludes = {}): string {
 	const sections: string[] = [];
 
-	if (release.copyright) {
+	if (include.copyright && release.copyright) {
 		sections.push(`Copyright: ${release.copyright}`);
 	}
-	if (release.credits) {
+	if (include.textCredits && release.credits) {
 		sections.push(`=== Credits from ${release.info.sourceMap?.credits!} ===`, release.credits);
 	}
 
