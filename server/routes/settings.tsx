@@ -4,10 +4,14 @@ import { CheckboxSettingRow, TextSettingRow } from '@/server/components/SettingR
 import { Tooltip } from '@/server/components/Tooltip.tsx';
 import { PersistentTextInput } from '@/server/islands/PersistentInput.tsx';
 import { defaultRegions } from '@/server/state.ts';
+import { Head } from 'fresh/runtime.ts';
 
 export default function Settings() {
 	return (
 		<main>
+			<Head>
+				<title>Settings &ndash; Harmony</title>
+			</Head>
 			<h2>Settings</h2>
 			<h3>Lookup Defaults</h3>
 			<p>Providers which should be looked up by barcode:</p>

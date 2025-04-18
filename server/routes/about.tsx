@@ -1,10 +1,14 @@
 import { providers } from '@/providers/mod.ts';
 import { FeatureQuality } from '@/providers/features.ts';
 import { ProviderIcon } from '@/server/components/ProviderIcon.tsx';
+import { Head } from 'fresh/runtime.ts';
 
 export default function About() {
 	return (
 		<main>
+			<Head>
+				<title>About Harmony</title>
+			</Head>
 			<h2>Supported Providers</h2>
 			<table>
 				<tr>
