@@ -417,10 +417,13 @@ span.tooltip-anchor {
 	position: relative;
 	font-size: 1rem;
 	font-weight: normal;
-	height: var(--icon-size);
-	width: var(--icon-size);
 	--arrow-length: 15px;
 	--icon-size: 24px;
+}
+
+span.tooltip-anchor.placeholder {
+	height: var(--icon-size);
+	width: var(--icon-size);
 }
 
 span.tooltip-anchor > svg.icon {

@@ -18,7 +18,7 @@ export function TextSettingRow({ name, label, defaultValue, useCookie, children 
 	return (
 		<div class='row'>
 			<label class='col' for={name}>{label}:</label>
-			{children ?? <span class='tooltip-anchor' />}
+			{children ?? <span class='tooltip-anchor placeholder' />}
 			<PersistentTextInput
 				name={name}
 				id={name}
