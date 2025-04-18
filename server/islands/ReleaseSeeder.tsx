@@ -21,6 +21,7 @@ export function ReleaseSeeder({ release, sourceUrl, targetUrl, projectUrl }: {
 			: undefined,
 		seederUrl: seederSourceUrl,
 		annotation: {
+			availability: checkSetting('annotation.availability', false),
 			copyright: checkSetting('annotation.copyright', true),
 			textCredits: checkSetting('annotation.credits', true),
 		},

@@ -1,6 +1,7 @@
 import { createReleasePermalink, encodeReleaseLookupState } from '@/server/permalink.ts';
 import { determineReleaseEventCountries } from './release_countries.ts';
 import { urlTypeIds } from './type_id.ts';
+import { formatRegionList } from '@/utils/regions.ts';
 import { preferArray } from 'utils/array/scalar.js';
 import { flatten } from 'utils/object/flatten.js';
 import { transform } from 'utils/string/transform.js';
@@ -32,6 +33,8 @@ export interface ReleaseSeedOptions {
 
 /** Information which should be included in the annotation. */
 interface AnnotationIncludes {
+	/** Include lists of available and excluded regions. */
+	availability?: boolean;
 	/** Include copyright lines. */
 	copyright?: boolean;
 	/** Include text-based release credits. */
@@ -150,6 +153,19 @@ function buildAnnotation(release: HarmonyRelease, include: AnnotationIncludes = 
 	}
 	if (include.textCredits && release.credits) {
 		sections.push(`=== Credits from ${release.info.sourceMap?.credits!} ===`, release.credits);
+	}
+	if (include.availability) {
+		const { availableIn, excludedFrom } = release;
+		if (availableIn?.length) {
+			const releaseEventCount = determineReleaseEventCountries(release)?.length;
+			// Skip if the list would be just a copy of the release events or is equivalent to one worldwide event.
+			if (availableIn.length !== releaseEventCount && releaseEventCount !== 1) {
+				sections.push('=== Available Regions ===', formatRegionList(availableIn));
+			}
+		}
+		if (excludedFrom?.length) {
+			sections.push('=== Excluded Regions ===', formatRegionList(excludedFrom));
+		}
 	}
 
 	const annotation = sections.join('\n\n');
