@@ -1,4 +1,4 @@
-import MBIDInput from '@/server/components/MBIDInput.tsx';
+import { MBIDInput } from '@/server/components/MBIDInput.tsx';
 import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
 import { Tooltip } from '@/server/components/Tooltip.tsx';
 
@@ -30,10 +30,11 @@ export default function Home() {
 				<hr />
 				<h2>Release Actions</h2>
 				<p>Submit additional data like cover art and ISRCs for a MusicBrainz release.</p>
-				<p>Link external IDs/URLs of related artists, labels and recordings to MusicBrainz.</p>
+				<p>Link external IDs (URLs) of related artists, labels and recordings to MusicBrainz.</p>
 				<form action='release/actions' class='center'>
 					<div class='row'>
-						<MBIDInput name='release_mbid' placeholder='MusicBrainz release MBID' />
+						<MBIDInput name='release_mbid' placeholder='MusicBrainz release URL or MBID' />
+						<input type='submit' value='Go!' />
 					</div>
 				</form>
 			</main>

@@ -18,6 +18,7 @@ import type {
 } from '@/harmonizer/types.ts';
 import { CombinedReleaseLookup } from '@/lookup.ts';
 import { MB } from '@/musicbrainz/api_client.ts';
+import { extractMBID } from '@/musicbrainz/extract_mbid.ts';
 import { providers as providerRegistry } from '@/providers/mod.ts';
 import { extractReleaseLookupState } from '@/server/state.ts';
 import { LookupError, ProviderError } from '@/utils/errors.ts';
@@ -46,6 +47,7 @@ export default defineRoute(async (req, ctx) => {
 		if (!releaseMbid) {
 			throw new Error('Required query parameter `release_mbid` is missing');
 		}
+		releaseMbid = extractMBID(releaseMbid, ['release']);
 		releaseUrl = join(musicbrainzTargetServer, 'release', releaseMbid);
 
 		const {
