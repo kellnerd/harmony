@@ -2,6 +2,7 @@ import { ArtistCredit } from '@/server/components/ArtistCredit.tsx';
 import { CoverImage } from '@/server/components/CoverImage.tsx';
 import { MagicISRC } from '@/server/components/ISRCSubmission.tsx';
 import { type EntityWithUrlRels, LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
+import { MBIDInput } from '@/server/components/MBIDInput.tsx';
 import { MessageBox } from '@/server/components/MessageBox.tsx';
 import { ProviderList } from '@/server/components/ProviderList.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
@@ -44,80 +45,79 @@ export default defineRoute(async (req, ctx) => {
 
 	try {
 		releaseMbid = ctx.url.searchParams.get('release_mbid') ?? undefined;
-		if (!releaseMbid) {
-			throw new Error('Required query parameter `release_mbid` is missing');
-		}
-		releaseMbid = extractMBID(releaseMbid, ['release']);
-		releaseUrl = join(musicbrainzTargetServer, 'release', releaseMbid);
+		if (releaseMbid) {
+			releaseMbid = extractMBID(releaseMbid, ['release']);
+			releaseUrl = join(musicbrainzTargetServer, 'release', releaseMbid);
 
-		const {
-			gtin,
-			urls,
-			regions,
-			providerIds,
-			providers,
-			snapshotMaxTimestamp,
-		} = extractReleaseLookupState(ctx.url, req.headers);
-		const options: ReleaseOptions = {
-			withSeparateMedia: true,
-			withISRC: true,
-			regions,
-			providers,
-			snapshotMaxTimestamp,
-		};
+			const {
+				gtin,
+				urls,
+				regions,
+				providerIds,
+				providers,
+				snapshotMaxTimestamp,
+			} = extractReleaseLookupState(ctx.url, req.headers);
+			const options: ReleaseOptions = {
+				withSeparateMedia: true,
+				withISRC: true,
+				regions,
+				providers,
+				snapshotMaxTimestamp,
+			};
 
-		// If only a release MBID is given, we have to get the URLs of the potential sources from the MB release itself.
-		if (!(providerIds.length || urls.length || gtin && providers?.size)) {
-			const mbRelease = await MB.lookup('release', releaseMbid, { inc: ['url-rels'] });
-			// Ended URLs usually can no longer be looked up, or worse, their tracklist has been changed.
-			const validUrlRels = mbRelease.relations.filter((rel) => !rel.ended);
-			const uniqueResources = new Set<string>(validUrlRels.map((rel) => rel.url.resource));
-			for (const resource of uniqueResources) {
-				const matchingProvider = providerRegistry.findByUrl(resource);
-				// Use all supported URLs or only those from requested providers if these are specified.
-				if (matchingProvider && (!providers?.size || providers.has(matchingProvider.internalName))) {
-					urls.push(new URL(resource));
+			// If only a release MBID is given, we have to get the URLs of the potential sources from the MB release itself.
+			if (!(providerIds.length || urls.length || gtin && providers?.size)) {
+				const mbRelease = await MB.lookup('release', releaseMbid, { inc: ['url-rels'] });
+				// Ended URLs usually can no longer be looked up, or worse, their tracklist has been changed.
+				const validUrlRels = mbRelease.relations.filter((rel) => !rel.ended);
+				const uniqueResources = new Set<string>(validUrlRels.map((rel) => rel.url.resource));
+				for (const resource of uniqueResources) {
+					const matchingProvider = providerRegistry.findByUrl(resource);
+					// Use all supported URLs or only those from requested providers if these are specified.
+					if (matchingProvider && (!providers?.size || providers.has(matchingProvider.internalName))) {
+						urls.push(new URL(resource));
+					}
 				}
 			}
-		}
 
-		// Add MB release to the combined lookup to match external IDs with MBIDs.
-		providerIds.push(['MusicBrainz', releaseMbid]);
+			// Add MB release to the combined lookup to match external IDs with MBIDs.
+			providerIds.push(['MusicBrainz', releaseMbid]);
 
-		const lookup = new CombinedReleaseLookup({ urls, gtin, providerIds }, options);
-		// Since the release has already been imported and has MBIDs, prefer MB data as merge target.
-		release = await lookup.getMergedRelease(['MusicBrainz']);
+			const lookup = new CombinedReleaseLookup({ urls, gtin, providerIds }, options);
+			// Since the release has already been imported and has MBIDs, prefer MB data as merge target.
+			release = await lookup.getMergedRelease(['MusicBrainz']);
 
-		const providerReleaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
-		allImages = Object.entries(providerReleaseMap).flatMap(([provider, release]) =>
-			release.images?.map((image) => ({ ...image, provider })) ?? []
-		);
+			const providerReleaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
+			allImages = Object.entries(providerReleaseMap).flatMap(([provider, release]) =>
+				release.images?.map((image) => ({ ...image, provider })) ?? []
+			);
 
-		const { info } = release;
-		const isrcSource = info.sourceMap?.isrc;
-		isrcProvider = info.providers.find((provider) => provider.name === isrcSource);
+			const { info } = release;
+			const isrcSource = info.sourceMap?.isrc;
+			isrcProvider = info.providers.find((provider) => provider.name === isrcSource);
 
-		const allTracks = release.media.flatMap((medium) => medium.tracklist);
+			const allTracks = release.media.flatMap((medium) => medium.tracklist);
 
-		// Fallback to track title, Harmony recordings are usually unnamed.
-		allRecordings = allTracks.map((track) => ({ name: track.title, ...track.recording }));
+			// Fallback to track title, Harmony recordings are usually unnamed.
+			allRecordings = allTracks.map((track) => ({ name: track.title, ...track.recording }));
 
-		// Combine and deduplicate release and track artists.
-		const trackArtists = allTracks
-			.flatMap((track) => track.artists)
-			.filter(isDefined);
-		allArtists = deduplicateEntities(release.artists.concat(trackArtists));
+			// Combine and deduplicate release and track artists.
+			const trackArtists = allTracks
+				.flatMap((track) => track.artists)
+				.filter(isDefined);
+			allArtists = deduplicateEntities(release.artists.concat(trackArtists));
 
-		// Load URL relationships for related artists, recordings and labels of the release.
-		// These will be used to skip suggestions to seed external links which already exist.
-		const mbArtistBrowseResult = await MB.get('artist', { release: releaseMbid, inc: 'url-rels' });
-		mbArtists = mbArtistBrowseResult.artists;
-		const mbRecordingBrowseResult = await MB.get('recording', { release: releaseMbid, inc: 'url-rels' });
-		mbRecordings = mbRecordingBrowseResult.recordings;
-		// Labels often have no external links which could be linked, save pointless API call.
-		if (release.labels?.some((label) => label.externalIds?.length)) {
-			const mbLabelBrowseResult = await MB.get('label', { release: releaseMbid, inc: 'url-rels' });
-			mbLabels = mbLabelBrowseResult.labels;
+			// Load URL relationships for related artists, recordings and labels of the release.
+			// These will be used to skip suggestions to seed external links which already exist.
+			const mbArtistBrowseResult = await MB.get('artist', { release: releaseMbid, inc: 'url-rels' });
+			mbArtists = mbArtistBrowseResult.artists;
+			const mbRecordingBrowseResult = await MB.get('recording', { release: releaseMbid, inc: 'url-rels' });
+			mbRecordings = mbRecordingBrowseResult.recordings;
+			// Labels often have no external links which could be linked, save pointless API call.
+			if (release.labels?.some((label) => label.externalIds?.length)) {
+				const mbLabelBrowseResult = await MB.get('label', { release: releaseMbid, inc: 'url-rels' });
+				mbLabels = mbLabelBrowseResult.labels;
+			}
 		}
 	} catch (error) {
 		if (error instanceof AggregateError) {
@@ -154,6 +154,14 @@ export default defineRoute(async (req, ctx) => {
 					</>
 				)}
 				<h2>Release Actions</h2>
+				{!release && (
+					<form>
+						<div class='row'>
+							<MBIDInput name='release_mbid' placeholder='MusicBrainz release URL or MBID' value={releaseMbid} />
+							<input type='submit' value='Go!' />
+						</div>
+					</form>
+				)}
 				{errors.map((error) => (
 					<MessageBox
 						message={{
