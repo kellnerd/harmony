@@ -156,15 +156,16 @@ function buildAnnotation(release: HarmonyRelease, include: AnnotationIncludes = 
 	}
 	if (include.availability) {
 		const { availableIn, excludedFrom } = release;
-		if (availableIn?.length) {
-			const releaseEventCount = determineReleaseEventCountries(release)?.length;
-			// Skip if the list would be just a copy of the release events or is equivalent to one worldwide event.
-			if (availableIn.length !== releaseEventCount && releaseEventCount !== 1) {
+		const releaseEventCount = determineReleaseEventCountries(release)?.length;
+		// Skip if all available regions have been preserved as release events.
+		if (availableIn?.length !== releaseEventCount) {
+			// Skip if the list would be the equivalent of one worldwide release event.
+			if (availableIn?.length && releaseEventCount !== 1) {
 				sections.push('=== Available Regions ===', formatRegionList(availableIn));
 			}
-		}
-		if (excludedFrom?.length) {
-			sections.push('=== Excluded Regions ===', formatRegionList(excludedFrom));
+			if (excludedFrom?.length) {
+				sections.push('=== Excluded Regions ===', formatRegionList(excludedFrom));
+			}
 		}
 	}
 
