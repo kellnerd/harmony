@@ -9,13 +9,15 @@ export function ProviderCheckbox({
 	internalName,
 	disabled = false,
 	enabled = false,
-	persistent = false,
+	loadDefaults = false,
+	storeChanges = false,
 }: {
 	providerName: string;
 	internalName: string;
 	disabled?: boolean;
 	enabled?: boolean;
-	persistent?: boolean;
+	loadDefaults?: boolean;
+	storeChanges?: boolean;
 }) {
 	const id = `${internalName}-input`;
 
@@ -27,7 +29,7 @@ export function ProviderCheckbox({
 		>
 			<ProviderIcon providerName={providerName} />
 			{providerName}
-			{(persistent && !disabled)
+			{(loadDefaults && !disabled)
 				? (
 					<PersistentCheckbox
 						name={internalName}
@@ -35,7 +37,8 @@ export function ProviderCheckbox({
 						namespace='persist'
 						initialValue={enabled}
 						formValue=''
-						useCookie
+						storeChanges={storeChanges}
+						useCookie={storeChanges}
 					/>
 				)
 				: <input type='checkbox' name={internalName} id={id} checked={enabled} value='' disabled={disabled} />}
@@ -43,9 +46,10 @@ export function ProviderCheckbox({
 	);
 }
 
-export function ProviderCheckboxes({ enabledProviders, persistent = false }: {
+export function ProviderCheckboxes({ enabledProviders, loadDefaults = false, storeChanges = false }: {
 	enabledProviders?: Set<string>;
-	persistent?: boolean;
+	loadDefaults?: boolean;
+	storeChanges?: boolean;
 }) {
 	return (
 		<div class='row'>
@@ -59,7 +63,8 @@ export function ProviderCheckboxes({ enabledProviders, persistent = false }: {
 						disabled={providers.findByName(name)!.getQuality('GTIN lookup') <=
 							FeatureQuality.UNKNOWN}
 						enabled={enabledProviders?.has(internalName)}
-						persistent={persistent}
+						loadDefaults={loadDefaults}
+						storeChanges={storeChanges}
 					/>
 				);
 			})}

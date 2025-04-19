@@ -55,7 +55,7 @@ export default function ReleaseLookup({
 								namespace='persist'
 								initialValue={regionValue}
 								placeholder='Region (Country Code)'
-								useCookie
+								storeChanges={false}
 							/>
 						),
 				)}
@@ -63,7 +63,7 @@ export default function ReleaseLookup({
 					<SpriteIcon name='search' />
 				</InputWithOverlay>
 			</div>
-			<ProviderCheckboxes enabledProviders={enabledProviders} persistent={!isActiveLookup} />
+			<ProviderCheckboxes enabledProviders={enabledProviders} loadDefaults={!isActiveLookup} storeChanges={false} />
 		</form>
 	);
 }

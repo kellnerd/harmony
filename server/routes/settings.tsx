@@ -15,7 +15,7 @@ export default function Settings() {
 			<h2>Settings</h2>
 			<h3>Lookup Defaults</h3>
 			<p>Providers which should be looked up by barcode:</p>
-			<ProviderCheckboxes enabledProviders={defaultProviders} persistent />
+			<ProviderCheckboxes enabledProviders={defaultProviders} loadDefaults storeChanges />
 			<p>
 				Some providers only do lookups for a specific region. Specify the region which should be tried if the looked up
 				URL doesn’t already contain a region.

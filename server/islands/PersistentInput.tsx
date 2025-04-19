@@ -31,6 +31,8 @@ export interface PersistentInputProps extends JSX.HTMLAttributes<HTMLInputElemen
 	id?: string;
 	/** A namespace will be used to prefix the storage key of this input. */
 	namespace?: string;
+	/** Store the new value when the input changes. */
+	storeChanges?: boolean;
 	/** Store the value as cookie, making it available to the server. */
 	useCookie?: boolean;
 }
@@ -54,6 +56,7 @@ export function PersistentCheckbox({
 	trueValue = '1',
 	falseValue = '0',
 	formValue = '1',
+	storeChanges = true,
 	useCookie = false,
 	...props
 }: PersistentCheckboxProps) {
@@ -73,7 +76,9 @@ export function PersistentCheckbox({
 			{...props}
 			value={formValue}
 			checked={persistedValue.value !== falseValue}
-			onChange={(event) => persistedValue.value = event.currentTarget.checked ? trueValue : falseValue}
+			onChange={storeChanges
+				? ((event) => persistedValue.value = event.currentTarget.checked ? trueValue : falseValue)
+				: undefined}
 		/>
 	);
 }
@@ -88,6 +93,7 @@ export function PersistentTextInput({
 	id,
 	namespace,
 	initialValue = '',
+	storeChanges = true,
 	useCookie = false,
 	...props
 }: PersistentTextInputProps) {
@@ -106,7 +112,7 @@ export function PersistentTextInput({
 			id={id}
 			{...props}
 			value={text}
-			onChange={(event) => text.value = event.currentTarget.value}
+			onChange={storeChanges ? ((event) => text.value = event.currentTarget.value) : undefined}
 		/>
 	);
 }
