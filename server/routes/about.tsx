@@ -16,9 +16,7 @@ export default function About() {
 					<th>Display Name</th>
 					<th>Internal Name</th>
 					<th colspan={2}>Supported URL Formats</th>
-					<th>
-						<abbr title='Global Trade Item Number'>GTIN</abbr> Lookup
-					</th>
+					<th>Barcode Lookup</th>
 				</tr>
 				{providers.displayNames.map((name) => {
 					const provider = providers.findByName(name)!;
