@@ -22,6 +22,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
     {
       types: [
         "paid download",
+        "paid streaming",
       ],
       url: "https://music.apple.com/gb/album/1441458047",
     },

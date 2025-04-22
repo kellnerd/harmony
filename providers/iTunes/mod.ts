@@ -162,7 +162,8 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 			// but then it is technically also not yet available for download.
 			linkTypes.push('paid download');
 		}
-		if (tracks.every((track) => track.isStreamable)) {
+		if (tracks.every((track) => track.isStreamable || track.kind === 'music-video')) {
+			// All audio tracks should be streamable, music videos are always streamable but have no `isStreamable` property.
 			linkTypes.push('paid streaming');
 		}
 

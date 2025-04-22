@@ -65,7 +65,7 @@ export type Track = {
 	country: string;
 	currency: string;
 	primaryGenreName: string;
-	isStreamable: boolean;
+	isStreamable?: boolean;
 };
 
 export type Explicitness = 'clean' | 'explicit' | 'notExplicit';
