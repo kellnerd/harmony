@@ -11,8 +11,7 @@
 	--nav-accent: var(--brand-red);
 	--badge-fill: #414a63;
 	--badge-text: #ffffff;
-	--tooltip-fill: #555555;
-	--tooltip-text: #ffffff;
+	--tooltip-fill: #bbbbbb;
 	--odd-fill: #efefef;
 	--even-fill: #f8f8f8;
 	--link: #0066cc;
@@ -35,6 +34,7 @@
 		--theme-fill: var(--brand-dark);
 		--theme-text: var(--brand-light);
 		--nav-accent: var(--brand-orange);
+		--tooltip-fill: #555555;
 		--odd-fill: #333333;
 		--even-fill: #2a2a2a;
 		--link: #3399ff;
@@ -435,7 +435,7 @@ div[role='tooltip'] {
 	position: absolute;
 	display: none;
 	background-color: var(--tooltip-fill);
-	color: var(--tooltip-text);
+	color: var(--text);
 	padding: 0.5em;
 	border-radius: 0.3em;
 	min-width: 15rem;
