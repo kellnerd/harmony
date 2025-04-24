@@ -17,6 +17,9 @@
 	--even-fill: #f8f8f8;
 	--input-fill: var(--page-fill);
 	--input-border: #999999;
+	--button-fill: var(--even-fill);
+	--button-focus: var(--odd-fill);
+	--button-border: #dcdcdc;
 	--link: #0066cc;
 	--link-accent: var(--brand-red);
 	/* Provider brand colors */
@@ -38,8 +41,9 @@
 		--theme-text: var(--brand-light);
 		--nav-accent: var(--brand-orange);
 		--tooltip-fill: #555555;
-		--odd-fill: #333333;
-		--even-fill: #2a2a2a;
+		--odd-fill: #3d3d3d;
+		--even-fill: #333333;
+		--button-border: #666666;
 		--link: #3399ff;
 		--link-accent: var(--brand-orange);
 	}
@@ -180,6 +184,19 @@ input[type='text'] {
 }
 input#region-input {
 	width: 14em;
+}
+
+input[type='submit'] {
+	color: var(--text);
+	background-color: var(--button-fill);
+	border: 2px outset var(--button-border);
+	border-radius: 0.3em;
+}
+input[type='submit']:active {
+	border-style: inset;
+}
+input[type='submit']:focus, input[type='submit']:hover {
+	background-color: var(--button-focus);
 }
 
 /* tables */
