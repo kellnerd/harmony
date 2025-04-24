@@ -28,6 +28,7 @@ export default defineRoute(async (req, ctx) => {
 	let releaseMap: ProviderReleaseMap | undefined;
 	let enabledProviders: Set<string> | undefined = undefined;
 	let gtinInput: GTIN = '', urlInput = '', regionsInput: string[] = [];
+	let existingMBID: string | undefined;
 
 	try {
 		const {
@@ -63,6 +64,7 @@ export default defineRoute(async (req, ctx) => {
 
 			const mbInfo = release.info.providers.find((provider) => provider.name === 'MusicBrainz');
 			if (mbInfo) {
+				existingMBID = mbInfo.id;
 				release.info.messages.push({
 					text:
 						`Release with GTIN ${release.gtin} already exists on MusicBrainz ([show actions](release/actions?release_mbid=${mbInfo.id}))`,
@@ -120,12 +122,22 @@ export default defineRoute(async (req, ctx) => {
 				))}
 				{release && <Release release={release} releaseMap={releaseMap} />}
 				{release && (
-					<ReleaseSeeder
-						release={release}
-						projectUrl={codeUrl.href}
-						sourceUrl={seederSourceUrl.href}
-						targetUrl={seederTargetUrl.href}
-					/>
+					<div class='row'>
+						<ReleaseSeeder
+							release={release}
+							projectUrl={codeUrl.href}
+							sourceUrl={seederSourceUrl.href}
+							targetUrl={seederTargetUrl.href}
+						/>
+						{existingMBID && (
+							<ReleaseSeeder
+								release={release}
+								projectUrl={codeUrl.href}
+								sourceUrl={seederSourceUrl.href}
+								targetUrl={join(musicbrainzTargetServer, 'release', existingMBID, 'edit').href}
+							/>
+						)}
+					</div>
 				)}
 			</main>
 		</>

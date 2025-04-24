@@ -27,6 +27,8 @@ export interface ReleaseSeedOptions {
 	redirectUrl?: URL;
 	/** Base URL of the Harmony instance which was used to seed the release, for permalinks. */
 	seederUrl?: URL;
+	/** Indicates whether the seed will be used to update an existing release. */
+	isUpdate?: boolean;
 	/** Options for the annotation builder. */
 	annotation?: AnnotationIncludes;
 }
@@ -51,6 +53,30 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 		// Timestamp `ts` is not needed and may even lead to cache misses when different lookup options are used.
 		lookupState.delete('ts');
 		redirectUrl.search = lookupState.toString();
+	}
+
+	const externalLinks: ReleaseUrlSeed[] = release.externalLinks.flatMap((link) =>
+		link.types?.length
+			? link.types.map((type) => ({
+				url: link.url,
+				link_type: convertLinkType('release', type, new URL(link.url)),
+			}))
+			: ({
+				url: link.url,
+			})
+	);
+
+	if (options.isUpdate) {
+		// Only seed external links for now, updating other properties is more controversial.
+		// For some properties (such as the tracklist) seeding updates is even affected by bugs:
+		// https://tickets.metabrainz.org/browse/MBS-13688
+		const seed: Omit<ReleaseSeed, 'name'> = {
+			urls: externalLinks,
+			edit_note: buildEditNote(release.info, options),
+			redirect_uri: redirectUrl?.href,
+		};
+
+		return flatten(seed);
 	}
 
 	const seed: ReleaseSeed = {
@@ -83,16 +109,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 		})),
 		language: release.language?.code,
 		script: release.script?.code,
-		urls: release.externalLinks.flatMap<ReleaseUrlSeed>((link) =>
-			link.types?.length
-				? link.types.map((type) => ({
-					url: link.url,
-					link_type: convertLinkType('release', type, new URL(link.url)),
-				}))
-				: ({
-					url: link.url,
-				})
-		),
+		urls: externalLinks,
 		annotation: buildAnnotation(release, options.annotation),
 		edit_note: buildEditNote(release.info, options),
 		redirect_uri: redirectUrl?.href,
@@ -187,7 +204,7 @@ function buildEditNote(info: ReleaseInfo, options: ReleaseSeedOptions): string {
 
 	const { projectUrl, seederUrl } = options;
 	const sourceUrl = seederUrl ? createReleasePermalink(info, seederUrl) : projectUrl;
-	lines.unshift(`Imported with Harmony (${sourceUrl}), using data from:`);
+	lines.unshift(`${options.isUpdate ? 'Updated' : 'Imported'} with Harmony (${sourceUrl}), using data from:`);
 
 	return lines.join('\n');
 }
