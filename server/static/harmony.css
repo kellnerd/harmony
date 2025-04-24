@@ -1,5 +1,6 @@
 :root {
-	--input-padding: 0.3rem;
+	--input-padding-x: 0.2rem;
+	--input-padding-y: 0.3rem;
 	--page-fill: #ffffff;
 	--text: #000000;
 	--brand-orange: #ffb92c;
@@ -14,6 +15,8 @@
 	--tooltip-fill: #bbbbbb;
 	--odd-fill: #efefef;
 	--even-fill: #f8f8f8;
+	--input-fill: var(--page-fill);
+	--input-border: #999999;
 	--link: #0066cc;
 	--link-accent: var(--brand-red);
 	/* Provider brand colors */
@@ -159,7 +162,7 @@ div.row > label.col {
 }
 
 input {
-	padding: var(--input-padding);
+	padding: var(--input-padding-y) var(--input-padding-x);
 	box-sizing: border-box;
 }
 
@@ -170,6 +173,10 @@ input:disabled {
 input[type='text'] {
 	width: 25em;
 	max-width: 100%;
+	color: var(--text);
+	background-color: var(--input-fill);
+	border: 1px solid var(--input-border);
+	border-radius: 0.2em;
 }
 input#region-input {
 	width: 14em;
@@ -237,7 +244,6 @@ figure.cover-image > figcaption {
 /* InputWithOverlay.tsx */
 
 div.input-with-overlay {
-	color: initial;
 	position: relative;
 	display: inline-block;
 	max-width: 100%;
@@ -248,7 +254,7 @@ div.input-with-overlay > div.overlay {
 	height: 100%;
 	display: flex;
 	align-items: center;
-	padding-left: var(--input-padding);
+	padding-left: var(--input-padding-x);
 	pointer-events: none;
 }
 
