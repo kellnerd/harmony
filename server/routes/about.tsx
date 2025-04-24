@@ -22,7 +22,7 @@ export default function About() {
 					const provider = providers.findByName(name)!;
 					return (
 						<tr>
-							<td class={provider.internalName}>
+							<td class={['provider-icon', provider.internalName].join(' ')}>
 								<ProviderIcon providerName={name} />
 							</td>
 							<td>

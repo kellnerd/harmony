@@ -200,6 +200,10 @@ td.numeric > ul {
 	text-align: left;
 }
 
+td.provider-icon {
+	color: var(--badge-text);
+}
+
 td ul {
 	margin: 0;
 	padding-left: 1em;
