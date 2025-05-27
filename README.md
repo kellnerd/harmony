@@ -36,7 +36,7 @@ Alternatively you can run the [predefined task](deno.json) which automatically s
 deno task server
 ```
 
-Other environment variables which are used by the server are documented in the [configuration module](server/config.ts).
+Other environment variables which are used by the server are documented in the [configuration module](config.ts).
 
 There is also a small command line app which can be used for testing:
 
@@ -76,7 +76,7 @@ Let us see what happens if someone looks up a release using the website:
 1. The Fresh app handles the request to the `/release` route in `server/routes/release.tsx`.
 2. A combined release lookup is initiated, which finds the matching provider(s) in the registry and calls their release lookup methods.
 3. Each requested provider fetches the release data and converts it into a harmonized release.
-4. Once all requested providers have been looked up, the individual release are combined into one release using the merge algorithm.
+4. Once all requested providers have been looked up, the individual releases are combined into one release using the merge algorithm.
 5. The route handler calls the MBID mapper, handles errors and renders the release page, including a hidden release seeder form.
 6. In order to create the release seed, the harmonized release is converted into the format expected by MusicBrainz where some data can only be put into the annotation.
 
