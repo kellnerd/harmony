@@ -12,6 +12,7 @@ describe('parseGermanDate', () => {
 		['parses a month name and year', 'Dezember 1999', { day: undefined, month: 12, year: 1999 }],
 		['parses a year', '1973', { day: undefined, month: undefined, year: 1973 }],
 		['handles umlauts in month names', '9. März 1984', { day: 9, month: 3, year: 1984 }],
+		['handles date with trailing text', '6. Juni 2025 (heute)', { day: 6, month: 6, year: 2025 }],
 	];
 
 	testCases.forEach(([description, input, expected]) => {
