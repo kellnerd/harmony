@@ -3,7 +3,7 @@ import { musicbrainzApiBaseUrl } from '@/config.ts';
 import { MusicBrainzClient } from '@kellnerd/musicbrainz';
 
 export const MB = new MusicBrainzClient({
-	apiUrl: musicbrainzApiBaseUrl.href,
+	apiUrl: musicbrainzApiBaseUrl,
 	app: appInfo,
 	maxQueueSize: 20,
 });

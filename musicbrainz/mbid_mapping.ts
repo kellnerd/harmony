@@ -41,7 +41,7 @@ export async function resolveToMbid(
 	for (const entityId of uncachedIds) {
 		const externalUrl = providers.constructEntityUrl(entityId);
 		try {
-			const result = await MB.browseUrl(externalUrl, {
+			const result = await MB.lookupByUrl(externalUrl, {
 				inc: [`${entityType}-rels`],
 			});
 			const rels = result.relations.filter((rel) => rel['target-type'] === entityType);
