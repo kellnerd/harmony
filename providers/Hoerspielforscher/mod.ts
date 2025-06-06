@@ -1,6 +1,6 @@
 import type { EpisodeData, Release } from './json_types.ts';
 import { mediumFormatMap, twoSidedFormats } from './mapping.ts';
-import type { EntityId, HarmonyMedium, HarmonyRelease } from '@/harmonizer/types.ts';
+import type { EntityId, HarmonyMedium, HarmonyRelease, Label } from '@/harmonizer/types.ts';
 import { MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { DurationPrecision } from '@/providers/features.ts';
 import { parseGermanDate } from '@/utils/date.ts';
@@ -97,7 +97,13 @@ export class HörspielforscherReleaseLookup extends ReleaseLookup<Hörspielforsc
 	convertRawRelease(rawRelease: Release): HarmonyRelease {
 		this.id = rawRelease.id.toString();
 
-		const { artist, coverUrl, label, info } = rawRelease;
+		const { artist, coverUrl, label, catalogNumbers, info } = rawRelease;
+
+		const mbLabel: Label | undefined = label && {
+			name: label.text,
+			externalIds: this.convertUrlToExternalId(label.href),
+		};
+
 		const release: HarmonyRelease = {
 			title: rawRelease.title,
 			artists: artist
@@ -106,13 +112,15 @@ export class HörspielforscherReleaseLookup extends ReleaseLookup<Hörspielforsc
 					externalIds: this.convertUrlToExternalId(rawRelease.artistUrl),
 				}]
 				: [],
-			labels: label
-				? [{
-					name: label.text,
-					externalIds: this.convertUrlToExternalId(label.href),
-					catalogNumber: info['Katalognummer'],
-				}]
+			labels: mbLabel
+				? catalogNumbers?.length
+					? catalogNumbers.map((catno) => ({
+						...mbLabel,
+						catalogNumber: catno,
+					}))
+					: [mbLabel]
 				: undefined,
+			gtin: rawRelease.upc?.replaceAll(/\s+/g, ''),
 			releaseDate: parseGermanDate(info['Veröffentlichung']),
 			media: this.makeMedia(rawRelease),
 			status: 'Official',
@@ -231,6 +239,7 @@ export class HörspielforscherReleaseLookup extends ReleaseLookup<Hörspielforsc
 			title: extractSpanWithClass(releaseInfo, 'title')!,
 			description: data.title,
 			artist: extractSpanWithClass(releaseInfo, 'artist')?.trim() || undefined,
+			catalogNumbers: [],
 			coverUrl: extractAttribute(main, 'img', 'src'),
 			chapters: Array.from(extractDivsWithClass(subsection, 'chapter')),
 			info: {},
@@ -245,13 +254,28 @@ export class HörspielforscherReleaseLookup extends ReleaseLookup<Hörspielforsc
 		for (const infoDiv of extractDivsWithClass(main, 'info-line')) {
 			if (infoDiv.includes('Spielzeit')) {
 				release.duration = toText(infoDiv).split(/:\s+/)[1];
+			} else if (infoDiv.includes('Katalognummern')) {
+				for (const catalog of extractAnchorTags(infoDiv)) {
+					const catalogId = new URL(catalog.href).searchParams.get('detail');
+					if (catalogId === '1296') { // Special UPC catalog.
+						release.upc = catalog.text;
+					} else {
+						// TODO: Handle ISBN and "ohne"
+						release.catalogNumbers.push(catalog.text);
+					}
+				}
 			} else {
 				for (const infoEntry of infoDiv.split(/<br>|•/i).map(toText)) {
 					// Split into key and value.
 					const infoMatch = infoEntry.match(/(.+?):\s+(.+)/);
 					if (infoMatch) {
 						const key = infoMatch[1].trim();
-						release.info[key] = infoMatch[2].trim();
+						const value = infoMatch[2].trim();
+						if (key === 'Katalognummer') {
+							release.catalogNumbers.push(value);
+						} else {
+							release.info[key] = value;
+						}
 					}
 				}
 			}

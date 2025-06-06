@@ -29,6 +29,10 @@ export interface Release {
 	artistUrl?: string;
 	/** Release label name and URL. */
 	label?: AnchorTag;
+	/** Catalog numbers. */
+	catalogNumbers: string[];
+	/** UPC barcode. */
+	upc?: string;
 	/** URL of the cover art (thumbnail). */
 	coverUrl?: string;
 	/** Duration of the release and its mediums/sides (in parentheses). */
