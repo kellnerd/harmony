@@ -109,9 +109,45 @@ export default class BandcampProvider extends MetadataProvider {
 		}
 	}
 
-	override getLinkTypesForEntity(): LinkType[] {
+	override getLinkTypesForEntity(entity: EntityId): LinkType[] {
+		if (entity.type === 'track') {
+			// For tracks, we need to determine the link types based on the track data
+			// This will be handled by the release lookup when creating the track
+			return [];
+		}
 		// MB has special handling for Bandcamp artist URLs
 		return ['discography page'];
+	}
+
+	/** Determines the link types for a track based on its data. */
+	getTrackLinkTypes(track: TrackInfo | PlayerTrack): LinkType[] {
+		const linkTypes: LinkType[] = [];
+
+		if ('track_streaming' in track) {
+			const playerTrack = track as PlayerTrack;
+			if (playerTrack.track_streaming) {
+				linkTypes.push('free streaming');
+			}
+
+			return linkTypes;
+		}
+
+		const trackInfo = track as TrackInfo;
+
+		if (trackInfo.streaming === 1) {
+			linkTypes.push('free streaming');
+		}
+
+		if (trackInfo.is_downloadable === true) {
+			if (trackInfo.has_free_download) {
+				linkTypes.push('free download');
+			} else {
+				linkTypes.push('paid download');
+				// TODO: And potentially a free download
+			}
+		}
+
+		return linkTypes;
 	}
 
 	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
@@ -349,13 +385,21 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			trackNumber = rawTrack.tracknum + 1;
 		}
 
+		const externalIds = title_link ? this.provider.makeExternalIdsFromUrl(title_link, this.rawReleaseUrl) : [];
+		if (externalIds.length > 0) {
+			const linkTypes = this.provider.getTrackLinkTypes(rawTrack);
+			if (linkTypes.length > 0) {
+				externalIds[0].linkTypes = linkTypes;
+			}
+		}
+
 		return {
 			number: trackNumber,
 			title,
 			artists: artist ? [this.makeArtistCreditName(artist)] : undefined,
 			length: rawTrack.duration * 1000,
 			recording: {
-				externalIds: title_link ? this.provider.makeExternalIdsFromUrl(title_link, this.rawReleaseUrl) : [],
+				externalIds,
 			},
 		};
 	}

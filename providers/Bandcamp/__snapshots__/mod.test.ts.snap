@@ -74,6 +74,10 @@ suika.love",
             externalIds: [
               {
                 id: "thedarkthursday/suomi-lovely",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
                 provider: "bandcamp",
                 type: "track",
               },
@@ -89,6 +93,10 @@ suika.love",
             externalIds: [
               {
                 id: "thedarkthursday/bittersweet-desires-to-overdose-on-my-prescriptions",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
                 provider: "bandcamp",
                 type: "track",
               },
@@ -104,6 +112,10 @@ suika.love",
             externalIds: [
               {
                 id: "thedarkthursday/set-fire-to-the-space-snow",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
                 provider: "bandcamp",
                 type: "track",
               },
