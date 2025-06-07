@@ -1,5 +1,5 @@
 import { DownloadPreference } from './json_types.ts';
-import type { AlbumCurrent, PlayerData, PlayerTrack, ReleasePage, TrackCurrent, TrackInfo } from './json_types.ts';
+import type { AlbumCurrent, PlayerData, ReleasePage, TrackCurrent, TrackInfo } from './json_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -109,9 +109,34 @@ export default class BandcampProvider extends MetadataProvider {
 		}
 	}
 
-	override getLinkTypesForEntity(): LinkType[] {
+	override getLinkTypesForEntity(entity: EntityId): LinkType[] {
+		if (entity.type === 'track') {
+			// For tracks, we need to determine the link types based on the track data
+			// This will be handled by the release lookup when creating the track
+			return [];
+		}
 		// MB has special handling for Bandcamp artist URLs
 		return ['discography page'];
+	}
+
+	/** Determines the link types for a track based on its data. */
+	getTrackLinkTypes(track: TrackInfo): LinkType[] {
+		const linkTypes: LinkType[] = [];
+
+		if (track.streaming === 1) {
+			linkTypes.push('free streaming');
+		}
+
+		if (track.is_downloadable === true) {
+			if (track.has_free_download) {
+				linkTypes.push('free download');
+			} else {
+				linkTypes.push('paid download');
+				// TODO: And potentially a free download
+			}
+		}
+
+		return linkTypes;
 	}
 
 	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
@@ -235,11 +260,20 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		}
 
 		const images = [this.getArtwork(rawRelease.art_id, ['front'])];
-		let tracks: Array<TrackInfo | PlayerTrack> = rawRelease.trackinfo;
+		let tracks: TrackInfo[] = rawRelease.trackinfo;
 		if (rawRelease.item_type === 'album' && rawRelease.album_is_preorder) {
 			// Fetch embedded player JSON which already has all track durations for pre-orders.
 			const embeddedPlayerRelease = await this.getEmbeddedPlayerRelease(rawRelease.id);
-			tracks = embeddedPlayerRelease.tracks;
+
+			// Update durations in TrackInfo objects from PlayerTrack data
+			tracks = tracks.map((trackInfo, index) => {
+				const playerTrack = embeddedPlayerRelease.tracks[index];
+				if (playerTrack) {
+					trackInfo.duration = playerTrack.duration;
+				}
+				return trackInfo;
+			});
+
 			this.addMessage('This is a pre-order release, so the metadata may change', 'warning');
 
 			// Extract track artwork.
@@ -334,19 +368,22 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		return release;
 	}
 
-	convertRawTrack(rawTrack: TrackInfo | PlayerTrack, index: number): HarmonyTrack {
+	convertRawTrack(rawTrack: TrackInfo, index: number): HarmonyTrack {
 		const { artist, title_link } = rawTrack;
 		let { title } = rawTrack;
-		let trackNumber: number;
+		const trackNumber = rawTrack.track_num ?? index + 1;
 
-		if ('track_num' in rawTrack) {
-			trackNumber = rawTrack.track_num ?? index + 1;
-			if (artist) {
-				// Track title is prefixed by the track artist (if filled).
-				title = title.replace(`${artist} - `, '');
+		if (artist) {
+			// Track title is prefixed by the track artist (if filled).
+			title = title.replace(`${artist} - `, '');
+		}
+
+		const externalIds = title_link ? this.provider.makeExternalIdsFromUrl(title_link, this.rawReleaseUrl) : [];
+		if (externalIds.length > 0) {
+			const linkTypes = this.provider.getTrackLinkTypes(rawTrack);
+			if (linkTypes.length > 0) {
+				externalIds[0].linkTypes = linkTypes;
 			}
-		} else {
-			trackNumber = rawTrack.tracknum + 1;
 		}
 
 		return {
@@ -355,7 +392,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			artists: artist ? [this.makeArtistCreditName(artist)] : undefined,
 			length: rawTrack.duration * 1000,
 			recording: {
-				externalIds: title_link ? this.provider.makeExternalIdsFromUrl(title_link, this.rawReleaseUrl) : [],
+				externalIds,
 			},
 		};
 	}

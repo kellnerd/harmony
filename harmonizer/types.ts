@@ -30,6 +30,8 @@ export interface EntityId {
 export interface ExternalEntityId extends EntityId {
 	/** Internal name of the provider. */
 	provider: string;
+	/** Optional link types for this external ID. */
+	linkTypes?: LinkType[];
 }
 
 /** Entity which may have external IDs which can be resolved to its MBID. */

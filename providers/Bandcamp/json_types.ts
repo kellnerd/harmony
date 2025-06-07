@@ -189,7 +189,8 @@ export interface TrackInfo {
 	/** Indicates whether the track can be streamed (can also be `1` for unreleased tracks). */
 	streaming: 1; // = boolean `1 | null`?
 	is_downloadable: boolean | null;
-	has_free_download: null;
+	/** Indicates whether the track is available for free download only (not for purchase). */
+	has_free_download: boolean | null;
 	free_album_download: boolean;
 	/** Duration in seconds (floating point, `0.0` for unreleased tracks). */
 	duration: number;

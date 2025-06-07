@@ -38,7 +38,7 @@ export function LinkWithMusicBrainz({ entity, entityType, sourceEntityUrl, entit
 		const provider = providers.findByName(externalId.provider)!;
 		return {
 			url: provider.constructUrl(externalId).href,
-			types: provider.getLinkTypesForEntity(externalId),
+			types: externalId.linkTypes ?? provider.getLinkTypesForEntity(externalId),
 		};
 	}).filter((link) => !existingLinks.has(link.url));
 
