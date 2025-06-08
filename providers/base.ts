@@ -170,9 +170,20 @@ export abstract class MetadataProvider {
 	}
 
 	/** Creates external entity IDs from the given provider entity URL. */
-	makeExternalIdsFromUrl(entityUrl: URL | string, baseUrl?: URL | string): ExternalEntityId[] {
-		const entityId = this.extractEntityFromUrl(new URL(entityUrl, baseUrl));
-		return entityId ? this.makeExternalIds(entityId) : [];
+	makeExternalIdsFromUrl(entityUrl: URL | string, options: {
+		baseUrl?: URL | string;
+		linkTypes?: LinkType[];
+	} = {}): ExternalEntityId[] {
+		const entityId = this.extractEntityFromUrl(new URL(entityUrl, options.baseUrl));
+		if (entityId) {
+			const externalIds = this.makeExternalIds(entityId);
+			if (options.linkTypes?.length) {
+				externalIds[0].linkTypes = options.linkTypes;
+			}
+			return externalIds;
+		} else {
+			return [];
+		}
 	}
 
 	/** Returns the quality rating of the given feature. */

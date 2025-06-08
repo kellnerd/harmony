@@ -378,21 +378,18 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			title = title.replace(`${artist} - `, '');
 		}
 
-		const externalIds = title_link ? this.provider.makeExternalIdsFromUrl(title_link, this.rawReleaseUrl) : [];
-		if (externalIds.length > 0) {
-			const linkTypes = this.provider.getTrackLinkTypes(rawTrack);
-			if (linkTypes.length > 0) {
-				externalIds[0].linkTypes = linkTypes;
-			}
-		}
-
 		return {
 			number: trackNumber,
 			title,
 			artists: artist ? [this.makeArtistCreditName(artist)] : undefined,
 			length: rawTrack.duration * 1000,
 			recording: {
-				externalIds,
+				externalIds: title_link
+					? this.provider.makeExternalIdsFromUrl(title_link, {
+						baseUrl: this.rawReleaseUrl,
+						linkTypes: this.provider.getTrackLinkTypes(rawTrack),
+					})
+					: [],
 			},
 		};
 	}
