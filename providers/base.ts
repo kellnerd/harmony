@@ -165,7 +165,7 @@ export abstract class MetadataProvider {
 	}
 
 	/** Creates external entity IDs from the given provider-specific IDs. */
-	makeExternalIds(...entityIds: EntityId[]): ExternalEntityId[] {
+	makeExternalIds(...entityIds: Array<EntityId | ExternalEntityId>): ExternalEntityId[] {
 		return entityIds.map((entityId) => ({ ...entityId, provider: this.internalName }));
 	}
 

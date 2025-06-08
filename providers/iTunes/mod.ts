@@ -224,6 +224,15 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 				title = track.trackCensoredName;
 			}
 
+			const linkTypes: LinkType[] = [];
+			if (track.trackPrice) {
+				linkTypes.push('paid download');
+			}
+			if (track.isStreamable || track.kind === 'music-video') {
+				// Audio tracks should be streamable, music videos are always streamable but have no `isStreamable` property.
+				linkTypes.push('paid streaming');
+			}
+
 			medium.tracklist.push({
 				number: track.trackNumber,
 				title,
@@ -235,6 +244,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 						type: track.kind,
 						id: track.trackId.toString(),
 						region: this.lookup.region,
+						linkTypes,
 					}),
 				},
 			});

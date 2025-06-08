@@ -87,6 +87,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458049",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -118,6 +122,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458050",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -149,6 +157,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458051",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -180,6 +192,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458052",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -211,6 +227,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458055",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -242,6 +262,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458065",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -273,6 +297,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458067",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -304,6 +332,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458071",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -335,6 +367,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458079",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -366,6 +402,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458080",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -397,6 +437,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458081",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -428,6 +472,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458082",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -465,6 +513,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458084",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -496,6 +548,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458085",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -527,6 +583,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458086",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -558,6 +618,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458088",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -589,6 +653,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458097",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -620,6 +688,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458098",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "song",
@@ -651,6 +723,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458100",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "music-video",
@@ -682,6 +758,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458161",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "music-video",
@@ -713,6 +793,10 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
             externalIds: [
               {
                 id: "1441458162",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
                 provider: "itunes",
                 region: "GB",
                 type: "music-video",
