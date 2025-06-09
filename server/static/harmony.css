@@ -91,6 +91,10 @@ h1 + p.subtitle {
 	text-align: center;
 }
 
+ul.inline {
+	display: inline-block;
+	padding-inline: 0;
+}
 ul.inline > li {
 	display: inline;
 }

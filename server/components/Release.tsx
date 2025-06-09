@@ -1,9 +1,9 @@
 import { setupAlternativeValues } from './AlternativeValues.tsx';
 import { ArtistCredit } from './ArtistCredit.tsx';
 import { CoverImage } from './CoverImage.tsx';
-import { LinkedEntity } from './LinkedEntity.tsx';
 import { MessageBox } from './MessageBox.tsx';
 import { ProviderList } from './ProviderList.tsx';
+import { ReleaseLabels } from './ReleaseLabels.tsx';
 import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import RegionList from '@/server/islands/RegionList.tsx';
@@ -59,14 +59,15 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 					<tr>
 						<th>Labels</th>
 						<td>
-							<ul>
-								{labels?.map((label) => (
-									<li>
-										<LinkedEntity entity={label} entityType='label' displayName={label.name ?? '[unknown]'} />{' '}
-										{label.catalogNumber}
-									</li>
-								))}
-							</ul>
+							<ReleaseLabels labels={labels} />
+							<AlternativeValues
+								property={(release) => release.labels}
+								display={(labels) => <ReleaseLabels labels={labels} inline />}
+								identifier={(labels) =>
+									labels.map(
+										({ name, catalogNumber }) => [name, catalogNumber].join('\t'),
+									).join('\n')}
+							/>
 						</td>
 					</tr>
 				)}
