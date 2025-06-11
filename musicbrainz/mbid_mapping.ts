@@ -3,87 +3,188 @@ import type { ExternalEntityId, HarmonyRelease, ResolvableEntity } from '@/harmo
 import { MB } from '@/musicbrainz/api_client.ts';
 import { providers } from '@/providers/mod.ts';
 import { encodeReleaseLookupState } from '@/server/permalink.ts';
-import { ApiError, type EntityWithMbid, RateLimitError } from '@kellnerd/musicbrainz';
+import { pluralWithCount } from '@/utils/plural.ts';
+import { type EntityWithMbid, RateLimitError } from '@kellnerd/musicbrainz';
+import type { RelInclude } from '@kellnerd/musicbrainz/api-types';
 import type { RelatableEntityType } from '@kellnerd/musicbrainz/data/entity';
+import { assert } from 'std/assert/assert.ts';
+import { chunk } from '@std/collections/chunk';
 import { getLogger } from 'std/log/get_logger.ts';
 
 /**
- * Resolves external IDs for a MusicBrainz entity to its MBID.
+ * Resolves the external IDs of each given MusicBrainz entity to its MBID.
  *
- * Tries to lookup each of the given external IDs until an MBID is found.
- * Before sending requests to the MusicBrainz API, the MBID cache is checked.
- *
- * Accepts an optional context cache which also stores unresolved external IDs.
- * This is useful to avoid multiple unsuccessful API requests for the same entity within a short interval.
+ * Tries to lookup the URL form of the given external IDs until an MBID is found.
+ * Before sending any requests to the MusicBrainz API, the MBID cache is checked.
  */
-export async function resolveToMbid(
-	entityIds: ExternalEntityId[],
-	entityType: RelatableEntityType,
-	contextCache?: Record<string, string>,
-): Promise<string | undefined> {
-	if (!entityIds.length) return;
+export async function resolveMbids(
+	entities: Iterable<ResolvableEntity>,
+	entityTypes: RelatableEntityType[] = ['artist', 'label'],
+): Promise<MbidResolverStatistics> {
+	const { serializedExternalIdToMbid, uncachedEntityUrls } = collectCachedExternalIdToMbidMapping(entities);
 
-	// First check the caches for each entity ID.
-	const uncachedIds: ExternalEntityId[] = [];
-	for (const entityId of entityIds) {
-		const mbid = getCachedMbid(entityId, contextCache);
-		if (mbid) {
-			return mbid;
-		} else if (mbid !== '') {
-			// Empty MBID is used by the context cache to indicate that further requests should be skipped.
-			uncachedIds.push(entityId);
+	let lookedUpMbids = 0, lookedUpUrls = 0, resolvedMbids = 0, requests = 0;
+	if (uncachedEntityUrls.length) {
+		// TODO: Prioritize URL lookups if more than one request would be necessary:
+		// Begin with looking up the first N external IDs of each entity, only lookup the rest if still necessary.
+
+		for (const urlsToBeLookedUp of chunk(uncachedEntityUrls, MAX_URLS_PER_REQUEST)) {
+			lookedUpMbids += await lookupUrlToMbidMapping(urlsToBeLookedUp, serializedExternalIdToMbid, entityTypes);
+			lookedUpUrls += urlsToBeLookedUp.length;
+			requests++;
 		}
 	}
 
+	// Inject collected MBIDs into the resolvable entities.
+	for (const entity of entities) {
+		if (!entity.mbid && entity.externalIds?.length) {
+			// Try all external IDs until one can be resolved to an MBID.
+			for (const externalId of entity.externalIds) {
+				const mbid = serializedExternalIdToMbid.get(serializeExternalId(externalId));
+				if (mbid) {
+					entity.mbid = mbid;
+					resolvedMbids++;
+					break;
+				}
+			}
+		}
+	}
+
+	return {
+		lookedUpMbids,
+		lookedUpUrls,
+		resolvedMbids,
+		requests,
+	};
+}
+
+/** Statistics collected by the MBID resolver. */
+interface MbidResolverStatistics {
+	lookedUpUrls: number;
+	lookedUpMbids: number;
+	resolvedMbids: number;
+	requests: number;
+}
+
+/**
+ * Collects already cached MBIDs for the external IDs of the given entities.
+ *
+ * Returns a mapping from serialized external ID to MBID and an array of URLs corresponding to uncached IDs.
+ */
+function collectCachedExternalIdToMbidMapping(entities: Iterable<ResolvableEntity>): {
+	serializedExternalIdToMbid: Map<string, string>;
+	uncachedEntityUrls: URL[];
+} {
 	const log = getLogger('harmony.mbid');
 
-	// If the MBID is not cached, try to lookup canonical entity URLs with the MB API.
-	for (const entityId of uncachedIds) {
-		const externalUrl = providers.constructEntityUrl(entityId);
-		try {
-			const result = await MB.lookupByUrl(externalUrl, {
-				inc: [`${entityType}-rels`],
-			});
-			const rels = result.relations.filter((rel) => rel['target-type'] === entityType);
-			const targetEntityMbids = rels.map((rel) => {
-				// @ts-ignore: `entityType` is not narrowed, but every specific value is a valid key here.
-				const targetEntity = rel[entityType] as EntityWithMbid;
+	// Collect external IDs of entities without MBID and deduplicate them (using a serialized string key).
+	// Remember the (first) entity to which each processed external ID belongs.
+	const externalIdsByIdKey = new Map<string, ExternalEntityId>();
+	const entitiesByIdKey = new Map<string, ResolvableEntity>();
+	let entityCount = 0;
+	for (const entity of entities) {
+		if (!entity.mbid && entity.externalIds?.length) {
+			entityCount++;
+			for (const externalId of entity.externalIds) {
+				const idKey = serializeExternalId(externalId);
+				if (!externalIdsByIdKey.has(idKey)) {
+					externalIdsByIdKey.set(idKey, externalId);
+					entitiesByIdKey.set(idKey, entity);
+				}
+			}
+		}
+	}
+
+	// Load cached MBIDs and collect the remaining unmapped external IDs.
+	const mbidByIdKey = new Map<string, string>();
+	const unmappedIdsByIdKey = new Map<string, ExternalEntityId>();
+	for (const [idKey, externalId] of externalIdsByIdKey) {
+		const mbid = getCachedMbid(externalId);
+		if (mbid) {
+			mbidByIdKey.set(idKey, mbid);
+		} else {
+			unmappedIdsByIdKey.set(idKey, externalId);
+		}
+	}
+
+	// Construct URLs that have to be looked up on MusicBrainz to resolve them to MBIDs.
+	// Ignore external IDs/links that belong to entities for which we already know the MBID (via another ID).
+	const uncachedEntityUrls = new Array<URL>();
+	for (const [idKey, externalId] of unmappedIdsByIdKey) {
+		const entity = entitiesByIdKey.get(idKey)!;
+		const hasKnownMbid = entity.externalIds?.some((otherId) => mbidByIdKey.has(serializeExternalId(otherId)));
+		if (!hasKnownMbid) {
+			uncachedEntityUrls.push(providers.constructEntityUrl(externalId));
+		}
+	}
+
+	log.debug(() =>
+		`Collected ${entityCount} resolvable entities with ${externalIdsByIdKey.size} unique external IDs` +
+		` (${unmappedIdsByIdKey.size} uncached IDs, ${uncachedEntityUrls.length} URLs have to be looked up)`
+	);
+
+	return { serializedExternalIdToMbid: mbidByIdKey, uncachedEntityUrls };
+}
+
+/** Maximum number of URLs which can be looked up with a single MB API request. */
+const MAX_URLS_PER_REQUEST = 100;
+
+/**
+ * Looks up (uncached) entity URLs using the MusicBrainz API.
+ *
+ * Collects the resulting MBIDs and updates the given mapping and the MBID cache.
+ */
+async function lookupUrlToMbidMapping(
+	entityUrls: URL[],
+	serializedExternalIdToMbid: Map<string, string>,
+	entityTypes: RelatableEntityType[],
+) {
+	if (!entityUrls.length) return 0;
+	assert(entityUrls.length <= MAX_URLS_PER_REQUEST, 'Too many URLs for one API request');
+
+	const log = getLogger('harmony.mbid');
+	// Handle API inconsistency, target types are in snake case.
+	const expectedTargetTypes = new Set(entityTypes.map((type) => type.replaceAll('-', '_')));
+
+	const results = await MB.lookupByUrl(entityUrls, {
+		inc: entityTypes.map((entityType) => `${entityType}-rels` as RelInclude),
+	});
+
+	let resolvedMbidCount = 0;
+	for (const { resource, relations } of results) {
+		const externalId = providers.extractEntityFromUrl(new URL(resource));
+		if (externalId) {
+			const expectedRels = relations.filter((rel) => expectedTargetTypes.has(rel['target-type']));
+			const targetEntityMbids = expectedRels.map((rel) => {
+				// @ts-ignore: Target type is not narrowed, but every specific value is a valid key here.
+				const targetEntity = rel[rel['target-type']] as EntityWithMbid;
 				return targetEntity.id;
 			});
 
+			// Check whether the external URL can be used as a unique identifier of exactly one entity.
 			const uniqueTargetCount = new Set(targetEntityMbids).size;
-			if (uniqueTargetCount !== 1) {
-				log.debug(`${result.resource} has rels to ${uniqueTargetCount} ${entityType} entities`);
-				// External URL can not be used as a unique identifier of one entity.
-				if (contextCache) {
-					// Only writes to the context cache to indicate that further requests for this URL should be skipped.
-					setCachedMbid(entityId, '', contextCache);
-				}
-				continue;
+			if (uniqueTargetCount === 1) {
+				const mbid = targetEntityMbids[0];
+				serializedExternalIdToMbid.set(serializeExternalId(externalId), mbid);
+				resolvedMbidCount++;
+				setCachedMbid(externalId, mbid);
+			} else {
+				log.debug(`${resource} has rels to ${uniqueTargetCount} entities`);
 			}
-
-			const mbid = targetEntityMbids[0];
-			log.debug(`Resolved ${externalUrl.href} to ${entityType} ${mbid}`);
-			setCachedMbid(entityId, mbid, contextCache);
-
-			return mbid;
-		} catch (error) {
-			if (error instanceof ApiError) {
-				// Only writes to the context cache to indicate that further requests for this URL should be skipped.
-				setCachedMbid(entityId, '', contextCache);
-				log.debug(`Failed to resolve ${externalUrl.href}`);
-				continue;
-			}
-			throw error;
+		} else {
+			log.warn(`The API returned an unexpected, unsupported URL: ${resource}`);
 		}
 	}
+
+	return resolvedMbidCount;
 }
 
 /** Resolves all external links for artists and labels of the given release to their MBIDs. */
 export async function resolveReleaseMbids(release: HarmonyRelease) {
+	const log = getLogger('harmony.mbid');
 	const startTime = performance.now();
 	const { artists, labels, media } = release;
-	const contextCache = {};
+	const trackArtists = media.flatMap((medium) => medium.tracklist).flatMap((track) => track.artists ?? []);
 
 	// Cache external artist IDs for identically named artists without IDs.
 	const externalArtistIds = new Map<string, ExternalEntityId[]>();
@@ -94,34 +195,36 @@ export async function resolveReleaseMbids(release: HarmonyRelease) {
 		}
 	}
 
-	try {
-		await resolveMbidsForMultipleEntities(artists, 'artist', contextCache);
-		if (labels) {
-			await resolveMbidsForMultipleEntities(labels, 'label', contextCache);
+	// Reuse external artist IDs of release artists for identically named track artists.
+	for (const artist of trackArtists) {
+		if (!artist.externalIds?.length) {
+			artist.externalIds = externalArtistIds.get(artist.name);
 		}
-		for (const medium of media) {
-			for (const track of medium.tracklist) {
-				if (track.artists) {
-					// Reuse external artist IDs of release artists for identically named track artists.
-					for (const artist of track.artists) {
-						if (!artist.externalIds?.length) {
-							artist.externalIds = externalArtistIds.get(artist.name);
-						}
-					}
-					await resolveMbidsForMultipleEntities(track.artists, 'artist', contextCache);
-				}
-			}
-		}
+	}
 
+	// Collect all resolvable entities, dedupe them (by reference).
+	// TODO: Share references in merge algorithm to dedupe by value?
+	const resolvableEntities: Set<ResolvableEntity> = new Set([...artists, ...(labels ?? []), ...trackArtists]);
+
+	try {
+		const {
+			resolvedMbids,
+			requests,
+			lookedUpMbids,
+			lookedUpUrls,
+		} = await resolveMbids(resolvableEntities, ['artist', 'label']);
 		const elapsedTime = performance.now() - startTime;
-		const requestCount = Object.keys(contextCache).length;
+		let message = `Resolving external IDs to MBIDs took ${elapsedTime.toFixed(0)} ms and ${
+			pluralWithCount(requests, 'API request')
+		}`;
+		if (requests) message += ` (for ${lookedUpUrls} URLs / ${lookedUpMbids} MBIDs)`;
 		release.info.messages.push({
 			type: 'debug',
-			text: `Resolving external IDs to MBIDs took ${elapsedTime.toFixed(0)} ms and ${requestCount} API requests`,
+			text: message,
 		});
+		log.debug(`Resolved ${resolvedMbids} MBIDs (${requests} req for ${lookedUpUrls} URLs / ${lookedUpMbids} MBIDs)`);
 	} catch (error) {
 		if (error instanceof RateLimitError) {
-			const log = getLogger('harmony.mbid');
 			log.info(`${error.message}: ${encodeReleaseLookupState(release.info)}`);
 			release.info.messages.push({
 				type: 'warning',
@@ -136,45 +239,25 @@ export async function resolveReleaseMbids(release: HarmonyRelease) {
 	}
 }
 
-async function resolveMbidForEntity(
-	entity: ResolvableEntity,
-	entityType: RelatableEntityType,
-	contextCache?: Record<string, string>,
-) {
-	if (entity.mbid) return;
-	if (entity.externalIds) {
-		entity.mbid = await resolveToMbid(entity.externalIds, entityType, contextCache);
-	}
-}
-
-function resolveMbidsForMultipleEntities(
-	entities: ResolvableEntity[],
-	entityType: RelatableEntityType,
-	contextCache?: Record<string, string>,
-) {
-	return Promise.all(
-		entities.map((entity) => resolveMbidForEntity(entity, entityType, contextCache)),
-	);
-}
-
 // Use persistent local storage in development (watch mode) when the server frequently restarts.
 const cache = inDevMode ? localStorage : sessionStorage;
 const cacheKeySeparator = ':';
-const mbidCachePrefix = 'mbid';
 
-function getCachedMbid(entityId: ExternalEntityId, contextCache?: Record<string, string>): string | undefined {
-	const key = [mbidCachePrefix, entityId.provider, entityId.type, entityId.id].join(cacheKeySeparator);
-	return contextCache?.[key] ?? cache.getItem(key) ?? undefined;
+function serializeExternalId(externalId: ExternalEntityId): string {
+	const { provider, type, id } = externalId;
+	return [provider, type, id].join(cacheKeySeparator);
 }
 
-function setCachedMbid(entityId: ExternalEntityId, mbid: string, contextCache?: Record<string, string>) {
-	const key = [mbidCachePrefix, entityId.provider, entityId.type, entityId.id].join(cacheKeySeparator);
-	if (contextCache) {
-		contextCache[key] = mbid;
-	}
-	if (mbid !== '') {
-		setCacheItem(key, mbid);
-	}
+function makeCacheKey(entityId: ExternalEntityId) {
+	return 'mbid:' + serializeExternalId(entityId);
+}
+
+function getCachedMbid(entityId: ExternalEntityId): string | undefined {
+	return cache.getItem(makeCacheKey(entityId)) ?? undefined;
+}
+
+function setCachedMbid(entityId: ExternalEntityId, mbid: string) {
+	setCacheItem(makeCacheKey(entityId), mbid);
 }
 
 function setCacheItem(key: string, value: string, retries = 1) {

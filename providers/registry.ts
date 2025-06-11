@@ -55,6 +55,17 @@ export class ProviderRegistry {
 		return provider.constructUrl(entityId);
 	}
 
+	/** Extracts the provider name, entity type and ID from a supported URL. */
+	extractEntityFromUrl(entityUrl: URL): ExternalEntityId | undefined {
+		const provider = this.findByUrl(entityUrl);
+		if (provider) {
+			const entityId = provider.extractEntityFromUrl(entityUrl);
+			if (entityId) {
+				return { ...entityId, provider: provider.internalName };
+			}
+		}
+	}
+
 	/** Returns a list of internal provider names that meet the given condition. */
 	filterInternalNames(predicate: (provider: MetadataProvider) => boolean): string[] {
 		return this.#providerList
