@@ -4,6 +4,7 @@ import { MB } from '@/musicbrainz/api_client.ts';
 import { providers } from '@/providers/mod.ts';
 import { encodeReleaseLookupState } from '@/server/permalink.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
+import { isDefined } from '@/utils/predicate.ts';
 import { type EntityWithMbid, RateLimitError } from '@kellnerd/musicbrainz';
 import type { RelInclude } from '@kellnerd/musicbrainz/api-types';
 import type { RelatableEntityType } from '@kellnerd/musicbrainz/data/entity';
@@ -169,7 +170,19 @@ async function lookupUrlToMbidMapping(
 				resolvedMbidCount++;
 				setCachedMbid(externalId, mbid);
 			} else {
-				log.debug(`${resource} has rels to ${uniqueTargetCount} entities`);
+				// Special case: For releases we are interested in all targets, they are potential duplicates.
+				const targetReleaseMbids = expectedRels
+					.filter((rel) => rel['target-type'] === 'release')
+					.map((rel) => rel.release.id);
+
+				if (targetReleaseMbids.length) {
+					// Hack: Collect all release MBIDs and join them for later use in `resolveReleaseMbids`.
+					// They should not be cached as they are not a unique MBID!
+					serializedExternalIdToMbid.set(serializeExternalId(externalId), targetReleaseMbids.join(','));
+					resolvedMbidCount++;
+				} else {
+					log.debug(`${resource} has rels to ${uniqueTargetCount} entities`);
+				}
 			}
 		} else {
 			log.warn(`The API returned an unexpected, unsupported URL: ${resource}`);
@@ -202,9 +215,21 @@ export async function resolveReleaseMbids(release: HarmonyRelease) {
 		}
 	}
 
+	// Trick to find potential duplicate releases on MB using the same MBID lookup logic:
+	// Since we always want to check all external links, we create one entity stub per link.
+	const releaseStubs: ResolvableEntity[] = release.externalLinks
+		.map((link) => providers.extractEntityFromUrl(new URL(link.url)))
+		.filter(isDefined)
+		.map((externalId) => ({ externalIds: [externalId] }));
+
 	// Collect all resolvable entities, dedupe them (by reference).
 	// TODO: Share references in merge algorithm to dedupe by value?
-	const resolvableEntities: Set<ResolvableEntity> = new Set([...artists, ...(labels ?? []), ...trackArtists]);
+	const resolvableEntities: Set<ResolvableEntity> = new Set([
+		...releaseStubs,
+		...artists,
+		...(labels ?? []),
+		...trackArtists,
+	]);
 
 	try {
 		const {
@@ -212,7 +237,7 @@ export async function resolveReleaseMbids(release: HarmonyRelease) {
 			requests,
 			lookedUpMbids,
 			lookedUpUrls,
-		} = await resolveMbids(resolvableEntities, ['artist', 'label']);
+		} = await resolveMbids(resolvableEntities, ['artist', 'label', 'release']);
 		const elapsedTime = performance.now() - startTime;
 		let message = `Resolving external IDs to MBIDs took ${elapsedTime.toFixed(0)} ms and ${
 			pluralWithCount(requests, 'API request')
@@ -223,6 +248,16 @@ export async function resolveReleaseMbids(release: HarmonyRelease) {
 			text: message,
 		});
 		log.debug(`Resolved ${resolvedMbids} MBIDs (${requests} req for ${lookedUpUrls} URLs / ${lookedUpMbids} MBIDs)`);
+
+		// Store resolved release MBIDs of the external links as part of the respective provider info.
+		for (const releaseStub of releaseStubs) {
+			if (releaseStub.mbid) {
+				const externalId = releaseStub.externalIds![0];
+				const providerInfo = release.info.providers.find((provider) => provider.internalName === externalId.provider)!;
+				// The stub may store multiple MBIDs, splitting them by comma handles both the hack and the regular case.
+				providerInfo.linkedReleases = releaseStub.mbid.split(',');
+			}
+		}
 	} catch (error) {
 		if (error instanceof RateLimitError) {
 			log.info(`${error.message}: ${encodeReleaseLookupState(release.info)}`);

@@ -225,6 +225,8 @@ export type ProviderInfo = {
 	processingTime?: number;
 	/** Date and time when the (last piece of) provider data was cached (in seconds since the UNIX epoch). */
 	cacheTime?: number;
+	/** MBIDs of the MusicBrainz releases to which the provider URL is already linked. */
+	linkedReleases?: string[];
 };
 
 export type MessageType = 'debug' | 'info' | 'warning' | 'error';
