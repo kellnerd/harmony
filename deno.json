@@ -12,7 +12,7 @@
 	"imports": {
 		"@/": "./",
 		"@deno/gfm": "jsr:@deno/gfm@^0.8.0",
-		"@kellnerd/musicbrainz": "jsr:@kellnerd/musicbrainz@^0.4.0",
+		"@kellnerd/musicbrainz": "jsr:@kellnerd/musicbrainz@^0.4.1",
 		"@std/collections": "jsr:@std/collections@^1.0.10",
 		"@std/path": "jsr:@std/path@^1.0.8",
 		"@std/testing": "jsr:@std/testing@^1.0.9",
