@@ -10,8 +10,11 @@
 - Merging of harmonized metadata from your preferred providers
 - Seeding of [MusicBrainz] releases using the merged metadata
 - Resolving of external entity identifiers to MBIDs
+- Detection of potential duplicate releases that already exist on MusicBrainz
 - Automatic guessing of title language and script
 - Permalinks which load snapshots of the originally queried source data
+- Submission of additional data like cover art and ISRCs for a MusicBrainz release
+- Link external IDs/URLs of related artists, labels and recordings to MusicBrainz
 
 ## Usage
 
