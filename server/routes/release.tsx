@@ -17,7 +17,7 @@ import { defineRoute } from 'fresh/server.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 import { join } from 'std/url/join.ts';
 
-import type { GTIN, HarmonyRelease, ProviderReleaseMap, ReleaseOptions } from '@/harmonizer/types.ts';
+import type { GTIN, HarmonyRelease, ProviderInfo, ProviderReleaseMap, ReleaseOptions } from '@/harmonizer/types.ts';
 
 const seederTargetUrl = join(musicbrainzTargetServer, 'release/add');
 
@@ -38,7 +38,7 @@ export default defineRoute(async (req, ctx) => {
 			providerIds,
 			providers,
 			snapshotMaxTimestamp,
-		} = extractReleaseLookupState(ctx.url, req.headers);
+		} = extractReleaseLookupState(seederSourceUrl, req.headers);
 		const options: ReleaseOptions = {
 			withSeparateMedia: true,
 			withAllTrackArtists: true,
@@ -69,6 +69,24 @@ export default defineRoute(async (req, ctx) => {
 					text:
 						`Release with GTIN ${release.gtin} already exists on MusicBrainz ([show actions](release/actions?release_mbid=${mbInfo.id}))`,
 					type: 'info',
+				});
+			}
+
+			// Warn about potential duplicate releases on MB which already have some of the external links.
+			for (const [mbid, providerInfo] of groupProvidersByLinkedRelease(release.info.providers)) {
+				const mbUrl = join(musicbrainzTargetServer, 'release', mbid);
+				const providerList = providerInfo.map((provider) => provider.name).join(' / ');
+				let dupeWarning = `Release [${mbid}](${mbUrl}) is already linked to this ${providerList} release`;
+				const dupeIsPartOfLookup = mbInfo?.id === mbid;
+				if (!dupeIsPartOfLookup) {
+					// Suggest to add the MBID of the potential duplicate to the current lookup (if it was not done already).
+					const dupeLookupUrl = new URL(seederSourceUrl);
+					dupeLookupUrl.searchParams.set('musicbrainz', mbid);
+					dupeWarning += ` ([add to lookup](${dupeLookupUrl}))`;
+				}
+				release.info.messages.push({
+					text: dupeWarning,
+					type: dupeIsPartOfLookup ? 'info' : 'warning',
 				});
 			}
 		}
@@ -143,3 +161,21 @@ export default defineRoute(async (req, ctx) => {
 		</>
 	);
 });
+
+function groupProvidersByLinkedRelease(providers: ProviderInfo[]): Map<string, ProviderInfo[]> {
+	const providersByLinkedReleaseMbid = new Map<string, ProviderInfo[]>();
+	for (const providerInfo of providers) {
+		const { linkedReleases } = providerInfo;
+		if (linkedReleases?.length) {
+			for (const mbid of linkedReleases) {
+				let list = providersByLinkedReleaseMbid.get(mbid);
+				if (!list) {
+					list = [];
+					providersByLinkedReleaseMbid.set(mbid, list);
+				}
+				list.push(providerInfo);
+			}
+		}
+	}
+	return providersByLinkedReleaseMbid;
+}
