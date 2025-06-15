@@ -58,6 +58,16 @@ export function extractReleaseLookupState(lookupUrl: URL, headers?: Headers): Re
 		}
 	}
 
+	const templateProviders = new Set<string>();
+	const templateId = searchParams.get('template');
+	if (templateId) {
+		// We only accept MusicBrainz releases as templates for now.
+		const templateProvider = 'musicbrainz';
+		templateProviders.add(templateProvider);
+		requestedProviders.add(templateProvider);
+		providerIds.push([templateProvider, templateId]);
+	}
+
 	const ts = searchParams.get('ts');
 	let snapshotMaxTimestamp: number | undefined = undefined;
 	if (ts) {
@@ -72,5 +82,6 @@ export function extractReleaseLookupState(lookupUrl: URL, headers?: Headers): Re
 		urls,
 		providerIds,
 		snapshotMaxTimestamp,
+		templateProviders,
 	};
 }

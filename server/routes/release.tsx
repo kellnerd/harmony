@@ -38,6 +38,7 @@ export default defineRoute(async (req, ctx) => {
 			providerIds,
 			providers,
 			snapshotMaxTimestamp,
+			templateProviders,
 		} = extractReleaseLookupState(seederSourceUrl, req.headers);
 		const options: ReleaseOptions = {
 			withSeparateMedia: true,
@@ -46,6 +47,7 @@ export default defineRoute(async (req, ctx) => {
 			regions,
 			providers,
 			snapshotMaxTimestamp,
+			templateProviders,
 		};
 		enabledProviders = providers;
 		gtinInput = gtin ?? '';

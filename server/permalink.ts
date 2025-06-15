@@ -4,7 +4,10 @@ import { isDefined } from '@/utils/predicate.ts';
 /** Encodes the given release info into release lookup state query parameters. */
 export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
 	const providersLookedUpByGtin = info.providers.filter((provider) => provider.lookup.method === 'gtin');
-	const providersLookedUpById = info.providers.filter((provider) => provider.lookup.method === 'id');
+	const providersLookedUpById = info.providers.filter((provider) =>
+		provider.lookup.method === 'id' && !provider.isTemplate
+	);
+	const providersUsedAsTemplate = info.providers.filter((provider) => provider.isTemplate);
 	const usedRegion = info.providers.map((provider) => provider.lookup.region).find(isDefined);
 	const cacheTimestamps = info.providers.map((provider) => provider.cacheTime).filter(isDefined);
 
@@ -12,6 +15,7 @@ export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
 	const state = new URLSearchParams(
 		providersLookedUpById.map((provider) => [provider.internalName, provider.id]),
 	);
+
 	if (providersLookedUpByGtin.length) {
 		// In an ideal world, a GTIN is just a number, but we have providers where zero-padding matters.
 		// By choosing the variant with the most zeros, more GTIN lookups should succeed on first try.
@@ -25,10 +29,21 @@ export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
 			state.append(provider.internalName, '');
 		}
 	}
+
+	// Finally add the template providers and their IDs.
+	for (const provider of providersUsedAsTemplate) {
+		// We only accept MusicBrainz releases as templates for now.
+		const templateProvider = 'musicbrainz';
+		if (provider.internalName === templateProvider) {
+			state.append('template', provider.id);
+		}
+	}
+
 	// If a region has been used for lookup, it should be the same for all providers.
 	if (usedRegion) {
 		state.append('region', usedRegion);
 	}
+
 	// Maximum timestamp can be used to load the latest snapshot up to this timestamp for each provider.
 	const maxTimestamp = Math.max(...cacheTimestamps);
 	if (Number.isSafeInteger(maxTimestamp)) {
