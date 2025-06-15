@@ -66,8 +66,9 @@ export default defineRoute(async (req, ctx) => {
 			if (mbInfo) {
 				existingMBID = mbInfo.id;
 				release.info.messages.push({
-					text:
-						`Release with GTIN ${release.gtin} already exists on MusicBrainz ([show actions](release/actions?release_mbid=${mbInfo.id}))`,
+					text: `Release with GTIN ${
+						release.gtin || '[unknown]'
+					} already exists on MusicBrainz ([show actions](release/actions?release_mbid=${mbInfo.id}))`,
 					type: 'info',
 				});
 			}
