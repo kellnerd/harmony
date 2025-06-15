@@ -15,6 +15,7 @@ import type {
 	HarmonyRelease,
 	LinkType,
 	MessageType,
+	ProviderInfo,
 	ProviderMessage,
 	ReleaseInfo,
 	ReleaseLookupParameters,
@@ -353,6 +354,8 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 		if (!this.entity && this.lookup.method === 'id') {
 			this.entity = this.provider.parseProviderId(this.lookup.value, 'release');
 		}
+
+		this.isTemplate = options.templateProviders?.has(provider.internalName) ?? false;
 	}
 
 	/** Parameters which are used for the current release lookup. */
@@ -363,6 +366,9 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 
 	/** Provider entity ID of the currently looked up release (initially undefined). */
 	protected entity: EntityId | undefined;
+
+	/** Indicates that the release will be used as template/fallback only. */
+	protected isTemplate: boolean;
 
 	/** Date and time when the (last piece of) provider data was cached (in seconds since the UNIX epoch). */
 	private cacheTime: number | undefined;
@@ -385,7 +391,13 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 		const release = await this.convertRawRelease(rawRelease);
 		this.withExcludedRegions(release);
 
-		// store the elapsed time for each provider info record (just in case), although there should be only one
+		// Strip unique identifiers from template release data.
+		if (this.isTemplate) {
+			release.gtin = undefined;
+			release.externalLinks = [];
+		}
+
+		// Store the elapsed time for each provider info record (just in case), although there should be only one.
 		const elapsedTime = performance.now() - startTime;
 		release.info.providers.forEach((providerInfo) => providerInfo.processingTime = elapsedTime);
 
@@ -417,16 +429,19 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 			throw new ProviderError(this.provider.name, 'Release info can only be generated with a defined entity ID');
 		}
 
+		const providerInfo: ProviderInfo = {
+			name: this.provider.name,
+			internalName: this.provider.internalName,
+			id: this.provider.serializeProviderId(this.entity),
+			url: this.provider.constructUrl(this.entity).href,
+			apiUrl: this.constructReleaseApiUrl()?.href,
+			lookup: this.lookup,
+			cacheTime: this.cacheTime,
+		};
+		if (this.isTemplate) providerInfo.isTemplate = true;
+
 		return {
-			providers: [{
-				name: this.provider.name,
-				internalName: this.provider.internalName,
-				id: this.provider.serializeProviderId(this.entity),
-				url: this.provider.constructUrl(this.entity).href,
-				apiUrl: this.constructReleaseApiUrl()?.href,
-				lookup: this.lookup,
-				cacheTime: this.cacheTime,
-			}],
+			providers: [providerInfo],
 			messages: this.messages,
 		};
 	}

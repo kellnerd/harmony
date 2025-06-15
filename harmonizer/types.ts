@@ -165,6 +165,8 @@ export type ReleaseOptions = Partial<{
 	providers: Set<string>;
 	/** Lookup release using historical snapshots before the given Unix timestamp. */
 	snapshotMaxTimestamp: number;
+	/** Internal names of the providers whose data should be used as template/fallback only. */
+	templateProviders: Set<string>;
 }>;
 
 /** Methods which can be used to lookup a release. */
@@ -227,6 +229,8 @@ export type ProviderInfo = {
 	cacheTime?: number;
 	/** MBIDs of the MusicBrainz releases to which the provider URL is already linked. */
 	linkedReleases?: string[];
+	/** Indicates that the entity should be used as template/fallback only. */
+	isTemplate?: boolean;
 };
 
 export type MessageType = 'debug' | 'info' | 'warning' | 'error';
