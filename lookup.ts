@@ -1,5 +1,6 @@
 import { detectLanguageAndScript } from '@/harmonizer/language_script.ts';
 import { mergeRelease } from '@/harmonizer/merge.ts';
+import { cleanupBogusReleaseLabels } from '@/harmonizer/release_label.ts';
 import { defaultProviderPreferences, providers } from '@/providers/mod.ts';
 import { FeatureQuality } from '@/providers/features.ts';
 import { LookupError, ProviderError } from '@/utils/errors.ts';
@@ -300,7 +301,12 @@ export class CombinedReleaseLookup {
 		const release = mergeRelease(releaseMap, providerPreferences);
 		// Prepend error and warning messages of the combined lookup.
 		release.info.messages.unshift(...this.messages);
+
+		// Provider-independent post-processing of the merged release.
 		detectLanguageAndScript(release);
+		if (release.labels) {
+			cleanupBogusReleaseLabels(release.labels);
+		}
 
 		return release;
 	}
