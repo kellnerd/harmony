@@ -270,14 +270,14 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 	}
 
 	private getArtwork(rawRelease: SingleDataDocument<ReleaseResource>): Artwork | undefined {
-		const allImages = rawRelease.data.attributes.imageLinks.map((link) => {
+		const allImages = rawRelease.data.attributes.imageLinks?.map((link) => {
 			return {
 				url: link.href,
 				width: link.meta.width,
 				height: link.meta.height,
 			};
 		});
-		return selectLargestImage(allImages, ['front']);
+		return allImages ? selectLargestImage(allImages, ['front']) : undefined;
 	}
 
 	private getLabels(rawRelease: SingleDataDocument<ReleaseResource>): Label[] {

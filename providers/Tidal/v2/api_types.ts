@@ -40,8 +40,10 @@ export type AlbumsAttributes = {
 	/** Defines an album availability e.g. for streaming, DJs, stems */
 	availability: Availability[];
 	mediaTags: string[];
-	imageLinks: MediaLink[];
-	videoLinks: MediaLink[];
+	/** @deprecated Removed 2025-06-17 (without announcement). */
+	imageLinks?: MediaLink[];
+	/** @deprecated Removed 2025-06-17 (without announcement). */
+	videoLinks?: MediaLink[];
 	externalLinks: ExternalLink[];
 	type: 'ALBUM' | 'EP' | 'SINGLE';
 };
