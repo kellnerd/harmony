@@ -436,6 +436,8 @@ export interface ApiAccessToken {
 export interface ApiQueryOptions {
 	/** Maximum creation date and time of snapshots which should be used (in seconds since the UNIX epoch). */
 	snapshotMaxTimestamp?: number;
+	/** Only use cached snapshots, never fetch a network resource. */
+	offline?: boolean;
 }
 
 /** Extends `MetadataProvider` with functions common to lookups accessing web APIs. */
@@ -468,6 +470,8 @@ export interface ApiAllRegionsQueryOptions<Data> {
 	isValidData: (data: Data) => boolean;
 	/** Callback which should return `false` to ignore the exception and try the next region. */
 	isCriticalError?: (error: unknown) => boolean;
+	/** Only use cached snapshots, never fetch a network resource. */
+	offline?: boolean;
 }
 
 /** Extends `ReleaseLookup` with functions common to lookups accessing web APIs. */
@@ -480,6 +484,7 @@ export abstract class ReleaseApiLookup<Provider extends MetadataApiProvider, Raw
 	protected async queryAllRegions<Data>({
 		isValidData,
 		isCriticalError = (_) => true,
+		offline,
 	}: ApiAllRegionsQueryOptions<Data>): Promise<Data> {
 		for (const region of this.options.regions || []) {
 			this.lookup.region = region;
@@ -487,6 +492,7 @@ export abstract class ReleaseApiLookup<Provider extends MetadataApiProvider, Raw
 			try {
 				const cacheEntry = await this.provider.query<Data>(apiUrl, {
 					snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+					offline,
 				});
 				if (isValidData(cacheEntry.content)) {
 					this.updateCacheTime(cacheEntry.timestamp);
