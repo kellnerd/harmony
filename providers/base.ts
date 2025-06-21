@@ -21,7 +21,7 @@ import type {
 	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
 import type { PartialDate } from '@/utils/date.ts';
-import type { CacheOptions, Snapshot, SnapStorage } from 'snap-storage';
+import type { CacheOptions, Policy, Snapshot, SnapStorage } from 'snap-storage';
 import type { MaybePromise } from 'utils/types.d.ts';
 import type { Logger } from 'std/log/logger.ts';
 
@@ -42,6 +42,11 @@ export type ProviderOptions = Partial<{
 	/** Storage which will be used to cache requests (optional). */
 	snaps: SnapStorage;
 }>;
+
+interface OfflineCacheOptions extends CacheOptions {
+	/** Only use cached snapshots, never fetch a network resource. */
+	offline?: boolean;
+}
 
 export type MetadataProviderConstructor = new (options: ProviderOptions) => MetadataProvider;
 
@@ -199,20 +204,33 @@ export abstract class MetadataProvider {
 
 	protected fetch = fetch;
 
-	protected async fetchSnapshot(input: string | URL, options?: CacheOptions): Promise<Snapshot<Response>> {
-		let snapshot: Snapshot<Response>;
+	protected async fetchSnapshot(input: string | URL, options?: CacheOptions): Promise<Snapshot<Response>>;
+	protected async fetchSnapshot(
+		input: string | URL,
+		options?: OfflineCacheOptions,
+	): Promise<Snapshot<Response> | undefined> {
+		let snapshot: Snapshot<Response> | undefined;
 
 		if (this.snaps) {
-			snapshot = await this.snaps.cache(input, {
-				fetch: this.fetch,
-				requestInit: options?.requestInit,
-				policy: {
-					maxAge: 60 * 60 * 24, // 24 hours
-					...options?.policy,
-				},
-				responseMutator: options?.responseMutator,
-			});
-			this.log.debug(`${input} => ${snapshot.path} (${snapshot.isFresh ? 'fresh' : 'old'})`);
+			const cachePolicy: Policy = {
+				maxAge: 60 * 60 * 24, // 24 hours
+				...options?.policy,
+			};
+			if (options?.offline) {
+				const snapMeta = this.snaps.getSnap(input.toString(), cachePolicy);
+				if (snapMeta) {
+					const data = await Deno.readFile(snapMeta.path);
+					snapshot = { ...snapMeta, content: new Response(data), isFresh: false };
+				}
+			} else {
+				snapshot = await this.snaps.cache(input, {
+					fetch: this.fetch,
+					requestInit: options?.requestInit,
+					policy: cachePolicy,
+					responseMutator: options?.responseMutator,
+				});
+			}
+			this.log.debug(`${input} => ${snapshot?.path} (${snapshot?.isFresh ? 'fresh' : 'old'})`);
 		} else {
 			let response = await this.fetch(input, options?.requestInit);
 			if (options?.responseMutator) {
@@ -231,12 +249,16 @@ export abstract class MetadataProvider {
 		return snapshot;
 	}
 
-	protected async fetchJSON<Content>(input: string | URL, options?: CacheOptions): Promise<CacheEntry<Content>> {
+	protected async fetchJSON<Content>(input: string | URL, options?: CacheOptions): Promise<CacheEntry<Content>>;
+	protected async fetchJSON<Content>(
+		input: string | URL,
+		options?: OfflineCacheOptions,
+	): Promise<CacheEntry<Content> | undefined> {
 		const snapshot = await this.fetchSnapshot(input, options);
-		const json = await snapshot.content.json();
+		if (!snapshot) return;
 
 		return {
-			content: json,
+			content: await snapshot.content.json(),
 			timestamp: snapshot.timestamp,
 			isFresh: snapshot.isFresh ?? false,
 		};
