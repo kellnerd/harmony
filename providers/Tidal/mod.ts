@@ -119,6 +119,7 @@ export default class TidalProvider extends MetadataApiProvider {
 		try {
 			const accessToken = await this.cachedAccessToken(this.requestAccessToken);
 			const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
+				offline: options.offline,
 				policy: { maxTimestamp: options.snapshotMaxTimestamp },
 				requestInit: {
 					headers: { 'Authorization': `Bearer ${accessToken}` },

@@ -1,17 +1,29 @@
 export type SingleDataDocument<T> = {
 	data: T;
 	links: ResourceLinks;
-	included: AlbumsResource[] | ArtistsResource[] | TracksResource[] | VideosResource[] | ProvidersResource[];
+	included:
+		| AlbumsResource[]
+		| ArtistsResource[]
+		| ArtworksResource[]
+		| TracksResource[]
+		| VideosResource[]
+		| ProvidersResource[];
 };
 
 export type MultiDataDocument<T> = {
 	data: T[];
 	links: ResourceLinks;
-	included: AlbumsResource[] | ArtistsResource[] | TracksResource[] | VideosResource[] | ProvidersResource[];
+	included:
+		| AlbumsResource[]
+		| ArtistsResource[]
+		| ArtworksResource[]
+		| TracksResource[]
+		| VideosResource[]
+		| ProvidersResource[];
 };
 
 // FIXME: complete list?
-export type ResourceType = 'albums' | 'artists' | 'providers' | 'tracks' | 'videos';
+export type ResourceType = 'albums' | 'artists' | 'artworks' | 'providers' | 'tracks' | 'videos';
 
 export type Availability = 'STREAM' | 'DJ' | 'STEM';
 
@@ -51,6 +63,8 @@ export type AlbumsAttributes = {
 export type AlbumsRelationships = {
 	artists: MultiDataRelationship;
 	similarAlbums: MultiDataRelationship;
+	/** Replaces {@linkcode AlbumsAttributes.imageLinks} and {@linkcode AlbumsAttributes.videoLinks}. */
+	coverArt?: MultiDataRelationship;
 	items: AlbumItemMultiDataRelationship;
 	providers: MultiDataRelationship;
 };
@@ -82,6 +96,18 @@ export type ArtistsRelationships = {
 	// trackProviders: ArtistTrackProvidersMultiDataRelationship; // FIXME
 	tracks: MultiDataRelationship;
 	radio: MultiDataRelationship;
+};
+
+export type ArtworksResource = {
+	id: string;
+	type: 'artworks';
+	attributes: ArtworksAttributes;
+};
+
+export type ArtworksAttributes = {
+	/** Media type of artwork files */
+	mediaType: 'IMAGE' | 'VIDEO';
+	files: MediaLink[];
 };
 
 export type TracksResource = {
@@ -134,6 +160,8 @@ export type VideosAttributes = TracksAttributes & {
 export type VideosRelationships = {
 	albums: MultiDataRelationship;
 	artists: MultiDataRelationship;
+	/** Replaces {@linkcode AlbumsAttributes.imageLinks} and {@linkcode AlbumsAttributes.videoLinks}. */
+	thumbnailArt?: MultiDataRelationship;
 	providers: MultiDataRelationship;
 };
 
