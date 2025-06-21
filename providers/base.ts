@@ -1,5 +1,5 @@
 import { FeatureQuality, type FeatureQualityMap, type ProviderFeature } from './features.ts';
-import { ProviderError, ResponseError } from '@/utils/errors.ts';
+import { CacheMissError, ProviderError, ResponseError } from '@/utils/errors.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 import { rateLimit } from 'utils/async/rateLimit.js';
@@ -204,11 +204,10 @@ export abstract class MetadataProvider {
 
 	protected fetch = fetch;
 
-	protected async fetchSnapshot(input: string | URL, options?: CacheOptions): Promise<Snapshot<Response>>;
 	protected async fetchSnapshot(
 		input: string | URL,
 		options?: OfflineCacheOptions,
-	): Promise<Snapshot<Response> | undefined> {
+	): Promise<Snapshot<Response>> {
 		let snapshot: Snapshot<Response> | undefined;
 
 		if (this.snaps) {
@@ -221,6 +220,8 @@ export abstract class MetadataProvider {
 				if (snapMeta) {
 					const data = await Deno.readFile(snapMeta.path);
 					snapshot = { ...snapMeta, content: new Response(data), isFresh: false };
+				} else {
+					throw new CacheMissError('No matching snapshot was found (in offline mode)');
 				}
 			} else {
 				snapshot = await this.snaps.cache(input, {
@@ -249,13 +250,11 @@ export abstract class MetadataProvider {
 		return snapshot;
 	}
 
-	protected async fetchJSON<Content>(input: string | URL, options?: CacheOptions): Promise<CacheEntry<Content>>;
 	protected async fetchJSON<Content>(
 		input: string | URL,
 		options?: OfflineCacheOptions,
-	): Promise<CacheEntry<Content> | undefined> {
+	): Promise<CacheEntry<Content>> {
 		const snapshot = await this.fetchSnapshot(input, options);
-		if (!snapshot) return;
 
 		return {
 			content: await snapshot.content.json(),
