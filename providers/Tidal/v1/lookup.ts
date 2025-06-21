@@ -5,9 +5,9 @@ import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
 import { formatCopyrightSymbols } from '@/utils/copyright.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
 import { selectLargestImage } from '@/utils/image.ts';
-import TidalProvider from '@/providers/Tidal/mod.ts';
+import type TidalProvider from '@/providers/Tidal/mod.ts';
 
-import type { Album, AlbumItem, Resource, Result, SimpleArtist } from '@/providers/Tidal/v1/api_types.ts';
+import type { Album, AlbumItem, Resource, Result, SimpleArtist } from './api_types.ts';
 import type { ArtistCreditName, HarmonyMedium, HarmonyRelease, HarmonyTrack, Label } from '@/harmonizer/types.ts';
 
 export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
@@ -20,7 +20,7 @@ export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album>
 			countryCode: region || this.provider.defaultRegion,
 		});
 		if (method === 'gtin') {
-			lookupUrl = join(this.apiBaseUrl, `albums/byBarcodeId`);
+			lookupUrl = join(this.apiBaseUrl, 'albums/byBarcodeId');
 			query.append('barcodeId', value);
 		} else { // if (method === 'id')
 			lookupUrl = join(this.apiBaseUrl, 'albums', value);
@@ -78,10 +78,9 @@ export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album>
 
 		while (true) {
 			url.search = query.toString();
-			const { content, timestamp }: CacheEntry<Result<AlbumItem>> = await this.provider.query(
-				url,
-				this.options.snapshotMaxTimestamp,
-			);
+			const { content, timestamp }: CacheEntry<Result<AlbumItem>> = await this.provider.query(url, {
+				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+			});
 			tracklist.push(...content.data.map((r) => r.resource));
 			this.updateCacheTime(timestamp);
 			if (!content.metadata.total || content.metadata.total <= tracklist.length) {

@@ -1,5 +1,11 @@
 import { availableRegions } from './regions.ts';
-import { type CacheEntry, MetadataApiProvider, type ProviderOptions, ReleaseApiLookup } from '@/providers/base.ts';
+import {
+	type ApiQueryOptions,
+	type CacheEntry,
+	MetadataApiProvider,
+	type ProviderOptions,
+	ReleaseApiLookup,
+} from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
@@ -70,9 +76,9 @@ export default class DeezerProvider extends MetadataApiProvider {
 		return ['free streaming'];
 	}
 
-	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+	async query<Data>(apiUrl: URL, options: ApiQueryOptions): Promise<CacheEntry<Data>> {
 		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
-			policy: { maxTimestamp },
+			policy: { maxTimestamp: options.snapshotMaxTimestamp },
 		});
 		const { error } = cacheEntry.content as { error?: ApiError };
 
@@ -103,10 +109,9 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 
 	protected async getRawRelease(): Promise<Release> {
 		const apiUrl = this.constructReleaseApiUrl();
-		const { content: release, timestamp } = await this.provider.query<Release>(
-			apiUrl,
-			this.options.snapshotMaxTimestamp,
-		);
+		const { content: release, timestamp } = await this.provider.query<Release>(apiUrl, {
+			snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+		});
 		this.updateCacheTime(timestamp);
 
 		return release;
@@ -119,7 +124,9 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 		while (nextPageQuery) {
 			const { content, timestamp }: CacheEntry<Result<TracklistItem>> = await this.provider.query(
 				new URL(nextPageQuery, this.provider.apiBaseUrl),
-				this.options.snapshotMaxTimestamp,
+				{
+					snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+				},
 			);
 			tracklist.push(...content.data);
 			nextPageQuery = content.next;
@@ -132,7 +139,9 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 	protected async getRawTrackById(trackId: string): Promise<Track> {
 		const { content: track, timestamp } = await this.provider.query<Track>(
 			new URL(`track/${trackId}`, this.provider.apiBaseUrl),
-			this.options.snapshotMaxTimestamp,
+			{
+				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+			},
 		);
 		this.updateCacheTime(timestamp);
 		return track;

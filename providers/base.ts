@@ -434,10 +434,15 @@ export interface ApiAccessToken {
 	validUntilTimestamp: number;
 }
 
+export interface ApiQueryOptions {
+	/** Maximum creation date and time of snapshots which should be used (in seconds since the UNIX epoch). */
+	snapshotMaxTimestamp?: number;
+}
+
 /** Extends `MetadataProvider` with functions common to lookups accessing web APIs. */
 export abstract class MetadataApiProvider extends MetadataProvider {
 	/** Must be implemented to perform a request against the specified URL. */
-	abstract query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>>;
+	abstract query<Data>(apiUrl: URL, options?: ApiQueryOptions): Promise<CacheEntry<Data>>;
 
 	/**
 	 * Returns a cached API access token.
@@ -474,10 +479,9 @@ export abstract class ReleaseApiLookup<Provider extends MetadataApiProvider, Raw
 			this.lookup.region = region;
 			const apiUrl = this.constructReleaseApiUrl();
 			try {
-				const cacheEntry = await this.provider.query<Data>(
-					apiUrl,
-					this.options.snapshotMaxTimestamp,
-				);
+				const cacheEntry = await this.provider.query<Data>(apiUrl, {
+					snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+				});
 				if (isValidData(cacheEntry.content)) {
 					this.updateCacheTime(cacheEntry.timestamp);
 					return cacheEntry.content;

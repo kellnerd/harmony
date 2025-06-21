@@ -1,6 +1,6 @@
 import { join } from 'std/url/join.ts';
 import { ReleaseApiLookup } from '@/providers/base.ts';
-import TidalProvider from '@/providers/Tidal/mod.ts';
+import type TidalProvider from '@/providers/Tidal/mod.ts';
 import { formatCopyrightSymbols } from '@/utils/copyright.ts';
 import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
 import { selectLargestImage } from '@/utils/image.ts';
@@ -17,7 +17,7 @@ import type {
 	SingleDataDocument,
 	TracksResource,
 	VideosResource,
-} from '@/providers/Tidal/v2/api_types.ts';
+} from './api_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -153,11 +153,9 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			const url = new URL(next.replace(/^\//, ''), this.apiBaseUrl);
 			url.searchParams.set('include', 'items.artists');
 
-			const { content, timestamp } = await this.provider
-				.query<MultiDataDocument<AlbumItemResourceIdentifier>>(
-					url,
-					this.options.snapshotMaxTimestamp,
-				);
+			const { content, timestamp } = await this.provider.query<MultiDataDocument<AlbumItemResourceIdentifier>>(url, {
+				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+			});
 
 			items.push(...content.data);
 			content.included.forEach((resource) => {
