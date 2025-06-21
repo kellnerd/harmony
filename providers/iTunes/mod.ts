@@ -108,10 +108,9 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		if (!this.options.regions?.size) {
 			this.options.regions = new Set([this.provider.defaultRegion]);
 		}
-		const isValidData = (data: ReleaseResult) => {
-			return Boolean(data?.resultCount);
-		};
-		return await this.queryAllRegions<ReleaseResult>(isValidData);
+		return await this.queryAllRegions<ReleaseResult>({
+			isValidData: (data) => Boolean(data?.resultCount),
+		});
 	}
 
 	protected convertRawRelease(data: ReleaseResult): HarmonyRelease {

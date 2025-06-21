@@ -59,10 +59,9 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		if (!this.options.regions?.size) {
 			this.options.regions = new Set([this.provider.defaultRegion]);
 		}
-		const isValidData = (data: MultiDataDocument<ReleaseResource>) => {
-			return Boolean(data?.data?.length);
-		};
-		const result = await this.queryAllRegions<MultiDataDocument<ReleaseResource>>(isValidData);
+		const result = await this.queryAllRegions<MultiDataDocument<ReleaseResource>>({
+			isValidData: (data) => Boolean(data?.data?.length),
+		});
 		if (result.data.length > 1) {
 			this.warnMultipleResults(
 				result.data.slice(1).map((release) => this.constructReleaseUrlFromRelease(release)),

@@ -464,6 +464,13 @@ export abstract class MetadataApiProvider extends MetadataProvider {
 	}
 }
 
+export interface ApiAllRegionsQueryOptions<Data> {
+	/** Callback which should return `true` for valid data. */
+	isValidData: (data: Data) => boolean;
+	/** Callback which should return `false` to ignore the exception and try the next region. */
+	isCriticalError?: (error: unknown) => boolean;
+}
+
 /** Extends `ReleaseLookup` with functions common to lookups accessing web APIs. */
 export abstract class ReleaseApiLookup<Provider extends MetadataApiProvider, RawRelease>
 	extends ReleaseLookup<Provider, RawRelease> {
@@ -471,10 +478,10 @@ export abstract class ReleaseApiLookup<Provider extends MetadataApiProvider, Raw
 	abstract override constructReleaseApiUrl(): URL;
 
 	/** Performs the query for the URL returned by {@linkcode constructReleaseApiUrl} for all configured regions until valid data is returned. */
-	protected async queryAllRegions<Data>(
-		isValidData: (data: Data) => boolean,
-		isCriticalError: (error: unknown) => boolean = (_) => true,
-	): Promise<Data> {
+	protected async queryAllRegions<Data>({
+		isValidData,
+		isCriticalError = (_) => true,
+	}: ApiAllRegionsQueryOptions<Data>): Promise<Data> {
 		for (const region of this.options.regions || []) {
 			this.lookup.region = region;
 			const apiUrl = this.constructReleaseApiUrl();
