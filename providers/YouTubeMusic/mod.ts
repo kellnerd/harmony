@@ -169,7 +169,7 @@ export class YoutubeMusicReleaseLookup extends ReleaseLookup<YoutubeMusicProvide
 		};
 	}
 
-	protected override async convertRawRelease(rawRelease: YTMusic.Album) {
+	protected override convertRawRelease(rawRelease: YTMusic.Album) {
 		if (!this.entity) {
 			this.entity = this.provider.extractEntityFromUrl(new URL(rawRelease.url!));
 		}
@@ -209,38 +209,7 @@ export class YoutubeMusicReleaseLookup extends ReleaseLookup<YoutubeMusicProvide
 			}
 		}, []);
 
-		const tracklist = rawRelease.contents.map((item) => {
-			const videoId = item.overlay?.content?.endpoint.payload.videoId;
-
-			let length;
-			if (item.duration) {
-				length = item.duration.seconds * 1000;
-			}
-
-			let number;
-			if (item.index?.text) {
-				try {
-					number = parseInt(item.index.text);
-				} catch (_e) {
-					// Leave number undefined if parsing failed
-				}
-			}
-
-			return {
-				title: item.title!,
-				tracktype: 'audio',
-				recording: {
-					title: item.title!,
-					externalIds: [{
-						type: TRACK,
-						id: videoId,
-						provider: this.provider.internalName,
-					}],
-				},
-				length,
-				number,
-			} as HarmonyTrack;
-		});
+		const tracklist = rawRelease.contents.map((item) => this.convertTrack(item));
 
 		const release: HarmonyRelease = {
 			title,
@@ -259,5 +228,38 @@ export class YoutubeMusicReleaseLookup extends ReleaseLookup<YoutubeMusicProvide
 		};
 
 		return release;
+	}
+
+	convertTrack(item: YTNodes.MusicResponsiveListItem) {
+		const videoId = item.overlay?.content?.endpoint.payload.videoId;
+
+		let length;
+		if (item.duration) {
+			length = item.duration.seconds * 1000;
+		}
+
+		let number;
+		if (item.index?.text) {
+			try {
+				number = parseInt(item.index.text);
+			} catch (_e) {
+				// Leave number undefined if parsing failed
+			}
+		}
+
+		return {
+			title: item.title!,
+			tracktype: 'audio',
+			recording: {
+				title: item.title!,
+				externalIds: [{
+					type: TRACK,
+					id: videoId,
+					provider: this.provider.internalName,
+				}],
+			},
+			length,
+			number,
+		} as HarmonyTrack;
 	}
 }
