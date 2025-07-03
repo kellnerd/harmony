@@ -1,5 +1,5 @@
 import { MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
-import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
+import { DurationPrecision, FeatureQuality, type FeatureQualityMap } from '@/providers/features.ts';
 import { ProviderError } from '@/utils/errors.ts';
 import type {
 	ArtistCreditName,
@@ -8,22 +8,27 @@ import type {
 	HarmonyRelease,
 	HarmonyTrack,
 	LinkType,
+	ReleaseOptions,
+	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
 
-import { Innertube, YTMusic, YTNodes } from 'youtubei.js';
+import { Innertube, UniversalCache, type YTMusic, YTNodes } from 'youtubei.js';
 
 // See https://ytjs.dev/guide/ and https://ytjs.dev/api/
 
 // Avoid typos when repeating entity types
 const CHANNEL = 'channel';
 const PLAYLIST = 'playlist';
-const ALBUM = 'album';
-const TRACK = 'track';
+const BROWSE = 'browse';
+const WATCH = 'watch';
 
-export default class YoutubeMusicProvider extends MetadataProvider {
-	override entityTypeMap: Record<HarmonyEntityType, string | string[]> = {
+export default class YouTubeMusicProvider extends MetadataProvider {
+	// Needs asynchronous creation, so is created in first getRelease call
+	innertube: Innertube | undefined;
+
+	readonly entityTypeMap: Record<HarmonyEntityType, string | string[]> = {
 		artist: CHANNEL,
-		release: [PLAYLIST, ALBUM],
+		release: [PLAYLIST, BROWSE],
 	};
 
 	override readonly features: FeatureQualityMap = {
@@ -32,88 +37,104 @@ export default class YoutubeMusicProvider extends MetadataProvider {
 		'duration precision': DurationPrecision.SECONDS,
 	};
 
-	protected override releaseLookup = YoutubeMusicReleaseLookup;
+	protected releaseLookup = YouTubeMusicReleaseLookup;
 
-	override readonly name = 'Youtube Music';
+	readonly name = 'YouTube Music';
 
 	/**
 	 * Accepts:
 	 * - https://music.youtube.com/channel/:channel_id
-	 * - https://music.youtube.com/browse/:album_id
+	 * - https://music.youtube.com/browse/:browse_id
 	 * - https://music.youtube.com/playlist?list=:playlist_id
+	 * - https://music.youtube.com/watch?v=:watch_id
 	 */
-	override readonly supportedUrls = new URLPattern({
+	readonly supportedUrls = new URLPattern({
 		hostname: 'music.youtube.com',
-		pathname: '/:type(playlist|channel|browse)/:id?',
-		search: '{list=:id}?',
+		pathname: '/:type(playlist|channel|browse|watch)/:id?',
 	});
 
-	override getLinkTypesForEntity(): LinkType[] {
-		return ['free streaming'];
-	}
-
-	// Override entity extraction since we also need to also extract groups from search
+	// Override entity extraction since we also need to also extract id from search
 	override extractEntityFromUrl(url: URL) {
 		const matched = this.supportedUrls.exec(url);
-		if (matched) {
-			const { type } = matched.pathname.groups;
-			const id = matched.pathname.groups['id'] ?? matched.search.groups['id'];
-			if (type && id) {
-				return {
-					type: (type === 'browse' ? ALBUM : type),
-					id,
-				};
+
+		const type = matched?.pathname.groups.type;
+
+		if (type) {
+			let id: string | null | undefined;
+
+			switch (type) {
+				case WATCH:
+					id = url.searchParams.get('v');
+					break;
+				case PLAYLIST:
+					id = url.searchParams.get('list');
+					break;
+				default:
+					id = matched?.pathname.groups.id;
+			}
+
+			if (id) {
+				return { type, id };
 			}
 		}
 	}
 
 	override constructUrl(entity: EntityId): URL {
+		let url: string;
+
+		switch (entity.type) {
+			case WATCH:
+				url = `watch?v=${entity.id}`;
+				break;
+			case PLAYLIST:
+				url = `playlist?list=${entity.id}`;
+				break;
+			default:
+				url = `${entity.type}/${entity.id}`;
+		}
+
 		return new URL(
-			(entity.type === PLAYLIST)
-				? `playlist?list=${entity.id}`
-				: (entity.type === TRACK)
-				? `watch?v=${entity.id}`
-				: `${entity.type}/${entity.id}`,
+			url,
 			'https://music.youtube.com',
 		);
 	}
 
-	/** Both playlist and album are a release, distinguish between them */
-	override serializeProviderId(entity: EntityId): string {
-		return (entity.type === PLAYLIST || entity.type === ALBUM) ? `${entity.type}:${entity.id}` : entity.id;
+	override getLinkTypesForEntity(): LinkType[] {
+		return ['free streaming'];
 	}
 
 	override parseProviderId(id: string, entityType: HarmonyEntityType): EntityId {
 		if (entityType === 'release') {
-			// Split at first ':', collect rest of items into array to join later in case id contained additional ':'
-			const [type, ...splitId] = id.split(':');
-			return {
-				type,
-				id: splitId.join(':'),
-			};
+			if (id.startsWith('OLAK5uy_')) {
+				// Album playlist ids always have prefix 'OLAK5uy_':
+				// https://wiki.archiveteam.org/index.php/YouTube/Technical_details#Playlists
+				return { type: PLAYLIST, id };
+			} else if (id.startsWith('MPREb_')) {
+				// Album browse ids always seem to have prefix 'MPREb_'
+				return { type: BROWSE, id };
+			} else {
+				throw new ProviderError(this.name, `Release id '${id} has invalid prefix, most likely not a valid release'`);
+			}
 		} else {
-			return {
-				type: 'artist',
-				id,
-			};
+			return super.parseProviderId(id, entityType);
 		}
+	}
+
+	override async getRelease(specifier: ReleaseSpecifier, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
+		this.innertube = await Innertube.create({
+			cache: new UniversalCache(false),
+		});
+
+		return await super.getRelease(specifier, options);
 	}
 }
 
-export class YoutubeMusicReleaseLookup extends ReleaseLookup<YoutubeMusicProvider, YTMusic.Album> {
-	// Needs asynchronous creation, so is created in first getRawRelease call
-	innertube: Innertube | undefined;
-
+export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvider, YTMusic.Album> {
 	override constructReleaseApiUrl(): URL | undefined {
 		return undefined;
 	}
 
 	protected override async getRawRelease(): Promise<YTMusic.Album> {
-		// Innertube needs an async context to be created, so create it in the first async context available
-		if (!this.innertube) {
-			this.innertube = await Innertube.create();
-		}
-
 		const { type, id } = (this.lookup.method === 'gtin')
 			? await this.lookupGTIN()
 			: this.provider.parseProviderId(this.lookup.value, 'release');
@@ -126,27 +147,46 @@ export class YoutubeMusicReleaseLookup extends ReleaseLookup<YoutubeMusicProvide
 		// If the first track does indeed have an album, we can check that album's playlist url.
 		// If that playlist url is the same as the current playlist url, we are indeed in the album we found.
 		if (type === PLAYLIST) {
-			const playlist = await this.innertube.music.getPlaylist(id).catch((reason) => {
-				throw new ProviderError(this.provider.name, `Failed to fetch playlist '${albumId}': ${reason}`);
-			});
-			const trackAlbum = playlist.contents?.as(YTNodes.MusicResponsiveListItem).at(0)?.album;
+			const playlist = await this.provider.innertube!.music
+				.getPlaylist(id)
+				.catch((reason) => {
+					throw new ProviderError(
+						this.provider.name,
+						`Failed to fetch playlist '${albumId}': ${reason}`,
+					);
+				});
+
+			const trackAlbum = playlist.contents
+				?.as(YTNodes.MusicResponsiveListItem)
+				.at(0)?.album;
 			if (!trackAlbum?.id) {
-				throw new ProviderError(this.provider.name, `Failed to convert playlist '${id}' to album`);
+				throw new ProviderError(
+					this.provider.name,
+					`Failed to convert playlist '${id}' to album`,
+				);
 			}
 			albumId = trackAlbum.id;
 		}
 
 		// Convert album id to album
-		const album = await this.innertube.music.getAlbum(albumId).catch((reason) => {
-			throw new ProviderError(this.provider.name, `Failed to fetch album '${albumId}': ${reason}`);
-		});
+		const album = await this.provider.innertube!.music
+			.getAlbum(albumId)
+			.catch((reason) => {
+				throw new ProviderError(
+					this.provider.name,
+					`Failed to fetch album '${albumId}': ${reason}`,
+				);
+			});
 
 		// If type was playlist, assert that the playlist url of the converted album is indeed the original playlist
 		if (
 			type === PLAYLIST &&
 			this.provider.extractEntityFromUrl(new URL(album.url!))?.id !== id
 		) {
-			throw new ProviderError(this.provider.name, `Failed to convert playlist '${id}' to album`);
+			throw new ProviderError(
+				this.provider.name,
+				`Failed to convert playlist '${id}' to album`,
+			);
 		}
 
 		return album;
@@ -155,29 +195,44 @@ export class YoutubeMusicReleaseLookup extends ReleaseLookup<YoutubeMusicProvide
 	private async lookupGTIN(): Promise<EntityId> {
 		// When searching YouTube Music for a GTIN in quotes, the first (and only) search result always seems to be the album with that GTIN
 		// If there is no album with that GTIN on YouTube, this should just return undefined
-		const id = (await this.innertube!.music.search(`"${this.lookup.value}"`, { type: 'album' }).catch((reason) => {
-			throw new ProviderError(this.provider.name, `Failed to lookup GTIN '${this.lookup.value}': ${reason}`);
-		})).albums?.contents.at(0)?.id;
+		const id = (
+			await this.provider.innertube!.music.search(`"${this.lookup.value}"`, {
+				type: 'album',
+			}).catch((reason) => {
+				throw new ProviderError(
+					this.provider.name,
+					`Failed to lookup GTIN '${this.lookup.value}': ${reason}`,
+				);
+			})
+		).albums?.contents.at(0)?.id;
 
 		if (!id) {
-			throw new ProviderError(this.provider.name, `Failed to lookup GTIN '${this.lookup.value}'`);
+			throw new ProviderError(
+				this.provider.name,
+				`Failed to lookup GTIN '${this.lookup.value}'`,
+			);
 		}
 
 		return {
-			type: ALBUM,
+			type: BROWSE,
 			id,
 		};
 	}
 
 	protected override convertRawRelease(rawRelease: YTMusic.Album) {
 		if (!this.entity) {
-			this.entity = this.provider.extractEntityFromUrl(new URL(rawRelease.url!));
+			this.entity = this.provider.extractEntityFromUrl(
+				new URL(rawRelease.url!),
+			);
 		}
 
-		// Youtube always seems to return a MusicResponsiveHeader.
-		// Throw if this isn't the case, as all other header types don't contain helpful data anyways
+		// YouTube always seems to return a MusicResponsiveHeader.
+		// Throw if this isn't the case, as all other header types don't seem to contain helpful data anyways
 		if (!(rawRelease.header instanceof YTNodes.MusicResponsiveHeader)) {
-			throw new ProviderError(this.provider.name, 'Got bad header type from API');
+			throw new ProviderError(
+				this.provider.name,
+				'Got bad header type from API',
+			);
 		}
 
 		const title = rawRelease.header.title.text;
@@ -185,44 +240,56 @@ export class YoutubeMusicReleaseLookup extends ReleaseLookup<YoutubeMusicProvide
 			throw new ProviderError(this.provider.name, 'Release has no title');
 		}
 
-		const artists = rawRelease.header.strapline_text_one.runs?.reduce((artists: ArtistCreditName[], run) => {
-			// Text is divided into "runs" of links and normal text.
-			// Usually, links point to artists and normal text acts as join phrases
+		const artists = rawRelease.header.strapline_text_one.runs?.reduce(
+			(artists: ArtistCreditName[], run) => {
+				// Text is divided into "runs" of links and normal text.
+				// Usually, links point to artists and normal text acts as join phrases
 
-			if ('endpoint' in run && run.endpoint) {
-				// Current run is artist credit, so append info to list of existing artist credits
-				return [...artists, {
-					name: run.text,
-					externalIds: [{
-						provider: this.provider.internalName,
-						type: CHANNEL,
-						id: run.endpoint.payload.browseId,
-					}],
-				}];
-			} else {
-				// Current run is join phrase, so set text as join phrase of previous artist
-				const lastArtistCredit = artists.at(-1);
-				if (lastArtistCredit) {
-					lastArtistCredit.joinPhrase = (lastArtistCredit.joinPhrase ?? '') + run.text;
+				if ('endpoint' in run && run.endpoint) {
+					// Current run is artist credit, so append info to list of existing artist credits
+					artists.push(
+						{
+							name: run.text,
+							externalIds: [
+								{
+									provider: this.provider.internalName,
+									type: CHANNEL,
+									id: run.endpoint.payload.browseId,
+								},
+							],
+						},
+					);
+				} else {
+					// Current run is join phrase, so set text as join phrase of previous artist
+					const lastArtistCredit = artists.at(-1);
+					if (lastArtistCredit) {
+						lastArtistCredit.joinPhrase = (lastArtistCredit.joinPhrase ?? '') + run.text;
+					}
 				}
+
 				return artists;
-			}
-		}, []);
+			},
+			[],
+		);
 
 		const tracklist = rawRelease.contents.map((item) => this.convertTrack(item));
 
 		const release: HarmonyRelease = {
 			title,
 			artists: artists ?? [],
-			externalLinks: [{
-				// rawRelease.url is always of type https://music.youtube.com/playlist?list=:playlist_id
-				url: rawRelease.url!,
-				types: this.provider.getLinkTypesForEntity(),
-			}],
-			media: [{
-				format: 'Digital Media',
-				tracklist,
-			}],
+			externalLinks: [
+				{
+					// rawRelease.url is always of type https://music.youtube.com/playlist?list=:playlist_id
+					url: rawRelease.url!,
+					types: this.provider.getLinkTypesForEntity(),
+				},
+			],
+			media: [
+				{
+					format: 'Digital Media',
+					tracklist,
+				},
+			],
 			packaging: 'None',
 			info: this.generateReleaseInfo(),
 		};
@@ -230,36 +297,26 @@ export class YoutubeMusicReleaseLookup extends ReleaseLookup<YoutubeMusicProvide
 		return release;
 	}
 
-	convertTrack(item: YTNodes.MusicResponsiveListItem) {
+	convertTrack(item: YTNodes.MusicResponsiveListItem): HarmonyTrack {
 		const videoId = item.overlay?.content?.endpoint.payload.videoId;
 
-		let length;
+		let length: number | undefined;
 		if (item.duration) {
 			length = item.duration.seconds * 1000;
 		}
 
-		let number;
-		if (item.index?.text) {
-			try {
-				number = parseInt(item.index.text);
-			} catch (_e) {
-				// Leave number undefined if parsing failed
-			}
-		}
-
 		return {
 			title: item.title!,
-			tracktype: 'audio',
+			type: 'audio',
 			recording: {
-				title: item.title!,
 				externalIds: [{
-					type: TRACK,
+					type: WATCH,
 					id: videoId,
 					provider: this.provider.internalName,
 				}],
 			},
 			length,
-			number,
-		} as HarmonyTrack;
+			number: item.index?.text,
+		};
 	}
 }
