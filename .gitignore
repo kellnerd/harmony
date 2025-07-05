@@ -10,3 +10,5 @@ snaps/
 
 # Temporary files
 local/
+
+node_modules

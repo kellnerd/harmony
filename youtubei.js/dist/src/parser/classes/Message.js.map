@@ -1,0 +1,1 @@
+{"version":3,"file":"Message.js","sourceRoot":"","sources":["../../../../src/parser/classes/Message.ts"],"names":[],"mappings":"AAAA,OAAO,IAAI,MAAM,gBAAgB,CAAC;AAClC,OAAO,EAAE,MAAM,EAAE,MAAM,eAAe,CAAC;AAGvC,MAAqB,OAAQ,SAAQ,MAAM;IAKzC,YAAY,IAAa;QACvB,KAAK,EAAE,CAAC;QACR,IAAI,CAAC,IAAI,GAAG,IAAI,IAAI,CAAC,IAAI,CAAC,IAAI,CAAC,CAAC;IAClC,CAAC;;AAPM,YAAI,GAAG,SAAS,CAAC;eADL,OAAO"}

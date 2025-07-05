@@ -1,0 +1,9 @@
+import { YTNode } from '../helpers.js';
+import type { RawNode } from '../index.js';
+import Text from './misc/Text.js';
+export default class ChannelHeaderLinksView extends YTNode {
+    static type: string;
+    first_link?: Text;
+    more?: Text;
+    constructor(data: RawNode);
+}

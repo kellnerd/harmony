@@ -1,0 +1,1 @@
+{"version":3,"file":"SignalAction.js","sourceRoot":"","sources":["../../../../../src/parser/classes/actions/SignalAction.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,kBAAkB,CAAC;AAG1C,MAAqB,YAAa,SAAQ,MAAM;IAK9C,YAAY,IAAa;QACvB,KAAK,EAAE,CAAC;QACR,IAAI,CAAC,MAAM,GAAG,IAAI,CAAC,MAAM,CAAC;IAC5B,CAAC;;AAPM,iBAAI,GAAG,cAAc,CAAC;eADV,YAAY"}

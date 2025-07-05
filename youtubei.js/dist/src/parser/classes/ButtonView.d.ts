@@ -1,0 +1,36 @@
+import { YTNode } from '../helpers.js';
+import type { RawNode } from '../index.js';
+import NavigationEndpoint from './NavigationEndpoint.js';
+import Thumbnail from './misc/Thumbnail.js';
+export default class ButtonView extends YTNode {
+    static type: string;
+    secondary_icon_image?: Thumbnail[];
+    icon_name?: string;
+    enable_icon_button?: boolean;
+    tooltip?: string;
+    icon_image_flip_for_rtl?: boolean;
+    button_size?: 'BUTTON_VIEW_MODEL_SIZE_UNKNOWN' | 'BUTTON_VIEW_MODEL_SIZE_DEFAULT' | 'BUTTON_VIEW_MODEL_SIZE_COMPACT' | 'BUTTON_VIEW_MODEL_SIZE_XSMALL' | 'BUTTON_VIEW_MODEL_SIZE_LARGE' | 'BUTTON_VIEW_MODEL_SIZE_XLARGE' | 'BUTTON_VIEW_MODEL_SIZE_XXLARGE';
+    icon_position?: 'BUTTON_VIEW_MODEL_ICON_POSITION_UNKNOWN' | 'BUTTON_VIEW_MODEL_ICON_POSITION_TRAILING' | 'BUTTON_VIEW_MODEL_ICON_POSITION_LEADING' | 'BUTTON_VIEW_MODEL_ICON_POSITION_ABOVE' | 'BUTTON_VIEW_MODEL_ICON_POSITION_LEADING_TRAILING';
+    is_full_width?: boolean;
+    state?: 'BUTTON_VIEW_MODEL_STATE_UNKNOWN' | 'BUTTON_VIEW_MODEL_STATE_ACTIVE' | 'BUTTON_VIEW_MODEL_STATE_INACTIVE' | 'BUTTON_VIEW_MODEL_STATE_DISABLED';
+    on_disabled_tap?: NavigationEndpoint;
+    custom_border_color?: number;
+    on_tap?: NavigationEndpoint;
+    style?: 'BUTTON_VIEW_MODEL_STYLE_UNKNOWN' | 'BUTTON_VIEW_MODEL_STYLE_CTA' | 'BUTTON_VIEW_MODEL_STYLE_BRAND' | 'BUTTON_VIEW_MODEL_STYLE_ADS_CTA' | 'BUTTON_VIEW_MODEL_STYLE_OVERLAY' | 'BUTTON_VIEW_MODEL_STYLE_CTA_THEMED' | 'BUTTON_VIEW_MODEL_STYLE_BLACK_CTA' | 'BUTTON_VIEW_MODEL_STYLE_CUSTOM' | 'BUTTON_VIEW_MODEL_STYLE_MONO' | 'BUTTON_VIEW_MODEL_STYLE_OVERLAY_DARK' | 'BUTTON_VIEW_MODEL_STYLE_CTA_OVERLAY' | 'BUTTON_VIEW_MODEL_STYLE_BRAND_AI' | 'BUTTON_VIEW_MODEL_STYLE_YT_GRADIENT' | 'BUTTON_VIEW_MODEL_STYLE_BRAND_GRADIENT';
+    icon_image?: object;
+    custom_dark_theme_border_color?: number;
+    title?: string;
+    target_id?: string;
+    enable_full_width_margins?: boolean;
+    custom_font_color?: number;
+    button_type?: 'BUTTON_VIEW_MODEL_TYPE_UNKNOWN' | 'BUTTON_VIEW_MODEL_TYPE_FILLED' | 'BUTTON_VIEW_MODEL_TYPE_OUTLINE' | 'BUTTON_VIEW_MODEL_TYPE_TEXT' | 'BUTTON_VIEW_MODEL_TYPE_TONAL';
+    enabled?: boolean;
+    accessibility_id?: string;
+    custom_background_color?: number;
+    on_long_press?: NavigationEndpoint;
+    title_formatted?: object;
+    on_visible?: object;
+    icon_trailing?: boolean;
+    accessibility_text?: string;
+    constructor(data: RawNode);
+}

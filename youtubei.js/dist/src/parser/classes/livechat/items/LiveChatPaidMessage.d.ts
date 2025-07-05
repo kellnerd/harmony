@@ -1,0 +1,34 @@
+import { YTNode } from '../../../helpers.js';
+import { type RawNode } from '../../../index.js';
+import NavigationEndpoint from '../../NavigationEndpoint.js';
+import Author from '../../misc/Author.js';
+import Text from '../../misc/Text.js';
+import Thumbnail from '../../misc/Thumbnail.js';
+import CreatorHeartView from './CreatorHeartView.js';
+import LiveChatItemBumperView from './LiveChatItemBumperView.js';
+import PdgReplyButtonView from './PdgReplyButtonView.js';
+export default class LiveChatPaidMessage extends YTNode {
+    static type: string;
+    id: string;
+    message: Text;
+    author: Author;
+    author_name_text_color: number;
+    header_background_color: number;
+    header_text_color: number;
+    body_background_color: number;
+    body_text_color: number;
+    purchase_amount: string;
+    menu_endpoint: NavigationEndpoint;
+    context_menu_accessibility_label: string;
+    timestamp: number;
+    timestamp_usec: string;
+    timestamp_text?: string;
+    timestamp_color: number;
+    header_overlay_image?: Thumbnail[];
+    text_input_background_color: number;
+    lower_bumper: LiveChatItemBumperView | null;
+    creator_heart_button: CreatorHeartView | null;
+    is_v2_style: boolean;
+    reply_button: PdgReplyButtonView | null;
+    constructor(data: RawNode);
+}
