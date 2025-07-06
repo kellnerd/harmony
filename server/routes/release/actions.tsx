@@ -20,6 +20,7 @@ import type {
 import { CombinedReleaseLookup } from '@/lookup.ts';
 import { MB } from '@/musicbrainz/api_client.ts';
 import { extractMBID } from '@/musicbrainz/extract_mbid.ts';
+import { variousArtists } from '@/musicbrainz/special_entities.ts';
 import { providers as providerRegistry } from '@/providers/mod.ts';
 import { extractReleaseLookupState } from '@/server/state.ts';
 import { LookupError, ProviderError } from '@/utils/errors.ts';
@@ -102,10 +103,12 @@ export default defineRoute(async (req, ctx) => {
 			allRecordings = allTracks.map((track) => ({ name: track.title, ...track.recording }));
 
 			// Combine and deduplicate release and track artists.
+			// Drop special purpose artist Various Artists, which can't be edited on MB (by regular users).
 			const trackArtists = allTracks
 				.flatMap((track) => track.artists)
 				.filter(isDefined);
-			allArtists = deduplicateEntities(release.artists.concat(trackArtists));
+			allArtists = deduplicateEntities(release.artists.concat(trackArtists))
+				.filter((artist) => artist.mbid !== variousArtists.mbid);
 
 			// Load URL relationships for related artists, recordings and labels of the release.
 			// These will be used to skip suggestions to seed external links which already exist.
