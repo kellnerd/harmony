@@ -57,6 +57,7 @@ export abstract class MetadataProvider {
 		snaps,
 	}: ProviderOptions = {}) {
 		this.snaps = snaps;
+		this.requestMaxDelay = requestMaxDelay;
 
 		if (rateLimitInterval && rateLimitInterval > 0) {
 			this.fetch = rateLimit(fetch, {
@@ -198,6 +199,9 @@ export abstract class MetadataProvider {
 	protected snaps: SnapStorage | undefined;
 
 	protected fetch = fetch;
+
+	/** Maximum acceptable delay between the time a request is queued and its execution (in ms). */
+	protected requestMaxDelay: number;
 
 	protected async fetchSnapshot(input: string | URL, options?: CacheOptions): Promise<Snapshot<Response>> {
 		let snapshot: Snapshot<Response>;
