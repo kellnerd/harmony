@@ -58,7 +58,7 @@ export function extractReleaseLookupState(lookupUrl: URL, headers?: Headers): Re
 		}
 	}
 
-	const ts = searchParams.get('ts') ?? '';
+	const ts = searchParams.get('ts');
 	let snapshotMaxTimestamp: number | undefined = undefined;
 	if (ts) {
 		snapshotMaxTimestamp = parseInt(ts);

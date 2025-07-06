@@ -30,7 +30,10 @@ export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
 		state.append('region', usedRegion);
 	}
 	// Maximum timestamp can be used to load the latest snapshot up to this timestamp for each provider.
-	state.append('ts', Math.max(...cacheTimestamps).toFixed(0));
+	const maxTimestamp = Math.max(...cacheTimestamps);
+	if (Number.isSafeInteger(maxTimestamp)) {
+		state.append('ts', maxTimestamp.toFixed(0));
+	}
 
 	return state;
 }
