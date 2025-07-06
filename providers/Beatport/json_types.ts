@@ -146,7 +146,7 @@ export interface Track extends EntityWithUrl {
 	genre: Genre;
 	is_available_for_streaming: boolean;
 	is_hype: boolean;
-	isrc: string;
+	isrc: string | null;
 	key: Key;
 	label_track_identifier: string;
 	length: string;

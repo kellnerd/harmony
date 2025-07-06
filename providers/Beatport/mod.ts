@@ -175,7 +175,7 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 			title: title,
 			artists: rawTrack.artists.map(this.makeArtistCreditName.bind(this)),
 			length: rawTrack.length_ms,
-			isrc: rawTrack.isrc,
+			isrc: rawTrack.isrc ?? undefined,
 			recording: {
 				externalIds: this.provider.makeExternalIds({ type: 'track', id: rawTrack.id.toString(), slug: rawTrack.slug }),
 			},
