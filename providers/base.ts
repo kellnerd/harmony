@@ -1,6 +1,7 @@
 import { FeatureQuality, type FeatureQualityMap, type ProviderFeature } from './features.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
+import { delay } from 'std/async/delay.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 import { rateLimit } from 'utils/async/rateLimit.js';
 import { simplifyName } from 'utils/string/simplify.js';
@@ -200,6 +201,9 @@ export abstract class MetadataProvider {
 
 	protected fetch = fetch;
 
+	/** Delay which should be awaited before the next request. */
+	protected requestDelay = Promise.resolve();
+
 	/** Maximum acceptable delay between the time a request is queued and its execution (in ms). */
 	protected requestMaxDelay: number;
 
@@ -217,11 +221,15 @@ export abstract class MetadataProvider {
 				responseMutator: options?.responseMutator,
 			});
 			this.log.debug(`${input} => ${snapshot.path} (${snapshot.isFresh ? 'fresh' : 'old'})`);
+			if (snapshot.isFresh) {
+				this.handleRateLimit(snapshot.content);
+			}
 		} else {
 			let response = await this.fetch(input, options?.requestInit);
 			if (options?.responseMutator) {
 				response = await options.responseMutator(response);
 			}
+			this.handleRateLimit(response);
 			snapshot = {
 				content: response,
 				timestamp: Math.floor(Date.now() / 1000),
@@ -244,6 +252,18 @@ export abstract class MetadataProvider {
 			timestamp: snapshot.timestamp,
 			isFresh: snapshot.isFresh ?? false,
 		};
+	}
+
+	/** Handles rate limit HTTP headers and sets the request delay. */
+	protected handleRateLimit(response: Response) {
+		const retryAfter = response.headers.get('Retry-After');
+		if (retryAfter) {
+			this.log.info(`${this.name} rate limit (HTTP ${response.status}): Retry-After ${retryAfter}`);
+			const retryAfterMs = parseInt(retryAfter) * 1000;
+			if (retryAfterMs > 0 && retryAfterMs < this.requestMaxDelay) {
+				this.requestDelay = delay(retryAfterMs);
+			}
+		}
 	}
 }
 

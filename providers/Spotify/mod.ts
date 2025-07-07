@@ -8,7 +8,6 @@ import { ResponseError } from '@/utils/errors.ts';
 import { selectLargestImage } from '@/utils/image.ts';
 import { splitLabels } from '@/utils/label.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
-import { delay } from 'std/async/delay.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { availableRegions } from './regions.ts';
 
@@ -98,17 +97,10 @@ export default class SpotifyProvider extends MetadataApiProvider {
 			let apiError: ApiError | undefined;
 			if (error instanceof SnapResponseError) {
 				const { response } = error;
+				this.handleRateLimit(response);
 				// Retry API query when we encounter a 429 rate limit error.
 				if (response.status === 429) {
-					const retryAfter = response.headers.get('Retry-After');
-					this.log.info(`${this.name} rate limit error (HTTP 429): Retry-After ${retryAfter}`);
-					if (retryAfter) {
-						const retryAfterMs = parseInt(retryAfter) * 1000;
-						if (retryAfterMs > 0 && retryAfterMs < this.requestMaxDelay) {
-							this.requestDelay = delay(retryAfterMs);
-							return this.query(apiUrl, maxTimestamp);
-						}
-					}
+					return this.query(apiUrl, maxTimestamp);
 				}
 				try {
 					// Clone the response so the body of the original response can be
@@ -125,9 +117,6 @@ export default class SpotifyProvider extends MetadataApiProvider {
 			}
 		}
 	}
-
-	/** Delay which should be awaited before the next request. */
-	private requestDelay = Promise.resolve();
 
 	private async requestAccessToken(): Promise<ApiAccessToken> {
 		// See https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow
