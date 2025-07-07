@@ -257,10 +257,6 @@ export abstract class MetadataProvider {
 	/** Handles rate limit HTTP headers and sets the request delay. */
 	protected handleRateLimit(response: Response) {
 		const retryAfter = response.headers.get('Retry-After');
-		const relevantHeaders = Object.fromEntries(
-			[...response.headers].filter(([key, _value]) => key.includes('rate')),
-		);
-		this.log.warn(`${this.name} rate limit headers: ${JSON.stringify(relevantHeaders)}`);
 		if (retryAfter) {
 			this.log.info(`${this.name} rate limit (HTTP ${response.status}): Retry-After ${retryAfter}`);
 			const retryAfterMs = parseInt(retryAfter) * 1000;
