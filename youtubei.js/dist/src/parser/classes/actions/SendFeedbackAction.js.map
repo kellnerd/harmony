@@ -1,0 +1,1 @@
+{"version":3,"file":"SendFeedbackAction.js","sourceRoot":"","sources":["../../../../../src/parser/classes/actions/SendFeedbackAction.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,kBAAkB,CAAC;AAG1C,MAAqB,kBAAmB,SAAQ,MAAM;IAKpD,YAAY,IAAa;QACvB,KAAK,EAAE,CAAC;QACR,IAAI,CAAC,MAAM,GAAG,IAAI,CAAC,MAAM,CAAC;IAC5B,CAAC;;AAPM,uBAAI,GAAG,oBAAoB,CAAC;eADhB,kBAAkB"}
