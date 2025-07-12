@@ -1,5 +1,8 @@
 import { CustomError } from 'ts-custom-error';
 
+/** Replacement for the built-in type which is apparently incompatible with 'ts-custom-error'. */
+export type ErrorConstructor = new (...options: ConstructorParameters<typeof Error>) => Error;
+
 /** Something went wrong during a Harmony lookup. */
 export class LookupError extends CustomError {}
 
