@@ -59,6 +59,12 @@ describe('Tidal provider', () => {
 			description: 'track /browse page',
 			url: new URL('https://tidal.com/browse/track/11343638'),
 			id: { type: 'track', id: '11343638' },
+		}, {
+			description: 'video page',
+			url: new URL('https://tidal.com/video/358461354'),
+			id: { type: 'video', id: '358461354' },
+			serializedId: 'video/358461354',
+			isCanonical: true,
 		}],
 		releaseLookup: [{
 			description: 'live album with video tracks and featured artist (v1 API)',
@@ -74,6 +80,17 @@ describe('Tidal provider', () => {
 				assert(allTracks[5].artists?.length === 2, 'Track 6 should have two artists');
 				assert(allTracks[8].type === 'video', 'Track 9 should be a video');
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
+			},
+		}, {
+			description: 'lyric video (v2 API with include=thumbnailArt)',
+			release: new URL('https://tidal.com/video/358461354'),
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+				const videoTrack = release.media[0].tracklist[0];
+				assert(videoTrack.type === 'video', 'Only track should be a video');
+				assert(videoTrack.isrc, 'Video should have an ISRC');
+				assert(release.images?.length === 1, 'Video should have a cover/thumbnail');
+				assert(release.info.providers[0].apiUrl?.includes('thumbnailArt'), 'API URL should contain thumbnailArt include');
 			},
 		}],
 	});

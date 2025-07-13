@@ -437,3 +437,110 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
   ],
 }
 `;
+
+snapshot[`Tidal provider > release lookup > lyric video (v2 API with include=thumbnailArt) 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Taylor Swift",
+      externalIds: [
+        {
+          id: "3557299",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Taylor Swift",
+    },
+  ],
+  copyright: "© 2024 Taylor Swift",
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+      ],
+      url: "https://tidal.com/video/358461354",
+    },
+  ],
+  gtin: undefined,
+  images: [
+    {
+      thumbUrl: "https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/320x180.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/1280x720.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://openapi.tidal.com/v2/videos?countryCode=US&include=artists%2Citems.artists%2Cproviders%2CthumbnailArt&filter%5Bid%5D=358461354",
+        id: "video/358461354",
+        internalName: "tidal",
+        lookup: {
+          method: "id",
+          region: "US",
+          value: "video/358461354",
+        },
+        name: "Tidal",
+        url: "https://tidal.com/video/358461354",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "Universal",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "Taylor Swift",
+              externalIds: [
+                {
+                  id: "3557299",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Taylor Swift",
+            },
+          ],
+          isrc: "USUMV2400558",
+          length: 208000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "358461354",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "My Boy Only Breaks His Favorite Toys (Lyric Video)",
+          type: "video",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 19,
+    month: 4,
+    year: 2024,
+  },
+  status: "Official",
+  title: "My Boy Only Breaks His Favorite Toys (Lyric Video)",
+  types: [
+    "Single",
+  ],
+}
+`;
