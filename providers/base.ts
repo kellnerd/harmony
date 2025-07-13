@@ -48,7 +48,9 @@ export interface OfflineCacheOptions extends CacheOptions {
 	offline?: boolean;
 }
 
-export type MetadataProviderConstructor = new (...args: ConstructorParameters<typeof MetadataProvider>) => MetadataProvider;
+export type MetadataProviderConstructor = new (
+	...args: ConstructorParameters<typeof MetadataProvider>
+) => MetadataProvider;
 
 /**
  * Abstract metadata provider which looks up releases from a specific source.
