@@ -438,7 +438,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
 }
 `;
 
-snapshot[`Tidal provider > release lookup > lyric video (v2 API with include=thumbnailArt) 1`] = `
+snapshot[`Tidal provider > release lookup > lyric video (v2 API) 1`] = `
 {
   artists: [
     {
@@ -476,12 +476,12 @@ snapshot[`Tidal provider > release lookup > lyric video (v2 API with include=thu
     messages: [],
     providers: [
       {
-        apiUrl: "https://openapi.tidal.com/v2/videos?countryCode=US&include=artists%2Citems.artists%2Cproviders%2CthumbnailArt&filter%5Bid%5D=358461354",
+        apiUrl: "https://openapi.tidal.com/v2/videos?countryCode=GB&include=artists%2Citems.artists%2Cproviders&filter%5Bid%5D=358461354",
         id: "video/358461354",
         internalName: "tidal",
         lookup: {
           method: "id",
-          region: "US",
+          region: "GB",
           value: "video/358461354",
         },
         name: "Tidal",

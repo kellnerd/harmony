@@ -82,15 +82,33 @@ describe('Tidal provider', () => {
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
 			},
 		}, {
-			description: 'lyric video (v2 API with include=thumbnailArt)',
+			description: 'lyric video (v2 API)',
 			release: new URL('https://tidal.com/video/358461354'),
+			options: {
+				// Use data from an old snapshot which was made when the original v2 API was still live.
+				snapshotMaxTimestamp: 1740233593,
+				regions: new Set(['GB']),
+			},
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
 				const videoTrack = release.media[0].tracklist[0];
 				assert(videoTrack.type === 'video', 'Only track should be a video');
 				assert(videoTrack.isrc, 'Video should have an ISRC');
 				assert(release.images?.length === 1, 'Video should have a cover/thumbnail');
-				assert(release.info.providers[0].apiUrl?.includes('thumbnailArt'), 'API URL should contain thumbnailArt include');
+				assert(
+					!release.info.providers[0].apiUrl?.includes('thumbnailArt'),
+					'API URL should not contain thumbnailArt include',
+				);
+			},
+		}, {
+			description: 'lyric video (v2 API, with include=thumbnailArt)',
+			release: new URL('https://tidal.com/video/358461354'),
+			assert: (release) => {
+				assert(release.images?.length === 1, 'Video should have a cover/thumbnail');
+				assert(
+					release.info.providers[0].apiUrl?.includes('thumbnailArt'),
+					'API URL should contain thumbnailArt include',
+				);
 			},
 		}],
 	});
