@@ -1,6 +1,7 @@
 // Automatically load .env environment variable file (before anything else).
 import 'std/dotenv/load.ts';
 
+import type { HarmonyRelease } from '@/harmonizer/types.ts';
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
 import { stubProviderLookups, stubTokenRetrieval } from '@/providers/test_stubs.ts';
 import { downloadMode } from '@/utils/fetch_stub.ts';
@@ -95,14 +96,14 @@ describe('Tidal provider', () => {
 				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
 				assert(release.images?.length === 1, 'Release should have a cover');
-				assert(!release.info.providers[0].apiUrl?.includes('coverArt'), 'API URL should not contain coverArt include');
+				assert(!apiUrlIncludes(release).includes('coverArt'), 'API URL should not contain coverArt include');
 			},
 		}, {
 			description: 'single by two artists (v2 API, with include=coverArt)',
 			release: new URL('https://tidal.com/album/381265361'),
 			assert: (release) => {
 				assert(release.images?.length === 1, 'Release should have a cover');
-				assert(release.info.providers[0].apiUrl?.includes('coverArt'), 'API URL should contain coverArt include');
+				assert(apiUrlIncludes(release).includes('coverArt'), 'API URL should contain coverArt include');
 			},
 		}, {
 			description: 'lyric video (v2 API)',
@@ -118,20 +119,14 @@ describe('Tidal provider', () => {
 				assert(videoTrack.type === 'video', 'Only track should be a video');
 				assert(videoTrack.isrc, 'Video should have an ISRC');
 				assert(release.images?.length === 1, 'Video should have a cover/thumbnail');
-				assert(
-					!release.info.providers[0].apiUrl?.includes('thumbnailArt'),
-					'API URL should not contain thumbnailArt include',
-				);
+				assert(!apiUrlIncludes(release).includes('thumbnailArt'), 'API URL should not contain thumbnailArt include');
 			},
 		}, {
 			description: 'lyric video (v2 API, with include=thumbnailArt)',
 			release: new URL('https://tidal.com/video/358461354'),
 			assert: (release) => {
 				assert(release.images?.length === 1, 'Video should have a cover/thumbnail');
-				assert(
-					release.info.providers[0].apiUrl?.includes('thumbnailArt'),
-					'API URL should contain thumbnailArt include',
-				);
+				assert(apiUrlIncludes(release).includes('thumbnailArt'), 'API URL should contain thumbnailArt include');
 			},
 		}],
 	});
@@ -140,3 +135,10 @@ describe('Tidal provider', () => {
 		stubs.forEach((stub) => stub.restore());
 	});
 });
+
+/** Extracts the include parameters from the given release's API URL. */
+function apiUrlIncludes(release: HarmonyRelease): string[] {
+	const tidalProvider = release.info.providers[0];
+	const apiUrlQuery = new URL(tidalProvider.apiUrl!).searchParams;
+	return apiUrlQuery.get('include')?.split(',') ?? [];
+}
