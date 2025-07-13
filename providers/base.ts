@@ -1,5 +1,5 @@
 import { FeatureQuality, type FeatureQualityMap, type ProviderFeature } from './features.ts';
-import { ProviderError, ResponseError } from '@/utils/errors.ts';
+import { CacheMissError, ProviderError, ResponseError } from '@/utils/errors.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
 import { delay } from 'std/async/delay.ts';
 import { getLogger } from 'std/log/get_logger.ts';
@@ -22,7 +22,7 @@ import type {
 	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
 import type { PartialDate } from '@/utils/date.ts';
-import type { CacheOptions, Snapshot, SnapStorage } from 'snap-storage';
+import type { CacheOptions, Policy, Snapshot, SnapStorage } from 'snap-storage';
 import type { MaybePromise } from 'utils/types.d.ts';
 import type { Logger } from 'std/log/logger.ts';
 
@@ -44,7 +44,14 @@ export type ProviderOptions = Partial<{
 	snaps: SnapStorage;
 }>;
 
-export type MetadataProviderConstructor = new (options: ProviderOptions) => MetadataProvider;
+export interface OfflineCacheOptions extends CacheOptions {
+	/** Only use cached snapshots, never fetch a network resource. */
+	offline?: boolean;
+}
+
+export type MetadataProviderConstructor = new (
+	...args: ConstructorParameters<typeof MetadataProvider>
+) => MetadataProvider;
 
 /**
  * Abstract metadata provider which looks up releases from a specific source.
@@ -207,23 +214,37 @@ export abstract class MetadataProvider {
 	/** Maximum acceptable delay between the time a request is queued and its execution (in ms). */
 	protected requestMaxDelay: number;
 
-	protected async fetchSnapshot(input: string | URL, options?: CacheOptions): Promise<Snapshot<Response>> {
-		let snapshot: Snapshot<Response>;
+	protected async fetchSnapshot(
+		input: string | URL,
+		options?: OfflineCacheOptions,
+	): Promise<Snapshot<Response>> {
+		let snapshot: Snapshot<Response> | undefined;
 
 		if (this.snaps) {
-			snapshot = await this.snaps.cache(input, {
-				fetch: this.fetch,
-				requestInit: options?.requestInit,
-				policy: {
-					maxAge: 60 * 60 * 24, // 24 hours
-					...options?.policy,
-				},
-				responseMutator: options?.responseMutator,
-			});
-			this.log.debug(`${input} => ${snapshot.path} (${snapshot.isFresh ? 'fresh' : 'old'})`);
-			if (snapshot.isFresh) {
-				this.handleRateLimit(snapshot.content);
+			const cachePolicy: Policy = {
+				maxAge: 60 * 60 * 24, // 24 hours
+				...options?.policy,
+			};
+			if (options?.offline) {
+				const snapMeta = this.snaps.getSnap(input.toString(), cachePolicy);
+				if (snapMeta) {
+					const data = await Deno.readFile(snapMeta.path);
+					snapshot = { ...snapMeta, content: new Response(data), isFresh: false };
+				} else {
+					throw new CacheMissError('No matching snapshot was found (in offline mode)');
+				}
+			} else {
+				snapshot = await this.snaps.cache(input, {
+					fetch: this.fetch,
+					requestInit: options?.requestInit,
+					policy: cachePolicy,
+					responseMutator: options?.responseMutator,
+				});
+				if (snapshot.isFresh) {
+					this.handleRateLimit(snapshot.content);
+				}
 			}
+			this.log.debug(`${input} => ${snapshot?.path} (${snapshot?.isFresh ? 'fresh' : 'old'})`);
 		} else {
 			let response = await this.fetch(input, options?.requestInit);
 			if (options?.responseMutator) {
@@ -243,12 +264,14 @@ export abstract class MetadataProvider {
 		return snapshot;
 	}
 
-	protected async fetchJSON<Content>(input: string | URL, options?: CacheOptions): Promise<CacheEntry<Content>> {
+	protected async fetchJSON<Content>(
+		input: string | URL,
+		options?: OfflineCacheOptions,
+	): Promise<CacheEntry<Content>> {
 		const snapshot = await this.fetchSnapshot(input, options);
-		const json = await snapshot.content.json();
 
 		return {
-			content: json,
+			content: await snapshot.content.json(),
 			timestamp: snapshot.timestamp,
 			isFresh: snapshot.isFresh ?? false,
 		};
@@ -443,10 +466,17 @@ export interface ApiAccessToken {
 	validUntilTimestamp: number;
 }
 
+export interface ApiQueryOptions {
+	/** Maximum creation date and time of snapshots which should be used (in seconds since the UNIX epoch). */
+	snapshotMaxTimestamp?: number;
+	/** Only use cached snapshots, never fetch a network resource. */
+	offline?: boolean;
+}
+
 /** Extends `MetadataProvider` with functions common to lookups accessing web APIs. */
 export abstract class MetadataApiProvider extends MetadataProvider {
 	/** Must be implemented to perform a request against the specified URL. */
-	abstract query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>>;
+	abstract query<Data>(apiUrl: URL, options?: ApiQueryOptions): Promise<CacheEntry<Data>>;
 
 	/**
 	 * Returns a cached API access token.
@@ -468,6 +498,15 @@ export abstract class MetadataApiProvider extends MetadataProvider {
 	}
 }
 
+export interface ApiAllRegionsQueryOptions<Data> {
+	/** Callback which should return `true` for valid data. */
+	isValidData: (data: Data) => boolean;
+	/** Callback which should return `false` to ignore the exception and try the next region. */
+	isCriticalError?: (error: unknown) => boolean;
+	/** Only use cached snapshots, never fetch a network resource. */
+	offline?: boolean;
+}
+
 /** Extends `ReleaseLookup` with functions common to lookups accessing web APIs. */
 export abstract class ReleaseApiLookup<Provider extends MetadataApiProvider, RawRelease>
 	extends ReleaseLookup<Provider, RawRelease> {
@@ -475,18 +514,19 @@ export abstract class ReleaseApiLookup<Provider extends MetadataApiProvider, Raw
 	abstract override constructReleaseApiUrl(): URL;
 
 	/** Performs the query for the URL returned by {@linkcode constructReleaseApiUrl} for all configured regions until valid data is returned. */
-	protected async queryAllRegions<Data>(
-		isValidData: (data: Data) => boolean,
-		isCriticalError: (error: unknown) => boolean = (_) => true,
-	): Promise<Data> {
+	protected async queryAllRegions<Data>({
+		isValidData,
+		isCriticalError = (_) => true,
+		offline,
+	}: ApiAllRegionsQueryOptions<Data>): Promise<Data> {
 		for (const region of this.options.regions || []) {
 			this.lookup.region = region;
 			const apiUrl = this.constructReleaseApiUrl();
 			try {
-				const cacheEntry = await this.provider.query<Data>(
-					apiUrl,
-					this.options.snapshotMaxTimestamp,
-				);
+				const cacheEntry = await this.provider.query<Data>(apiUrl, {
+					snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+					offline,
+				});
 				if (isValidData(cacheEntry.content)) {
 					this.updateCacheTime(cacheEntry.timestamp);
 					return cacheEntry.content;

@@ -7,7 +7,13 @@ import type {
 	MediumFormat,
 	ReleaseGroupType,
 } from '@/harmonizer/types.ts';
-import { CacheEntry, MetadataApiProvider, ProviderOptions, ReleaseApiLookup } from '@/providers/base.ts';
+import {
+	type ApiQueryOptions,
+	type CacheEntry,
+	MetadataApiProvider,
+	type ProviderOptions,
+	ReleaseApiLookup,
+} from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
@@ -62,9 +68,9 @@ export default class MusicBrainzProvider extends MetadataApiProvider {
 		return join('https://musicbrainz.org', entity.type, entity.id);
 	}
 
-	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+	async query<Data>(apiUrl: URL, options: ApiQueryOptions): Promise<CacheEntry<Data>> {
 		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
-			policy: { maxTimestamp },
+			policy: { maxTimestamp: options.snapshotMaxTimestamp },
 			requestInit: {
 				headers: {
 					'Accept': 'application/json',
@@ -100,10 +106,9 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 	async getRawRelease(): Promise<RawRelease> {
 		if (this.lookup.method === 'gtin') {
 			const apiUrl = this.constructReleaseApiUrl();
-			const { content, timestamp } = await this.provider.query<ReleaseSearchResults>(
-				apiUrl,
-				this.options.snapshotMaxTimestamp,
-			);
+			const { content, timestamp } = await this.provider.query<ReleaseSearchResults>(apiUrl, {
+				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+			});
 			this.updateCacheTime(timestamp);
 
 			const { releases } = content;
@@ -121,10 +126,9 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 			}
 		}
 
-		const { content: release, timestamp } = await this.provider.query<RawRelease>(
-			this.constructReleaseApiUrl(),
-			this.options.snapshotMaxTimestamp,
-		);
+		const { content: release, timestamp } = await this.provider.query<RawRelease>(this.constructReleaseApiUrl(), {
+			snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+		});
 		this.updateCacheTime(timestamp);
 
 		return release;

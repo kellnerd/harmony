@@ -1,6 +1,7 @@
-import { urlToFilePath } from './file_path.ts';
+import type { ErrorConstructor } from '@/utils/errors.ts';
 import { dirname } from '@std/path/dirname';
 import { stub } from '@std/testing/mock';
+import { urlToFilePath } from './file_path.ts';
 
 /** CLI flag (`--download`) which allows {@linkcode stubFetchWithCache} etc. to make network requests. */
 export const downloadMode = Deno.args.includes('--download');
@@ -37,13 +38,13 @@ export async function saveResponse(response: Response, path: string): Promise<vo
 }
 
 /** Reads the cached response body from the file at the given path. */
-export async function loadResponse(path: string): Promise<Response> {
+export async function loadResponse(path: string, NotFoundError: ErrorConstructor = Error): Promise<Response> {
 	try {
 		const body = await Deno.readFile(path);
 		return new Response(body);
 	} catch (error) {
 		if (error instanceof Deno.errors.NotFound) {
-			throw new Error(`Response has not been cached at ${path}`);
+			throw new NotFoundError(`Response has not been cached at ${path}`);
 		} else {
 			throw error;
 		}

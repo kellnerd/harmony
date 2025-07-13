@@ -1,8 +1,8 @@
+import { CacheMissError } from '@/utils/errors.ts';
 import { downloadMode, loadResponse, saveResponse } from '@/utils/fetch_stub.ts';
 import { urlToFilePath } from '@/utils/file_path.ts';
 import { stub } from '@std/testing/mock';
-import type { CacheOptions } from 'snap-storage';
-import type { MetadataApiProvider, MetadataProvider } from './base.ts';
+import type { MetadataApiProvider, MetadataProvider, OfflineCacheOptions } from './base.ts';
 
 /** Prevents the given provider from retrieving an API access token. */
 export function stubTokenRetrieval(provider: MetadataApiProvider) {
@@ -24,7 +24,7 @@ export function stubProviderLookups(provider: MetadataProvider, cacheDir = 'test
 		provider,
 		// @ts-ignore-error -- Private method is not visible in TS, but accessible in JS.
 		'fetchSnapshot',
-		async function (input: string | URL, options?: CacheOptions) {
+		async function (input: string | URL, options?: OfflineCacheOptions) {
 			const path = await urlToFilePath(new URL(input), { baseDir: cacheDir });
 			let response: Response;
 
@@ -35,7 +35,7 @@ export function stubProviderLookups(provider: MetadataProvider, cacheDir = 'test
 				}
 				await saveResponse(response.clone(), path);
 			} else {
-				response = await loadResponse(path);
+				response = await loadResponse(path, options?.offline ? CacheMissError : Error);
 			}
 
 			return {

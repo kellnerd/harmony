@@ -1,5 +1,5 @@
 import { availableRegions } from './regions.ts';
-import { type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
+import { type ApiQueryOptions, type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
@@ -73,9 +73,9 @@ export default class iTunesProvider extends MetadataApiProvider {
 		return ['paid streaming'];
 	}
 
-	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+	async query<Data>(apiUrl: URL, options: ApiQueryOptions): Promise<CacheEntry<Data>> {
 		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
-			policy: { maxTimestamp },
+			policy: { maxTimestamp: options.snapshotMaxTimestamp },
 		});
 		return cacheEntry;
 	}
@@ -108,10 +108,9 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		if (!this.options.regions?.size) {
 			this.options.regions = new Set([this.provider.defaultRegion]);
 		}
-		const isValidData = (data: ReleaseResult) => {
-			return Boolean(data?.resultCount);
-		};
-		return await this.queryAllRegions<ReleaseResult>(isValidData);
+		return await this.queryAllRegions<ReleaseResult>({
+			isValidData: (data) => Boolean(data?.resultCount),
+		});
 	}
 
 	protected convertRawRelease(data: ReleaseResult): HarmonyRelease {

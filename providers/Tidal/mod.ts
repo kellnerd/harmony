@@ -1,4 +1,10 @@
-import { ApiAccessToken, type CacheEntry, MetadataApiProvider, type ProviderOptions } from '@/providers/base.ts';
+import {
+	type ApiAccessToken,
+	type ApiQueryOptions,
+	type CacheEntry,
+	MetadataApiProvider,
+	type ProviderOptions,
+} from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { getFromEnv } from '@/utils/config.ts';
 import { ResponseError } from '@/utils/errors.ts';
@@ -109,11 +115,12 @@ export default class TidalProvider extends MetadataApiProvider {
 		return ['paid streaming'];
 	}
 
-	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+	async query<Data>(apiUrl: URL, options: ApiQueryOptions): Promise<CacheEntry<Data>> {
 		try {
 			const accessToken = await this.cachedAccessToken(this.requestAccessToken);
 			const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
-				policy: { maxTimestamp },
+				offline: options.offline,
+				policy: { maxTimestamp: options.snapshotMaxTimestamp },
 				requestInit: {
 					headers: { 'Authorization': `Bearer ${accessToken}` },
 				},

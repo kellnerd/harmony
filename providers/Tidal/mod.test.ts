@@ -1,6 +1,7 @@
 // Automatically load .env environment variable file (before anything else).
 import 'std/dotenv/load.ts';
 
+import type { HarmonyRelease } from '@/harmonizer/types.ts';
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
 import { stubProviderLookups, stubTokenRetrieval } from '@/providers/test_stubs.ts';
 import { downloadMode } from '@/utils/fetch_stub.ts';
@@ -59,6 +60,12 @@ describe('Tidal provider', () => {
 			description: 'track /browse page',
 			url: new URL('https://tidal.com/browse/track/11343638'),
 			id: { type: 'track', id: '11343638' },
+		}, {
+			description: 'video page',
+			url: new URL('https://tidal.com/video/358461354'),
+			id: { type: 'video', id: '358461354' },
+			serializedId: 'video/358461354',
+			isCanonical: true,
 		}],
 		releaseLookup: [{
 			description: 'live album with video tracks and featured artist (v1 API)',
@@ -75,6 +82,52 @@ describe('Tidal provider', () => {
 				assert(allTracks[8].type === 'video', 'Track 9 should be a video');
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
 			},
+		}, {
+			description: 'single by two artists (v2 API)',
+			release: new URL('https://tidal.com/album/381265361'),
+			options: {
+				// Use data from an old snapshot which was made when the original v2 API was still live.
+				snapshotMaxTimestamp: 1740781974,
+				regions: new Set(['GB']),
+			},
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
+				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
+				assert(release.images?.length === 1, 'Release should have a cover');
+				assert(!apiUrlIncludes(release).includes('coverArt'), 'API URL should not contain coverArt include');
+			},
+		}, {
+			description: 'single by two artists (v2 API, with include=coverArt)',
+			release: new URL('https://tidal.com/album/381265361'),
+			assert: (release) => {
+				assert(release.images?.length === 1, 'Release should have a cover');
+				assert(apiUrlIncludes(release).includes('coverArt'), 'API URL should contain coverArt include');
+			},
+		}, {
+			description: 'lyric video (v2 API)',
+			release: new URL('https://tidal.com/video/358461354'),
+			options: {
+				// Use data from an old snapshot which was made when the original v2 API was still live.
+				snapshotMaxTimestamp: 1740233593,
+				regions: new Set(['GB']),
+			},
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+				const videoTrack = release.media[0].tracklist[0];
+				assert(videoTrack.type === 'video', 'Only track should be a video');
+				assert(videoTrack.isrc, 'Video should have an ISRC');
+				assert(release.images?.length === 1, 'Video should have a cover/thumbnail');
+				assert(!apiUrlIncludes(release).includes('thumbnailArt'), 'API URL should not contain thumbnailArt include');
+			},
+		}, {
+			description: 'lyric video (v2 API, with include=thumbnailArt)',
+			release: new URL('https://tidal.com/video/358461354'),
+			assert: (release) => {
+				assert(release.images?.length === 1, 'Video should have a cover/thumbnail');
+				assert(apiUrlIncludes(release).includes('thumbnailArt'), 'API URL should contain thumbnailArt include');
+			},
 		}],
 	});
 
@@ -82,3 +135,10 @@ describe('Tidal provider', () => {
 		stubs.forEach((stub) => stub.restore());
 	});
 });
+
+/** Extracts the include parameters from the given release's API URL. */
+function apiUrlIncludes(release: HarmonyRelease): string[] {
+	const tidalProvider = release.info.providers[0];
+	const apiUrlQuery = new URL(tidalProvider.apiUrl!).searchParams;
+	return apiUrlQuery.get('include')?.split(',') ?? [];
+}

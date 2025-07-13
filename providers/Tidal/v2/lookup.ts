@@ -1,10 +1,11 @@
+import { getLogger } from 'std/log/get_logger.ts';
 import { join } from 'std/url/join.ts';
 import { ReleaseApiLookup } from '@/providers/base.ts';
-import TidalProvider from '@/providers/Tidal/mod.ts';
+import type TidalProvider from '@/providers/Tidal/mod.ts';
 import { formatCopyrightSymbols } from '@/utils/copyright.ts';
 import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
 import { selectLargestImage } from '@/utils/image.ts';
-import { ProviderError } from '@/utils/errors.ts';
+import { CacheMissError, ProviderError } from '@/utils/errors.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
 import { parseISODuration } from '@/utils/time.ts';
 
@@ -12,12 +13,13 @@ import type {
 	AlbumItemResourceIdentifier,
 	AlbumsResource,
 	ArtistsResource,
+	ArtworksResource,
 	MultiDataDocument,
 	ProvidersResource,
 	SingleDataDocument,
 	TracksResource,
 	VideosResource,
-} from '@/providers/Tidal/v2/api_types.ts';
+} from './api_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -30,8 +32,18 @@ import type {
 
 type ReleaseResource = AlbumsResource | VideosResource;
 
+/** Supported compatibility modes of release lookups. */
+enum LookupCompatibility {
+	/** Original URL format for the Tidal v2 API. */
+	Original,
+	/** 2025-06-17: New include parameter for cover art is required. */
+	IncludeCoverArt,
+}
+
 export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, SingleDataDocument<ReleaseResource>> {
 	readonly apiBaseUrl = 'https://openapi.tidal.com/v2/';
+
+	private compatibility = LookupCompatibility.Original;
 
 	constructReleaseApiUrl(): URL {
 		let { method, value, region } = this.lookup;
@@ -41,9 +53,13 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			value = value.replace('video/', '');
 		}
 		const lookupUrl = join(this.apiBaseUrl, resource);
+		const includes = ['artists', 'items.artists', 'providers'];
+		if (this.compatibility === LookupCompatibility.IncludeCoverArt) {
+			includes.push(resource === 'videos' ? 'thumbnailArt' : 'coverArt');
+		}
 		const query = new URLSearchParams({
 			countryCode: region || this.provider.defaultRegion,
-			include: ['artists', 'items.artists', 'providers'].join(','),
+			include: includes.join(','),
 		});
 		if (method === 'gtin') {
 			query.append('filter[barcodeId]', value);
@@ -59,15 +75,31 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		if (!this.options.regions?.size) {
 			this.options.regions = new Set([this.provider.defaultRegion]);
 		}
-		const isValidData = (data: MultiDataDocument<ReleaseResource>) => {
-			return Boolean(data?.data?.length);
-		};
-		const result = await this.queryAllRegions<MultiDataDocument<ReleaseResource>>(isValidData);
+
+		const isValidData = (data: MultiDataDocument<ReleaseResource>): boolean => Boolean(data?.data?.length);
+		let result: MultiDataDocument<ReleaseResource> | undefined = undefined;
+		if (this.options.snapshotMaxTimestamp) {
+			// Check for cached snapshots using the original URL format first.
+			try {
+				this.compatibility = LookupCompatibility.Original;
+				result = await this.queryAllRegions({ isValidData, offline: true });
+			} catch (error) {
+				// Ignore cache misses, there are more compatibility modes to be tried.
+				if (!(error instanceof CacheMissError)) throw error;
+			}
+		}
+		if (!result) {
+			// Regular query using the latest compatibility mode.
+			this.compatibility = LookupCompatibility.IncludeCoverArt;
+			result = await this.queryAllRegions({ isValidData, offline: false });
+		}
+
 		if (result.data.length > 1) {
 			this.warnMultipleResults(
 				result.data.slice(1).map((release) => this.constructReleaseUrlFromRelease(release)),
 			);
 		}
+
 		return {
 			data: result.data[0],
 			links: result.links,
@@ -120,7 +152,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 
 	private getFullVideoTracklist(rawRelease: SingleDataDocument<VideosResource>): HarmonyMedium[] {
 		const artistMap = new Map(
-			this.getRelatedItems<ArtistsResource>(rawRelease, 'artists').map((artist) => [artist.id, artist]),
+			this.getRelatedItems<ArtistsResource>(rawRelease, 'artists', 'artists').map((artist) => [artist.id, artist]),
 		);
 
 		// A video only contains a single track
@@ -153,11 +185,9 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			const url = new URL(next.replace(/^\//, ''), this.apiBaseUrl);
 			url.searchParams.set('include', 'items.artists');
 
-			const { content, timestamp } = await this.provider
-				.query<MultiDataDocument<AlbumItemResourceIdentifier>>(
-					url,
-					this.options.snapshotMaxTimestamp,
-				);
+			const { content, timestamp } = await this.provider.query<MultiDataDocument<AlbumItemResourceIdentifier>>(url, {
+				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+			});
 
 			items.push(...content.data);
 			content.included.forEach((resource) => {
@@ -258,7 +288,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 	}
 
 	private getArtists(rawRelease: SingleDataDocument<ReleaseResource>): ArtistCreditName[] {
-		const artists = this.getRelatedItems<ArtistsResource>(rawRelease, 'artists');
+		const artists = this.getRelatedItems<ArtistsResource>(rawRelease, 'artists', 'artists');
 		return artists
 			.map((resource) => {
 				return {
@@ -270,18 +300,28 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 	}
 
 	private getArtwork(rawRelease: SingleDataDocument<ReleaseResource>): Artwork | undefined {
-		const allImages = rawRelease.data.attributes.imageLinks?.map((link) => {
+		let { imageLinks } = rawRelease.data.attributes;
+		if (!imageLinks) {
+			const relationship = rawRelease.data.type === 'videos' ? 'thumbnailArt' : 'coverArt';
+			// @ts-ignore: Not all `relationship` values are keys of `AlbumsResource` and `VideosResource` (TODO: improve types)
+			const artworks = this.getRelatedItems<ArtworksResource>(rawRelease, relationship, 'artworks');
+			imageLinks = artworks.find((artwork) => artwork.attributes.mediaType === 'IMAGE')?.attributes.files ?? [];
+			if (artworks.length > 1) {
+				getLogger('harmony.provider').warn(`Tidal release ${rawRelease.data.id} has multiple artworks`);
+			}
+		}
+		const allImages = imageLinks.map((link) => {
 			return {
 				url: link.href,
 				width: link.meta.width,
 				height: link.meta.height,
 			};
 		});
-		return allImages ? selectLargestImage(allImages, ['front']) : undefined;
+		return selectLargestImage(allImages, ['front']);
 	}
 
 	private getLabels(rawRelease: SingleDataDocument<ReleaseResource>): Label[] {
-		const providers = this.getRelatedItems<ProvidersResource>(rawRelease, 'providers');
+		const providers = this.getRelatedItems<ProvidersResource>(rawRelease, 'providers', 'providers');
 		return providers
 			.map((resource) => {
 				return {
@@ -296,9 +336,11 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 
 	private getRelatedItems<T>(
 		rawRelease: SingleDataDocument<ReleaseResource>,
-		resourceType: 'artists' | 'providers',
+		relationship: keyof ReleaseResource['relationships'],
+		resourceType: 'artists' | 'artworks' | 'providers',
 	): T[] {
-		const relatedIds = new Set(rawRelease.data.relationships[resourceType].data.map((item) => item.id));
+		const targetRels = rawRelease.data.relationships[relationship];
+		const relatedIds = new Set(targetRels?.data?.map((item) => item.id));
 
 		return rawRelease.included
 			.filter((resource) => resource.type === resourceType && relatedIds.has(resource.id)) as T[];

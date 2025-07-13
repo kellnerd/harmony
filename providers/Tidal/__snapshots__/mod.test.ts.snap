@@ -437,3 +437,239 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
   ],
 }
 `;
+
+snapshot[`Tidal provider > release lookup > single by two artists (v2 API) 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Bruno Mars",
+      externalIds: [
+        {
+          id: "3658521",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Bruno Mars",
+    },
+    {
+      creditedName: "Lady Gaga",
+      externalIds: [
+        {
+          id: "3534754",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Lady Gaga",
+    },
+  ],
+  copyright: "© 2024 Interscope Records",
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+      ],
+      url: "https://tidal.com/album/381265361",
+    },
+  ],
+  gtin: "00602475093060",
+  images: [
+    {
+      thumbUrl: "https://resources.tidal.com/images/d55c740a/fc2c/4352/ad58/ffd1bce34b87/320x320.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://resources.tidal.com/images/d55c740a/fc2c/4352/ad58/ffd1bce34b87/1280x1280.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://openapi.tidal.com/v2/albums?countryCode=GB&include=artists%2Citems.artists%2Cproviders&filter%5Bid%5D=381265361",
+        id: "381265361",
+        internalName: "tidal",
+        lookup: {
+          method: "id",
+          region: "GB",
+          value: "381265361",
+        },
+        name: "Tidal",
+        url: "https://tidal.com/album/381265361",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "Universal",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "Lady Gaga",
+              externalIds: [
+                {
+                  id: "3534754",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Lady Gaga",
+            },
+            {
+              creditedName: "Bruno Mars",
+              externalIds: [
+                {
+                  id: "3658521",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Bruno Mars",
+            },
+          ],
+          isrc: "USUM72409273",
+          length: 252000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "381265362",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "Die With A Smile",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 16,
+    month: 8,
+    year: 2024,
+  },
+  status: "Official",
+  title: "Die With A Smile",
+  types: [
+    "Single",
+  ],
+}
+`;
+
+snapshot[`Tidal provider > release lookup > lyric video (v2 API) 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Taylor Swift",
+      externalIds: [
+        {
+          id: "3557299",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Taylor Swift",
+    },
+  ],
+  copyright: "© 2024 Taylor Swift",
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+      ],
+      url: "https://tidal.com/video/358461354",
+    },
+  ],
+  gtin: undefined,
+  images: [
+    {
+      thumbUrl: "https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/320x180.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/1280x720.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://openapi.tidal.com/v2/videos?countryCode=GB&include=artists%2Citems.artists%2Cproviders&filter%5Bid%5D=358461354",
+        id: "video/358461354",
+        internalName: "tidal",
+        lookup: {
+          method: "id",
+          region: "GB",
+          value: "video/358461354",
+        },
+        name: "Tidal",
+        url: "https://tidal.com/video/358461354",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "Universal",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "Taylor Swift",
+              externalIds: [
+                {
+                  id: "3557299",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Taylor Swift",
+            },
+          ],
+          isrc: "USUMV2400558",
+          length: 208000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "358461354",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "My Boy Only Breaks His Favorite Toys (Lyric Video)",
+          type: "video",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 19,
+    month: 4,
+    year: 2024,
+  },
+  status: "Official",
+  title: "My Boy Only Breaks His Favorite Toys (Lyric Video)",
+  types: [
+    "Single",
+  ],
+}
+`;

@@ -1,5 +1,11 @@
 import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
-import { ApiAccessToken, type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
+import {
+	type ApiAccessToken,
+	type ApiQueryOptions,
+	type CacheEntry,
+	MetadataApiProvider,
+	ReleaseApiLookup,
+} from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { getFromEnv } from '@/utils/config.ts';
 import { formatCopyrightSymbols } from '@/utils/copyright.ts';
@@ -76,12 +82,12 @@ export default class SpotifyProvider extends MetadataApiProvider {
 		return ['free streaming'];
 	}
 
-	async query<Data>(apiUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+	async query<Data>(apiUrl: URL, options: ApiQueryOptions): Promise<CacheEntry<Data>> {
 		try {
 			await this.requestDelay;
 			const accessToken = await this.cachedAccessToken(this.requestAccessToken);
 			const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
-				policy: { maxTimestamp },
+				policy: { maxTimestamp: options.snapshotMaxTimestamp },
 				requestInit: {
 					headers: {
 						'Authorization': `Bearer ${accessToken}`,
@@ -100,7 +106,7 @@ export default class SpotifyProvider extends MetadataApiProvider {
 				this.handleRateLimit(response);
 				// Retry API query when we encounter a 429 rate limit error.
 				if (response.status === 429) {
-					return this.query(apiUrl, maxTimestamp);
+					return this.query(apiUrl, options);
 				}
 				try {
 					// Clone the response so the body of the original response can be
@@ -149,7 +155,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		const query = new URLSearchParams();
 
 		if (method === 'gtin') {
-			lookupUrl = new URL(`search`, this.provider.apiBaseUrl);
+			lookupUrl = new URL('search', this.provider.apiBaseUrl);
 			query.set('type', 'album');
 			query.set('q', `upc:${value}`);
 			if (region) {
@@ -178,10 +184,9 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			this.lookup.value = albumId;
 		}
 
-		const cacheEntry = await this.provider.query<Album>(
-			this.constructReleaseApiUrl(),
-			this.options.snapshotMaxTimestamp,
-		);
+		const cacheEntry = await this.provider.query<Album>(this.constructReleaseApiUrl(), {
+			snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+		});
 		const release = cacheEntry.content;
 
 		this.updateCacheTime(cacheEntry.timestamp);
@@ -198,10 +203,9 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			this.lookup.region = region;
 			for (const gtin of gtins) {
 				this.lookup.value = gtin;
-				const cacheEntry = await this.provider.query<SearchResult>(
-					this.constructReleaseApiUrl(),
-					this.options.snapshotMaxTimestamp,
-				);
+				const cacheEntry = await this.provider.query<SearchResult>(this.constructReleaseApiUrl(), {
+					snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+				});
 				this.updateCacheTime(cacheEntry.timestamp);
 				const releases = cacheEntry.content?.albums?.items;
 				if (releases?.length) {
@@ -223,10 +227,9 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		// tracks with separate requests if needed.
 		let nextUrl = rawRelease.tracks.next;
 		while (nextUrl && allTracks.length < rawRelease.tracks.total) {
-			const cacheEntry = await this.provider.query<ResultList<SimplifiedTrack>>(
-				new URL(nextUrl),
-				this.options.snapshotMaxTimestamp,
-			);
+			const cacheEntry = await this.provider.query<ResultList<SimplifiedTrack>>(new URL(nextUrl), {
+				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+			});
 			this.updateCacheTime(cacheEntry.timestamp);
 			allTracks.push(...cacheEntry.content.items);
 			nextUrl = cacheEntry.content.next;
@@ -256,11 +259,9 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		const apiUrl = new URL('tracks', this.provider.apiBaseUrl);
 		for (let index = 0; index < trackIds.length; index += maxResults) {
 			apiUrl.searchParams.set('ids', trackIds.slice(index, index + maxResults).join(','));
-			apiUrl.search = apiUrl.searchParams.toString();
-			const cacheEntry = await this.provider.query<TrackList>(
-				apiUrl,
-				this.options.snapshotMaxTimestamp,
-			);
+			const cacheEntry = await this.provider.query<TrackList>(apiUrl, {
+				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+			});
 			this.updateCacheTime(cacheEntry.timestamp);
 			allTracks.push(...cacheEntry.content.tracks);
 		}

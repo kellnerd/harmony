@@ -5,9 +5,9 @@ import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
 import { formatCopyrightSymbols } from '@/utils/copyright.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
 import { selectLargestImage } from '@/utils/image.ts';
-import TidalProvider from '@/providers/Tidal/mod.ts';
+import type TidalProvider from '@/providers/Tidal/mod.ts';
 
-import type { Album, AlbumItem, Resource, Result, SimpleArtist } from '@/providers/Tidal/v1/api_types.ts';
+import type { Album, AlbumItem, Resource, Result, SimpleArtist } from './api_types.ts';
 import type { ArtistCreditName, HarmonyMedium, HarmonyRelease, HarmonyTrack, Label } from '@/harmonizer/types.ts';
 
 export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
@@ -20,7 +20,7 @@ export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album>
 			countryCode: region || this.provider.defaultRegion,
 		});
 		if (method === 'gtin') {
-			lookupUrl = join(this.apiBaseUrl, `albums/byBarcodeId`);
+			lookupUrl = join(this.apiBaseUrl, 'albums/byBarcodeId');
 			query.append('barcodeId', value);
 		} else { // if (method === 'id')
 			lookupUrl = join(this.apiBaseUrl, 'albums', value);
@@ -43,24 +43,22 @@ export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album>
 			this.options.regions = new Set([this.provider.defaultRegion]);
 		}
 		if (this.lookup.method === 'gtin') {
-			const isValidData = (data: Result<Album>) => {
-				return Boolean(data?.data?.length);
-			};
-			const result = await this.queryAllRegions<Result<Album>>(isValidData);
+			const result = await this.queryAllRegions<Result<Album>>({
+				isValidData: (data) => Boolean(data?.data?.length),
+			});
 			if (result.data.length > 1) {
 				this.warnMultipleResults(result.data.slice(1).map((release) => release.resource.tidalUrl));
 			}
 			return result.data[0].resource;
 		} else {
-			const isValidData = (data: Resource<Album>) => {
-				return Boolean(data?.resource);
-			};
-			// If this was a 404 not found error, ignore it and try next region.
-			const isCriticalError = (error: unknown) => {
-				const { response } = error as { response?: Response };
-				return response?.status !== 404;
-			};
-			const result = await this.queryAllRegions<Resource<Album>>(isValidData, isCriticalError);
+			const result = await this.queryAllRegions<Resource<Album>>({
+				isValidData: (data) => Boolean(data?.resource),
+				isCriticalError: (error: unknown) => {
+					// If this was a 404 not found error, ignore it and try next region.
+					const { response } = error as { response?: Response };
+					return response?.status !== 404;
+				},
+			});
 			return result.resource;
 		}
 	}
@@ -78,10 +76,9 @@ export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album>
 
 		while (true) {
 			url.search = query.toString();
-			const { content, timestamp }: CacheEntry<Result<AlbumItem>> = await this.provider.query(
-				url,
-				this.options.snapshotMaxTimestamp,
-			);
+			const { content, timestamp }: CacheEntry<Result<AlbumItem>> = await this.provider.query(url, {
+				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+			});
 			tracklist.push(...content.data.map((r) => r.resource));
 			this.updateCacheTime(timestamp);
 			if (!content.metadata.total || content.metadata.total <= tracklist.length) {
