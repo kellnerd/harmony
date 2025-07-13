@@ -7,7 +7,7 @@ type APIResponse = {
 } & TrackingParams;
 
 export type Album = {
-	contents?: Renderer<'TwoColumnBrowseResults'>;
+	contents: Renderer<'TwoColumnBrowseResults'>;
 	microformat: Renderer<'MicroformatData'>;
 	background?: Renderer<'MusicThumbnail'>;
 } & APIResponse;
@@ -87,6 +87,7 @@ export type Nodes = {
 			| Renderer<'MusicShelf'>
 			| Renderer<'MusicPlaylistShelf'>
 			| Renderer<'MusicResponsiveHeader'>
+			| Renderer<'MusicCarouselShelf'>
 		)[];
 	};
 	/** @see https://github.com/LuanRT/YouTube.js/blob/v14.0.0/src/parser/classes/ItemSection.ts */
@@ -138,6 +139,30 @@ export type Nodes = {
 	MusicCardShelfHeaderBasic: unknown;
 	/** @see https://github.com/LuanRT/YouTube.js/blob/v14.0.0/src/parser/classes/MusicItemThumbnailOverlay.ts */
 	MusicItemThumbnailOverlay: unknown;
+	/** @see https://github.com/LuanRT/YouTube.js/blob/v14.0.0/src/parser/classes/MusicCarouselShelf.ts */
+	MusicCarouselShelf: {
+		header: Renderer<'MusicCarouselShelfBasicHeader'>;
+		contents: Renderer<'MusicTwoRowItem'>[];
+	};
+	/** @see https://github.com/LuanRT/YouTube.js/blob/v14.0.0/src/parser/classes/MusicCarouselShelfBasicHeader.ts */
+	MusicCarouselShelfBasicHeader: {
+		title: YTText;
+		accessibilityData?: {
+			accessibilityData: {
+				label?: string;
+			};
+		};
+	};
+	/** @see https://github.com/LuanRT/YouTube.js/blob/v14.0.0/src/parser/classes/MusicTwoRowItem.ts */
+	MusicTwoRowItem: {
+		thumbnailRenderer?: Renderer<'MusicThumbnail'>;
+		aspectRatio?: string;
+		title: YTText;
+		subtitle?: YTText;
+		navigationEndpoint: BrowseEndpoint;
+		menu?: Renderer<'Menu'>;
+		thumbnailOverlay: Renderer<'MusicItemThumbnailOverlay'>;
+	};
 	/** @see https://github.com/LuanRT/YouTube.js/blob/v14.0.0/src/parser/classes/MusicResponsiveListItem.ts */
 	MusicResponsiveListItem: {
 		thumbnail: Renderer<'MusicThumbnail'>;

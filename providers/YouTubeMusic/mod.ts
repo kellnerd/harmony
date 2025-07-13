@@ -322,7 +322,7 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 
 		const header = album
 			.contents
-			?.twoColumnBrowseResultsRenderer
+			.twoColumnBrowseResultsRenderer
 			.tabs
 			.at(0)
 			?.tabRenderer
@@ -342,7 +342,7 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 
 		const albumTrackData = album
 			.contents
-			?.twoColumnBrowseResultsRenderer
+			.twoColumnBrowseResultsRenderer
 			.secondaryContents
 			.sectionListRenderer
 			.contents
@@ -353,7 +353,7 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 
 		const playlistTrackData = playlist
 			.contents
-			?.twoColumnBrowseResultsRenderer
+			.twoColumnBrowseResultsRenderer
 			.secondaryContents
 			.sectionListRenderer
 			.contents
@@ -436,6 +436,25 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 				// Leave releaseYear undefined
 			}
 			release.releaseDate = { year: releaseYear };
+		}
+
+		const otherVersions = album
+			.contents
+			?.twoColumnBrowseResultsRenderer
+			.secondaryContents.sectionListRenderer
+			.contents
+			.filter((renderer) => 'musicCarouselShelfRenderer' in renderer)
+			.find((shelf) =>
+				// TODO: Try to make this be independent of the returned language
+				shelf.musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.title.runs.at(0)?.text ===
+					'Other versions'
+			)
+			?.musicCarouselShelfRenderer.contents
+			.map((item) => item.musicTwoRowItemRenderer.navigationEndpoint.browseEndpoint.browseId)
+			.map((id) => this.provider.constructUrl({ id, type: BROWSE }));
+
+		if (otherVersions) {
+			this.warnMultipleResults(otherVersions);
 		}
 
 		return release;
@@ -528,8 +547,9 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 		}, 0);
 
 		// TODO: WIP code for fetching data from the "View song credits" popup
-		// Can be used to improve artist credits,
+		// Could be used to improve artist credits,
 		// and to get the videoId of the actual song (instead of the MV) instead of parsing it from the playlist contents
+		// Using this would however require an additional API call per track
 		const creditsEndpoint = item
 			.musicResponsiveListItemRenderer
 			.menu

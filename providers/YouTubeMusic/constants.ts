@@ -33,8 +33,6 @@ export const YOUTUBEI_BODY = {
 			platform: 'DESKTOP',
 			clientFormFactor: 'UNKNOWN_FORM_FACTOR',
 			userInterfaceTheme: 'USER_INTERFACE_THEME_LIGHT',
-			timeZone: 'Europe/Berlin',
-			originalUrl: 'https://www.youtube.com',
 			deviceMake: '',
 			deviceModel: '',
 			browserName: 'Edge Chromium',
