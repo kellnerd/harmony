@@ -82,6 +82,29 @@ describe('Tidal provider', () => {
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
 			},
 		}, {
+			description: 'single by two artists (v2 API)',
+			release: new URL('https://tidal.com/album/381265361'),
+			options: {
+				// Use data from an old snapshot which was made when the original v2 API was still live.
+				snapshotMaxTimestamp: 1740781974,
+				regions: new Set(['GB']),
+			},
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
+				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
+				assert(release.images?.length === 1, 'Release should have a cover');
+				assert(!release.info.providers[0].apiUrl?.includes('coverArt'), 'API URL should not contain coverArt include');
+			},
+		}, {
+			description: 'single by two artists (v2 API, with include=coverArt)',
+			release: new URL('https://tidal.com/album/381265361'),
+			assert: (release) => {
+				assert(release.images?.length === 1, 'Release should have a cover');
+				assert(release.info.providers[0].apiUrl?.includes('coverArt'), 'API URL should contain coverArt include');
+			},
+		}, {
 			description: 'lyric video (v2 API)',
 			release: new URL('https://tidal.com/video/358461354'),
 			options: {
