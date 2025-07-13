@@ -220,6 +220,7 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 
 		this.updateCacheTime(timestamp);
 
+		// The main list of search results
 		const tab = content
 			.contents
 			.tabbedSearchResultsRenderer
@@ -231,9 +232,14 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 			?.content
 			.sectionListRenderer
 			.contents
+			// Search results are grouped into music shelfs.
+			// Since we filtered the search by albums,
+			// we only care about the first (and only) music shelf
 			.find((renderer) => 'musicShelfRenderer' in renderer)
 			?.musicShelfRenderer
 			.contents
+			// The first (and usually only) item in the music in the shelf
+			// is the album we are looking for
 			.at(0)
 			?.musicResponsiveListItemRenderer
 			.navigationEndpoint
@@ -253,6 +259,7 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 		};
 	}
 
+	/** Fetch a YouTube Music album by its browse ID */
 	async fetchAlbum(albumId: string) {
 		const { content, timestamp } = await this.provider.browse<Album>(albumId)
 			.catch((reason) => {
@@ -267,6 +274,7 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 		return content;
 	}
 
+	/** Fetch a YouTube Music playlist by its playlist ID */
 	async fetchPlaylist(playlistId: string) {
 		const { content, timestamp } = await this.provider.browse<Playlist>(`VL${playlistId}`)
 			.catch((reason) => {
@@ -281,6 +289,7 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 		return content;
 	}
 
+	/** Extract and fetch the corresponding playlist of an album */
 	async playlistFromAlbum(album: Album) {
 		const { id } = this.provider.extractEntityFromUrl(
 			new URL(album.microformat.microformatDataRenderer.urlCanonical),
@@ -289,6 +298,10 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 		return await this.fetchPlaylist(id);
 	}
 
+	/**
+	 * Extract and fetch the corresponding album of a playlist, if it exists.
+	 * Throws a ProviderError otherwise.
+	 */
 	async albumFromPlaylist(playlistId: string) {
 		// cbrd=1 seems to skip the privacy consent screen
 		const { content, timestamp } = await this.provider.extractEmbeddedJson(
@@ -314,12 +327,19 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 	}
 
 	protected override convertRawRelease({ album, playlist }: YouTubeMusicRelease) {
+		const url = album.microformat.microformatDataRenderer.urlCanonical;
+
 		if (!this.entity) {
 			this.entity = this.provider.extractEntityFromUrl(
-				new URL(album.microformat.microformatDataRenderer.urlCanonical),
+				new URL(url),
 			);
 		}
 
+		/**
+		 * The header contains the main metadata about the album.
+		 * It's mostly what's shown on the left half of an album screen
+		 * on the YouTube Music web UI.
+		 */
 		const header = album
 			.contents
 			.twoColumnBrowseResultsRenderer
@@ -393,7 +413,7 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 			externalLinks: [
 				{
 					// Album URL is always of type https://music.youtube.com/playlist?list=:playlist_id
-					url: album.microformat.microformatDataRenderer.urlCanonical,
+					url,
 					// Set free streaming if every track is (seemingly) streamable
 					types: tracklist.every((track) => track.recording?.externalIds?.length) ? ['free streaming'] : undefined,
 				},
@@ -413,6 +433,7 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 			?.musicThumbnailRenderer
 			.thumbnail
 			.thumbnails
+			// Sort by highest pixel count
 			.sort((a, b) => a.width * a.height - b.width * b.height)
 			.at(-1);
 		if (image) {
@@ -503,12 +524,16 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 	}
 
 	extractTrackData(item: Renderer<'MusicResponsiveListItem'>) {
-		const columns = item.musicResponsiveListItemRenderer.flexColumns.map(
+		// Extract the text run of each flex column.
+		// The flex columns usually are:
+		// - Title (usually with endpoint to video)
+		// - Artist name (usually with endpoint to artist)
+		// - Album name (usually with endpoint to album)
+		const columnTextRuns = item.musicResponsiveListItemRenderer.flexColumns.map(
 			(column) => column.musicResponsiveListItemFlexColumnRenderer.text.runs,
 		);
 
-		item.musicResponsiveListItemRenderer;
-		const titleRun = columns[0][0];
+		const titleRun = columnTextRuns[0][0];
 		const title = titleRun.text;
 
 		let videoId: string | undefined;
@@ -518,10 +543,10 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 			musicVideoType = titleRun.navigationEndpoint.watchEndpoint?.watchEndpointMusicSupportedConfigs?.musicVideoType;
 		}
 
-		const artistRuns = columns[1];
+		const artistRuns = columnTextRuns[1];
 		const artists = artistRuns ? this.extractArtistCredit(artistRuns) : undefined;
 
-		const albumRun = columns.at(2)?.at(0);
+		const albumRun = columnTextRuns.at(2)?.at(0);
 		let albumName: string | undefined;
 		let albumId: string | undefined;
 		if (albumRun) {
@@ -533,11 +558,11 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 
 		const index = item.musicResponsiveListItemRenderer.index?.runs.at(0)?.text;
 
+		// The duration is given in (HH:)MM:SS, which is then parsed manually using the code below
 		const durationString = item.musicResponsiveListItemRenderer.fixedColumns?.at(0)
 			?.musicResponsiveListItemFixedColumnRenderer.text.runs
 			.map((r) => r.text)
 			.join('');
-
 		const duration = durationString?.split(':').reduce((acc, curr) => {
 			try {
 				return acc * 60 + Number.parseInt(curr);
@@ -560,7 +585,6 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 			.filter((endpoint) => 'browseEndpoint' in endpoint)
 			.find((endpoint) => endpoint.browseEndpoint.browseId.startsWith('MPTC'))
 			?.browseEndpoint;
-
 		if (creditsEndpoint) {
 			// await this.provider.browse(creditsEndpoint.browseId);
 		}
