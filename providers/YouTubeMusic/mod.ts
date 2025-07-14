@@ -207,8 +207,11 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 	 * There are
 	 */
 	private async lookupGTIN(): Promise<EntityId> {
+		// YouTube Music doesn't seem to like leading 0s
+		const youtubeGTIN = String(Number(this.lookup.value));
+
 		const { content, timestamp } = await this.provider.search(
-			`"${this.lookup.value}"`,
+			`"${youtubeGTIN}"`,
 			/* Parameter for filtering for albums */ 'EgWKAQIYAWoSEAMQBBAJEA4QChAFEBEQEBAV',
 		)
 			.catch((reason) => {
