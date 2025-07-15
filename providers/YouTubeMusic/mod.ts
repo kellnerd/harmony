@@ -462,23 +462,29 @@ export class YouTubeMusicReleaseLookup extends ReleaseLookup<YouTubeMusicProvide
 			release.releaseDate = { year: releaseYear };
 		}
 
-		const otherVersions = album
-			.contents
-			?.twoColumnBrowseResultsRenderer
-			.secondaryContents.sectionListRenderer
-			.contents
-			.filter((renderer) => 'musicCarouselShelfRenderer' in renderer)
-			.find((shelf) =>
-				// TODO: Try to make this be independent of the returned language
-				shelf.musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.title.runs.at(0)?.text ===
-					'Other versions'
-			)
-			?.musicCarouselShelfRenderer.contents
-			.map((item) => item.musicTwoRowItemRenderer.navigationEndpoint.browseEndpoint.browseId)
-			.map((id) => this.provider.constructUrl({ id, type: BROWSE }));
+		// If lookup method is gtin, warn if album has multiple versions,
+		// as YouTube doesn't reliably return the correct version in this case
+		if (this.lookup.method === 'gtin') {
+			const musicCarouselShelfs = album
+				.contents
+				?.twoColumnBrowseResultsRenderer
+				.secondaryContents.sectionListRenderer
+				.contents
+				.filter((renderer) => 'musicCarouselShelfRenderer' in renderer);
 
-		if (otherVersions) {
-			this.warnMultipleResults(otherVersions);
+			// Usually, musicCarouselShelfs is just "Releases for you"
+			// If there are two musicCarouselShelfs, the first one is "Other versions"
+			// and the second one is "Releases for you"
+			if (musicCarouselShelfs.length === 2) {
+				const otherVersions = musicCarouselShelfs[0]
+					.musicCarouselShelfRenderer.contents
+					.map((item) => item.musicTwoRowItemRenderer.navigationEndpoint.browseEndpoint.browseId)
+					.map((id) => this.provider.constructUrl({ id, type: BROWSE }));
+
+				this.warnMultipleResults(otherVersions);
+			} else if (musicCarouselShelfs.length > 2) {
+				this.addMessage('More than 2 music carousel shelfs found in release page', 'warning');
+			}
 		}
 
 		return release;
