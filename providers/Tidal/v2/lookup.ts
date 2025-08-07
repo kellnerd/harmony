@@ -261,7 +261,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			artists: this.getTrackArtists(track, artistMap),
 			type: track.type === 'videos' ? 'video' : 'audio',
 			recording: {
-				externalIds: this.provider.makeExternalIds({ type: 'track', id: track.id }),
+				externalIds: this.provider.makeExternalIds({ type: track.type === 'videos' ? 'video' : 'track', id: track.id }),
 			},
 		};
 	}

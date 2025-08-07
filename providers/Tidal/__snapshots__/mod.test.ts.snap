@@ -650,7 +650,7 @@ snapshot[`Tidal provider > release lookup > lyric video (v2 API) 1`] = `
               {
                 id: "358461354",
                 provider: "tidal",
-                type: "track",
+                type: "video",
               },
             ],
           },
