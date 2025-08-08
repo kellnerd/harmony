@@ -1,6 +1,6 @@
 import { type EntityType, entityTypes } from '@kellnerd/musicbrainz/data/entity';
 import { assert } from 'std/assert/assert.ts';
-import { validate } from '@std/uuid';
+import { validate } from '@std/uuid/common';
 
 const MBID_LENGTH = 36;
 
