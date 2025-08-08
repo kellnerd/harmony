@@ -5,7 +5,7 @@
 ## Features
 
 - Lookup of release metadata from multiple sources by URL and/or GTIN
-- Metadata providers convert source data into a common, harmonized representation
+- Metadata [providers](providers/) convert source data into a common, harmonized representation
 - Additional sources can be supported by adding more provider implementations
 - Merging of harmonized metadata from your preferred providers
 - Seeding of [MusicBrainz] releases using the merged metadata
