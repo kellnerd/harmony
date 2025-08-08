@@ -20,7 +20,7 @@ setup({
 	loggers: {
 		'harmony.lookup': {
 			handlers: ['default'],
-			level: 'DEBUG', // temporary
+			level: 'INFO',
 		},
 		'harmony.mbid': {
 			handlers: ['default'],
