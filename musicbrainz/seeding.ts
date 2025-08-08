@@ -196,8 +196,8 @@ function buildAnnotation(release: HarmonyRelease, include: AnnotationIncludes = 
 }
 
 function buildEditNote(info: ReleaseInfo, options: ReleaseSeedOptions): string {
-	const lines = info.providers.map(({ name, url, apiUrl }) => {
-		let line = `* ${name}: ${url}`;
+	const lines = info.providers.map(({ name, isTemplate, url, apiUrl }) => {
+		let line = `* ${name}${isTemplate ? ' (template)' : ''}: ${url}`;
 		if (apiUrl) line += ` (API: ${apiUrl})`;
 		return line;
 	});
