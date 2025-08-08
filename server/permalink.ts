@@ -32,11 +32,7 @@ export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
 
 	// Finally add the template providers and their IDs.
 	for (const provider of providersUsedAsTemplate) {
-		// We only accept MusicBrainz releases as templates for now.
-		const templateProvider = 'musicbrainz';
-		if (provider.internalName === templateProvider) {
-			state.append('template', provider.id);
-		}
+		state.append(`${provider.internalName}!`, provider.id);
 	}
 
 	// If a region has been used for lookup, it should be the same for all providers.

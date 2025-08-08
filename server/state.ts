@@ -46,26 +46,30 @@ export function extractReleaseLookupState(lookupUrl: URL, headers?: Headers): Re
 
 	const category = searchParams.get('category');
 	const requestedProviders = new Set(category ? providers.filterInternalNamesByCategory(category, cookies) : undefined);
+	const templateProviders = new Set<string>();
 
 	const providerNames = providers.internalNames;
 	const providerIds: ProviderNameAndId[] = [];
-	for (const [name, value] of searchParams) {
+	for (let [name, value] of searchParams) {
 		if (providerNames.has(name)) {
 			requestedProviders.add(name);
 			if (value) {
 				providerIds.push([name, value]);
 			}
+		} else if (name.endsWith('!')) {
+			// Internal provider names are alphanumeric, the `!` suffix indicates a template provider.
+			name = name.slice(0, -1);
+			// Only a specific release with an ID (value) is allowed to be used as a template.
+			if (value && providerNames.has(name)) {
+				// We only accept MusicBrainz releases as templates for now.
+				if (name !== 'musicbrainz') {
+					continue;
+				}
+				templateProviders.add(name);
+				requestedProviders.add(name);
+				providerIds.push([name, value]);
+			}
 		}
-	}
-
-	const templateProviders = new Set<string>();
-	const templateId = searchParams.get('template');
-	if (templateId) {
-		// We only accept MusicBrainz releases as templates for now.
-		const templateProvider = 'musicbrainz';
-		templateProviders.add(templateProvider);
-		requestedProviders.add(templateProvider);
-		providerIds.push([templateProvider, templateId]);
 	}
 
 	const ts = searchParams.get('ts');
