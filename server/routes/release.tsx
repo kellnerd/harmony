@@ -65,7 +65,7 @@ export default defineRoute(async (req, ctx) => {
 			}
 
 			const mbInfo = release.info.providers.find((provider) => provider.name === 'MusicBrainz');
-			if (mbInfo) {
+			if (mbInfo && !mbInfo.isTemplate) {
 				existingMBID = mbInfo.id;
 				release.info.messages.push({
 					text: `Release with GTIN ${
