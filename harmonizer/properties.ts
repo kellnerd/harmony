@@ -1,4 +1,4 @@
-import type { HarmonyRelease } from './types.ts';
+import type { HarmonyRelease, HarmonyTrack } from './types.ts';
 
 /** Release properties which can be combined from data of multiple providers. */
 export const combinableReleaseProperties: Array<keyof HarmonyRelease> = [
@@ -33,5 +33,9 @@ export const immutableReleaseProperties = [
 export const immutableTrackProperties = [
 	'isrc',
 	'length',
-	'recording',
 ] as const;
+
+/** Track properties which can be combined from data of multiple providers. */
+export const combinableTrackProperties: Array<keyof HarmonyTrack> = [
+	'recording',
+];

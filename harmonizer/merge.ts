@@ -241,20 +241,19 @@ export function mergeRelease(
 	// Keep external recording IDs from all providers.
 	mergedRelease.media.forEach((medium, mediumIndex) => {
 		medium.tracklist.forEach((track, trackIndex) => {
-			if (track.recording) { // should exist by now
-				const sourceRecordings = availableSourceReleases
-					.filter((release) => release.media.length)
-					.flatMap((release) => release.media[mediumIndex].tracklist[trackIndex].recording)
-					.filter(isDefined);
-				const recordingIds = sourceRecordings.flatMap((recording) => recording.externalIds ?? []);
-				if (recordingIds) {
-					track.recording.externalIds = recordingIds;
-				}
-				// Keep recording MBID if it is unique across all sources.
-				const recordingMbids = sourceRecordings.map((recording) => recording.mbid).filter(isDefined);
-				if (new Set(recordingMbids).size === 1) {
-					track.recording.mbid = recordingMbids[0];
-				}
+			track.recording = {};
+			const sourceRecordings = availableSourceReleases
+				.filter((release) => release.media.length)
+				.flatMap((release) => release.media[mediumIndex].tracklist[trackIndex].recording)
+				.filter(isDefined);
+			const recordingIds = sourceRecordings.flatMap((recording) => recording.externalIds ?? []);
+			if (recordingIds) {
+				track.recording.externalIds = recordingIds;
+			}
+			// Keep recording MBID if it is unique across all sources.
+			const recordingMbids = sourceRecordings.map((recording) => recording.mbid).filter(isDefined);
+			if (new Set(recordingMbids).size === 1) {
+				track.recording.mbid = recordingMbids[0];
 			}
 		});
 	});
