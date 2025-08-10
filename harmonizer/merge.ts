@@ -95,6 +95,7 @@ export function mergeRelease(
 	// Phase 1: Clone properties without specific provider preferences
 	for (const providerName of availableProviders) {
 		const sourceRelease = releaseMap[providerName] as HarmonyRelease;
+		const sourceIsTemplate = sourceRelease.info.providers[0].isTemplate;
 
 		// Clone missing properties into the merge target and keep track of their sources.
 		missingReleaseProperties.forEach((property) => {
@@ -102,7 +103,14 @@ export function mergeRelease(
 
 			if (isFilled(value)) {
 				mergedRelease.info.sourceMap![property] = providerName;
-				missingReleaseProperties.delete(property);
+				if (!sourceIsTemplate) {
+					// Template data is still allowed to be overwritten by other providers.
+					// FIXME: Least preferred template would overwrite earlier templates.
+					// Unproblematic as long as there can be only one (MB) template release.
+					// TODO: We need the negative counterpart of provider preferences for this.
+					// It would be useful to de-prioritize/down-rank templates and bad sources (e.g. iTunes ACs).
+					missingReleaseProperties.delete(property);
+				}
 			}
 		});
 
@@ -120,7 +128,9 @@ export function mergeRelease(
 				// Filling each track separately using data from multiple providers leads to potentially inconsistent data.
 				if (mergedRelease.media.some((medium) => medium.tracklist.some((track) => isFilled(track[property])))) {
 					mergedRelease.info.sourceMap![property] = providerName;
-					missingTrackProperties.delete(property);
+					if (!sourceIsTemplate) {
+						missingTrackProperties.delete(property);
+					}
 				}
 			});
 		}
@@ -171,6 +181,7 @@ export function mergeRelease(
 
 				for (const providerName of availableProviders) {
 					const sourceRelease = releaseMap[providerName] as HarmonyRelease;
+					const sourceIsTemplate = sourceRelease.info.providers[0].isTemplate;
 
 					if (isTrackProperty(property)) {
 						if (!sourceRelease.media.length) continue;
@@ -183,14 +194,18 @@ export function mergeRelease(
 
 						if (mergedRelease.media.some((medium) => medium.tracklist.some((track) => isFilled(track[property])))) {
 							mergedRelease.info.sourceMap![property] = providerName;
-							break;
+							if (!sourceIsTemplate) {
+								break;
+							}
 						}
 					} else {
 						const value = cloneInto(mergedRelease, sourceRelease, property);
 
 						if (isFilled(value)) {
 							mergedRelease.info.sourceMap![property] = providerName;
-							break;
+							if (!sourceIsTemplate) {
+								break;
+							}
 						}
 					}
 				}
