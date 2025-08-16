@@ -1,0 +1,9 @@
+export const snapshot = {};
+
+snapshot[`formatTracklist > formats tracks with default options 1`] = `
+"1. Track only has a title
+2. Track with rounded length (2:04)
+4. Track with a single artist - Artist (3:51)
+B7. Track with multiple artists - Artist 1, Artist 2 & Artist 3 (0:42)
+123. Track with artist credit names and join phrase - Credit 1 feat. Artist 2 & Credit 3 (10:54)"
+`;
