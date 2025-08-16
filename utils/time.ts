@@ -1,13 +1,14 @@
 import { assert } from 'std/assert/assert.ts';
 
-export function formatDuration(ms: number | undefined, {
-	showMs = false,
+export function formatDuration(ms: number | undefined, { showMs }: {
+	showMs?: boolean;
 } = {}): string | undefined {
 	if (ms === undefined) return;
 
 	const timeComponents: number[] = [];
 
-	const seconds = Math.floor(ms / 1000);
+	let seconds = ms / 1000;
+	seconds = showMs === false ? Math.round(seconds) : Math.floor(seconds);
 	timeComponents.unshift(seconds % 60);
 
 	const minutes = Math.floor(seconds / 60);
@@ -28,7 +29,7 @@ export function formatDuration(ms: number | undefined, {
 	}).join(':');
 
 	ms %= 1000;
-	if (ms || showMs) {
+	if ((ms && showMs !== false) || showMs) {
 		duration += '.' + ms.toFixed(0).padStart(3, '0');
 	}
 
