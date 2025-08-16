@@ -248,6 +248,12 @@ caption > ul.alt-values {
 	margin: 0 auto;
 }
 
+/* CopyButton.tsx */
+
+button.copy {
+	margin: 0 0.3em;
+}
+
 /* CoverImage.tsx */
 
 figure.cover-image {

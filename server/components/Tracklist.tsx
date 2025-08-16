@@ -3,6 +3,7 @@ import { ArtistCredit } from './ArtistCredit.tsx';
 import { ISRC } from './ISRC.tsx';
 import { LinkedEntity } from './LinkedEntity.tsx';
 import { SpriteIcon } from './SpriteIcon.tsx';
+import { CopyTracklistButton } from '@/server/islands/CopyButton.tsx';
 
 import { pluralWithCount } from '@/utils/plural.ts';
 import { mapValues } from '@/utils/record.ts';
@@ -35,6 +36,7 @@ export function Tracklist({ medium, mediumMap, showTitle = false }: TracklistPro
 			{showTitle && (
 				<caption>
 					{mediumCaption(medium)}
+					<CopyTracklistButton tracks={medium.tracklist} />
 					<AlternativeValues property={mediumCaption} />
 				</caption>
 			)}

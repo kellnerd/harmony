@@ -1,10 +1,13 @@
+import type { HarmonyTrack } from '@/harmonizer/types.ts';
+import { formatTracklist } from '@/musicbrainz/tracklist.ts';
 import { Button } from '@/server/components/Button.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 import { useSignal, useSignalEffect } from '@preact/signals';
 
-export function CopyButton({ content, size }: {
+export function CopyButton({ content, size, tooltip = 'Copy to clipboard' }: {
 	content: string;
 	size?: number;
+	tooltip?: string;
 }) {
 	const isCopied = useSignal(false);
 
@@ -27,8 +30,12 @@ export function CopyButton({ content, size }: {
 	});
 
 	return (
-		<Button onClick={copyContent} title={'Copy to clipboard'}>
-			<SpriteIcon name={isCopied.value ? 'copy-check' : 'copy'} size={size} />
+		<Button class={'copy'} onClick={copyContent} title={tooltip}>
+			<SpriteIcon name={isCopied.value ? 'copy-check' : 'copy'} size={size ?? 18} />
 		</Button>
 	);
+}
+
+export function CopyTracklistButton({ tracks }: { tracks: HarmonyTrack[] }) {
+	return <CopyButton content={formatTracklist(tracks)} tooltip={'Copy tracklist to clipboard'} />;
 }
