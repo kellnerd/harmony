@@ -10,6 +10,8 @@ import IconBrandTidal from 'tabler-icons/brand-tidal.tsx';
 import IconAlertTriangle from 'tabler-icons/alert-triangle.tsx';
 import IconBarcode from 'tabler-icons/barcode.tsx';
 import IconBug from 'tabler-icons/bug.tsx';
+import IconCopy from 'tabler-icons/copy.tsx';
+import IconCopyCheck from 'tabler-icons/copy-check.tsx';
 import IconDatabaseEdit from 'tabler-icons/database-edit.tsx';
 import IconDatabaseImport from 'tabler-icons/database-import.tsx';
 import IconDisc from 'tabler-icons/disc.tsx';
@@ -33,6 +35,8 @@ const icons: Icon[] = [
 	IconAlertTriangle,
 	IconBarcode,
 	IconBug,
+	IconCopy,
+	IconCopyCheck,
 	IconDatabaseEdit,
 	IconDatabaseImport,
 	IconDisc,

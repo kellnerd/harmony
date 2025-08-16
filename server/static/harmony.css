@@ -152,6 +152,10 @@ a > svg.icon {
 	width: 18px;
 }
 
+button > svg.icon {
+	vertical-align: middle;
+}
+
 /* forms */
 
 div.row {
@@ -190,16 +194,16 @@ input#region-input {
 	width: 14em;
 }
 
-input[type='submit'] {
+input[type='submit'], button {
 	color: var(--text);
 	background-color: var(--button-fill);
 	border: 2px outset var(--button-border);
 	border-radius: 0.3em;
 }
-input[type='submit']:active {
+input[type='submit']:active, button:active {
 	border-style: inset;
 }
-input[type='submit']:focus, input[type='submit']:hover {
+input[type='submit']:focus, button:focus, input[type='submit']:hover, button:hover {
 	background-color: var(--button-focus);
 }
 

@@ -10,6 +10,7 @@ import * as $index from './routes/index.tsx';
 import * as $release from './routes/release.tsx';
 import * as $release_actions from './routes/release/actions.tsx';
 import * as $settings from './routes/settings.tsx';
+import * as $CopyButton from './islands/CopyButton.tsx';
 import * as $PersistentInput from './islands/PersistentInput.tsx';
 import * as $RegionList from './islands/RegionList.tsx';
 import * as $ReleaseSeeder from './islands/ReleaseSeeder.tsx';
@@ -27,6 +28,7 @@ const manifest = {
 		'./routes/settings.tsx': $settings,
 	},
 	islands: {
+		'./islands/CopyButton.tsx': $CopyButton,
 		'./islands/PersistentInput.tsx': $PersistentInput,
 		'./islands/RegionList.tsx': $RegionList,
 		'./islands/ReleaseSeeder.tsx': $ReleaseSeeder,
