@@ -99,7 +99,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 					<tr>
 						<th>Availability</th>
 						<td>
-							<RegionList regions={regions} />
+							<RegionList regions={regions} heading={'Available Regions'} />
 						</td>
 					</tr>
 				)}
@@ -107,7 +107,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 					<tr>
 						<th>Unavailability</th>
 						<td>
-							<RegionList regions={excludedRegions} />
+							<RegionList regions={excludedRegions} heading={'Excluded Regions'} />
 						</td>
 					</tr>
 				)}

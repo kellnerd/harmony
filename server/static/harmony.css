@@ -259,7 +259,7 @@ button.copy:hover {
 	opacity: 1.0;
 }
 
-td > button.copy:first-child {
+td > button.copy:first-child, div.region-list > button.copy {
 	float: right;
 }
 
@@ -452,8 +452,8 @@ span > svg.icon {
 
 /* RegionList.tsx */
 
-div.region-list > button {
-	margin: 0 0.3em;
+div.region-list > span.label + button {
+	margin-left: 0.3em;
 }
 
 /* Release.tsx */
