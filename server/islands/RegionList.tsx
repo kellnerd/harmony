@@ -1,15 +1,16 @@
 import { Button } from '@/server/components/Button.tsx';
 import { CopyButton } from '@/server/islands/CopyButton.tsx';
+import { formatAvailability } from '@/musicbrainz/annotation.ts';
 import { regionName } from '@/utils/locale.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
-import { flagEmoji, formatRegionList } from '@/utils/regions.ts';
+import { flagEmoji } from '@/utils/regions.ts';
 import { useSignal } from '@preact/signals';
 
 import type { CountryCode } from '@/harmonizer/types.ts';
 
 export default function RegionList({ regions, heading }: {
 	regions: CountryCode[];
-	heading?: string;
+	heading: string;
 }) {
 	const isExpanded = useSignal(false);
 
@@ -46,13 +47,7 @@ export default function RegionList({ regions, heading }: {
 
 export function CopyRegionsButton({ regions, heading }: {
 	regions: CountryCode[];
-	heading?: string;
+	heading: string;
 }) {
-	const sections: string[] = [];
-	if (heading) {
-		sections.push(`=== ${heading} ===`);
-	}
-	sections.push(formatRegionList(regions));
-
-	return <CopyButton content={sections.join('\n\n')} />;
+	return <CopyButton content={formatAvailability(regions, heading).join('\n\n')} />;
 }
