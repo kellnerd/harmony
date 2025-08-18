@@ -6,6 +6,7 @@ import { ProviderList } from './ProviderList.tsx';
 import { ReleaseLabels } from './ReleaseLabels.tsx';
 import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
+import { CopyButton, CopyLinksButton } from '@/server/islands/CopyButton.tsx';
 import RegionList from '@/server/islands/RegionList.tsx';
 
 import { determineReleaseEventCountries } from '@/musicbrainz/release_countries.ts';
@@ -75,11 +76,15 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 					<th>
 						<abbr title='Global Trade Item Number'>GTIN</abbr>
 					</th>
-					<td>{release.gtin || '[unknown]'}</td>
+					<td>
+						{release.gtin || '[unknown]'}
+						{release.gtin && <CopyButton content={release.gtin.toString()} />}
+					</td>
 				</tr>
 				<tr>
 					<th>External links</th>
 					<td>
+						<CopyLinksButton links={release.externalLinks} />
 						<ul>
 							{release.externalLinks.map((link) => (
 								<li>

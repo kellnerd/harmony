@@ -1,4 +1,4 @@
-import type { HarmonyTrack } from '@/harmonizer/types.ts';
+import type { ExternalLink, HarmonyTrack } from '@/harmonizer/types.ts';
 import { formatTracklist } from '@/musicbrainz/tracklist.ts';
 import { Button } from '@/server/components/Button.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
@@ -34,6 +34,10 @@ export function CopyButton({ content, size, tooltip = 'Copy to clipboard' }: {
 			<SpriteIcon name={isCopied.value ? 'copy-check' : 'copy'} size={size ?? 18} />
 		</Button>
 	);
+}
+
+export function CopyLinksButton({ links }: { links: ExternalLink[] }) {
+	return <CopyButton content={links.map((link) => link.url).join('\n')} />;
 }
 
 export function CopyTracklistButton({ tracks }: { tracks: HarmonyTrack[] }) {

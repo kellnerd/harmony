@@ -259,6 +259,10 @@ button.copy:hover {
 	opacity: 1.0;
 }
 
+td > button.copy:first-child {
+	float: right;
+}
+
 /* CoverImage.tsx */
 
 figure.cover-image {
