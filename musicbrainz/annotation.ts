@@ -1,3 +1,4 @@
+import { formatTimestampAsISODate, getMaxCacheTimestamp } from '@/harmonizer/timestamp.ts';
 import type { CountryCode, HarmonyRelease } from '@/harmonizer/types.ts';
 import { formatRegionList } from '@/utils/regions.ts';
 import { determineReleaseEventCountries } from './release_countries.ts';
@@ -28,12 +29,13 @@ export function buildAnnotation(release: HarmonyRelease, include: AnnotationIncl
 		const releaseEventCount = determineReleaseEventCountries(release)?.length;
 		// Skip if all available regions have been preserved as release events.
 		if (availableIn?.length !== releaseEventCount) {
+			const ts = getMaxCacheTimestamp(release.info);
 			// Skip if the list would be the equivalent of one worldwide release event.
 			if (availableIn?.length && releaseEventCount !== 1) {
-				sections.push(...formatAvailability(availableIn, 'Available Regions'));
+				sections.push(...formatAvailability(availableIn, 'Available Regions', ts));
 			}
 			if (excludedFrom?.length) {
-				sections.push(...formatAvailability(excludedFrom, 'Excluded Regions'));
+				sections.push(...formatAvailability(excludedFrom, 'Excluded Regions', ts));
 			}
 		}
 	}
@@ -48,9 +50,9 @@ export function buildAnnotation(release: HarmonyRelease, include: AnnotationIncl
 }
 
 /** Formats the given availability data as sections for a MusicBrainz annotation. */
-export function formatAvailability(regions: CountryCode[], heading: string): string[] {
+export function formatAvailability(regions: CountryCode[], heading: string, ts?: number): string[] {
 	return [
-		`=== ${heading} ===`,
+		`=== ${heading}${ts ? ` (as of ${formatTimestampAsISODate(ts)})` : ''} ===`,
 		formatRegionList(regions),
 	];
 }

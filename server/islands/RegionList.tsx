@@ -8,9 +8,10 @@ import { useSignal } from '@preact/signals';
 
 import type { CountryCode } from '@/harmonizer/types.ts';
 
-export default function RegionList({ regions, heading }: {
+export default function RegionList({ regions, heading, timestamp }: {
 	regions: CountryCode[];
 	heading: string;
+	timestamp?: number;
 }) {
 	const isExpanded = useSignal(false);
 
@@ -38,16 +39,17 @@ export default function RegionList({ regions, heading }: {
 					<Button onClick={() => isExpanded.value = !isExpanded.value}>
 						{isExpanded.value ? 'Collapse' : 'Expand'}
 					</Button>
-					<CopyRegionsButton regions={regions} heading={heading} />
+					<CopyRegionsButton regions={regions} heading={heading} timestamp={timestamp} />
 				</>
 			)}
 		</div>
 	);
 }
 
-export function CopyRegionsButton({ regions, heading }: {
+export function CopyRegionsButton({ regions, heading, timestamp }: {
 	regions: CountryCode[];
 	heading: string;
+	timestamp?: number;
 }) {
-	return <CopyButton content={formatAvailability(regions, heading).join('\n\n')} />;
+	return <CopyButton content={formatAvailability(regions, heading, timestamp).join('\n\n')} />;
 }

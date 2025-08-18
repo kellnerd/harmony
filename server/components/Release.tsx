@@ -9,6 +9,7 @@ import { Tracklist } from './Tracklist.tsx';
 import { CopyButton, CopyLinksButton } from '@/server/islands/CopyButton.tsx';
 import RegionList from '@/server/islands/RegionList.tsx';
 
+import { getMaxCacheTimestamp } from '@/harmonizer/timestamp.ts';
 import { determineReleaseEventCountries } from '@/musicbrainz/release_countries.ts';
 import { formatPartialDate } from '@/utils/date.ts';
 import { formatLanguageConfidence, formatScriptFrequency, regionName } from '@/utils/locale.ts';
@@ -22,6 +23,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
 	const { credits, copyright, labels, language, script, types, info } = release;
+	const ts = getMaxCacheTimestamp(info);
 
 	const AlternativeValues = setupAlternativeValues(releaseMap);
 
@@ -99,7 +101,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 					<tr>
 						<th>Availability</th>
 						<td>
-							<RegionList regions={regions} heading={'Available Regions'} />
+							<RegionList regions={regions} heading={'Available Regions'} timestamp={ts} />
 						</td>
 					</tr>
 				)}
@@ -107,7 +109,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 					<tr>
 						<th>Unavailability</th>
 						<td>
-							<RegionList regions={excludedRegions} heading={'Excluded Regions'} />
+							<RegionList regions={excludedRegions} heading={'Excluded Regions'} timestamp={ts} />
 						</td>
 					</tr>
 				)}
