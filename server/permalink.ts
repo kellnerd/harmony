@@ -1,3 +1,4 @@
+import { getMaxCacheTimestamp } from '@/harmonizer/timestamp.ts';
 import type { ReleaseInfo } from '@/harmonizer/types.ts';
 import { isDefined } from '@/utils/predicate.ts';
 
@@ -9,7 +10,6 @@ export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
 	);
 	const providersUsedAsTemplate = info.providers.filter((provider) => provider.isTemplate);
 	const usedRegion = info.providers.map((provider) => provider.lookup.region).find(isDefined);
-	const cacheTimestamps = info.providers.map((provider) => provider.cacheTime).filter(isDefined);
 
 	// Add provider IDs for all providers which were looked up by ID or URL.
 	const state = new URLSearchParams(
@@ -41,8 +41,8 @@ export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
 	}
 
 	// Maximum timestamp can be used to load the latest snapshot up to this timestamp for each provider.
-	const maxTimestamp = Math.max(...cacheTimestamps);
-	if (Number.isSafeInteger(maxTimestamp)) {
+	const maxTimestamp = getMaxCacheTimestamp(info);
+	if (maxTimestamp) {
 		state.append('ts', maxTimestamp.toFixed(0));
 	}
 

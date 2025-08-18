@@ -1,6 +1,6 @@
 import { ProviderIcon } from './ProviderIcon.tsx';
 
-import { formatTimestampAsISOString } from '@/utils/time.ts';
+import { formatTimestampAsISOString } from '@/harmonizer/timestamp.ts';
 import type { ProviderInfo } from '@/harmonizer/types.ts';
 
 export function ProviderList({ providers }: { providers: ProviderInfo[] }) {

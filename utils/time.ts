@@ -1,5 +1,4 @@
-import { assert } from 'std/assert/assert.ts';
-
+/** Formats milliseconds as colon-separated duration string. */
 export function formatDuration(ms: number | undefined, { showMs }: {
 	showMs?: boolean;
 } = {}): string | undefined {
@@ -34,15 +33,6 @@ export function formatDuration(ms: number | undefined, { showMs }: {
 	}
 
 	return duration;
-}
-
-export function formatTimestampAsISOString(unixSeconds: number): string {
-	return new Date(unixSeconds * 1000).toISOString().replace('.000', '');
-}
-
-/** Asserts that the given number is a valid timestamp. */
-export function assertTimestamp(ts: number) {
-	assert(Number.isSafeInteger(ts) && ts >= 0, 'Timestamp has to be a non-negative integer');
 }
 
 /** Converts an ISO-8601 duration (e.g. PT41M5S) to milliseconds. */

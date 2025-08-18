@@ -1,10 +1,10 @@
 import type { ReleaseLookupParameters } from '@/lookup.ts';
+import { assertTimestamp } from '@/harmonizer/timestamp.ts';
 import type { CountryCode, ProviderNameAndId, ReleaseOptions } from '@/harmonizer/types.ts';
 import { providers } from '@/providers/mod.ts';
 import { ensureValidGTIN } from '@/utils/gtin.ts';
 import { isNotEmpty } from '@/utils/predicate.ts';
 import { assertCountryCode } from '@/utils/regions.ts';
-import { assertTimestamp } from '@/utils/time.ts';
 import { getCookies } from 'std/http/cookie.ts';
 
 /** Default regions which will be used for lookups if no regions could be obtained otherwise. */
