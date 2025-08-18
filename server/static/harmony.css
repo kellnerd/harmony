@@ -251,7 +251,12 @@ caption > ul.alt-values {
 /* CopyButton.tsx */
 
 button.copy {
-	margin: 0 0.3em;
+	background: none;
+	border: none;
+	opacity: 0.7;
+}
+button.copy:hover {
+	opacity: 1.0;
 }
 
 /* CoverImage.tsx */
