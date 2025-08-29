@@ -11,7 +11,7 @@ export interface AlternativeValueProps<Root, Value> {
 
 export function setupAlternativeValues<Root>(providerMap: Record<ProviderName, Root> | undefined) {
 	if (!providerMap) {
-		return () => <></>;
+		return () => null;
 	}
 
 	return function AlternativeValues<Value,>({ property, display, identifier }: AlternativeValueProps<Root, Value>) {
@@ -23,14 +23,14 @@ export function setupAlternativeValues<Root>(providerMap: Record<ProviderName, R
 						([value, providerNames]) => (
 							<li>
 								{display ? display(value) : value}
-								{providerNames.map((name) => <ProviderIcon providerName={name} stroke={1.25} />)}
+								{providerNames.map((name) => <ProviderIcon providerName={name} stroke={1.25} key={name} />)}
 							</li>
 						),
 					)}
 				</ul>
 			);
 		} else {
-			return <></>;
+			return null;
 		}
 	};
 }

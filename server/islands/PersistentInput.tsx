@@ -12,6 +12,7 @@ function persistInStorage(key: string, value: Signal<string>) {
 	}
 
 	// Persist input value every time it changes.
+	// deno-lint-ignore react-rules-of-hooks -- Reusable custom hook function
 	useSignalEffect(() => localStorage.setItem(key, value.value));
 }
 
@@ -21,6 +22,7 @@ function makeKey(...names: Array<string | undefined>) {
 
 function persistAsCookie(name: string, value: Signal<string>) {
 	// Set persistent cookie (for 1 year) every time the value changes.
+	// deno-lint-ignore react-rules-of-hooks -- Reusable custom hook function
 	useSignalEffect(() => setCookie(name, value.value, 'Max-Age=31536000', 'SameSite=Lax'));
 }
 

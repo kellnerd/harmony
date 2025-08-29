@@ -217,7 +217,7 @@ export default defineRoute(async (req, ctx) => {
 						</div>
 					</div>
 				)}
-				{allImages.map((artwork) => <CoverImage artwork={artwork} />)}
+				{allImages.map((artwork) => <CoverImage artwork={artwork} key={artwork.url} />)}
 				{allRecordings.map((recording) => (
 					<LinkWithMusicBrainz
 						entity={recording}

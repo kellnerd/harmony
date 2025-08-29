@@ -7,7 +7,7 @@ export function MagicISRC({ release, targetMbid }: { release: HarmonyRelease; ta
 	const isrcSource = release.info.sourceMap?.isrc;
 	const isrcProvider = release.info.providers.find((provider) => provider.name === isrcSource);
 	if (!(allTracks.some((track) => track.isrc) && isrcProvider)) {
-		return <></>;
+		return null;
 	}
 
 	const query = new URLSearchParams(

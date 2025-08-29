@@ -36,8 +36,8 @@ export default function Settings() {
 			</div>
 			<h3>Annotation Content</h3>
 			<p>Select additional information which can’t be imported directly and should be added to the annotation.</p>
-			<CheckboxSettingRow name='annotation.copyright' label='Copyright lines' defaultValue={true} />
-			<CheckboxSettingRow name='annotation.credits' label='Release credits' defaultValue={true} />
+			<CheckboxSettingRow name='annotation.copyright' label='Copyright lines' defaultValue />
+			<CheckboxSettingRow name='annotation.credits' label='Release credits' defaultValue />
 			<CheckboxSettingRow name='annotation.availability' label='Lists of available and excluded regions' />
 			<h3>Importer Behavior</h3>
 			<TextSettingRow name='seeder.target' label='Seeder target' defaultValue='_blank'>
@@ -54,7 +54,7 @@ export default function Settings() {
 					</ul>
 				</Tooltip>
 			</TextSettingRow>
-			<CheckboxSettingRow name='seeder.redirect' label='Redirect to Release Actions after import' defaultValue={true} />
+			<CheckboxSettingRow name='seeder.redirect' label='Redirect to Release Actions after import' defaultValue />
 		</main>
 	);
 }

@@ -30,7 +30,7 @@ export function CopyButton({ content, size, tooltip = 'Copy to clipboard' }: {
 	});
 
 	return (
-		<Button class={'copy'} onClick={copyContent} title={tooltip}>
+		<Button class='copy' onClick={copyContent} title={tooltip}>
 			<SpriteIcon name={isCopied.value ? 'copy-check' : 'copy'} size={size ?? 18} />
 		</Button>
 	);
@@ -41,5 +41,5 @@ export function CopyLinksButton({ links }: { links: ExternalLink[] }) {
 }
 
 export function CopyTracklistButton({ tracks }: { tracks: HarmonyTrack[] }) {
-	return <CopyButton content={formatTracklist(tracks)} tooltip={'Copy tracklist to clipboard'} />;
+	return <CopyButton content={formatTracklist(tracks)} tooltip='Copy tracklist to clipboard' />;
 }

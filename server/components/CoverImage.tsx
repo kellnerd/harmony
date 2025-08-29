@@ -16,7 +16,7 @@ export function CoverImage({ artwork }: { artwork: Artwork }) {
 			</a>
 			<figcaption>
 				{artwork.comment}
-				{artwork.types?.map((type) => <span class='label'>Type: {type}</span>)}
+				{artwork.types?.map((type) => <span class='label' key={type}>Type: {type}</span>)}
 				<span class='label'>
 					Source: {provider
 						? (

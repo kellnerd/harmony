@@ -37,7 +37,7 @@ export function ReleaseSeeder({ release, sourceUrl, targetUrl, projectUrl }: {
 			name={isUpdate ? 'release-update-seeder' : 'release-seeder'}
 		>
 			{Object.entries(seed).flatMap(([key, valueOrValues]) => {
-				return preferArray(valueOrValues).map((value) => <input type='hidden' name={key} value={value} />);
+				return preferArray(valueOrValues).map((value) => <input type='hidden' name={key} value={value} key={key} />);
 			})}
 			<InputWithOverlay
 				type='submit'

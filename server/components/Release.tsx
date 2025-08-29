@@ -29,7 +29,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 
 	return (
 		<div class='release'>
-			{info.messages.map((message) => <MessageBox message={message} />)}
+			{info.messages.map((message, index) => <MessageBox message={message} key={index} />)}
 			<h2 class='release-title'>{release.title}</h2>
 			<AlternativeValues property={(release) => release.title} />
 			<div class='release-artist'>
@@ -91,7 +91,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 							{release.externalLinks.map((link) => (
 								<li>
 									<a href={link.url}>{new URL(link.url).hostname}</a>
-									{link.types?.map((type) => <span class='label ml-1'>{type}</span>)}
+									{link.types?.map((type) => <span class='label ml-1' key={type}>{type}</span>)}
 								</li>
 							))}
 						</ul>
@@ -101,7 +101,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 					<tr>
 						<th>Availability</th>
 						<td>
-							<RegionList regions={regions} heading={'Available Regions'} timestamp={ts} />
+							<RegionList regions={regions} heading='Available Regions' timestamp={ts} />
 						</td>
 					</tr>
 				)}
@@ -109,7 +109,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 					<tr>
 						<th>Unavailability</th>
 						<td>
-							<RegionList regions={excludedRegions} heading={'Excluded Regions'} timestamp={ts} />
+							<RegionList regions={excludedRegions} heading='Excluded Regions' timestamp={ts} />
 						</td>
 					</tr>
 				)}
@@ -176,18 +176,20 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 						<th>Sources</th>
 						<td>
 							<ul>
-								{Object.entries(info.sourceMap!).map(([property, source]) => <li>{property}: {source}</li>)}
+								{Object.entries(info.sourceMap!).map(([property, source]) => (
+									<li key={property}>{property}: {source}</li>
+								))}
 							</ul>
 						</td>
 					</tr>
 				)}
 			</table>
-			{release.images?.map((artwork) => <CoverImage artwork={artwork} />)}
+			{release.images?.map((artwork) => <CoverImage artwork={artwork} key={artwork.url} />)}
 			{release.media.map((medium, index) => (
 				<Tracklist
 					medium={medium}
 					mediumMap={releaseMap && mapValues(releaseMap, (release) => release.media[index])}
-					showTitle={true}
+					showTitle
 				/>
 			))}
 		</div>
