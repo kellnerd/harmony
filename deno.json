@@ -4,6 +4,7 @@
 		"jsxImportSource": "preact"
 	},
 	"fmt": {
+		"exclude": ["**/*.svg"],
 		"lineWidth": 120,
 		"proseWrap": "preserve",
 		"singleQuote": true,
