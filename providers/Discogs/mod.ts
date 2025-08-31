@@ -1,0 +1,146 @@
+import type {
+	ArtistCreditName,
+	EntityId,
+	HarmonyRelease,
+	HarmonyTrack,
+	Label as HarmonyLabel,
+	LinkType,
+} from '@/harmonizer/types.ts';
+import { ApiQueryOptions, CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
+import { FeatureQualityMap } from '@/providers/features.ts';
+import { parseHyphenatedDate } from '@/utils/date.ts';
+import { cleanBarcode, uniqueGtinSet } from '@/utils/gtin.ts';
+import type { Artist, Identifier, Label, Release, Track } from './api_types.ts';
+import { isDefined } from '@/utils/predicate.ts';
+
+export default class DiscogsProvider extends MetadataApiProvider {
+	readonly name = 'Discogs';
+
+	readonly supportedUrls = new URLPattern({
+		hostname: 'www.discogs.com',
+		pathname: String.raw`/:locale?/:type(artist|label|release)/:id(\d+){-:slug}?`,
+	});
+
+	// TODO: Also try to override optional properties which are (or return) empty arrays/objects in the base class.
+	override readonly features: FeatureQualityMap = {};
+
+	readonly entityTypeMap = {
+		artist: 'artist',
+		label: 'label',
+		release: 'release',
+	};
+
+	readonly releaseLookup = DiscogsReleaseLookup;
+
+	constructUrl(entity: EntityId): URL {
+		return new URL([entity.type, entity.id].join('/'), 'https://www.discogs.com');
+	}
+
+	override getLinkTypesForEntity(): LinkType[] {
+		return ['discography page'];
+	}
+
+	async query<Data>(apiUrl: URL, options: ApiQueryOptions): Promise<CacheEntry<Data>> {
+		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
+			policy: { maxTimestamp: options.snapshotMaxTimestamp },
+		});
+		return cacheEntry;
+	}
+
+	/** Cleans Discogs entity names which have a numeric suffix. */
+	cleanName(name: string): string {
+		return name.replace(/ \(\d+\)$/, '');
+	}
+}
+
+export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Release> {
+	constructReleaseApiUrl(): URL {
+		return new URL(`releases/${this.lookup.value}`, 'https://api.discogs.com');
+	}
+
+	async getRawRelease(): Promise<Release> {
+		const apiUrl = this.constructReleaseApiUrl();
+		const { content: release, timestamp } = await this.provider.query<Release>(apiUrl, {
+			snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+		});
+		this.updateCacheTime(timestamp);
+
+		return release;
+	}
+
+	convertRawRelease(rawRelease: Release): HarmonyRelease {
+		this.entity = {
+			type: 'release',
+			id: rawRelease.id.toString(),
+		};
+
+		return {
+			title: rawRelease.title,
+			artists: rawRelease.artists.map(this.convertRawArtist.bind(this)),
+			gtin: this.findBarcode(rawRelease.identifiers),
+			externalLinks: [{
+				url: this.provider.constructUrl(this.entity).href,
+				types: this.provider.getLinkTypesForEntity(),
+			}],
+			media: [{
+				tracklist: rawRelease.tracklist.map(this.convertRawTrack.bind(this)),
+			}],
+			releaseDate: parseHyphenatedDate(rawRelease.released),
+			labels: rawRelease.labels.map(this.convertRawLabel.bind(this)),
+			// status: 'Official',
+			// types,
+			// packaging: 'None',
+			images: [],
+			// availableIn: [rawRelease.country],
+			info: this.generateReleaseInfo(),
+		};
+	}
+
+	convertRawTrack(track: Track): HarmonyTrack {
+		return {
+			number: track.position,
+			title: track.title,
+			artists: track.artists.map(this.convertRawArtist.bind(this)),
+			// length: parseDuration(track.duration),
+		};
+	}
+
+	convertRawArtist(artist: Artist): ArtistCreditName {
+		return {
+			name: this.provider.cleanName(artist.name),
+			creditedName: artist.anv || undefined,
+			joinPhrase: artist.join || undefined,
+			externalIds: this.provider.makeExternalIds({
+				type: 'artist',
+				id: artist.id.toString(),
+			}),
+		};
+	}
+
+	convertRawLabel(label: Label): HarmonyLabel {
+		return {
+			name: this.provider.cleanName(label.name),
+			catalogNumber: label.catno || undefined,
+			externalIds: this.provider.makeExternalIds({
+				type: 'label',
+				id: label.id.toString(),
+			}),
+		};
+	}
+
+	findBarcode(identifiers: Identifier[]): string | undefined {
+		const barcodes = identifiers.filter((identifier) => identifier.type === 'Barcode');
+		if (!barcodes.length) {
+			return;
+		}
+		const gtinCandidates = barcodes.map((barcode) => cleanBarcode(barcode.value)).filter(isDefined);
+		const uniqueGtins = uniqueGtinSet(gtinCandidates);
+		if (uniqueGtins.size > 1) {
+			this.addMessage(
+				`Release has multiple barcodes: ${barcodes.map((barcode) => barcode.value).join(', ')}`,
+				'warning',
+			);
+		}
+		return gtinCandidates[0];
+	}
+}

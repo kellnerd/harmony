@@ -82,3 +82,14 @@ export function isEqualGTIN(a: GTIN, b: GTIN, { strict = false } = {}): boolean 
 export function uniqueGtinSet(gtins: GTIN[]): Set<number> {
 	return new Set(gtins.map(Number));
 }
+
+/** Cleans the given barcode and returns a valid, numeric GTIN string. */
+export function cleanBarcode(barcode: string): string | undefined {
+	if (isValidGTIN(barcode)) {
+		return barcode;
+	}
+	barcode = barcode.replaceAll(/\s/g, '');
+	if (isValidGTIN(barcode)) {
+		return barcode;
+	}
+}

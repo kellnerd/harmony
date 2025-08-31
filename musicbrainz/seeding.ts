@@ -129,6 +129,7 @@ export function convertLinkType(entityType: EntityType, linkType: LinkType, url?
 	const typeIds = urlTypeIds[entityType];
 	if (!typeIds) return;
 
+	const hostname = url?.hostname;
 	switch (linkType) {
 		case 'free streaming':
 			return typeIds['free streaming'];
@@ -141,9 +142,13 @@ export function convertLinkType(entityType: EntityType, linkType: LinkType, url?
 		case 'mail order':
 			return typeIds['purchase for mail-order'];
 		case 'discography page':
-			// Handle URLs which MB treats as special cases
-			if (url?.hostname.endsWith('.bandcamp.com')) {
-				return typeIds.bandcamp;
+			if (hostname) {
+				// Handle URLs which MB treats as special cases
+				if (hostname.endsWith('.bandcamp.com')) {
+					return typeIds.bandcamp;
+				} else if (hostname === 'www.discogs.com') {
+					return typeIds.discogs;
+				}
 			}
 			return typeIds['discography page'] ?? typeIds['discography entry'];
 		case 'license':
