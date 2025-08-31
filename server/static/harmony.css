@@ -205,6 +205,7 @@ input[type='submit']:active, button:active {
 }
 input[type='submit']:focus, button:focus, input[type='submit']:hover, button:hover {
 	background-color: var(--button-focus);
+	cursor: pointer;
 }
 
 /* tables */
