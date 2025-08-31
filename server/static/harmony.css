@@ -253,10 +253,10 @@ caption > ul.alt-values {
 button.copy {
 	background: none;
 	border: none;
-	opacity: 0.7;
+	opacity: 0.5;
 }
 button.copy:hover {
-	opacity: 1.0;
+	opacity: 0.8;
 }
 
 td > button.copy:first-child, div.region-list > button.copy {
