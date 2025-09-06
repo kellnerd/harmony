@@ -1,1 +1,93 @@
-{"data":[{"id":"358461354","type":"videos","attributes":{"title":"My Boy Only Breaks His Favorite Toys (Lyric Video)","isrc":"USUMV2400558","duration":"PT3M28S","copyright":"© 2024 Taylor Swift","releaseDate":"2024-04-19","explicit":false,"popularity":0.32698116550173406,"availability":["STREAM","DJ"],"externalLinks":[{"href":"https://tidal.com/browse/video/358461354","meta":{"type":"TIDAL_SHARING"}}]},"relationships":{"albums":{"links":{"self":"/videos/358461354/relationships/albums?countryCode=US"}},"artists":{"data":[{"id":"3557299","type":"artists"}],"links":{"self":"/videos/358461354/relationships/artists?countryCode=US"}},"thumbnailArt":{"data":[{"id":"3bRG3TlOXxZMW8fpkV4r4O","type":"artworks"}],"links":{"self":"/videos/358461354/relationships/thumbnailArt?countryCode=US"}},"providers":{"data":[{"id":"350","type":"providers"}],"links":{"self":"/videos/358461354/relationships/providers?countryCode=US"}}}}],"links":{"self":"/videos?filter%5Bid%5D=358461354&include=artists%2Cproviders%2CthumbnailArt&countryCode=US"},"included":[{"id":"350","type":"providers","attributes":{"name":"Universal"}},{"id":"3bRG3TlOXxZMW8fpkV4r4O","type":"artworks","attributes":{"mediaType":"IMAGE","files":[{"href":"https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/1280x720.jpg","meta":{"width":1280,"height":720}},{"href":"https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/800x450.jpg","meta":{"width":800,"height":450}},{"href":"https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/640x360.jpg","meta":{"width":640,"height":360}},{"href":"https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/320x180.jpg","meta":{"width":320,"height":180}},{"href":"https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/160x90.jpg","meta":{"width":160,"height":90}}]},"relationships":{"owners":{"links":{"self":"/artworks/3bRG3TlOXxZMW8fpkV4r4O/relationships/owners?countryCode=US"}}}},{"id":"3557299","type":"artists","attributes":{"name":"Taylor Swift","popularity":0.9328337958905205,"externalLinks":[{"href":"https://twitter.com/taylorswift13","meta":{"type":"TWITTER"}},{"href":"https://tidal.com/browse/artist/3557299","meta":{"type":"TIDAL_SHARING"}}]},"relationships":{"similarArtists":{"links":{"self":"/artists/3557299/relationships/similarArtists?countryCode=US"}},"albums":{"links":{"self":"/artists/3557299/relationships/albums?countryCode=US"}},"roles":{"links":{"self":"/artists/3557299/relationships/roles?countryCode=US"}},"videos":{"links":{"self":"/artists/3557299/relationships/videos?countryCode=US"}},"owners":{"links":{"self":"/artists/3557299/relationships/owners?countryCode=US"}},"profileArt":{"links":{"self":"/artists/3557299/relationships/profileArt?countryCode=US"}},"trackProviders":{"links":{"self":"/artists/3557299/relationships/trackProviders?countryCode=US"}},"tracks":{"links":{"self":"/artists/3557299/relationships/tracks?countryCode=US"}},"radio":{"links":{"self":"/artists/3557299/relationships/radio?countryCode=US"}}}}]}
+{
+	"data": [
+		{
+			"id": "358461354",
+			"type": "videos",
+			"attributes": {
+				"title": "My Boy Only Breaks His Favorite Toys (Lyric Video)",
+				"isrc": "USUMV2400558",
+				"duration": "PT3M28S",
+				"copyright": "© 2024 Taylor Swift",
+				"releaseDate": "2024-04-19",
+				"explicit": false,
+				"popularity": 0.32698116550173406,
+				"availability": ["STREAM", "DJ"],
+				"externalLinks": [{ "href": "https://tidal.com/browse/video/358461354", "meta": { "type": "TIDAL_SHARING" } }]
+			},
+			"relationships": {
+				"albums": { "links": { "self": "/videos/358461354/relationships/albums?countryCode=US" } },
+				"artists": {
+					"data": [{ "id": "3557299", "type": "artists" }],
+					"links": { "self": "/videos/358461354/relationships/artists?countryCode=US" }
+				},
+				"thumbnailArt": {
+					"data": [{ "id": "3bRG3TlOXxZMW8fpkV4r4O", "type": "artworks" }],
+					"links": { "self": "/videos/358461354/relationships/thumbnailArt?countryCode=US" }
+				},
+				"providers": {
+					"data": [{ "id": "350", "type": "providers" }],
+					"links": { "self": "/videos/358461354/relationships/providers?countryCode=US" }
+				}
+			}
+		}
+	],
+	"links": { "self": "/videos?filter%5Bid%5D=358461354&include=artists%2Cproviders%2CthumbnailArt&countryCode=US" },
+	"included": [
+		{ "id": "350", "type": "providers", "attributes": { "name": "Universal" } },
+		{
+			"id": "3bRG3TlOXxZMW8fpkV4r4O",
+			"type": "artworks",
+			"attributes": {
+				"mediaType": "IMAGE",
+				"files": [
+					{
+						"href": "https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/1280x720.jpg",
+						"meta": { "width": 1280, "height": 720 }
+					},
+					{
+						"href": "https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/800x450.jpg",
+						"meta": { "width": 800, "height": 450 }
+					},
+					{
+						"href": "https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/640x360.jpg",
+						"meta": { "width": 640, "height": 360 }
+					},
+					{
+						"href": "https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/320x180.jpg",
+						"meta": { "width": 320, "height": 180 }
+					},
+					{
+						"href": "https://resources.tidal.com/images/931df7cf/57ce/47f8/9a6e/c7cea3e19287/160x90.jpg",
+						"meta": { "width": 160, "height": 90 }
+					}
+				]
+			},
+			"relationships": {
+				"owners": { "links": { "self": "/artworks/3bRG3TlOXxZMW8fpkV4r4O/relationships/owners?countryCode=US" } }
+			}
+		},
+		{
+			"id": "3557299",
+			"type": "artists",
+			"attributes": {
+				"name": "Taylor Swift",
+				"popularity": 0.9328337958905205,
+				"externalLinks": [
+					{ "href": "https://twitter.com/taylorswift13", "meta": { "type": "TWITTER" } },
+					{ "href": "https://tidal.com/browse/artist/3557299", "meta": { "type": "TIDAL_SHARING" } }
+				]
+			},
+			"relationships": {
+				"similarArtists": { "links": { "self": "/artists/3557299/relationships/similarArtists?countryCode=US" } },
+				"albums": { "links": { "self": "/artists/3557299/relationships/albums?countryCode=US" } },
+				"roles": { "links": { "self": "/artists/3557299/relationships/roles?countryCode=US" } },
+				"videos": { "links": { "self": "/artists/3557299/relationships/videos?countryCode=US" } },
+				"owners": { "links": { "self": "/artists/3557299/relationships/owners?countryCode=US" } },
+				"profileArt": { "links": { "self": "/artists/3557299/relationships/profileArt?countryCode=US" } },
+				"trackProviders": { "links": { "self": "/artists/3557299/relationships/trackProviders?countryCode=US" } },
+				"tracks": { "links": { "self": "/artists/3557299/relationships/tracks?countryCode=US" } },
+				"radio": { "links": { "self": "/artists/3557299/relationships/radio?countryCode=US" } }
+			}
+		}
+	]
+}
