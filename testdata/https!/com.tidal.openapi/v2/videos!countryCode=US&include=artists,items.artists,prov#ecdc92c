@@ -10,7 +10,7 @@
 				"copyright": "© 2024 Taylor Swift",
 				"releaseDate": "2024-04-19",
 				"explicit": false,
-				"popularity": 0.32698116550173406,
+				"popularity": 0.23938502235195716,
 				"availability": ["STREAM", "DJ"],
 				"externalLinks": [{ "href": "https://tidal.com/browse/video/358461354", "meta": { "type": "TIDAL_SHARING" } }]
 			},
@@ -83,6 +83,7 @@
 				"roles": { "links": { "self": "/artists/3557299/relationships/roles?countryCode=US" } },
 				"videos": { "links": { "self": "/artists/3557299/relationships/videos?countryCode=US" } },
 				"owners": { "links": { "self": "/artists/3557299/relationships/owners?countryCode=US" } },
+				"biography": { "links": { "self": "/artists/3557299/relationships/biography?countryCode=US" } },
 				"profileArt": { "links": { "self": "/artists/3557299/relationships/profileArt?countryCode=US" } },
 				"trackProviders": { "links": { "self": "/artists/3557299/relationships/trackProviders?countryCode=US" } },
 				"tracks": { "links": { "self": "/artists/3557299/relationships/tracks?countryCode=US" } },

@@ -122,6 +122,13 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			types = [capitalizeReleaseType(attributes.type)];
 		}
 
+		// Release copyright used to be a plain string, but is now an object, handle both.
+		// Video/track copyright is still a plain string.
+		let { copyright } = attributes;
+		if (copyright && typeof copyright !== 'string') {
+			copyright = copyright.text;
+		}
+
 		return {
 			title: attributes.title,
 			artists: this.getArtists(rawRelease),
@@ -132,7 +139,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			}],
 			media,
 			releaseDate: parseHyphenatedDate(attributes.releaseDate),
-			copyright: attributes.copyright ? formatCopyrightSymbols(attributes.copyright) : undefined,
+			copyright: copyright ? formatCopyrightSymbols(copyright) : undefined,
 			status: 'Official',
 			types,
 			packaging: 'None',

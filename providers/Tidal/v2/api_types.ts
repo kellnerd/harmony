@@ -46,7 +46,8 @@ export type AlbumsAttributes = {
 	explicit: boolean;
 	/** Release date in YYYY-MM-DD format */
 	releaseDate: string;
-	copyright?: string;
+	/** Copyright text. No longer a plain string since 2025-09-06. */
+	copyright?: string | { text: string };
 	/** Album popularity (ranged in 0.00 ... 1.00). Conditionally visible */
 	popularity: number;
 	/** Defines an album availability e.g. for streaming, DJs, stems */
@@ -125,6 +126,7 @@ export type TracksAttributes = {
 	isrc: string;
 	/** ISO-8601 duration (e.g. P41M5S) */
 	duration: string;
+	/** Copyright text. */
 	copyright: string;
 	explicit: boolean;
 	/** Track popularity (ranged in 0.00 ... 1.00). Conditionally visible */

@@ -11,7 +11,7 @@
 				"duration": "PT4M12S",
 				"explicit": false,
 				"releaseDate": "2024-08-16",
-				"copyright": "© 2024 Interscope Records",
+				"copyright": { "text": "© 2024 Interscope Records" },
 				"popularity": 0.0,
 				"availability": ["STREAM", "DJ"],
 				"mediaTags": ["LOSSLESS"],
@@ -24,6 +24,8 @@
 					"data": [{ "id": "3534754", "type": "artists" }, { "id": "3658521", "type": "artists" }],
 					"links": { "self": "/albums/381265361/relationships/artists?countryCode=US" }
 				},
+				"genres": { "links": { "self": "/albums/381265361/relationships/genres?countryCode=US" } },
+				"owners": { "links": { "self": "/albums/381265361/relationships/owners?countryCode=US" } },
 				"coverArt": {
 					"data": [{ "id": "2xpmpI1s9E00P3ibLQtuBV", "type": "artworks" }],
 					"links": { "self": "/albums/381265361/relationships/coverArt?countryCode=US" }
@@ -89,6 +91,7 @@
 			"type": "tracks",
 			"attributes": {
 				"title": "Die With A Smile",
+				"version": null,
 				"isrc": "USUM72409273",
 				"duration": "PT4M12S",
 				"copyright": "℗ 2024 Interscope Records",
@@ -107,8 +110,11 @@
 					"data": [{ "id": "3534754", "type": "artists" }, { "id": "3658521", "type": "artists" }],
 					"links": { "self": "/tracks/381265362/relationships/artists?countryCode=US" }
 				},
+				"genres": { "links": { "self": "/tracks/381265362/relationships/genres?countryCode=US" } },
 				"similarTracks": { "links": { "self": "/tracks/381265362/relationships/similarTracks?countryCode=US" } },
 				"owners": { "links": { "self": "/tracks/381265362/relationships/owners?countryCode=US" } },
+				"lyrics": { "links": { "self": "/tracks/381265362/relationships/lyrics?countryCode=US" } },
+				"sourceFile": { "links": { "self": "/tracks/381265362/relationships/sourceFile?countryCode=US" } },
 				"providers": { "links": { "self": "/tracks/381265362/relationships/providers?countryCode=US" } },
 				"radio": { "links": { "self": "/tracks/381265362/relationships/radio?countryCode=US" } }
 			}
@@ -127,6 +133,7 @@
 				"roles": { "links": { "self": "/artists/3534754/relationships/roles?countryCode=US" } },
 				"videos": { "links": { "self": "/artists/3534754/relationships/videos?countryCode=US" } },
 				"owners": { "links": { "self": "/artists/3534754/relationships/owners?countryCode=US" } },
+				"biography": { "links": { "self": "/artists/3534754/relationships/biography?countryCode=US" } },
 				"profileArt": { "links": { "self": "/artists/3534754/relationships/profileArt?countryCode=US" } },
 				"trackProviders": { "links": { "self": "/artists/3534754/relationships/trackProviders?countryCode=US" } },
 				"tracks": { "links": { "self": "/artists/3534754/relationships/tracks?countryCode=US" } },
@@ -147,6 +154,7 @@
 				"roles": { "links": { "self": "/artists/3658521/relationships/roles?countryCode=US" } },
 				"videos": { "links": { "self": "/artists/3658521/relationships/videos?countryCode=US" } },
 				"owners": { "links": { "self": "/artists/3658521/relationships/owners?countryCode=US" } },
+				"biography": { "links": { "self": "/artists/3658521/relationships/biography?countryCode=US" } },
 				"profileArt": { "links": { "self": "/artists/3658521/relationships/profileArt?countryCode=US" } },
 				"trackProviders": { "links": { "self": "/artists/3658521/relationships/trackProviders?countryCode=US" } },
 				"tracks": { "links": { "self": "/artists/3658521/relationships/tracks?countryCode=US" } },
