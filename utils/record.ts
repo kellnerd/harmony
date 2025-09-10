@@ -1,6 +1,9 @@
 /** Clones properties between records of the same type. Creates a deep copy if necessary. */
 export function cloneInto<T>(target: T, source: T, property: keyof T) {
 	let value = source[property];
+	if (value === undefined) {
+		return value;
+	}
 	if (typeof value === 'object' && value !== null) {
 		value = structuredClone(value);
 	}
@@ -9,7 +12,11 @@ export function cloneInto<T>(target: T, source: T, property: keyof T) {
 
 /** Copies properties between records of the same type. Helper to prevent type errors. */
 export function copyTo<T>(target: T, source: T, property: keyof T) {
-	return target[property] = source[property];
+	const value = source[property];
+	if (value === undefined) {
+		return value;
+	}
+	return target[property] = value;
 }
 
 /** Filters the error entires of the given record and creates a new error-free record. */
