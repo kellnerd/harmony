@@ -42,6 +42,51 @@ describe('release types', () => {
 			['should detect type before comment', 'Enter Suicidal Angels - EP (Remastered 2021)', new Set(['EP'])],
 			['should detect EP suffix', 'Zero Distance EP', new Set(['EP'])],
 			['should detect demo type', 'Parasite Inc. (Demo)', new Set(['Demo'])],
+			// Soundtrack releases
+			...([
+				// Titles with original/official <medium> soundtrack
+				'The Lord of the Rings: The Return of the King (Original Motion Picture Soundtrack)',
+				'The Bodyguard - Original Soundtrack Album',
+				'Plants Vs. Zombies (Original Video Game Soundtrack)',
+				'Stardew Valley (Original Game Soundtrack)',
+				'L.A. Noire Official Soundtrack',
+				'Tarzan (Deutscher Original Film-Soundtrack)',
+				'Die Eiskönigin Völlig Unverfroren (Deutscher Original Film Soundtrack)',
+				// Soundtrack from the ... <medium>
+				'KPop Demon Hunters (Soundtrack from the Netflix Film)',
+				'The Witcher: Season 2 (Soundtrack from the Netflix Original Series)',
+				'The White Lotus (Soundtrack from the HBO® Original Limited Series)',
+				'Inception (Music from the Motion Picture)',
+				// Releases referring to score instead of soundtrack
+				'Fantastic Mr. Fox - Additional Music From The Original Score By Alexandre Desplat - The Abbey Road Mixes',
+				'Scott Pilgrim Vs. The World (Original Score Composed by Nigel Godrich)',
+				'F1® The Movie (Original Score By Hans Zimmer)',
+				'EUPHORIA SEASON 2 OFFICIAL SCORE (FROM THE HBO ORIGINAL SERIES)',
+				'The Bible (Official Score Soundtrack)',
+				'The Good Wife (The Official TV Score)',
+				// Releases with OST abbreviation
+				'O.S.T. Das Boot',
+				'Alvin & The Chipmunks / OST',
+				// German release titles
+				'Get Up (Der Original Soundtrack zum Kinofilm)',
+				'Ein Mädchen namens Willow - Soundtrack zum Film',
+				'Das Boot (Soundtrack zur TV Serie, zweite Staffel)',
+				// Swedish release titles
+				'Fucking Åmål - Musiken från filmen',
+				'Fejkpatient (Musik från TV-serien)',
+				'Kärlek Fårever (Soundtrack till Netflix-filmen)',
+				// Norwegian release titles
+				'Kvitebjørn (Musikken fra filmen)',
+				'Døden på Oslo S (Musikken fra teaterforestillingen)',
+				// Musical releases
+				'The Lion King: Original Broadway Cast Recording',
+			].map((
+				title,
+			): FunctionSpec<typeof guessTypesFromTitle>[number] => [
+				'should detect soundtrack type',
+				title,
+				new Set(['Soundtrack']),
+			])),
 		];
 
 		describe('exact case match', () => {
