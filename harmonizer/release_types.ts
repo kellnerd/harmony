@@ -11,23 +11,60 @@ export function guessTypesForRelease(release: HarmonyRelease): Iterable<ReleaseG
 	return types;
 }
 
-const detectTypesPatterns = [
+const releaseGroupTypeMatchers: Array<{ type?: ReleaseGroupType; pattern: RegExp }> = [
 	// Commonly used for Bandcamp releases
-	/\s\((EP|Single|Live|Demo)\)(?:\s\(.*?\))?$/i,
+	{ pattern: /\s\((EP|Single|Live|Demo)\)(?:\s\(.*?\))?$/i },
 	// iTunes singles and EPs
-	/\s- (EP|Single|Live)(?:\s\(.*?\))?$/i,
+	{ pattern: /\s- (EP|Single|Live)(?:\s\(.*?\))?$/i },
 	// Generic "EP" suffix
-	/\s(EP)(?:\s\(.*?\))?$/i,
+	{ pattern: /\s(EP)(?:\s\(.*?\))?$/i },
+	// Common soundtrack title: "Official/Original <Medium> Soundtrack" and "Original Score"
+	{
+		type: 'Soundtrack',
+		pattern:
+			/(?:Original\s|Official\s)(?:(?:(?:Video\s)?Game|Motion Picture|Film|Movie|Television|TV|(?:(?:TV|Television)[\s-]?)?(?:Mini[\s-]?)?Series?|Musical)[\s-])?(?:Soundtrack|Score)/i,
+	},
+	// Common soundtrack title: "Soundtrack from the <Medium>", should also match "Soundtrack from the <Streaming service> <Medium>"
+	{
+		type: 'Soundtrack',
+		pattern:
+			/(?:Soundtrack|Score|Music)\s(?:(?:from|to) the)\s(?:.+[\s-])?(?:(?:Video\s)?Game|Motion Picture|Film|Movie|(?:(?:TV|Television)[\s-]?)?(?:Mini[\s-]?)?Series|Musical)/i,
+	},
+	// Common soundtrack title. Starting or ending with O.S.T. or OST (with or without wrapping parenthesis). Note: it's case sensitive.
+	{
+		type: 'Soundtrack',
+		pattern: /(?:^(?:\(O\.S\.T\.\)|O\.S\.T\.|OST|\(OST\))\s.+|.+\s(?:\(O\.S\.T\.\)|O\.S\.T\.|OST|\(OST\))$)/,
+	},
+	// Common musical soundtrack release titles
+	{ type: 'Soundtrack', pattern: /Original (?:.+\s)?Cast Recording/i },
+	// Common German soundtrack release titles
+	{
+		type: 'Soundtrack',
+		pattern: /(?:Soundtrack|Musik)\s(?:zum|zur)\s(?:.+[\s-])?(?:(?:Kino)?Film|Theaterstück|(?:TV[\s-]?)?Serie)/i,
+	},
+	// Common Swedish soundtrack release titles
+	{
+		type: 'Soundtrack',
+		pattern:
+			/(?:Soundtrack|Musik(?:en)?)\s(?:från|till|ur)\s(?:.+[\s-])?(?:Film(?:en)?|(?:TV[\s-]?)?(?:Mini[\s-]?)?Serien?|Musikalen)/i,
+	},
+	// Common Norwegian soundtrack release titles
+	{ type: 'Soundtrack', pattern: /Musikk(?:en)? (?:fra) (?:Filmen|TV[\s-]serien|(?:teater)?forestillingen)/i },
 ];
 
 /** Guesses a release type from a title. */
 export function guessTypesFromTitle(title: string): Set<ReleaseGroupType> {
 	const types = new Set<ReleaseGroupType>();
-	detectTypesPatterns.forEach((pattern) => {
-		const match = title.match(pattern);
-		if (match) {
-			types.add(capitalizeReleaseType(match[1]));
+	releaseGroupTypeMatchers.forEach((matcher) => {
+		const match = title.match(matcher.pattern);
+		if (!match) {
+			return;
 		}
+		const type = match[1] || matcher.type;
+		if (!type) {
+			return;
+		}
+		types.add(capitalizeReleaseType(type));
 	});
 	return types;
 }
