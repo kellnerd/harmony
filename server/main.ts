@@ -1,5 +1,5 @@
 // Automatically load .env environment variable file and configure logger (before anything else).
-import 'std/dotenv/load.ts';
+import '@std/dotenv/load';
 import './logging.ts';
 
 import { shortRevision } from '@/config.ts';

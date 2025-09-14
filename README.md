@@ -39,7 +39,7 @@ Alternatively you can run the [predefined task](deno.json) which automatically s
 deno task server
 ```
 
-Other environment variables which are used by the server are documented in the [configuration module](config.ts).
+Other environment variables which are used by the server are documented in the [configuration module](config.ts) and in the [`.env.example` file](.env.example). To get started, copy `.env.example` to `.env`. Most environment variables are optional and have default values in the code. To use some providers, you need to create an app with that provider. After which, you'll get a set of client credentials, which you need to assign to the corresponding environment variables.
 
 There is also a small command line app which can be used for testing:
 

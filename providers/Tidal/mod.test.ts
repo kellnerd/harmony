@@ -1,5 +1,5 @@
 // Automatically load .env environment variable file (before anything else).
-import 'std/dotenv/load.ts';
+import '@std/dotenv/load';
 
 import type { HarmonyRelease } from '@/harmonizer/types.ts';
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
