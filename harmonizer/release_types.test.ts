@@ -64,9 +64,6 @@ describe('release types', () => {
 				'EUPHORIA SEASON 2 OFFICIAL SCORE (FROM THE HBO ORIGINAL SERIES)',
 				'The Bible (Official Score Soundtrack)',
 				'The Good Wife (The Official TV Score)',
-				// Releases with OST abbreviation
-				'O.S.T. Das Boot',
-				'Alvin & The Chipmunks / OST',
 				// German release titles
 				'Get Up (Der Original Soundtrack zum Kinofilm)',
 				'Ein Mädchen namens Willow - Soundtrack zum Film',
@@ -83,14 +80,29 @@ describe('release types', () => {
 			].map((
 				title,
 			): FunctionSpec<typeof guessTypesFromTitle>[number] => [
-				'should detect soundtrack type',
+				`should detect soundtrack type (${title})`,
+				title,
+				new Set(['Soundtrack']),
+			])),
+		];
+
+		const passingCaseSensitiveCases: FunctionSpec<typeof guessTypesFromTitle> = [
+			// Soundtrack releases
+			...([
+				// Releases with OST abbreviation
+				'O.S.T. Das Boot',
+				'Alvin & The Chipmunks / OST',
+			].map((
+				title,
+			): FunctionSpec<typeof guessTypesFromTitle>[number] => [
+				`should detect soundtrack type (${title})`,
 				title,
 				new Set(['Soundtrack']),
 			])),
 		];
 
 		describe('exact case match', () => {
-			passingCases.forEach(([description, input, expected]) => {
+			[...passingCases, ...passingCaseSensitiveCases].forEach(([description, input, expected]) => {
 				it(description, () => {
 					assertEquals(guessTypesFromTitle(input), expected);
 				});
