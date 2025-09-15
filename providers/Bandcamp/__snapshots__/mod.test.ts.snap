@@ -161,7 +161,6 @@ snapshot[`Bandcamp provider > release lookup > subscriber-only release 1`] = `
     {
       types: [
         "paid download",
-        "free streaming",
       ],
       url: "https://arbee.bandcamp.com/album/des-papiers-ii",
     },
@@ -207,7 +206,6 @@ snapshot[`Bandcamp provider > release lookup > subscriber-only release 1`] = `
               {
                 id: "arbee/des-papiers-ii",
                 linkTypes: [
-                  "free streaming",
                   "paid download",
                 ],
                 provider: "bandcamp",
@@ -257,7 +255,6 @@ All the things, Steve. Cover model: Flapjack.",
     {
       types: [
         "paid download",
-        "free streaming",
       ],
       url: "https://stevelawson.bandcamp.com/album/ambiguous-hands",
     },
@@ -309,7 +306,6 @@ All the things, Steve. Cover model: Flapjack.",
               {
                 id: "stevelawson/ambiguous-hands",
                 linkTypes: [
-                  "free streaming",
                   "paid download",
                 ],
                 provider: "bandcamp",

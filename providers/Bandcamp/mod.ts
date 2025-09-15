@@ -123,7 +123,7 @@ export default class BandcampProvider extends MetadataProvider {
 	getTrackLinkTypes(track: TrackInfo): LinkType[] {
 		const linkTypes: LinkType[] = [];
 
-		if (track.streaming === 1) {
+		if (this.isFreeStreamingTrack(track)) {
 			linkTypes.push('free streaming');
 		}
 
@@ -179,6 +179,10 @@ export default class BandcampProvider extends MetadataProvider {
 				}
 			},
 		});
+	}
+
+	isFreeStreamingTrack(track: TrackInfo): boolean {
+		return track.streaming === 1 && !!track.file;
 	}
 }
 
@@ -314,7 +318,10 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		if (rawRelease.freeDownloadPage || (current.minimum_price === 0.0 && !current.is_set_price)) {
 			linkTypes.push('free download');
 		}
-		if (rawRelease.trackinfo.every((track) => track.streaming)) {
+		if (
+			!rawRelease.tralbum_subscriber_only &&
+			rawRelease.trackinfo.every((track) => this.provider.isFreeStreamingTrack(track))
+		) {
 			linkTypes.push('free streaming');
 		}
 
