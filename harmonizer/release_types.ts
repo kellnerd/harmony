@@ -56,6 +56,11 @@ const releaseGroupTypeMatchers: Array<{ type?: ReleaseGroupType; pattern: RegExp
 export function guessTypesFromTitle(title: string): Set<ReleaseGroupType> {
 	const types = new Set<ReleaseGroupType>();
 	releaseGroupTypeMatchers.forEach((matcher) => {
+		if (matcher.type && types.has(matcher.type)) {
+			// Release has already been assigned this type.
+			return;
+		}
+
 		const match = title.match(matcher.pattern);
 		if (!match) {
 			return;
