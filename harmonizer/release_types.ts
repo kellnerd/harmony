@@ -22,7 +22,7 @@ const releaseGroupTypeMatchers: Array<{ type?: ReleaseGroupType; pattern: RegExp
 	{
 		type: 'Soundtrack',
 		pattern:
-			/(?:Original\s|Official\s)(?:(?:(?:Video\s)?Game|Motion Picture|Film|Movie|Television|TV|(?:(?:TV|Television)[\s-]?)?(?:Mini[\s-]?)?Series?|Musical)[\s-])?(?:Soundtrack|Score)/i,
+			/(?:Original|Official)\s(?:(?:(?:Video\s)?Game|Motion Picture|Film|Movie|Television|TV|(?:(?:TV|Television)[\s-]?)?(?:Mini[\s-]?)?Series?|Musical)[\s-])?(?:Soundtrack|Score)/i,
 	},
 	// Common soundtrack title: "Soundtrack from the <Medium>", should also match "Soundtrack from the <Streaming service> <Medium>"
 	{
@@ -61,10 +61,9 @@ export function guessTypesFromTitle(title: string): Set<ReleaseGroupType> {
 			return;
 		}
 		const type = match[1] || matcher.type;
-		if (!type) {
-			return;
+		if (type) {
+			types.add(capitalizeReleaseType(type));
 		}
-		types.add(capitalizeReleaseType(type));
 	});
 	return types;
 }
