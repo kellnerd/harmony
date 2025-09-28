@@ -72,11 +72,16 @@ export function guessTypesFromTitle(title: string): Set<ReleaseGroupType> {
 	return types;
 }
 
+/**
+ * Expression matching common live track name patterns.
+ * Both `Track name - Live` and `Track name (Live)`.
+ */
+const liveTrackPattern = /\s(?:- Live|\(Live\))(?:\s\(.*?\))?$/i;
+
 /** Returns true if all track titles indicate a live release. */
 export function guessLiveRelease(tracks: HarmonyTrack[]): boolean {
 	return tracks?.length > 0 && tracks.every((track) => {
-		const types = guessTypesFromTitle(track.title);
-		return types.has('Live');
+		return liveTrackPattern.test(track.title);
 	});
 }
 
