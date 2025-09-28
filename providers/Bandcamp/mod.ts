@@ -136,6 +136,11 @@ export default class BandcampProvider extends MetadataProvider {
 			}
 		}
 
+		// Track links without any streaming or download relationship are kept.
+		// It is up to the user to decide what to do.
+		// In the future there might be a separate relationship that can be used.
+		// See https://tickets.metabrainz.org/browse/STYLE-2443
+
 		return linkTypes;
 	}
 
