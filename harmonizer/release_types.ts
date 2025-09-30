@@ -18,6 +18,8 @@ const releaseGroupTypeMatchers: Array<{ type?: ReleaseGroupType; pattern: RegExp
 	{ pattern: /\s- (EP|Single|Live)(?:\s\(.*?\))?$/i },
 	// Generic "EP" suffix
 	{ pattern: /\s(EP)(?:\s\(.*?\))?$/i },
+	// Common remix title: "Remixed", "The Remixes", or "<Track name> (<Remixer> remix)".
+	{ pattern: /\b(Remix)(?:e[sd])?\b/i },
 	// Common soundtrack title: "Official/Original <Medium> Soundtrack" and "Original Score"
 	{
 		type: 'Soundtrack',

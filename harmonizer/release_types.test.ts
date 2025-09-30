@@ -84,6 +84,56 @@ describe('release types', () => {
 				title,
 				new Set(['Soundtrack']),
 			])),
+			// Remix releases
+			...([
+				'Human (Paul Woolford Remix)',
+				'Paper Romance (Purple Disco Machine Remix - Edit)',
+				'Paper Romance (Purple Disco Machine Remix) [Edit]',
+				'Paper Romance (Purple Disco Machine Remix) (Edit)',
+				'Paper Romance (Purple Disco Machine Remix; Edit)',
+				"Stay (Don't Go Away) [feat. Raye] [Nicky Romero Remix]",
+				'Anti‐Hero (Kungs remix extended version)',
+				'Remix',
+				'Anti‐Hero (Remixes)',
+				'The One (feat. Daddy Yankee) [The Remixes]',
+				'The Remixes',
+				'The Remixes - Vol.1',
+				'The Remixes, Pt. 1',
+				'Remixes',
+				'Remixes 81>04',
+				'Never Say Never - The Remixes',
+				'Skin: The Remixes',
+				'The Hills Remixes',
+				'MIDI Kittyy - The Remixes Vol 1',
+				'The Slow Rush B-Sides & Remixes',
+				'Remixed',
+				'Remixed (2003 Remaster)',
+				'Remixed Sides',
+				'Remixed: The Definitive Collection',
+				'The Hits: Remixed',
+				'Remixed & Revisited',
+				'Revived Remixed Revisited',
+				'Welcome To My World (Remixed)',
+				'Mörkrets Narr Remixed',
+			].map((
+				title,
+			): FunctionSpec<typeof guessTypesFromTitle>[number] => [
+				`should detect remix type (${title})`,
+				title,
+				new Set(['Remix']),
+			])),
+			['should not treat a premix as remix', 'Wild (premix version)', new Set()],
+			// Multiple types
+			[
+				'should detect both remix and soundtrack type',
+				'The Sims 2: Nightlife (Remixes) (Original Soundtrack)',
+				new Set(['Remix', 'Soundtrack']),
+			],
+			[
+				'should detect both remix and soundtrack type',
+				'Remixes - EP',
+				new Set(['EP', 'Remix']),
+			],
 		];
 
 		const passingCaseSensitiveCases: FunctionSpec<typeof guessTypesFromTitle> = [
