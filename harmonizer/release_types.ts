@@ -1,4 +1,4 @@
-import { HarmonyRelease, HarmonyTrack, ReleaseGroupType } from './types.ts';
+import { HarmonyMedium, HarmonyRelease, HarmonyTrack, ReleaseGroupType } from './types.ts';
 import { primaryTypeIds } from '@kellnerd/musicbrainz/data/release-group';
 
 /** Guess the types for a release from release and track titles. */
@@ -7,6 +7,9 @@ export function guessTypesForRelease(release: HarmonyRelease): Iterable<ReleaseG
 	types = types.union(guessTypesFromTitle(release.title));
 	if (!types.has('Live') && guessLiveRelease(release.media.flatMap((media) => media.tracklist))) {
 		types.add('Live');
+	}
+	if (!types.has('DJ-mix') && guessDjMixRelease(release.media)) {
+		types.add('DJ-mix');
 	}
 	return types;
 }
@@ -20,6 +23,8 @@ const releaseGroupTypeMatchers: Array<{ type?: ReleaseGroupType; pattern: RegExp
 	{ pattern: /\s(EP)(?:\s\(.*?\))?$/i },
 	// Common remix title: "Remixed", "The Remixes", or "<Track name> (<Remixer> remix)".
 	{ pattern: /\b(Remix)(?:e[sd])?\b/i },
+	// Common DJ-mix titles
+	{ type: 'DJ-mix', pattern: /\bContinuous DJ[\s-]Mix\b|[\(\[]DJ[\s-]mix[\)\]]/i },
 	// Common soundtrack title: "Official/Original <Medium> Soundtrack" and "Original Score"
 	{
 		type: 'Soundtrack',
@@ -84,6 +89,26 @@ const liveTrackPattern = /\s(?:- Live|\(Live\))(?:\s\(.*?\))?$/i;
 export function guessLiveRelease(tracks: HarmonyTrack[]): boolean {
 	return tracks?.length > 0 && tracks.every((track) => {
 		return liveTrackPattern.test(track.title);
+	});
+}
+
+/**
+ * Expression matching common DJ-mix track name patterns.
+ * Support `Track name - Mixed`, `Track name (Mixed)`, and `Track name [Mixed]`.
+ */
+const djMixTrackPattern = /\s(?:- Mixed|\(Mixed\)|\[Mixed\])(?:\s\(.*?\))?$/i;
+
+/**
+ * Returns true if all track titles on at least one medium indicate a DJ-mix release.
+ *
+ * Some DJ-mix releases have both a medium with the mixed tracks and another with the unmixed tracks.
+ */
+export function guessDjMixRelease(media: HarmonyMedium[]): boolean {
+	return media?.length > 0 && media.some((medium) => {
+		const tracks = medium.tracklist;
+		return tracks?.length > 0 && tracks.every((track) => {
+			return djMixTrackPattern.test(track.title);
+		});
 	});
 }
 
