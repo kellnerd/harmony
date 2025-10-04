@@ -20,6 +20,9 @@
 	--button-fill: var(--even-fill);
 	--button-focus: var(--odd-fill);
 	--button-border: #dcdcdc;
+	--button-accent-fill: #0066cc;
+	--button-accent-focus: #004d99;
+	--button-accent-text: #ffffff;
 	--link: #0066cc;
 	--link-accent: var(--brand-red);
 	/* Provider brand colors */
@@ -319,9 +322,15 @@ span.entity-links > a:hover {
 	color: var(--link-accent);
 }
 
-/* MessageBox.tsx */
+/* LinkWithMusicBrainz.tsx, actions.tsx */
 
-div.message {
+div.action-group {
+	margin: 1.5em auto;
+}
+
+/* MessageBox.tsx, LinkWithMusicBrainz.tsx, actions.tsx */
+
+div.message, div.action {
 	display: flex;
 	align-items: center;
 	background-color: var(--theme-fill);
@@ -331,7 +340,7 @@ div.message {
 	border-radius: 5px;
 }
 
-div.message > svg.icon {
+div.message > svg.icon, div.action > svg.icon {
 	min-width: fit-content;
 	margin-right: 0.3em;
 }
@@ -341,7 +350,7 @@ div.message span.provider {
 	margin-right: 0.5em;
 }
 
-div.message p, div.message ul {
+div.message p, div.message ul, div.action p, div.action ul {
 	margin: 0;
 }
 
@@ -409,6 +418,23 @@ nav a:link, nav a:visited {
 nav img.icon-logo {
 	height: 2rem;
 	margin-right: 0.3rem;
+}
+
+/* OpenAllLinks.tsx */
+
+button.open-all-links {
+	padding: 0.4em;
+	border-radius: 0.2em;
+	line-height: 0.8em;
+	background-color: var(--button-accent-fill);
+	border: none;
+	color: var(--button-accent-text);
+	font-size: inherit;
+	font-family: inherit;
+}
+
+button.open-all-links:focus, button.open-all-links:hover {
+	background-color: var(--button-accent-focus);
 }
 
 /* ProviderInput.tsx */
