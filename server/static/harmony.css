@@ -319,6 +319,12 @@ span.entity-links > a:hover {
 	color: var(--link-accent);
 }
 
+/* LinkWithMusicBrainz.tsx */
+
+div.message-group {
+	margin: 1.5em auto;
+}
+
 /* MessageBox.tsx */
 
 div.message {
@@ -409,6 +415,23 @@ nav a:link, nav a:visited {
 nav img.icon-logo {
 	height: 2rem;
 	margin-right: 0.3rem;
+}
+
+/* OpenAllLinks.tsx */
+
+button.open-all-links {
+	color: var(--link);
+	background-color: inherit;
+	border: none;
+	border-radius: inherit;
+	text-decoration: underline;
+	font-size: inherit;
+	padding: inherit;
+	font-family: inherit;
+}
+
+button.open-all-links:hover {
+	color: var(--link-accent);
 }
 
 /* ProviderInput.tsx */
