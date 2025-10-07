@@ -20,6 +20,9 @@
 	--button-fill: var(--even-fill);
 	--button-focus: var(--odd-fill);
 	--button-border: #dcdcdc;
+	--button-accent-fill: #0066cc;
+	--button-accent-focus: #004d99;
+	--button-accent-text: #ffffff;
 	--link: #0066cc;
 	--link-accent: var(--brand-red);
 	/* Provider brand colors */
@@ -420,18 +423,23 @@ nav img.icon-logo {
 /* OpenAllLinks.tsx */
 
 button.open-all-links {
-	color: var(--link);
-	background-color: inherit;
+	display: inline-flex;
+	align-items: center;
+	padding: 0.4em;
+	border-radius: 0.2em;
+	font-size: 0.8em;
+	line-height: 0.8em;
+	white-space: nowrap;
+	background-color: var(--button-accent-fill);
 	border: none;
-	border-radius: inherit;
-	text-decoration: underline;
+	color: var(--button-accent-text);
 	font-size: inherit;
-	padding: inherit;
 	font-family: inherit;
 }
 
-button.open-all-links:hover {
-	color: var(--link-accent);
+button.open-all-links:focus, button.open-all-links:hover {
+	background-color: var(--button-accent-focus);
+	cursor: pointer;
 }
 
 /* ProviderInput.tsx */

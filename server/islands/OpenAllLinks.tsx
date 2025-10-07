@@ -68,8 +68,12 @@ export function OpenAllLinks({ mbEditLinks, entityType }: {
 				<SpriteIcon name='external-link' />
 				<div>
 					<p>
-						<Button class='open-all-links' onClick={openAllLinks}>
-							Open all {entityType} links
+						<Button
+							class='open-all-links'
+							onClick={openAllLinks}
+							title={`This will open ${numberOfLinks} tabs (pop-up)`}
+						>
+							Open all {numberOfLinks} {entityType} links
 						</Button>
 					</p>
 				</div>
