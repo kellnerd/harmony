@@ -1,6 +1,6 @@
 import { ArtistCredit } from '@/server/components/ArtistCredit.tsx';
 import { CoverImage } from '@/server/components/CoverImage.tsx';
-import { MagicISRC } from '@/server/components/ISRCSubmission.tsx';
+import { ISRCSubmission } from '@/server/components/ISRCSubmission.tsx';
 import { LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
 import { MBIDInput } from '@/server/components/MBIDInput.tsx';
 import { MessageBox } from '@/server/components/MessageBox.tsx';
@@ -13,7 +13,6 @@ import type {
 	ArtistCreditName,
 	Artwork,
 	HarmonyRelease,
-	ProviderInfo,
 	ReleaseOptions,
 	ResolvableEntity,
 } from '@/harmonizer/types.ts';
@@ -37,7 +36,6 @@ export default defineRoute(async (req, ctx) => {
 	let release: HarmonyRelease | undefined = undefined;
 	let releaseMbid: string | undefined;
 	let releaseUrl: URL | undefined;
-	let isrcProvider: ProviderInfo | undefined;
 	let allArtists: ArtistCreditName[] = [];
 	let mbArtists: EntityWithUrlRels[] = [];
 	let mbLabels: EntityWithUrlRels[] = [];
@@ -94,10 +92,6 @@ export default defineRoute(async (req, ctx) => {
 				release.images?.map((image) => ({ ...image, provider })) ?? []
 			);
 
-			const { info } = release;
-			const isrcSource = info.sourceMap?.isrc;
-			isrcProvider = info.providers.find((provider) => provider.name === isrcSource);
-
 			const allTracks = release.media.flatMap((medium) => medium.tracklist);
 
 			// Fallback to track title, Harmony recordings are usually unnamed.
@@ -113,9 +107,14 @@ export default defineRoute(async (req, ctx) => {
 
 			// Load URL relationships for related artists, recordings and labels of the release.
 			// These will be used to skip suggestions to seed external links which already exist.
+			// For recordings it also includes ISRCs to determine if there are new ones to submit.
 			const mbArtistBrowseResult = await MB.get('artist', { release: releaseMbid, inc: 'url-rels', limit: 100 });
 			mbArtists = mbArtistBrowseResult.artists;
-			const mbRecordingBrowseResult = await MB.get('recording', { release: releaseMbid, inc: 'url-rels', limit: 100 });
+			const mbRecordingBrowseResult = await MB.get('recording', {
+				release: releaseMbid,
+				inc: 'url-rels+isrcs',
+				limit: 100,
+			});
 			mbRecordings = mbRecordingBrowseResult.recordings;
 			// Labels often have no external links which could be linked, save pointless API call.
 			if (release.labels?.some((label) => label.externalIds?.length)) {
@@ -185,14 +184,12 @@ export default defineRoute(async (req, ctx) => {
 						</p>
 					</div>
 				)}
-				{release && isrcProvider && (
-					<div class='action'>
-						<SpriteIcon name='disc' />
-						<p>
-							<MagicISRC release={release} targetMbid={releaseMbid!} />
-							: Submit ISRCs from <a href={isrcProvider.url}>{isrcProvider.name}</a> to MusicBrainz
-						</p>
-					</div>
+				{release && (
+					<ISRCSubmission
+						release={release}
+						targetMbid={releaseMbid}
+						recordingsCache={mbRecordings}
+					/>
 				)}
 				{releaseUrl && (
 					<LinkWithMusicBrainz
