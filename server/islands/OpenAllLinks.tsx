@@ -19,6 +19,8 @@ export function OpenAllLinks({ mbEditLinks, entityType }: {
 	if (numberOfLinks <= 1) return null;
 
 	async function openAllLinks() {
+		if (numberOfLinks >= 10 && !globalThis.confirm(`This will open ${numberOfLinks} new tabs. Continue?`)) return;
+
 		const controller = new AbortController();
 		const signal = controller.signal;
 
