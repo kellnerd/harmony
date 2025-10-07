@@ -194,20 +194,17 @@ export default defineRoute(async (req, ctx) => {
 						</p>
 					</div>
 				)}
-				{releaseUrl &&
-					(
-						<LinkWithMusicBrainz
-							entities={allArtists}
-							entityType='artist'
-							sourceEntityUrl={releaseUrl}
-							entityCache={mbArtists}
-						/>
-					)}
+				<LinkWithMusicBrainz
+					entities={allArtists}
+					entityType='artist'
+					sourceEntityUrl={releaseUrl}
+					entityCache={mbArtists}
+				/>
 				{release?.labels && (
 					<LinkWithMusicBrainz
 						entities={release.labels}
 						entityType='label'
-						sourceEntityUrl={releaseUrl!}
+						sourceEntityUrl={releaseUrl}
 						entityCache={mbLabels}
 					/>
 				)}
@@ -227,7 +224,7 @@ export default defineRoute(async (req, ctx) => {
 				<LinkWithMusicBrainz
 					entities={allRecordings}
 					entityType='recording'
-					sourceEntityUrl={releaseUrl!}
+					sourceEntityUrl={releaseUrl}
 					entityCache={mbRecordings}
 				/>
 			</main>

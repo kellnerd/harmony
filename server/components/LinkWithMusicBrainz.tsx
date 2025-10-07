@@ -19,9 +19,12 @@ type EntityWithMbEditLink = {
 export function LinkWithMusicBrainz({ entities, entityType, sourceEntityUrl, entityCache }: {
 	entities: ResolvableEntity[];
 	entityType: EntityType;
-	sourceEntityUrl: URL;
+	sourceEntityUrl?: URL;
 	entityCache?: EntityWithUrlRels[];
 }) {
+	// No entities or no source entity URL to link from, nothing to render.
+	if (!sourceEntityUrl) return null;
+
 	const entitiesWithMbEditLinks = entities.map((entity) => ({
 		entity,
 		mbEditLink: getMusicBrainzEditLink(entity, entityType, sourceEntityUrl, entityCache),
