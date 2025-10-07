@@ -1,6 +1,6 @@
 import { ArtistCredit } from '@/server/components/ArtistCredit.tsx';
 import { CoverImage } from '@/server/components/CoverImage.tsx';
-import { MagicISRC } from '@/server/components/ISRCSubmission.tsx';
+import { ISRCSubmission } from '@/server/components/ISRCSubmission.tsx';
 import { type EntityWithUrlRels, LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
 import { MBIDInput } from '@/server/components/MBIDInput.tsx';
 import { MessageBox } from '@/server/components/MessageBox.tsx';
@@ -112,9 +112,14 @@ export default defineRoute(async (req, ctx) => {
 
 			// Load URL relationships for related artists, recordings and labels of the release.
 			// These will be used to skip suggestions to seed external links which already exist.
+			// For recordings it also includes ISRCs to determine if there are new ones to submit.
 			const mbArtistBrowseResult = await MB.get('artist', { release: releaseMbid, inc: 'url-rels', limit: 100 });
 			mbArtists = mbArtistBrowseResult.artists;
-			const mbRecordingBrowseResult = await MB.get('recording', { release: releaseMbid, inc: 'url-rels', limit: 100 });
+			const mbRecordingBrowseResult = await MB.get('recording', {
+				release: releaseMbid,
+				inc: 'url-rels+isrcs',
+				limit: 100,
+			});
 			mbRecordings = mbRecordingBrowseResult.recordings;
 			// Labels often have no external links which could be linked, save pointless API call.
 			if (release.labels?.some((label) => label.externalIds?.length)) {
@@ -184,15 +189,12 @@ export default defineRoute(async (req, ctx) => {
 						</p>
 					</div>
 				)}
-				{release && isrcProvider && (
-					<div class='message'>
-						<SpriteIcon name='disc' />
-						<p>
-							<MagicISRC release={release} targetMbid={releaseMbid!} />
-							: Submit ISRCs from <a href={isrcProvider.url}>{isrcProvider.name}</a> to MusicBrainz
-						</p>
-					</div>
-				)}
+				<ISRCSubmission
+					release={release}
+					targetMbid={releaseMbid}
+					isrcProvider={isrcProvider}
+					recordingsCache={mbRecordings}
+				/>
 				{releaseUrl &&
 					allArtists.map((artist) => (
 						<LinkWithMusicBrainz
