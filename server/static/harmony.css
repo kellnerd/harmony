@@ -20,6 +20,9 @@
 	--button-fill: var(--even-fill);
 	--button-focus: var(--odd-fill);
 	--button-border: #dcdcdc;
+	--button-accent-fill: #0066cc;
+	--button-accent-focus: #004d99;
+	--button-accent-text: #ffffff;
 	--link: #0066cc;
 	--link-accent: var(--brand-red);
 	/* Provider brand colors */
@@ -319,6 +322,12 @@ span.entity-links > a:hover {
 	color: var(--link-accent);
 }
 
+/* LinkWithMusicBrainz.tsx */
+
+div.message-group {
+	margin: 1.5em auto;
+}
+
 /* MessageBox.tsx */
 
 div.message {
@@ -409,6 +418,28 @@ nav a:link, nav a:visited {
 nav img.icon-logo {
 	height: 2rem;
 	margin-right: 0.3rem;
+}
+
+/* OpenAllLinks.tsx */
+
+button.open-all-links {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.4em;
+	border-radius: 0.2em;
+	font-size: 0.8em;
+	line-height: 0.8em;
+	white-space: nowrap;
+	background-color: var(--button-accent-fill);
+	border: none;
+	color: var(--button-accent-text);
+	font-size: inherit;
+	font-family: inherit;
+}
+
+button.open-all-links:focus, button.open-all-links:hover {
+	background-color: var(--button-accent-focus);
+	cursor: pointer;
 }
 
 /* ProviderInput.tsx */

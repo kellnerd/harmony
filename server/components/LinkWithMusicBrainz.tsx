@@ -1,65 +1,65 @@
 import { LinkedEntity } from './LinkedEntity.tsx';
 import { SpriteIcon } from './SpriteIcon.tsx';
 
-import { musicbrainzTargetServer } from '@/config.ts';
-import type { ExternalLink, ResolvableEntity } from '@/harmonizer/types.ts';
-import { convertLinkType } from '@/musicbrainz/seeding.ts';
-import { providers } from '@/providers/mod.ts';
-import type { EntityWithMbid } from '@kellnerd/musicbrainz/api-types';
 import type { EntityType } from '@kellnerd/musicbrainz/data/entity';
-import { join } from 'std/url/join.ts';
-import { flatten } from 'utils/object/flatten.js';
+import { type EntityWithUrlRels, getMusicBrainzEditLink } from '@/utils/mbLink.ts';
+import type { ResolvableEntity } from '@/harmonizer/types.ts';
+import { OpenAllLinks } from '@/server/islands/OpenAllLinks.tsx';
+import { classList } from '@/utils/jsx.ts';
+import { providers } from '../../providers/mod.ts';
 
-// TODO: incomplete type, expose a suitable type from @kellnerd/musicbrainz?
-// interface $EntityWithUrlRels extends EntityWithMbid, WithRels<'url-rels'> {}
-// type EntityWithUrlRels = WithIncludes<$EntityWithUrlRels, 'url-rels'>
-export interface EntityWithUrlRels extends EntityWithMbid {
-	relations: Array<{
-		url: {
-			resource: string;
-		};
-	}>;
-}
-
-export function LinkWithMusicBrainz({ entity, entityType, sourceEntityUrl, entityCache }: {
+type EntityWithMbEditLink = {
 	entity: ResolvableEntity;
+	mbEditLink: URL;
+};
+
+/**
+ * Renders a list of MusicBrainz edit links to add external links, based on the provided entities and entity type.
+ * If multiple entities are present, a button to open all MusicBrainz edit links at once is shown.
+ */
+export function LinkWithMusicBrainz({ entities, entityType, sourceEntityUrl, entityCache }: {
+	entities: ResolvableEntity[];
 	entityType: EntityType;
-	sourceEntityUrl: URL;
+	sourceEntityUrl?: URL;
 	entityCache?: EntityWithUrlRels[];
 }) {
-	if (!entity.externalIds?.length || !entity.mbid) return null;
+	// No entities or no source entity URL to link from, nothing to render.
+	if (!sourceEntityUrl) return null;
 
-	// Get the entity from the cache and check which links already exist in MB.
-	const mbEntity = entityCache?.find((e) => e.id === entity.mbid);
-	const existingLinks = new Set(mbEntity?.relations.map((urlRel) => urlRel.url.resource));
+	const entitiesWithMbEditLinks = entities.map((entity) => ({
+		entity,
+		mbEditLink: getMusicBrainzEditLink({ entity, entityType, sourceEntityUrl, entityCache, providers }),
+	}))
+		.filter(isEntityWithMbEditLink);
 
-	// Convert external IDs into links and discard those which already exist.
-	const externalLinks: ExternalLink[] = entity.externalIds.map((externalId) => {
-		const provider = providers.findByName(externalId.provider)!;
-		return {
-			url: provider.constructUrl(externalId).href,
-			types: externalId.linkTypes ?? provider.getLinkTypesForEntity(externalId),
-		};
-	}).filter((link) => !existingLinks.has(link.url));
+	if (entitiesWithMbEditLinks.length === 0) return null;
 
-	if (!externalLinks.length) return null;
+	const hasMultipleEntities = entitiesWithMbEditLinks.length > 1;
 
-	// Construct link to seed the MB entity editor.
-	const mbEditLink = join(musicbrainzTargetServer, entityType, entity.mbid, 'edit');
-	mbEditLink.search = new URLSearchParams(flatten({
-		[`edit-${entityType}`]: {
-			url: externalLinks.flatMap((link) =>
-				link.types?.length
-					? link.types.map((type) => ({
-						text: link.url,
-						link_type_id: convertLinkType(entityType, type, new URL(link.url)),
-					}))
-					: ({ text: link.url })
-			),
-			edit_note: `Matched ${entityType} while importing ${sourceEntityUrl} with Harmony`,
-		},
-	})).toString();
+	return (
+		<div class={classList(hasMultipleEntities && 'message-group')}>
+			{hasMultipleEntities && (
+				<OpenAllLinks
+					mbEditLinks={entitiesWithMbEditLinks.map(({ mbEditLink }) => mbEditLink.href)}
+					entityType={entityType}
+				/>
+			)}
+			{entitiesWithMbEditLinks.map(({ entity, mbEditLink }) => (
+				<LinkWithMusicBrainzEntry
+					mbEditLink={mbEditLink}
+					entity={entity}
+					entityType={entityType}
+				/>
+			))}
+		</div>
+	);
+}
 
+function LinkWithMusicBrainzEntry({ mbEditLink, entity, entityType }: {
+	mbEditLink: URL;
+	entity: ResolvableEntity;
+	entityType: EntityType;
+}) {
 	return (
 		<div class='message'>
 			<SpriteIcon name='link' />
@@ -75,4 +75,8 @@ export function LinkWithMusicBrainz({ entity, entityType, sourceEntityUrl, entit
 			</div>
 		</div>
 	);
+}
+
+function isEntityWithMbEditLink(x: unknown): x is EntityWithMbEditLink {
+	return typeof x === 'object' && x !== null && 'entity' in x && 'mbEditLink' in x && x.mbEditLink instanceof URL;
 }

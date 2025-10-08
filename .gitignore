@@ -10,3 +10,6 @@ snaps/
 
 # Temporary files
 local/
+
+# Coverage directory
+coverage/
