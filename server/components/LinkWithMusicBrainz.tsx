@@ -6,6 +6,7 @@ import { type EntityWithUrlRels, getMusicBrainzEditLink } from '@/utils/mbLink.t
 import type { ResolvableEntity } from '@/harmonizer/types.ts';
 import { OpenAllLinks } from '@/server/islands/OpenAllLinks.tsx';
 import { classList } from '@/utils/jsx.ts';
+import { providers } from '../../providers/mod.ts';
 
 type EntityWithMbEditLink = {
 	entity: ResolvableEntity;
@@ -27,7 +28,7 @@ export function LinkWithMusicBrainz({ entities, entityType, sourceEntityUrl, ent
 
 	const entitiesWithMbEditLinks = entities.map((entity) => ({
 		entity,
-		mbEditLink: getMusicBrainzEditLink(entity, entityType, sourceEntityUrl, entityCache),
+		mbEditLink: getMusicBrainzEditLink({ entity, entityType, sourceEntityUrl, entityCache, providers }),
 	}))
 		.filter(isEntityWithMbEditLink);
 

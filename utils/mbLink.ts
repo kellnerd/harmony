@@ -3,9 +3,9 @@ import { flatten } from 'utils/object/flatten.js';
 import { musicbrainzTargetServer } from '@/config.ts';
 import { convertLinkType } from '@/musicbrainz/seeding.ts';
 import type { EntityType } from '@kellnerd/musicbrainz/data/entity';
-import { providers } from '@/providers/mod.ts';
 import type { EntityWithMbid } from '@kellnerd/musicbrainz/api-types';
 import type { ExternalLink, ResolvableEntity } from '@/harmonizer/types.ts';
+import type { ProviderRegistry } from '@/providers/registry.ts';
 
 // TODO: incomplete type, expose a suitable type from @kellnerd/musicbrainz?
 // interface $EntityWithUrlRels extends EntityWithMbid, WithRels<'url-rels'> {}
@@ -19,10 +19,17 @@ export interface EntityWithUrlRels extends EntityWithMbid {
 }
 
 export function getMusicBrainzEditLink(
-	entity: ResolvableEntity,
-	entityType: EntityType,
-	sourceEntityUrl: URL,
-	entityCache?: EntityWithUrlRels[],
+	{ entity, entityType, sourceEntityUrl, entityCache, providers }: {
+		entity: ResolvableEntity;
+		entityType: EntityType;
+		sourceEntityUrl: URL;
+		entityCache?: EntityWithUrlRels[];
+		/**
+		 * Registry of available metadata providers to construct external URLs and get link types.
+		 * Sent as a parameter to allow easier testing/mocking.
+		 */
+		providers: ProviderRegistry;
+	},
 ): URL | null {
 	if (!entity.externalIds?.length || !entity.mbid) return null;
 
