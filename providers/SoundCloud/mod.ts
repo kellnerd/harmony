@@ -10,6 +10,8 @@ import type {
 	LinkType,
 } from "@/harmonizer/types.ts";
 import {
+	type ApiAccessToken,
+	type ApiQueryOptions,
 	type CacheEntry,
 	MetadataProvider,
 	ReleaseLookup,
@@ -26,11 +28,16 @@ import {
 	extractMetadataTag,
 	extractTextFromHtml,
 } from "@/utils/html.ts";
+import { getFromEnv } from '@/utils/config.ts';
 import { plural, pluralWithCount } from "@/utils/plural.ts";
 import { isNotNull } from "@/utils/predicate.ts";
 import { similarNames } from "@/utils/similarity.ts";
 import { toTrackRanges } from "@/utils/tracklist.ts";
 import { simplifyName } from "utils/string/simplify.js";
+
+const soundcloudClientId = getFromEnv('HARMONY_SOUNDCLOUD_CLIENT_ID') || '';
+const soundcloudClientSecret = getFromEnv('HARMONY_SOUNDCLOUD_CLIENT_SECRET') || '';
+
 
 export default class SoundCloudProvider extends MetadataProvider {
 	readonly name = "SoundCloud";
@@ -68,7 +75,29 @@ export default class SoundCloudProvider extends MetadataProvider {
 		release: ['playlist', 'album'],
 	};
 
+	//Soundcloud's client credentials authentication works surprisingly simularly to Spotify's https://developers.soundcloud.com/docs#authentication
+	private async requestAccessToken(): Promise<ApiAccessToken> {
+		// See https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow
+		const url = new URL('https://secure.soundcloud.com/oauth/token');
+		const auth = encodeBase64(`${soundcloudClientId}:${soundcloudClientSecret}`);
+		const body = new URLSearchParams();
+		body.append('grant_type', 'client_credentials');
 
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Authorization': `Basic ${auth}`,
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			body: body,
+		});
+
+		const content = await response.json();
+		return {
+			accessToken: content?.access_token,
+			validUntilTimestamp: Date.now() + (content.expires_in * 1000),
+		};
+	}
 
 	override extractEntityFromUrl(url: URL): EntityId | undefined {
 		const albumResult = this.supportedUrls.exec(url);
@@ -84,11 +113,5 @@ export default class SoundCloudProvider extends MetadataProvider {
 		}
 
 		const artistResult = this.artistUrlPattern.exec(url);
-		if (artistResult) {
-			return {
-				type: 'artist',
-				id: artistResult.hostname.groups.artist!,
-			};
-		}
 	}
 }
