@@ -13,6 +13,7 @@ import {
 	type ApiAccessToken,
 	type ApiQueryOptions,
 	type CacheEntry,
+	MetadataApiProvider,
 	MetadataProvider,
 	ReleaseLookup,
 } from "@/providers/base.ts";
@@ -34,12 +35,19 @@ import { isNotNull } from "@/utils/predicate.ts";
 import { similarNames } from "@/utils/similarity.ts";
 import { toTrackRanges } from "@/utils/tracklist.ts";
 import { simplifyName } from "utils/string/simplify.js";
+import type {
+	ApiError
+} from './api_types.ts';
+import { encodeBase64 } from 'std/encoding/base64.ts';
+import { ResponseError as SnapResponseError } from 'snap-storage';
+
+
 
 const soundcloudClientId = getFromEnv('HARMONY_SOUNDCLOUD_CLIENT_ID') || '';
 const soundcloudClientSecret = getFromEnv('HARMONY_SOUNDCLOUD_CLIENT_SECRET') || '';
 
 
-export default class SoundCloudProvider extends MetadataProvider {
+export default class SoundCloudProvider extends MetadataApiProvider {
 	readonly name = "SoundCloud";
 
 	readonly supportedUrls = new URLPattern({
@@ -75,6 +83,48 @@ export default class SoundCloudProvider extends MetadataProvider {
 		release: ['playlist', 'album'],
 	};
 
+	async query<Data>(apiUrl: URL, options: ApiQueryOptions): Promise<CacheEntry<Data>> {
+			try {
+				await this.requestDelay;
+				const accessToken = await this.cachedAccessToken(this.requestAccessToken);
+				const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
+					policy: { maxTimestamp: options.snapshotMaxTimestamp },
+					requestInit: {
+						headers: {
+							'Authorization': `Bearer ${accessToken}`,
+						},
+					},
+				});
+				const apiError = cacheEntry.content as ApiError;
+				if (apiError.error) {
+					throw new SoundCloudReponseError(apiError, apiUrl);
+				}
+				return cacheEntry;
+			} catch (error) {
+				let apiError: ApiError | undefined;
+				if (error instanceof SnapResponseError) {
+					const { response } = error;
+					this.handleRateLimit(response);
+					// Retry API query when we encounter a 429 rate limit error.
+					if (response.status === 429) {
+						return this.query(apiUrl, options);
+					}
+					try {
+						// Clone the response so the body of the original response can be
+						// consumed later if the error gets re-thrown.
+						apiError = await response.clone().json();
+					} catch {
+						// Ignore secondary JSON parsing error, rethrow original error.
+					}
+				}
+				if (apiError?.error) {
+					throw new SoundCloudReponseError(apiError, apiUrl);
+				} else {
+					throw error;
+				}
+			}
+		}
+
 	//Soundcloud's client credentials authentication works surprisingly simularly to Spotify's https://developers.soundcloud.com/docs#authentication
 	private async requestAccessToken(): Promise<ApiAccessToken> {
 		// See https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow
@@ -100,18 +150,20 @@ export default class SoundCloudProvider extends MetadataProvider {
 	}
 
 	override extractEntityFromUrl(url: URL): EntityId | undefined {
-		const albumResult = this.supportedUrls.exec(url);
-		if (albumResult) {
-			const artist = albumResult.hostname.groups.artist!;
-			const { type, title } = albumResult.pathname.groups;
-			if (type && title) {
-				return {
-					type,
-					id: [artist, title].join('/'),
-				};
-			}
+		const playlistResult = this.supportedUrls.exec(url);
+		if (playlistResult) {
 		}
-
+		const trackResult = this.trackUrlPattern.exec(url);
+		if (trackResult) {
+		}
 		const artistResult = this.artistUrlPattern.exec(url);
+		if (artistResult) {
+		}
+	}
+}
+
+class SoundCloudReponseError extends ResponseError {
+	constructor(readonly details: ApiError, url: URL) {
+		super('SoundCloud', details?.status, url); //While there exists a message feild in the error response, it's usually empty, despite status being depricated.
 	}
 }
