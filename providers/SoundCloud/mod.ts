@@ -36,7 +36,12 @@ import { similarNames } from "@/utils/similarity.ts";
 import { toTrackRanges } from "@/utils/tracklist.ts";
 import { simplifyName } from "utils/string/simplify.js";
 import type {
-	ApiError
+	ApiError,
+	SoundcloudPlaylist,
+	SoundcloudUser,
+	SoundCloudTrack,
+	SoundcloudSearch,
+	SoundcloudFilter,
 } from './api_types.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
@@ -49,6 +54,8 @@ const soundcloudClientSecret = getFromEnv('HARMONY_SOUNDCLOUD_CLIENT_SECRET') ||
 
 export default class SoundCloudProvider extends MetadataApiProvider {
 	readonly name = "SoundCloud";
+
+	readonly apiBaseUrl = new URL('https://api.soundcloud.com/');
 
 	readonly supportedUrls = new URLPattern({
 		hostname: "soundcloud.com",
@@ -97,7 +104,7 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 				});
 				const apiError = cacheEntry.content as ApiError;
 				if (apiError.error) {
-					throw new SoundCloudReponseError(apiError, apiUrl);
+					throw new SoundCloudResponseError(apiError, apiUrl);
 				}
 				return cacheEntry;
 			} catch (error) {
@@ -118,14 +125,14 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 					}
 				}
 				if (apiError?.error) {
-					throw new SoundCloudReponseError(apiError, apiUrl);
+					throw new SoundCloudResponseError(apiError, apiUrl);
 				} else {
 					throw error;
 				}
 			}
 		}
 
-	//Soundcloud's client credentials authentication works surprisingly simularly to Spotify's https://developers.soundcloud.com/docs#authentication
+	//Soundcloud's client credentials authentication works surprisingly similarly to Spotify's https://developers.soundcloud.com/docs#authentication
 	private async requestAccessToken(): Promise<ApiAccessToken> {
 		// See https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow
 		const url = new URL('https://secure.soundcloud.com/oauth/token');
@@ -151,19 +158,29 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 
 	override extractEntityFromUrl(url: URL): EntityId | undefined {
 		const playlistResult = this.supportedUrls.exec(url);
-		if (playlistResult) {
-		}
 		const trackResult = this.trackUrlPattern.exec(url);
-		if (trackResult) {
-		}
 		const artistResult = this.artistUrlPattern.exec(url);
-		if (artistResult) {
+		const query = new URLSearchParams();
+		query.set('url', url.href);
+		const resolveUrl = new URL('resolve', this.apiBaseUrl);
+		resolveUrl.search = query.toString();
+		if (playlistResult | trackResult | artistResult) {
+			const cacheEntry = this.query<SoundcloudPlaylist | SoundcloudUser | SoundcloudTrack>(resolveUrl, { resolveUrl: this.options.snapshotMaxTimestamp });
+			this.updateCacheTime(cacheEntry.timestamp);
+			const entity = cacheEntry.content
+			if (entity) {
+				return entity.urn;
+			}
 		}
 	}
 }
 
-class SoundCloudReponseError extends ResponseError {
+class SoundCloudResponseError extends ResponseError {
 	constructor(readonly details: ApiError, url: URL) {
-		super('SoundCloud', details?.status, url); //While there exists a message feild in the error response, it's usually empty, despite status being depricated.
+		super('SoundCloud', details?.status, url); //While there exists a message field in the error response, it's usually empty, despite status being deprecated.
 	}
+}
+
+export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider> {
+
 }
