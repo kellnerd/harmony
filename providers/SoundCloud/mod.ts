@@ -351,7 +351,7 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 
 	getArtwork(release: SoundcloudPlaylist | SoundcloudTrack): Artwork[] | undefined {
 		const artworks: Artwork[] = [];
-		const artworkUrl = release.artwork_url;
+		const artworkUrl = release.artwork_url?.replace(/-(large|medium|small)\./, '-t300x300.');;
 		if (artworkUrl) {
 			// Replace large/medium/small with t500x500 to get the largest available image.
 			const artworkFull = artworkUrl.replace(/-(large|medium|small)\./, '-t500x500.');
