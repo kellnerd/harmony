@@ -10,6 +10,7 @@ import iTunesProvider from './iTunes/mod.ts';
 import MusicBrainzProvider from './MusicBrainz/mod.ts';
 import SpotifyProvider from './Spotify/mod.ts';
 import TidalProvider from './Tidal/mod.ts';
+import SoundCloudProvider from './SoundCloud/mod.ts';
 
 /** Registry with all supported providers. */
 export const providers = new ProviderRegistry({
@@ -26,6 +27,7 @@ providers.addMultiple(
 	TidalProvider,
 	BandcampProvider,
 	BeatportProvider,
+	SoundCloudProvider
 );
 
 /** Internal names of providers which are enabled by default (for GTIN lookups). */
