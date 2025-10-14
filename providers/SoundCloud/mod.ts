@@ -15,26 +15,14 @@ import {
 	type ApiQueryOptions,
 	type CacheEntry,
 	MetadataApiProvider,
-	MetadataProvider,
 	ReleaseLookup,
 } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
-import { extractDataAttribute, extractMetadataTag, extractTextFromHtml } from '@/utils/html.ts';
 import { getFromEnv } from '@/utils/config.ts';
-import { plural, pluralWithCount } from '@/utils/plural.ts';
 import { isNotNull } from '@/utils/predicate.ts';
-import { similarNames } from '@/utils/similarity.ts';
-import { toTrackRanges } from '@/utils/tracklist.ts';
-import { simplifyName } from 'utils/string/simplify.js';
-import {
-	ApiError,
-	RawReponse,
-	SoundcloudPlaylist,
-	SoundcloudTrack,
-	SoundcloudUser,
-} from './api_types.ts';
+import { ApiError, RawReponse, SoundcloudPlaylist, SoundcloudTrack, SoundcloudUser } from './api_types.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
 import { capitalizeReleaseType } from '../../harmonizer/release_types.ts';
@@ -306,7 +294,7 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 				}],
 				media: [{
 					format: 'Digital Media',
-					tracklist: playlistResponse.tracks?.filter(isNotNull).map((track, idx) => this.convertRawTrack(track, idx)) || [],
+					tracklist: playlistResponse.tracks?.filter(isNotNull).map(this.convertRawTrack.bind(this)) ?? [],
 				}],
 				releaseDate: this.getReleaseDate(playlistResponse),
 				labels: this.getLabel(playlistResponse),
@@ -316,7 +304,6 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 				images: this.getArtwork(playlistResponse),
 			};
 			return release;
-
 		}
 	}
 
@@ -325,18 +312,10 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 			const playlist = release as SoundcloudPlaylist;
 			const types: LinkType[] = ['free streaming'];
 			if (playlist.tracks?.length > 0) {
-				let allDownloadable = true;
-				for (const track of playlist.tracks) {
-					if (!track.downloadable) {
-						allDownloadable = false;
-						break;
-					}
-				}
-				if (allDownloadable) {
+				if (playlist.tracks?.every((track) => track.downloadable)) {
 					types.push('free download');
 				}
 			}
-			return types;
 		} else if (release.kind === 'track') {
 			const track = release as SoundcloudTrack;
 			const types: LinkType[] = ['free streaming'];
@@ -348,19 +327,15 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 		return [];
 	}
 
-
 	getArtwork(release: SoundcloudPlaylist | SoundcloudTrack): Artwork[] | undefined {
 		const artworks: Artwork[] = [];
-		const artworkUrl = release.artwork_url?.replace(/-(large|medium|small)\./, '-t300x300.');;
+		const artworkUrl = release.artwork_url;
 		if (artworkUrl) {
-			// Replace large/medium/small with t500x500 to get the largest available image.
-			const artworkFull = artworkUrl.replace(/-(large|medium|small)\./, '-t500x500.');
 			artworks.push({
-				thumbUrl: artworkUrl,
-				url: artworkFull,
-				types: ['front'],
+				thumbUrl: artworkUrl.replace(/-(large|medium|small)\./, '-t300x300.'),
+				url: artworkUrl.replace(/-(large|medium|small)\./, '-original.'),
+				types: ['front' as ArtworkType],
 				provider: this.provider.name,
-
 			});
 			return artworks;
 		}
@@ -371,33 +346,26 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 		if (release.kind === 'playlist') {
 			const playlist = release as SoundcloudPlaylist;
 			if (playlist.label_name) {
-				const label:Label = {
+				const label: Label = {
 					name: playlist.label_name,
-				}
+				};
 				return [label];
 			} else {
 				if (playlist.tracks?.length > 0) {
 					const labelName = playlist.tracks[0].label_name;
-					for (const track of playlist.tracks) {
-						if (track.label_name !== track.label_name) {
-							// Different label names found, cannot determine a single label for the release.
-							return undefined;
-						}
-					}
-					if (labelName) {
-						const label:Label = {
+					if (labelName && playlist.tracks.every((track) => track.label_name === labelName)) {
+						return [{
 							name: labelName,
-						}
-						return [label];
+						}];
 					}
 				}
 			}
 		} else if (release.kind === 'track') {
 			const track = release as SoundcloudTrack;
 			if (track.label_name) {
-				const label:Label = {
+				const label: Label = {
 					name: track.label_name,
-				}
+				};
 				return [label];
 			}
 		}
@@ -405,7 +373,7 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 	}
 
 	getReleaseDate(release: SoundcloudTrack | SoundcloudPlaylist): PartialDate | undefined {
-		if (release.release_day, release.release_month, release.release_year) {
+		if (release.release_year || release.release_month || release.release_day) {
 			const date: PartialDate = {
 				year: release.release_year || undefined,
 				month: release.release_month || undefined,
