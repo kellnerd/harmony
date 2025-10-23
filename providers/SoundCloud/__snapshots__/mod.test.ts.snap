@@ -32,14 +32,14 @@ snapshot[`SoundCloud provider > release lookup > track release with downloads en
       types: [
         "front",
       ],
-      url: "https://i1.sndcdn.com/artworks-000142912000-f05col-original.jpg",
+      url: "https://i1.sndcdn.com/artworks-000142912000-f05col-t500x500.jpg",
     },
   ],
   info: {
     messages: [],
     providers: [
       {
-        apiUrl: undefined,
+        apiUrl: "https://api.soundcloud.com/resolve?url=https%3A%2F%2Fsoundcloud.com%2Fleagueoflegends%2Fpiercing-light-mako-remix",
         id: "leagueoflegends/track/piercing-light-mako-remix",
         internalName: "soundcloud",
         lookup: {
