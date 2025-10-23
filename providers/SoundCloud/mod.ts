@@ -405,8 +405,7 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 		const segments = timestamp.split(' ');
 		if (segments.length === 3) {
 			// Convert "2025/07/30 07:13:31 +0000" to "2025-07-30T07:13:31+00:00"
-			const iso = segments[0].replace(/\//g, '-') + 'T' + segments[1] +
-				segments[2].replace(/([+-]\d{2})(\d{2})$/, '$1:$2');
+			const iso = segments[0].replace(/\//g, '-');// + 'T' + segments[1] + segments[2].replace(/([+-]\d{2})(\d{2})$/, '$1:$2')
 			const date = new Date(iso);
 			if (!isNaN(date.getTime())) {
 				return date;
