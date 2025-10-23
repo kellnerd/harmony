@@ -121,11 +121,11 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 	}
 
 	override getLinkTypesForEntity(entity: EntityId): LinkType[] {
-		if (entity.type === 'track') {
+		if (entity.type != 'artist') {
 			// All tracks offer free streaming, but some don't have free downloads enabled.
 			return ['free streaming'];
 		}
-		// MB has special handling for Bandcamp artist URLs
+		// MB has special handling for Soundcloud artist URLs
 		return ['discography page'];
 	}
 
