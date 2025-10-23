@@ -219,7 +219,19 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 	rawReleaseUrl: URL | undefined;
 
 	constructReleaseApiUrl(): URL | undefined {
-		return undefined;
+		const { method, value } = this.lookup;
+		let lookupUrl: URL;
+		const query = new URLSearchParams();
+		if (method === 'gtin') {
+			throw new ProviderError(this.provider.name, 'GTIN lookups are not supported');
+		} else {
+			const entityId = this.provider.parseProviderId(value, 'release');
+			const releaseUrl = this.provider.constructUrl(entityId);
+			lookupUrl = new URL(`resolve`, this.provider.apiBaseUrl);
+			query.set('url', releaseUrl.href);
+		}
+		lookupUrl.search = query.toString();
+		return lookupUrl;
 	}
 
 	async getRawRelease(): Promise<RawReponse> {
@@ -333,7 +345,7 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 		if (artworkUrl) {
 			artworks.push({
 				thumbUrl: artworkUrl.replace(/-(large|medium|small)\./, '-t300x300.'),
-				url: artworkUrl.replace(/-(large|medium|small)\./, '-original.'),
+				url: artworkUrl.replace(/-(large|medium|small)\./, '-t500x500.'),
 				types: ['front' as ArtworkType],
 				provider: this.provider.name,
 			});
