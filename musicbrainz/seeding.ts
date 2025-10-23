@@ -145,7 +145,7 @@ export function convertLinkType(entityType: EntityType, linkType: LinkType, url?
 			if (url?.hostname.endsWith('.bandcamp.com')) {
 				return typeIds.bandcamp;
 			}
-			if (url?.hostname.replace('www.','') == 'soundcloud.com') {
+			if (url?.hostname.replace('www.', '') == 'soundcloud.com') {
 				return typeIds.soundcloud;
 			}
 			return typeIds['discography page'] ?? typeIds['discography entry'];

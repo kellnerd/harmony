@@ -27,7 +27,7 @@ providers.addMultiple(
 	TidalProvider,
 	BandcampProvider,
 	BeatportProvider,
-	SoundCloudProvider
+	SoundCloudProvider,
 );
 
 /** Internal names of providers which are enabled by default (for GTIN lookups). */

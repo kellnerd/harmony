@@ -1,98 +1,95 @@
 // Classes from https://github.com/Moebytes/soundcloud.ts
 // MIT License
-export type SoundcloudImageFormats =
-	| 't500x500'
-	| 'crop'
-	| 't300x300'
-	| 'large'
-	| 't67x67'
-	| 'badge'
-	| 'small'
-	| 'tiny'
-	| 'mini';
+export type SoundcloudImageFormats = 't500x500';
+'crop';
+'t300x300';
+'large';
+'t67x67';
+'badge';
+'small';
+'tiny';
+'mini';
 
-export type SoundcloudLicense =
-	| 'no-rights-reserved'
-	| 'all-rights-reserved'
-	| 'cc-by'
-	| 'cc-by-nc'
-	| 'cc-by-nd'
-	| 'cc-by-sa'
-	| 'cc-by-nc-nd'
-	| 'cc-by-nc-sa';
+export type SoundcloudLicense = 'no-rights-reserved';
+'all-rights-reserved';
+'cc-by';
+'cc-by-nc';
+'cc-by-nd';
+'cc-by-sa';
+'cc-by-nc-nd';
+'cc-by-nc-sa';
 
-export type SoundcloudTrackType =
-	| 'original'
-	| 'remix'
-	| 'live'
-	| 'recording'
-	| 'spoken'
-	| 'podcast'
-	| 'demo'
-	| 'in progress'
-	| 'stem'
-	| 'loop'
-	| 'sound effect'
-	| 'sample'
-	| 'other';
+export type SoundcloudTrackType = 'original';
+'remix';
+'live';
+'recording';
+'spoken';
+'podcast';
+'demo';
+'in progress';
+'stem';
+'loop';
+'sound effect';
+'sample';
+'other';
 
 export interface SoundcloudTrack {
-    artwork_url: string;
-    comment_count: number;
-    commentable: boolean;
-    created_at: string;
-    description: string;
-    display_date: string;
-    download_count: number;
-    downloadable: boolean;
-    duration: number;
-    embeddable_by: "all" | "me" | "none";
-    full_duration: number;
-    genre: string;
-    has_downloads_left: boolean;
-    id: number;
-    kind: string;
-    label_name: string;
-    last_modified: string;
-    license: SoundcloudLicense;
-    likes_count: number;
-    monetization_model: string;
-    permalink: string;
-    permalink_url: string;
-    playback_count: number;
-    policy: string;
-    public: boolean;
-    purchase_title: string;
-    purchase_url: string;
-    reposts_count: number;
-    secret_token: string;
-    sharing: "private" | "public";
-    state: "processing" | "failed" | "finished";
-    streamable: boolean;
-    tag_list: string;
-    title: string;
-    uri: string;
-    urn: string;
-    user: SoundcloudUser;
-    user_id: number;
-    visuals: string;
-    waveform_url: string;
-		release: string | null;
-		key_signature: string | null;
-		isrc: string | null;
-		bpm: number | null;
-		release_year: number | null;
-		release_month: number | null;
-		release_day: number | null;
-		stream_url: string;
-		download_url: string | null;
-		available_country_codes: string[] | null;
-		secret_uri: string | null;
-		user_favorite: boolean | null;
-		user_playback_count: number | null;
-		favoritings_count: number;
-		access: string;
-		metadata_artist: string;
+	artwork_url: string;
+	comment_count: number;
+	commentable: boolean;
+	created_at: string;
+	description: string;
+	display_date: string;
+	download_count: number;
+	downloadable: boolean;
+	duration: number;
+	embeddable_by: 'all' | 'me' | 'none';
+	full_duration: number;
+	genre: string;
+	has_downloads_left: boolean;
+	id: number;
+	kind: string;
+	label_name: string;
+	last_modified: string;
+	license: SoundcloudLicense;
+	likes_count: number;
+	monetization_model: string;
+	permalink: string;
+	permalink_url: string;
+	playback_count: number;
+	policy: string;
+	public: boolean;
+	purchase_title: string;
+	purchase_url: string;
+	reposts_count: number;
+	secret_token: string;
+	sharing: 'private' | 'public';
+	state: 'processing' | 'failed' | 'finished';
+	streamable: boolean;
+	tag_list: string;
+	title: string;
+	uri: string;
+	urn: string;
+	user: SoundcloudUser;
+	user_id: number;
+	visuals: string;
+	waveform_url: string;
+	release: string | null;
+	key_signature: string | null;
+	isrc: string | null;
+	bpm: number | null;
+	release_year: number | null;
+	release_month: number | null;
+	release_day: number | null;
+	stream_url: string;
+	download_url: string | null;
+	available_country_codes: string[] | null;
+	secret_uri: string | null;
+	user_favorite: boolean | null;
+	user_playback_count: number | null;
+	favoritings_count: number;
+	access: string;
+	metadata_artist: string;
 }
 
 export interface SoundcloudPlaylist {
@@ -185,7 +182,6 @@ export interface SoundcloudCreatorSubscription {
 	};
 }
 
-
 //Custom Classes
 
 export type ApiError = {
@@ -204,4 +200,4 @@ export type RawReponse = {
 	type: 'track' | 'playlist';
 	/** Url of the release */
 	href: string;
-}
+};

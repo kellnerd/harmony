@@ -259,7 +259,7 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 		}
 	}
 
-	async convertRawRelease(rawRelease: RawReponse): Promise<HarmonyRelease> {
+	convertRawRelease(rawRelease: RawReponse): HarmonyRelease {
 		const { apiResponse, type } = rawRelease;
 		if (type == 'track') {
 			const trackReponse = apiResponse as SoundcloudTrack;
