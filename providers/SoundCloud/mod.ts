@@ -393,23 +393,22 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 			};
 			return date;
 		} else if (release.created_at) {
-			const date = this.parseSoundcloudTimestamp(release.created_at);
-			if (date) {
-				return parseISODateTime(date.toISOString());
-			}
+			return this.parseSoundcloudTimestamp(release.created_at);
 		}
 		return undefined;
 	}
 
-	parseSoundcloudTimestamp(timestamp: string): Date | undefined {
+	parseSoundcloudTimestamp(timestamp: string): PartialDate | undefined {
 		const segments = timestamp.split(' ');
 		if (segments.length === 3) {
-			// Convert "2025/07/30 07:13:31 +0000" to "2025-07-30T07:13:31+00:00"
-			const iso = segments[0].replace(/\//g, '-');// + 'T' + segments[1] + segments[2].replace(/([+-]\d{2})(\d{2})$/, '$1:$2')
-			const date = new Date(iso);
-			if (!isNaN(date.getTime())) {
-				return date;
-			}
+			// Timestamp format "2025/07/30 07:13:31 +0000"
+			const dateSegments = segments[0].split("/");
+			const date: PartialDate = {
+				year: Number(dateSegments[0]) || undefined,
+				month: Number(dateSegments[1]) || undefined,
+				day: Number(dateSegments[2]) || undefined,
+			};
+			return date
 		}
 		return undefined;
 	}
