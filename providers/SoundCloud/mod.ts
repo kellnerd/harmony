@@ -402,13 +402,13 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 		const segments = timestamp.split(' ');
 		if (segments.length === 3) {
 			// Timestamp format "2025/07/30 07:13:31 +0000"
-			const dateSegments = segments[0].split("/");
+			const dateSegments = segments[0].split('/');
 			const date: PartialDate = {
 				year: Number(dateSegments[0]) || undefined,
 				month: Number(dateSegments[1]) || undefined,
 				day: Number(dateSegments[2]) || undefined,
 			};
-			return date
+			return date;
 		}
 		return undefined;
 	}
