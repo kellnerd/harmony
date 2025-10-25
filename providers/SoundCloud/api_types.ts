@@ -1,37 +1,40 @@
 // Classes from https://github.com/Moebytes/soundcloud.ts
 // MIT License
-export type SoundcloudImageFormats = 't500x500';
-'crop';
-'t300x300';
-'large';
-'t67x67';
-'badge';
-'small';
-'tiny';
-'mini';
+export type SoundcloudImageFormats =
+	| 't500x500'
+	| 'crop'
+	| 't300x300'
+	| 'large'
+	| 't67x67'
+	| 'badge'
+	| 'small'
+	| 'tiny'
+	| 'mini';
 
-export type SoundcloudLicense = 'no-rights-reserved';
-'all-rights-reserved';
-'cc-by';
-'cc-by-nc';
-'cc-by-nd';
-'cc-by-sa';
-'cc-by-nc-nd';
-'cc-by-nc-sa';
+export type SoundcloudLicense =
+	| 'no-rights-reserved'
+	| 'all-rights-reserved'
+	| 'cc-by'
+	| 'cc-by-nc'
+	| 'cc-by-nd'
+	| 'cc-by-sa'
+	| 'cc-by-nc-nd'
+	| 'cc-by-nc-sa';
 
-export type SoundcloudTrackType = 'original';
-'remix';
-'live';
-'recording';
-'spoken';
-'podcast';
-'demo';
-'in progress';
-'stem';
-'loop';
-'sound effect';
-'sample';
-'other';
+export type SoundcloudTrackType =
+	| 'original'
+	| 'remix'
+	| 'live'
+	| 'recording'
+	| 'spoken'
+	| 'podcast'
+	| 'demo'
+	| 'in progress'
+	| 'stem'
+	| 'loop'
+	| 'sound effect'
+	| 'sample'
+	| 'other';
 
 export interface SoundcloudTrack {
 	artwork_url: string;
