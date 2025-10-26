@@ -28,6 +28,7 @@
 	--beatport: #00e586;
 	--brainz: #eb743b;
 	--deezer: #a238ff;
+	--discogs: #121212;
 	--musicbrainz: #ba478f;
 	--spotify: #1db954;
 	--tidal: #000000;
@@ -431,6 +432,9 @@ label.beatport, td.beatport {
 }
 label.deezer, td.deezer {
 	background-color: var(--deezer);
+}
+label.discogs, td.discogs {
+	background-color: var(--discogs);
 }
 label.itunes, td.itunes {
 	background-color: var(--apple);
