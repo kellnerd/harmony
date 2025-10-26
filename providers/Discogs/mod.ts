@@ -106,10 +106,22 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 	}
 
 	convertRawArtist(artist: Artist): ArtistCreditName {
+		let joinPhrase = artist.join;
+		if (joinPhrase) {
+			// Discogs join phrases are often not padded with the necessary spaces.
+			// Prefix with space unless the phrase starts with a space or a comma.
+			if (!/^[\s,]/.test(joinPhrase)) {
+				joinPhrase = ' ' + joinPhrase;
+			}
+			// Append space if it is missing.
+			if (!joinPhrase.endsWith(' ')) {
+				joinPhrase += ' ';
+			}
+		}
 		return {
 			name: this.provider.cleanName(artist.name),
 			creditedName: artist.anv || undefined,
-			joinPhrase: artist.join || undefined,
+			joinPhrase: joinPhrase || undefined,
 			externalIds: this.provider.makeExternalIds({
 				type: 'artist',
 				id: artist.id.toString(),
