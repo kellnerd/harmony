@@ -15,6 +15,7 @@ import IconCopyCheck from 'tabler-icons/copy-check.tsx';
 import IconDatabaseEdit from 'tabler-icons/database-edit.tsx';
 import IconDatabaseImport from 'tabler-icons/database-import.tsx';
 import IconDisc from 'tabler-icons/disc.tsx';
+import IconExternalLink from 'tabler-icons/external-link.tsx';
 import IconHelp from 'tabler-icons/help.tsx';
 import IconInfoCircle from 'tabler-icons/info-circle.tsx';
 import IconLink from 'tabler-icons/link.tsx';
@@ -40,6 +41,7 @@ const icons: Icon[] = [
 	IconDatabaseEdit,
 	IconDatabaseImport,
 	IconDisc,
+	IconExternalLink,
 	IconHelp,
 	IconInfoCircle,
 	IconLink,

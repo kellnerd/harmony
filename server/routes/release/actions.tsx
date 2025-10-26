@@ -1,7 +1,7 @@
 import { ArtistCredit } from '@/server/components/ArtistCredit.tsx';
 import { CoverImage } from '@/server/components/CoverImage.tsx';
 import { MagicISRC } from '@/server/components/ISRCSubmission.tsx';
-import { type EntityWithUrlRels, LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
+import { LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
 import { MBIDInput } from '@/server/components/MBIDInput.tsx';
 import { MessageBox } from '@/server/components/MessageBox.tsx';
 import { ProviderList } from '@/server/components/ProviderList.tsx';
@@ -30,6 +30,7 @@ import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 import { join } from 'std/url/join.ts';
+import type { EntityWithUrlRels } from '@/musicbrainz/edit_link.ts';
 
 export default defineRoute(async (req, ctx) => {
 	const errors: Error[] = [];
@@ -175,7 +176,7 @@ export default defineRoute(async (req, ctx) => {
 					/>
 				))}
 				{releaseUrl && (
-					<div class='message'>
+					<div class='action'>
 						<SpriteIcon name='brand-metabrainz' />
 						<p>
 							<a href={releaseUrl.href}>
@@ -185,7 +186,7 @@ export default defineRoute(async (req, ctx) => {
 					</div>
 				)}
 				{release && isrcProvider && (
-					<div class='message'>
+					<div class='action'>
 						<SpriteIcon name='disc' />
 						<p>
 							<MagicISRC release={release} targetMbid={releaseMbid!} />
@@ -193,20 +194,24 @@ export default defineRoute(async (req, ctx) => {
 						</p>
 					</div>
 				)}
-				{releaseUrl &&
-					allArtists.map((artist) => (
-						<LinkWithMusicBrainz
-							entity={artist}
-							entityType='artist'
-							sourceEntityUrl={releaseUrl}
-							entityCache={mbArtists}
-						/>
-					))}
-				{release?.labels?.map((label) => (
-					<LinkWithMusicBrainz entity={label} entityType='label' sourceEntityUrl={releaseUrl!} entityCache={mbLabels} />
-				))}
 				{releaseUrl && (
-					<div class='message'>
+					<LinkWithMusicBrainz
+						entities={allArtists}
+						entityType='artist'
+						sourceEntityUrl={releaseUrl}
+						entityCache={mbArtists}
+					/>
+				)}
+				{releaseUrl && release?.labels && (
+					<LinkWithMusicBrainz
+						entities={release.labels}
+						entityType='label'
+						sourceEntityUrl={releaseUrl!}
+						entityCache={mbLabels}
+					/>
+				)}
+				{releaseUrl && (
+					<div class='action'>
 						<SpriteIcon name='photo-plus' />
 						<div>
 							<p>
@@ -218,14 +223,14 @@ export default defineRoute(async (req, ctx) => {
 					</div>
 				)}
 				{allImages.map((artwork) => <CoverImage artwork={artwork} key={artwork.url} />)}
-				{allRecordings.map((recording) => (
+				{releaseUrl && (
 					<LinkWithMusicBrainz
-						entity={recording}
+						entities={allRecordings}
 						entityType='recording'
-						sourceEntityUrl={releaseUrl!}
+						sourceEntityUrl={releaseUrl}
 						entityCache={mbRecordings}
 					/>
-				))}
+				)}
 			</main>
 		</>
 	);
