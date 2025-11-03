@@ -18,7 +18,7 @@ import {
 	ReleaseLookup,
 } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
-import { parseISODateTime, PartialDate } from '@/utils/date.ts';
+import { PartialDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { getFromEnv } from '@/utils/config.ts';
 import { isNotNull } from '@/utils/predicate.ts';
@@ -53,8 +53,8 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 	});
 
 	readonly entityTypeMap = {
-		artist: 'user',
-		release: ['playlist', 'track'],
+		artist: 'artist',
+		release: ['set', 'track'],
 	};
 
 	override extractEntityFromUrl(url: URL): EntityId | undefined {
@@ -64,7 +64,7 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 
 			if (title) {
 				return {
-					type: 'playlist',
+					type: 'set', // playlist or album
 					id: [artist, title].join('/'),
 				};
 			}
@@ -94,7 +94,7 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 		if (entity.type === 'artist') return new URL(artist, 'https://soundcloud.com');
 
 		if (!title) {
-			throw new ProviderError(this.name, `Incomplete release ID '${entity.id}' does not match format \`user/title\``);
+			throw new ProviderError(this.name, `Incomplete release ID '${entity.id}' does not match format \`artist/title\``);
 		}
 		if (entity.type === 'track') return new URL([artist, title].join('/'), 'https://soundcloud.com');
 		return new URL([artist, 'sets', title].join('/'), 'https://soundcloud.com');
@@ -113,7 +113,7 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 			if (id.includes('/track/')) {
 				return { id: id.replace('/track/', '/'), type: 'track' };
 			} else {
-				return { id, type: 'album' };
+				return { id, type: 'set' };
 			}
 		} else {
 			return { id, type: this.entityTypeMap[entityType] };

@@ -20,7 +20,7 @@ describe('SoundCloud provider', () => {
 		urls: [{
 			description: 'album page',
 			url: new URL('https://soundcloud.com/ivycomb/sets/crimsongalaxies'),
-			id: { type: 'playlist', id: 'ivycomb/crimsongalaxies' },
+			id: { type: 'set', id: 'ivycomb/crimsongalaxies' },
 			isCanonical: true,
 		}, {
 			description: 'standalone track page',
