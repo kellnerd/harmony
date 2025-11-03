@@ -38,6 +38,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: 'album',
+		recording: 'song', // ['song', 'music-video'],
 	};
 
 	override readonly availableRegions = new Set(availableRegions);
