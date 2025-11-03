@@ -39,12 +39,7 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'soundcloud.com',
-		pathname: '/:artist/sets/:title',
-	});
-
-	readonly trackUrlPattern = new URLPattern({
-		hostname: 'soundcloud.com',
-		pathname: '/:artist/:title',
+		pathname: '/:artist/:type(sets)?/:title',
 	});
 
 	readonly artistUrlPattern = new URLPattern({
@@ -54,27 +49,17 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 
 	readonly entityTypeMap = {
 		artist: 'artist',
+		// A set can be an album or a playlist.
 		release: ['set', 'track'],
 	};
 
 	override extractEntityFromUrl(url: URL): EntityId | undefined {
-		const playlistResult = this.supportedUrls.exec(url);
-		if (playlistResult) {
-			const { title, artist } = playlistResult.pathname.groups;
-
-			if (title) {
+		const releaseResult = this.supportedUrls.exec(url);
+		if (releaseResult) {
+			const { artist, type, title } = releaseResult.pathname.groups;
+			if (artist && title) {
 				return {
-					type: 'set', // playlist or album
-					id: [artist, title].join('/'),
-				};
-			}
-		}
-		const trackResult = this.trackUrlPattern.exec(url);
-		if (trackResult) {
-			const { title, artist } = trackResult.pathname.groups;
-			if (title) {
-				return {
-					type: 'track',
+					type: type === 'sets' ? 'set' : 'track',
 					id: [artist, title].join('/'),
 				};
 			}
