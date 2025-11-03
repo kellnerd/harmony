@@ -1,5 +1,6 @@
-// Classes from https://github.com/Moebytes/soundcloud.ts
-// MIT License
+// Type definitions from https://github.com/Moebytes/soundcloud.ts
+// Copyright (c) 2020 Moebytes. MIT License.
+
 export type SoundcloudImageFormats =
 	| 't500x500'
 	| 'crop'
@@ -51,7 +52,7 @@ export interface SoundcloudTrack {
 	genre: string;
 	has_downloads_left: boolean;
 	id: number;
-	kind: string;
+	kind: 'track';
 	label_name: string;
 	last_modified: string;
 	license: SoundcloudLicense;
@@ -120,7 +121,7 @@ export interface SoundcloudPlaylist {
 	secret_token: string | null;
 	created_at: string;
 	likes_count: number;
-	kind: string;
+	kind: 'playlist';
 	title: string;
 	purchase_title: string | null;
 	managed_by_feeds: boolean;
@@ -185,7 +186,7 @@ export interface SoundcloudCreatorSubscription {
 	};
 }
 
-//Custom Classes
+// Custom type definitions.
 
 export type ApiError = {
 	code: number;
@@ -196,11 +197,4 @@ export type ApiError = {
 	error: string | null;
 };
 
-export type RawReponse = {
-	/** Raw Data from the soundcloud API */
-	apiResponse: SoundcloudTrack | SoundcloudPlaylist;
-	/** The type of release, either 'track' or 'playlist' */
-	type: 'track' | 'playlist';
-	/** Url of the release */
-	href: string;
-};
+export type RawRelease = SoundcloudTrack | SoundcloudPlaylist;

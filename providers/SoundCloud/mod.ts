@@ -1,7 +1,6 @@
 import type {
 	ArtistCreditName,
 	Artwork,
-	ArtworkType,
 	CountryCode,
 	EntityId,
 	HarmonyEntityType,
@@ -22,7 +21,7 @@ import { PartialDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { getFromEnv } from '@/utils/config.ts';
 import { isNotNull } from '@/utils/predicate.ts';
-import { ApiError, RawReponse, SoundcloudPlaylist, SoundcloudTrack, SoundcloudUser } from './api_types.ts';
+import { ApiError, RawRelease, SoundcloudPlaylist, SoundcloudTrack, SoundcloudUser } from './api_types.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
 import { capitalizeReleaseType } from '../../harmonizer/release_types.ts';
@@ -75,14 +74,15 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 	}
 
 	constructUrl(entity: EntityId): URL {
+		const baseUrl = 'https://soundcloud.com';
 		const [artist, title] = entity.id.split('/', 2);
-		if (entity.type === 'artist') return new URL(artist, 'https://soundcloud.com');
+		if (entity.type === 'artist') return new URL(artist, baseUrl);
 
 		if (!title) {
 			throw new ProviderError(this.name, `Incomplete release ID '${entity.id}' does not match format \`artist/title\``);
 		}
-		if (entity.type === 'track') return new URL([artist, title].join('/'), 'https://soundcloud.com');
-		return new URL([artist, 'sets', title].join('/'), 'https://soundcloud.com');
+		if (entity.type === 'track') return new URL([artist, title].join('/'), baseUrl);
+		return new URL([artist, 'sets', title].join('/'), baseUrl);
 	}
 
 	override serializeProviderId(entity: EntityId): string {
@@ -110,7 +110,7 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 			// All tracks offer free streaming, but some don't have free downloads enabled.
 			return ['free streaming'];
 		}
-		// MB has special handling for Soundcloud artist URLs
+		// MB has special handling for Soundcloud artist URLs.
 		return ['discography page'];
 	}
 
@@ -169,9 +169,8 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 		}
 	}
 
-	//Soundcloud's client credentials authentication works surprisingly similarly to Spotify's https://developers.soundcloud.com/docs#authentication
 	private async requestAccessToken(): Promise<ApiAccessToken> {
-		// See https://developer.spotify.com/documentation/web-api/tutorials/client-credentials-flow
+		// See https://developers.soundcloud.com/docs#authentication
 		const url = new URL('https://secure.soundcloud.com/oauth/token');
 		const auth = encodeBase64(`${soundcloudClientId}:${soundcloudClientSecret}`);
 		const body = new URLSearchParams();
@@ -196,127 +195,107 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 
 class SoundCloudResponseError extends ResponseError {
 	constructor(readonly details: ApiError, url: URL) {
-		super('SoundCloud', details?.status, url); //While there exists a message field in the error response, it's usually empty, despite status being deprecated.
+		// While there exists a message field in the error response, it's usually empty, despite status being deprecated.
+		super('SoundCloud', details?.status, url);
 	}
 }
 
-export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, RawReponse> {
-	rawReleaseUrl: URL | undefined;
-
-	constructReleaseApiUrl(): URL | undefined {
-		const { method, value } = this.lookup;
+export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, RawRelease> {
+	constructReleaseApiUrl(): URL {
 		let lookupUrl: URL;
 		const query = new URLSearchParams();
-		if (method === 'gtin') {
+		if (this.lookup.method === 'gtin') {
 			throw new ProviderError(this.provider.name, 'GTIN lookups are not supported');
 		} else {
-			const entityId = this.provider.parseProviderId(value, 'release');
-			const releaseUrl = this.provider.constructUrl(entityId);
-			lookupUrl = new URL(`resolve`, this.provider.apiBaseUrl);
+			// Entity is already defined for ID/URL lookups.
+			const releaseUrl = this.provider.constructUrl(this.entity!);
+			lookupUrl = new URL('resolve', this.provider.apiBaseUrl);
 			query.set('url', releaseUrl.href);
 		}
 		lookupUrl.search = query.toString();
 		return lookupUrl;
 	}
 
-	async getRawRelease(): Promise<RawReponse> {
-		if (this.lookup.method === 'gtin') {
-			throw new ProviderError(this.provider.name, 'GTIN lookups are not supported');
-		}
-
+	async getRawRelease(): Promise<RawRelease> {
+		const lookupUrl = this.constructReleaseApiUrl();
 		// Entity is already defined for ID/URL lookups.
-		const webUrl = this.provider.constructUrl(this.entity!);
-		const lookupUrl = new URL('resolve', this.provider.apiBaseUrl);
-		lookupUrl.searchParams.set('url', webUrl.href);
-		this.rawReleaseUrl = webUrl;
-		if (this.entity!.type === 'playlist') {
+		const entityType = this.entity?.type;
+		if (entityType === 'set') {
 			const cacheEntry = await this.provider.query<SoundcloudPlaylist>(lookupUrl, {
 				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
 			});
 			this.updateCacheTime(cacheEntry.timestamp);
-			const release = {
-				apiResponse: cacheEntry.content,
-				type: 'playlist' as const,
-				href: webUrl.href,
-			};
-			return release;
-		} else if (this.entity!.type === 'track') {
+			return cacheEntry.content;
+		} else if (entityType === 'track') {
 			const cacheEntry = await this.provider.query<SoundcloudTrack>(lookupUrl, {
 				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
 			});
 			this.updateCacheTime(cacheEntry.timestamp);
-			const release = {
-				apiResponse: cacheEntry.content,
-				type: 'track' as const,
-				href: webUrl.href,
-			};
-			return release;
+			return cacheEntry.content;
 		} else {
-			throw new ProviderError(this.provider.name, `Unsupported entity type '${this.entity!.type}'`);
+			throw new ProviderError(this.provider.name, `Unsupported release type '${entityType}'`);
 		}
 	}
 
-	convertRawRelease(rawRelease: RawReponse): HarmonyRelease {
-		const { apiResponse, type } = rawRelease;
-		if (type == 'track') {
-			const trackReponse = apiResponse as SoundcloudTrack;
+	convertRawRelease(rawRelease: RawRelease): HarmonyRelease {
+		// Entity is already defined for ID/URL lookups.
+		const releaseUrl = this.provider.constructUrl(this.entity!);
+		if (rawRelease.kind === 'track') {
+			const rawTrack = rawRelease;
 			const release: HarmonyRelease = {
-				title: trackReponse.title,
-				artists: [this.makeArtistCredit(trackReponse.user)],
+				title: rawTrack.title,
+				artists: [this.makeArtistCredit(rawTrack.user)],
 				externalLinks: [{
-					url: rawRelease.href,
-					types: this.getReleaseTypes(trackReponse),
+					url: releaseUrl.href,
+					types: this.getLinkTypes(rawTrack),
 				}],
 				media: [{
 					format: 'Digital Media',
-					tracklist: [this.convertRawTrack(trackReponse)],
+					tracklist: [this.convertRawTrack(rawTrack)],
 				}],
-				releaseDate: this.getReleaseDate(trackReponse),
-				labels: this.getLabel(trackReponse),
+				releaseDate: this.getReleaseDate(rawTrack),
+				labels: this.getLabel(rawTrack),
 				packaging: 'None',
 				types: ['Single'],
-				availableIn: this.getCountryCodes(trackReponse),
+				availableIn: this.getCountryCodes(rawTrack),
 				info: this.generateReleaseInfo(),
-				images: this.getArtwork(trackReponse),
+				images: this.getArtwork(rawTrack),
 			};
 			return release;
 		} else {
-			const playlistResponse = apiResponse as SoundcloudPlaylist;
 			const release: HarmonyRelease = {
-				title: playlistResponse.title,
-				artists: [this.makeArtistCredit(playlistResponse.user)],
+				title: rawRelease.title,
+				artists: [this.makeArtistCredit(rawRelease.user)],
 				externalLinks: [{
-					url: rawRelease.href,
-					types: this.getReleaseTypes(playlistResponse),
+					url: releaseUrl.href,
+					types: this.getLinkTypes(rawRelease),
 				}],
 				media: [{
 					format: 'Digital Media',
-					tracklist: playlistResponse.tracks?.filter(isNotNull).map(this.convertRawTrack.bind(this)) ?? [],
+					tracklist: rawRelease.tracks?.filter(isNotNull).map(this.convertRawTrack.bind(this)) ?? [],
 				}],
-				releaseDate: this.getReleaseDate(playlistResponse),
-				labels: this.getLabel(playlistResponse),
+				releaseDate: this.getReleaseDate(rawRelease),
+				labels: this.getLabel(rawRelease),
 				packaging: 'None',
-				types: playlistResponse.playlist_type ? [capitalizeReleaseType(playlistResponse.playlist_type)] : undefined,
+				types: rawRelease.playlist_type ? [capitalizeReleaseType(rawRelease.playlist_type)] : undefined,
 				info: this.generateReleaseInfo(),
-				images: this.getArtwork(playlistResponse),
+				images: this.getArtwork(rawRelease),
 			};
 			return release;
 		}
 	}
 
-	getReleaseTypes(release: SoundcloudPlaylist | SoundcloudTrack): LinkType[] {
+	getLinkTypes(release: RawRelease): LinkType[] {
 		if (release.kind === 'playlist') {
-			const playlist = release as SoundcloudPlaylist;
 			const types: LinkType[] = ['free streaming'];
-			if (playlist.tracks?.length > 0) {
-				if (playlist.tracks?.every((track) => track.downloadable)) {
+			if (release.tracks?.length > 0) {
+				if (release.tracks?.every((track) => track.downloadable)) {
 					types.push('free download');
 				}
 			}
 		} else if (release.kind === 'track') {
-			const track = release as SoundcloudTrack;
 			const types: LinkType[] = ['free streaming'];
-			if (track.downloadable) {
+			if (release.downloadable) {
 				types.push('free download');
 			}
 			return types;
@@ -324,14 +303,14 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 		return [];
 	}
 
-	getArtwork(release: SoundcloudPlaylist | SoundcloudTrack): Artwork[] | undefined {
+	getArtwork(release: RawRelease): Artwork[] | undefined {
 		const artworks: Artwork[] = [];
 		const artworkUrl = release.artwork_url;
 		if (artworkUrl) {
 			artworks.push({
 				thumbUrl: artworkUrl.replace(/-(large|medium|small)\./, '-t300x300.'),
 				url: artworkUrl.replace(/-(large|medium|small)\./, '-t500x500.'),
-				types: ['front' as ArtworkType],
+				types: ['front'],
 				provider: this.provider.name,
 			});
 			return artworks;
@@ -341,29 +320,23 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 
 	getLabel(release: SoundcloudPlaylist | SoundcloudTrack): Label[] | undefined {
 		if (release.kind === 'playlist') {
-			const playlist = release as SoundcloudPlaylist;
-			if (playlist.label_name) {
-				const label: Label = {
-					name: playlist.label_name,
-				};
-				return [label];
-			} else {
-				if (playlist.tracks?.length > 0) {
-					const labelName = playlist.tracks[0].label_name;
-					if (labelName && playlist.tracks.every((track) => track.label_name === labelName)) {
-						return [{
-							name: labelName,
-						}];
-					}
+			if (release.label_name) {
+				return [{
+					name: release.label_name,
+				}];
+			} else if (release.tracks?.length > 0) {
+				const labelName = release.tracks[0].label_name;
+				if (labelName && release.tracks.every((track) => track.label_name === labelName)) {
+					return [{
+						name: labelName,
+					}];
 				}
 			}
 		} else if (release.kind === 'track') {
-			const track = release as SoundcloudTrack;
-			if (track.label_name) {
-				const label: Label = {
-					name: track.label_name,
-				};
-				return [label];
+			if (release.label_name) {
+				return [{
+					name: release.label_name,
+				}];
 			}
 		}
 		return undefined;
@@ -398,20 +371,19 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 		return undefined;
 	}
 
-	convertRawTrack(rawTrack: SoundcloudTrack, index: number = 0): HarmonyTrack {
-		const trackUrl: URL = new URL(rawTrack.permalink_url);
-		const trackEntity = this.provider.extractEntityFromUrl(trackUrl);
+	convertRawTrack(rawTrack: SoundcloudTrack, index = 0): HarmonyTrack {
 		const trackNumber = index + 1;
-		const track: HarmonyTrack = {
+		return {
 			number: trackNumber,
 			title: rawTrack.title,
 			artists: [this.makeArtistCredit(rawTrack.user)],
 			length: rawTrack.duration,
 			isrc: rawTrack.isrc || undefined,
 			availableIn: this.getCountryCodes(rawTrack),
-			recording: trackEntity ? { externalIds: this.provider.makeExternalIds(trackEntity) } : undefined,
+			recording: {
+				externalIds: this.provider.makeExternalIdsFromUrl(rawTrack.permalink_url),
+			},
 		};
-		return track;
 	}
 
 	getCountryCodes(track: SoundcloudTrack): CountryCode[] | undefined {
@@ -422,12 +394,10 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 	}
 
 	makeArtistCredit(user: SoundcloudUser): ArtistCreditName {
-		const userUrl: URL = new URL(user.permalink_url);
-		const userEntity = this.provider.extractEntityFromUrl(userUrl);
 		return {
 			name: user.username,
 			creditedName: user.username,
-			externalIds: userEntity ? this.provider.makeExternalIds(userEntity) : undefined,
+			externalIds: this.provider.makeExternalIdsFromUrl(user.permalink_url),
 		};
 	}
 }
