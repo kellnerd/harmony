@@ -1,14 +1,20 @@
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
-import { stubProviderLookups } from '@/providers/test_stubs.ts';
+import { stubProviderLookups, stubTokenRetrieval } from '@/providers/test_stubs.ts';
+import { downloadMode } from '@/utils/fetch_stub.ts';
 import { assert } from 'std/assert/assert.ts';
 import { afterAll, describe } from '@std/testing/bdd';
+import type { Stub } from '@std/testing/mock';
 import { assertSnapshot } from '@std/testing/snapshot';
 
 import SoundCloudProvider from './mod.ts';
 
 describe('SoundCloud provider', () => {
 	const sc = new SoundCloudProvider(makeProviderOptions());
-	const lookupStub = stubProviderLookups(sc);
+	const stubs: Stub[] = [stubProviderLookups(sc)];
+
+	if (!downloadMode) {
+		stubs.push(stubTokenRetrieval(sc));
+	}
 
 	describeProvider(sc, {
 		urls: [{
@@ -40,6 +46,6 @@ describe('SoundCloud provider', () => {
 	});
 
 	afterAll(() => {
-		lookupStub.restore();
+		stubs.forEach((stub) => stub.restore());
 	});
 });
