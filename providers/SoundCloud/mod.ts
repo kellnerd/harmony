@@ -44,7 +44,7 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 
 	readonly artistUrlPattern = new URLPattern({
 		hostname: 'soundcloud.com',
-		pathname: '/:artist',
+		pathname: '/:artist/(albums|sets|tracks|popular-tracks|reposts)?',
 	});
 
 	readonly entityTypeMap = {
@@ -54,6 +54,14 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 	};
 
 	override extractEntityFromUrl(url: URL): EntityId | undefined {
+		const artistResult = this.artistUrlPattern.exec(url);
+		if (artistResult) {
+			return {
+				type: 'artist',
+				id: artistResult.pathname.groups.artist!,
+			};
+		}
+
 		const releaseResult = this.supportedUrls.exec(url);
 		if (releaseResult) {
 			const { artist, type, title } = releaseResult.pathname.groups;
@@ -63,14 +71,6 @@ export default class SoundCloudProvider extends MetadataApiProvider {
 					id: [artist, title].join('/'),
 				};
 			}
-		}
-
-		const artistResult = this.artistUrlPattern.exec(url);
-		if (artistResult) {
-			return {
-				type: 'artist',
-				id: artistResult.pathname.groups.artist!,
-			};
 		}
 	}
 

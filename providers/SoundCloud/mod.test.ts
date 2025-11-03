@@ -33,6 +33,10 @@ describe('SoundCloud provider', () => {
 			url: new URL('https://soundcloud.com/vocalokat'),
 			id: { type: 'artist', id: 'vocalokat' },
 			isCanonical: true,
+		}, {
+			description: "artist's albums subpage",
+			url: new URL('https://soundcloud.com/ivycomb/albums'),
+			id: { type: 'artist', id: 'ivycomb' },
 		}],
 		releaseLookup: [{
 			description: 'track release with downloads enabled',
