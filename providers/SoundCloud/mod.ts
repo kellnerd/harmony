@@ -356,17 +356,15 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 		return undefined;
 	}
 
+	/** Parses `YYYY/MM/DD HH:mm:ss +0000` timestamps. */
 	parseSoundcloudTimestamp(timestamp: string): PartialDate | undefined {
-		const segments = timestamp.split(' ');
-		if (segments.length === 3) {
-			// Timestamp format "2025/07/30 07:13:31 +0000"
-			const dateSegments = segments[0].split('/');
-			const date: PartialDate = {
-				year: Number(dateSegments[0]) || undefined,
-				month: Number(dateSegments[1]) || undefined,
-				day: Number(dateSegments[2]) || undefined,
+		const dateMatch = timestamp.match(/^(\d{4})\/(\d{2})\/(\d{2}) \d{2}:\d{2}:\d{2} \+0000$/);
+		if (dateMatch) {
+			return {
+				year: Number.parseInt(dateMatch[1]),
+				month: Number.parseInt(dateMatch[2]),
+				day: Number.parseInt(dateMatch[3]),
 			};
-			return date;
 		}
 		return undefined;
 	}
