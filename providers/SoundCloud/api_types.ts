@@ -92,7 +92,8 @@ export interface SoundcloudTrack {
 	user_favorite: boolean | null;
 	user_playback_count: number | null;
 	favoritings_count: number;
-	access: string;
+	access: 'playable' | 'preview' | 'blocked' | string;
+	/** Artist credit, may contain featured artists. */
 	metadata_artist: string;
 }
 

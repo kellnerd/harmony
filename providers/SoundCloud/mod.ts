@@ -243,7 +243,7 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 			const rawTrack = rawRelease;
 			const release: HarmonyRelease = {
 				title: rawTrack.title,
-				artists: [this.makeArtistCredit(rawTrack.user)],
+				artists: this.makeArtistCredit(rawTrack.user, rawRelease.metadata_artist),
 				externalLinks: [{
 					url: releaseUrl.href,
 					types: this.getLinkTypes(rawTrack),
@@ -279,7 +279,7 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 			}
 			const release: HarmonyRelease = {
 				title: rawRelease.title,
-				artists: [this.makeArtistCredit(rawRelease.user)],
+				artists: this.makeArtistCredit(rawRelease.user),
 				externalLinks: [{
 					url: releaseUrl.href,
 					types: this.getLinkTypes(rawRelease),
@@ -389,8 +389,9 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 		return {
 			number: trackNumber,
 			title: rawTrack.title,
-			artists: [this.makeArtistCredit(rawTrack.user)],
-			length: rawTrack.duration,
+			artists: this.makeArtistCredit(rawTrack.user, rawTrack.metadata_artist),
+			// API returns a constant track length (30s) for previews.
+			length: rawTrack.access !== 'preview' ? rawTrack.duration : undefined,
 			isrc: rawTrack.isrc || undefined,
 			availableIn: this.getCountryCodes(rawTrack),
 			recording: {
@@ -406,11 +407,12 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 		return undefined;
 	}
 
-	makeArtistCredit(user: SoundcloudUser): ArtistCreditName {
-		return {
+	makeArtistCredit(user: SoundcloudUser, artists?: string): ArtistCreditName[] {
+		// TODO: Split off featured artists from artists string
+		return [{
 			name: user.username,
-			creditedName: user.username,
+			creditedName: artists ?? user.username,
 			externalIds: this.provider.makeExternalIdsFromUrl(user.permalink_url),
-		};
+		}];
 	}
 }
