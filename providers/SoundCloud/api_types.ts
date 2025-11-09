@@ -85,7 +85,7 @@ export interface SoundcloudTrack {
 	release_year: number | null;
 	release_month: number | null;
 	release_day: number | null;
-	stream_url: string;
+	stream_url: string | null;
 	download_url: string | null;
 	available_country_codes: string[] | null;
 	secret_uri: string | null;
@@ -115,6 +115,8 @@ export interface SoundcloudPlaylist {
 	last_modified: string;
 	license: SoundcloudLicense;
 	tracks: SoundcloudTrack[];
+	/** API URL for the tracklist. */
+	tracks_uri: string;
 	id: number;
 	display_date: string;
 	sharing: 'public' | 'private';

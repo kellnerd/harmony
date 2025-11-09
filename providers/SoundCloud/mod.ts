@@ -20,8 +20,7 @@ import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/provider
 import { PartialDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { getFromEnv } from '@/utils/config.ts';
-import { isNotNull } from '@/utils/predicate.ts';
-import { ApiError, RawRelease, SoundcloudPlaylist, SoundcloudTrack, SoundcloudUser } from './api_types.ts';
+import type { ApiError, RawRelease, SoundcloudPlaylist, SoundcloudTrack, SoundcloudUser } from './api_types.ts';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
 import { capitalizeReleaseType } from '../../harmonizer/release_types.ts';
@@ -263,6 +262,21 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 			};
 			return release;
 		} else {
+			const tracks = rawRelease.tracks;
+			if (tracks.length < rawRelease.track_count) {
+				// if (rawRelease.tracks_uri) {
+				// 	// Unfortunately this endpoint does not seem to return more tracks...
+				// 	const tracksResult = await this.provider.query<SoundcloudTrack[]>(new URL(rawRelease.tracks_uri), {
+				// 		snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+				// 	});
+				// 	this.updateCacheTime(tracksResult.timestamp);
+				// 	tracks = tracksResult.content;
+				// }
+				this.addMessage(
+					`API response contains only ${tracks.length} out of ${rawRelease.track_count} tracks`,
+					'warning',
+				);
+			}
 			const release: HarmonyRelease = {
 				title: rawRelease.title,
 				artists: [this.makeArtistCredit(rawRelease.user)],
@@ -272,7 +286,7 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 				}],
 				media: [{
 					format: 'Digital Media',
-					tracklist: rawRelease.tracks?.filter(isNotNull).map(this.convertRawTrack.bind(this)) ?? [],
+					tracklist: tracks.map(this.convertRawTrack.bind(this)),
 				}],
 				releaseDate: this.getReleaseDate(rawRelease),
 				labels: this.getLabel(rawRelease),
@@ -370,6 +384,7 @@ export class SoundCloudReleaseLookup extends ReleaseLookup<SoundCloudProvider, R
 	}
 
 	convertRawTrack(rawTrack: SoundcloudTrack, index = 0): HarmonyTrack {
+		// Track number is wrong for incomplete API responses!
 		const trackNumber = index + 1;
 		return {
 			number: trackNumber,
