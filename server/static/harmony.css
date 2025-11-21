@@ -31,6 +31,7 @@
 	--beatport: #00e586;
 	--brainz: #eb743b;
 	--deezer: #a238ff;
+	--mora: #02082a;
 	--musicbrainz: #ba478f;
 	--spotify: #1db954;
 	--tidal: #000000;
@@ -460,6 +461,9 @@ label.deezer, td.deezer {
 }
 label.itunes, td.itunes {
 	background-color: var(--apple);
+}
+label.mora, td.mora {
+	background-color: var(--mora);
 }
 label.musicbrainz, td.musicbrainz {
 	background-color: var(--musicbrainz);

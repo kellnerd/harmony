@@ -1,0 +1,649 @@
+export const snapshot = {};
+
+snapshot[`Mora provider > release lookup > release with GTIN in distPartNo 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Ado",
+      name: "Ado",
+    },
+  ],
+  availableIn: [
+    "JP",
+  ],
+  copyright: "A Virgin Music release; ℗ 2025 UNIVERSAL MUSIC LLC",
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://mora.jp/package/43000006/00602488058599/",
+    },
+  ],
+  gtin: "00602488058599",
+  images: [
+    {
+      types: [
+        "front",
+      ],
+      url: "https://cf.mora.jp/contents/package/0000/00000083/0042/023/270/0042023270.200.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "43000006/00602488058599",
+        internalName: "mora",
+        lookup: {
+          method: "id",
+          value: "43000006/00602488058599",
+        },
+        name: "Mora",
+        url: "https://mora.jp/package/43000006/00602488058599/",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "Universal Music LLC",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "Ado",
+              name: "Ado",
+            },
+          ],
+          length: 172000,
+          number: 0,
+          recording: {
+            externalIds: [],
+          },
+          title: "MAGIC",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 31,
+    month: 10,
+    year: 2025,
+  },
+  status: "Official",
+  title: "MAGIC",
+  types: [
+    "Single",
+  ],
+}
+`;
+
+snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Various Artists",
+      name: "Various Artists",
+    },
+  ],
+  availableIn: [
+    "JP",
+  ],
+  copyright: "(P)2025 BUSHIROAD MUSIC INC.",
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://mora.jp/package/43000035/198704758065_F/",
+    },
+  ],
+  gtin: "198704758065",
+  images: [
+    {
+      types: [
+        "front",
+      ],
+      url: "https://cf.mora.jp/contents/package/0000/00000013/0041/921/939/0041921939.200.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "43000035/198704758065_F",
+        internalName: "mora",
+        lookup: {
+          method: "id",
+          value: "43000035/198704758065_F",
+        },
+        name: "Mora",
+        url: "https://mora.jp/package/43000035/198704758065_F/",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "ブシロードミュージック",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "Poppin'Party",
+              name: "Poppin'Party",
+            },
+          ],
+          length: 256000,
+          number: 0,
+          recording: {
+            externalIds: [],
+          },
+          title: "心絵 (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Poppin'Party",
+              name: "Poppin'Party",
+            },
+          ],
+          length: 188000,
+          number: 1,
+          recording: {
+            externalIds: [],
+          },
+          title: "ちゅ、多様性。 (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Poppin'Party",
+              name: "Poppin'Party",
+            },
+          ],
+          length: 232000,
+          number: 2,
+          recording: {
+            externalIds: [],
+          },
+          title: "フィクション (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Afterglow",
+              name: "Afterglow",
+            },
+          ],
+          length: 233000,
+          number: 3,
+          recording: {
+            externalIds: [],
+          },
+          title: "カゲロウデイズ (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Afterglow",
+              name: "Afterglow",
+            },
+          ],
+          length: 217000,
+          number: 4,
+          recording: {
+            externalIds: [],
+          },
+          title: "Bunny Girl (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Afterglow",
+              name: "Afterglow",
+            },
+          ],
+          length: 235000,
+          number: 5,
+          recording: {
+            externalIds: [],
+          },
+          title: "オレンジ (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Pastel*Palettes",
+              name: "Pastel*Palettes",
+            },
+          ],
+          length: 215000,
+          number: 6,
+          recording: {
+            externalIds: [],
+          },
+          title: "サインはB (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Pastel*Palettes",
+              name: "Pastel*Palettes",
+            },
+          ],
+          length: 230000,
+          number: 7,
+          recording: {
+            externalIds: [],
+          },
+          title: "だから、ひとりじゃない (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Pastel*Palettes",
+              name: "Pastel*Palettes",
+            },
+          ],
+          length: 191000,
+          number: 8,
+          recording: {
+            externalIds: [],
+          },
+          title: "最上級にかわいいの！ (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Roselia",
+              name: "Roselia",
+            },
+          ],
+          length: 220000,
+          number: 9,
+          recording: {
+            externalIds: [],
+          },
+          title: "ファタール (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Roselia",
+              name: "Roselia",
+            },
+          ],
+          length: 205000,
+          number: 10,
+          recording: {
+            externalIds: [],
+          },
+          title: "ヒバナ -Reloaded- (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Roselia",
+              name: "Roselia",
+            },
+          ],
+          length: 238000,
+          number: 11,
+          recording: {
+            externalIds: [],
+          },
+          title: "Reweave (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Poppin'Party, 高松 燈(CV:羊宮妃那)",
+              name: "Poppin'Party, 高松 燈(CV:羊宮妃那)",
+            },
+          ],
+          length: 275000,
+          number: 12,
+          recording: {
+            externalIds: [],
+          },
+          title: "幾億光年 (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Pastel*Palettes, 美竹 蘭(CV:佐倉綾音)",
+              name: "Pastel*Palettes, 美竹 蘭(CV:佐倉綾音)",
+            },
+          ],
+          length: 222000,
+          number: 13,
+          recording: {
+            externalIds: [],
+          },
+          title: "愛包ダンスホール (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "ハロー、ハッピーワールド！",
+              name: "ハロー、ハッピーワールド！",
+            },
+          ],
+          length: 226000,
+          number: 14,
+          recording: {
+            externalIds: [],
+          },
+          title: "最高到達点 (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "ハロー、ハッピーワールド！",
+              name: "ハロー、ハッピーワールド！",
+            },
+          ],
+          length: 135000,
+          number: 15,
+          recording: {
+            externalIds: [],
+          },
+          title: "強風オールバック (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "ハロー、ハッピーワールド！",
+              name: "ハロー、ハッピーワールド！",
+            },
+          ],
+          length: 160000,
+          number: 16,
+          recording: {
+            externalIds: [],
+          },
+          title: "はいよろこんで (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Morfonica",
+              name: "Morfonica",
+            },
+          ],
+          length: 273000,
+          number: 17,
+          recording: {
+            externalIds: [],
+          },
+          title: "輪舞-revolution (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Morfonica",
+              name: "Morfonica",
+            },
+          ],
+          length: 145000,
+          number: 18,
+          recording: {
+            externalIds: [],
+          },
+          title: "QUEEN (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Morfonica",
+              name: "Morfonica",
+            },
+          ],
+          length: 250000,
+          number: 19,
+          recording: {
+            externalIds: [],
+          },
+          title: "again (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "RAISE A SUILEN",
+              name: "RAISE A SUILEN",
+            },
+          ],
+          length: 168000,
+          number: 20,
+          recording: {
+            externalIds: [],
+          },
+          title: "Bling-Bang-Bang-Born (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "RAISE A SUILEN",
+              name: "RAISE A SUILEN",
+            },
+          ],
+          length: 193000,
+          number: 21,
+          recording: {
+            externalIds: [],
+          },
+          title: "第六感 (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "MyGO!!!!!",
+              name: "MyGO!!!!!",
+            },
+          ],
+          length: 188000,
+          number: 22,
+          recording: {
+            externalIds: [],
+          },
+          title: "雑踏、僕らの街 (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "MyGO!!!!!",
+              name: "MyGO!!!!!",
+            },
+          ],
+          length: 249000,
+          number: 23,
+          recording: {
+            externalIds: [],
+          },
+          title: "遥か彼方 (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "MyGO!!!!!",
+              name: "MyGO!!!!!",
+            },
+          ],
+          length: 236000,
+          number: 24,
+          recording: {
+            externalIds: [],
+          },
+          title: "だれかの心臓になれたなら (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Roselia, レイヤ(CV:Raychell)",
+              name: "Roselia, レイヤ(CV:Raychell)",
+            },
+          ],
+          length: 227000,
+          number: 25,
+          recording: {
+            externalIds: [],
+          },
+          title: "悪魔の子 (Cover)",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "ハロー、ハッピーワールド！, 倉田ましろ(CV:進藤あまね)",
+              name: "ハロー、ハッピーワールド！, 倉田ましろ(CV:進藤あまね)",
+            },
+          ],
+          length: 202000,
+          number: 26,
+          recording: {
+            externalIds: [],
+          },
+          title: "シカ色デイズ (Cover)",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 15,
+    month: 10,
+    year: 2025,
+  },
+  status: "Official",
+  title: "バンドリ！ ガールズバンドパーティ！ カバーコレクションVol.10",
+  types: [
+    "Album",
+  ],
+}
+`;
+
+snapshot[`Mora provider > release lookup > video release 1`] = `
+{
+  artists: [
+    {
+      creditedName: "The Last Dinner Party",
+      name: "The Last Dinner Party",
+    },
+  ],
+  availableIn: [
+    "JP",
+  ],
+  copyright: "© 2025 The Last Dinner Party, under exclusive licence to Universal Music Operations Limited",
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://mora.jp/package/43000006/00199957093194/",
+    },
+  ],
+  gtin: "00199957093194",
+  images: [
+    {
+      types: [
+        "front",
+      ],
+      url: "https://cf.mora.jp/contents/package/0000/00000083/0042/738/339/0042738339.200.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "43000006/00199957093194",
+        internalName: "mora",
+        lookup: {
+          method: "id",
+          value: "43000006/00199957093194",
+        },
+        name: "Mora",
+        url: "https://mora.jp/package/43000006/00199957093194/",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "Universal-Island Records Ltd.",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "The Last Dinner Party",
+              name: "The Last Dinner Party",
+            },
+          ],
+          length: 239000,
+          number: 0,
+          recording: {
+            externalIds: [],
+          },
+          title: "Woman is a Tree",
+          type: "video",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 22,
+    month: 11,
+    year: 2025,
+  },
+  status: "Official",
+  title: "Woman is a Tree",
+  types: [
+    "Single",
+  ],
+}
+`;
