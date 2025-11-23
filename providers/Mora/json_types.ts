@@ -11,6 +11,7 @@ export interface WithApiUrl<Data> {
 
 export interface PackageMeta {
 	artistName: string;
+	artistNo: number;
 	cdPartNo: string | null;
 	fullsizeimage: string;
 	title: string;
@@ -31,6 +32,7 @@ export interface Track {
 	lyrics?: string;
 
 	artistName: string;
+	artistNo: number;
 	/** Track duration in seconds */
 	duration: number;
 	mediaFormatNo: MediaFormat;

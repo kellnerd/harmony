@@ -193,7 +193,7 @@ export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> 
 
 		const release: HarmonyRelease = {
 			title: albumPage.title,
-			artists: [this.makeArtistCreditName(albumPage.artistName)],
+			artists: [this.makeArtistCreditName(albumPage.artistName, albumPage.artistNo)],
 			labels: [label],
 			gtin,
 			releaseDate: parseISODateTime(albumPage.startDate),
@@ -222,7 +222,7 @@ export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> 
 			number: rawTrack.trackNo,
 			title: rawTrack.title,
 			type: rawTrack.mediaFormatNo == MediaFormat.Video ? 'video' : 'audio',
-			artists: [this.makeArtistCreditName(rawTrack.artistName)],
+			artists: [this.makeArtistCreditName(rawTrack.artistName, rawTrack.artistNo)],
 			length: rawTrack.duration * 1000,
 			recording: {
 				externalIds: [],
@@ -230,10 +230,11 @@ export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> 
 		};
 	}
 
-	makeArtistCreditName(artist: string): ArtistCreditName {
+	makeArtistCreditName(artist: string, artistNo: number): ArtistCreditName {
 		return {
 			name: artist,
 			creditedName: artist,
+			externalIds: this.provider.makeExternalIds({ type: 'artist', id: artistNo }),
 		};
 	}
 
