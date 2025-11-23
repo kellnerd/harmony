@@ -10,6 +10,7 @@ const providerIconMap: Record<string, string> = {
 	musicbrainz: 'brand-metabrainz',
 	spotify: 'brand-spotify',
 	tidal: 'brand-tidal',
+	soundcloud: 'brand-soundcloud',
 };
 
 export type ProviderIconProps = Omit<SpriteIconProps, 'name'> & {
