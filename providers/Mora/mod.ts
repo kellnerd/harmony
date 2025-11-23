@@ -1,4 +1,5 @@
-import { ApiArgs, MediaFormat, PackageMeta, Track, WithApiUrl } from './json_types.ts';
+import type { ApiArgs, PackageMeta, Track, WithApiUrl } from './json_types.ts';
+import { MediaFormat } from './json_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -14,7 +15,7 @@ import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/provider
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { extractMetadataTag } from '@/utils/html.ts';
-import { isValidGTIN } from '../../utils/gtin.ts';
+import { isValidGTIN } from '@/utils/gtin.ts';
 
 export default class MoraProvider extends MetadataProvider {
 	readonly name = 'Mora';
