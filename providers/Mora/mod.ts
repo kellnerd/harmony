@@ -41,7 +41,7 @@ export default class MoraProvider extends MetadataProvider {
 
 	readonly entityTypeMap = {
 		artist: 'artist',
-		release: 'album',
+		release: 'package',
 	};
 
 	override readonly launchDate: PartialDate = {
@@ -52,13 +52,7 @@ export default class MoraProvider extends MetadataProvider {
 	readonly releaseLookup = MoraReleaseLookup;
 
 	constructUrl(entity: EntityId): URL {
-		if (entity.type === 'artist') {
-			return new URL(`https://mora.jp/artist/${entity.id}/`);
-		} else if (entity.type === 'album') {
-			return new URL(`https://mora.jp/package/${entity.id}/`);
-		}
-
-		throw new ProviderError(this.name, `Incomplete release ID '${entity.id}' does not match format \`band/title\``);
+		return new URL(`https://mora.jp/${entity.type}/${entity.id}/`);
 	}
 
 	override extractEntityFromUrl(url: URL): EntityId | undefined {
@@ -70,7 +64,7 @@ export default class MoraProvider extends MetadataProvider {
 			}
 
 			return {
-				type: 'album',
+				type: 'package',
 				id: [labelCode, materialNo].join('/'),
 			};
 		}
@@ -84,10 +78,6 @@ export default class MoraProvider extends MetadataProvider {
 		}
 
 		return undefined;
-	}
-
-	override parseProviderId(id: string, entityType: HarmonyEntityType): EntityId {
-		return { id, type: this.entityTypeMap[entityType] };
 	}
 
 	override getLinkTypesForEntity(_entity: EntityId): LinkType[] {
