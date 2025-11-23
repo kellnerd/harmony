@@ -182,7 +182,7 @@ export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> 
 			artists: [this.makeArtistCreditName(albumPage.artistName, albumPage.artistNo)],
 			labels: [label],
 			gtin,
-			releaseDate: parseISODateTime(albumPage.startDate),
+			releaseDate: parseISODateTime(albumPage.startDate + ' +0'),
 			availableIn: ['JP'],
 			media: [{
 				format: 'Digital Media',
