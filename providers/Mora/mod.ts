@@ -18,7 +18,7 @@ import { extractMetadataTag } from '@/utils/html.ts';
 import { isValidGTIN } from '@/utils/gtin.ts';
 
 export default class MoraProvider extends MetadataProvider {
-	readonly name = 'Mora';
+	readonly name = 'mora';
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'mora.jp',
