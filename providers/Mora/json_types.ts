@@ -21,7 +21,7 @@ export interface PackageMeta {
 	startDate: string;
 	mediaFormatNo: MediaFormat;
 	mediaType: MediaType;
-	trackList: Record<number, Track>;
+	trackList: Track[];
 }
 
 export interface Track {
@@ -36,6 +36,7 @@ export interface Track {
 	mediaFormatNo: MediaFormat;
 	mediaType: MediaType;
 	title: string;
+	trackNo: number;
 }
 
 export enum MediaFormat {

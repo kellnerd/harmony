@@ -177,9 +177,7 @@ export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> 
 
 	convertRawRelease(albumPage: PackageMeta): HarmonyRelease {
 		const label = { name: albumPage.labelcompanyname };
-		const tracklist = Object.entries(albumPage.trackList).map(([index, track]) =>
-			this.convertRawTrack(Number(index), track)
-		);
+		const tracklist = albumPage.trackList.map(this.convertRawTrack.bind(this));
 		const types: ReleaseGroupType[] = [Object.keys(albumPage.trackList).length > 1 ? 'Album' : 'Single'];
 
 		// `distPartNo` *might* contain the GTIN, but will oftentimes contain either label-specific catalog numbers, or
@@ -220,9 +218,9 @@ export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> 
 		return release;
 	}
 
-	convertRawTrack(index: number, rawTrack: Track): HarmonyTrack {
+	convertRawTrack(rawTrack: Track): HarmonyTrack {
 		return {
-			number: index,
+			number: rawTrack.trackNo,
 			title: rawTrack.title,
 			type: rawTrack.mediaFormatNo == MediaFormat.Video ? 'video' : 'audio',
 			artists: [this.makeArtistCreditName(rawTrack.artistName)],
