@@ -99,12 +99,11 @@ export default class MoraProvider extends MetadataProvider {
 			policy: { maxTimestamp },
 			responseMutator: async (response) => {
 				const html = await response.text();
-				const metaTag = extractMetadataTag(html, 'msApplication-Arguments');
-				if (!metaTag) {
+				const apiArgsRaw = extractMetadataTag(html, 'msApplication-Arguments');
+				if (!apiArgsRaw) {
 					throw new ResponseError(this.name, 'Response is missing the expected <meta> tag', webUrl);
 				}
 
-				const apiArgsRaw = metaTag.replace(/&quot;/g, '"');
 				try {
 					const apiArgs: ApiArgs = JSON.parse(apiArgsRaw);
 
