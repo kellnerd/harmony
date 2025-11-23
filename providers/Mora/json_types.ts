@@ -4,11 +4,6 @@ export interface ApiArgs {
 	materialNo: string;
 }
 
-export interface WithApiUrl<Data> {
-	apiUrl: URL;
-	data: Data;
-}
-
 export interface PackageMeta {
 	artistName: string;
 	artistNo: number;

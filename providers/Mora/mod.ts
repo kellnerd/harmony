@@ -1,4 +1,4 @@
-import type { ApiArgs, PackageMeta, Track, WithApiUrl } from './json_types.ts';
+import type { ApiArgs, PackageMeta, Track } from './json_types.ts';
 import { MediaFormat } from './json_types.ts';
 import type {
 	ArtistCreditName,
@@ -84,8 +84,8 @@ export default class MoraProvider extends MetadataProvider {
 		return ['paid download'];
 	}
 
-	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<WithApiUrl<Data>>> {
-		return this.fetchJSON<ApiArgs>(webUrl, {
+	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+		return this.fetchJSON<Data>(webUrl, {
 			policy: { maxTimestamp },
 			responseMutator: async (response) => {
 				const html = await response.text();
@@ -95,7 +95,7 @@ export default class MoraProvider extends MetadataProvider {
 				}
 
 				try {
-					const apiArgs: ApiArgs = JSON.parse(apiArgsRaw);
+					const apiArgs: Data = JSON.parse(apiArgsRaw);
 
 					if (apiArgs) {
 						return new Response(JSON.stringify(apiArgs), response);
@@ -106,44 +106,32 @@ export default class MoraProvider extends MetadataProvider {
 
 				throw new ResponseError(this.name, 'Failed to extract API arguments', webUrl);
 			},
-		}).then(({ content }) => {
-			const apiBase = apiUrl(content.mountPoint, content.labelId, content.materialNo);
-
-			const packageMetaUrl = new URL(apiBase);
-			packageMetaUrl.pathname += 'packageMeta.json';
-
-			return this.fetchJSON<WithApiUrl<Data>>(packageMetaUrl, {
-				policy: { maxTimestamp },
-				responseMutator: async (response) => {
-					const data = await response.json();
-					return new Response(
-						JSON.stringify({
-							apiUrl: apiBase,
-							data,
-						}),
-						response,
-					);
-				},
-			});
 		});
 	}
 }
 
-function apiUrl(mountPoint: string, labelId: string, materialNo: string) {
-	const paddedMaterialNo = materialNo.padStart(10, '0');
-	const slicedMaterialNo = `${paddedMaterialNo.slice(0, 4)}/${paddedMaterialNo.slice(4, 7)}/${
-		paddedMaterialNo.slice(7)
-	}`;
-
-	return new URL(`https://cf.mora.jp/contents/package/${mountPoint}/${labelId}/${slicedMaterialNo}/`);
-}
-
 export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> {
 	rawReleaseUrl: URL | undefined;
-	apiUrl: URL | undefined;
+	mountPoint: string | undefined;
+	labelId: string | undefined;
+	materialNo: string | undefined;
+
+	apiUrl() {
+		const paddedMaterialNo = this.materialNo.padStart(10, '0');
+		const slicedMaterialNo = `${paddedMaterialNo.slice(0, 4)}/${paddedMaterialNo.slice(4, 7)}/${
+			paddedMaterialNo.slice(7)
+		}`;
+
+		return new URL(`https://cf.mora.jp/contents/package/${this.mountPoint}/${this.labelId}/${slicedMaterialNo}/`);
+	}
 
 	constructReleaseApiUrl(): URL | undefined {
-		return undefined;
+		const apiBase = this.apiUrl();
+
+		const packageMetaUrl = new URL(apiBase);
+		packageMetaUrl.pathname += 'packageMeta.json';
+
+		return packageMetaUrl;
 	}
 
 	async getRawRelease(): Promise<PackageMeta> {
@@ -154,11 +142,20 @@ export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> 
 		// Entity is already defined for ID/URL lookups.
 		const webUrl = this.provider.constructUrl(this.entity!);
 		this.rawReleaseUrl = webUrl;
-		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<PackageMeta>(
+		const { content: apiArgs, timestamp: apiArgsTimestamp } = await this.provider.extractEmbeddedJson<ApiArgs>(
 			webUrl,
 			this.options.snapshotMaxTimestamp,
 		);
-		this.apiUrl = release.apiUrl;
+		this.updateCacheTime(apiArgsTimestamp);
+
+		this.mountPoint = apiArgs.mountPoint;
+		this.labelId = apiArgs.labelId;
+		this.materialNo = apiArgs.materialNo;
+
+		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<PackageMeta>(
+			this.constructReleaseApiUrl(),
+			this.options.snapshotMaxTimestamp,
+		);
 		this.updateCacheTime(timestamp);
 
 		return release.data;
@@ -224,7 +221,7 @@ export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> 
 	}
 
 	getArtwork(albumPage: PackageMeta): Artwork {
-		const imageUrl = new URL(this.apiUrl!);
+		const imageUrl = this.apiUrl();
 		imageUrl.pathname += albumPage.fullsizeimage;
 
 		return {
