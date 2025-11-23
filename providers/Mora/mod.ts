@@ -4,11 +4,9 @@ import type {
 	ArtistCreditName,
 	Artwork,
 	EntityId,
-	HarmonyEntityType,
 	HarmonyRelease,
 	HarmonyTrack,
 	LinkType,
-	ReleaseGroupType,
 } from '@/harmonizer/types.ts';
 import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
@@ -88,6 +86,10 @@ export default class MoraProvider extends MetadataProvider {
 		return this.fetchJSON<Data>(webUrl, {
 			policy: { maxTimestamp },
 			responseMutator: async (response) => {
+				if (!webUrl.pathname.startsWith('/package')) {
+					return response;
+				}
+
 				const html = await response.text();
 				const apiArgsRaw = extractMetadataTag(html, 'msApplication-Arguments');
 				if (!apiArgsRaw) {
@@ -116,16 +118,16 @@ export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> 
 	labelId: string | undefined;
 	materialNo: string | undefined;
 
-	apiUrl() {
-		const paddedMaterialNo = this.materialNo.padStart(10, '0');
+	apiUrl(): URL {
+		const paddedMaterialNo = this.materialNo!.padStart(10, '0');
 		const slicedMaterialNo = `${paddedMaterialNo.slice(0, 4)}/${paddedMaterialNo.slice(4, 7)}/${
 			paddedMaterialNo.slice(7)
 		}`;
 
-		return new URL(`https://cf.mora.jp/contents/package/${this.mountPoint}/${this.labelId}/${slicedMaterialNo}/`);
+		return new URL(`https://cf.mora.jp/contents/package/${this.mountPoint!}/${this.labelId!}/${slicedMaterialNo}/`);
 	}
 
-	constructReleaseApiUrl(): URL | undefined {
+	constructReleaseApiUrl(): URL {
 		const apiBase = this.apiUrl();
 
 		const packageMetaUrl = new URL(apiBase);
@@ -158,7 +160,7 @@ export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> 
 		);
 		this.updateCacheTime(timestamp);
 
-		return release.data;
+		return release;
 	}
 
 	convertRawRelease(albumPage: PackageMeta): HarmonyRelease {
@@ -216,7 +218,7 @@ export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> 
 		return {
 			name: artist,
 			creditedName: artist,
-			externalIds: this.provider.makeExternalIds({ type: 'artist', id: artistNo }),
+			externalIds: this.provider.makeExternalIds({ type: 'artist', id: artistNo.toString() }),
 		};
 	}
 

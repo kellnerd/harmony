@@ -5,6 +5,13 @@ snapshot[`Mora provider > release lookup > release with GTIN in distPartNo 1`] =
   artists: [
     {
       creditedName: "Ado",
+      externalIds: [
+        {
+          id: "1310625",
+          provider: "mora",
+          type: "artist",
+        },
+      ],
       name: "Ado",
     },
   ],
@@ -33,14 +40,14 @@ snapshot[`Mora provider > release lookup > release with GTIN in distPartNo 1`] =
     messages: [],
     providers: [
       {
-        apiUrl: undefined,
+        apiUrl: "https://cf.mora.jp/contents/package/0000/00000083/0042/023/270/packageMeta.json",
         id: "43000006/00602488058599",
         internalName: "mora",
         lookup: {
           method: "id",
           value: "43000006/00602488058599",
         },
-        name: "Mora",
+        name: "mora",
         url: "https://mora.jp/package/43000006/00602488058599/",
       },
     ],
@@ -58,14 +65,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in distPartNo 1`] =
           artists: [
             {
               creditedName: "Ado",
+              externalIds: [
+                {
+                  id: "1310625",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Ado",
             },
           ],
           length: 172000,
-          number: 0,
-          recording: {
-            externalIds: [],
-          },
+          number: 1,
           title: "MAGIC",
           type: "audio",
         },
@@ -80,9 +91,6 @@ snapshot[`Mora provider > release lookup > release with GTIN in distPartNo 1`] =
   },
   status: "Official",
   title: "MAGIC",
-  types: [
-    "Single",
-  ],
 }
 `;
 
@@ -91,6 +99,13 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
   artists: [
     {
       creditedName: "Various Artists",
+      externalIds: [
+        {
+          id: "15340",
+          provider: "mora",
+          type: "artist",
+        },
+      ],
       name: "Various Artists",
     },
   ],
@@ -119,14 +134,14 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
     messages: [],
     providers: [
       {
-        apiUrl: undefined,
+        apiUrl: "https://cf.mora.jp/contents/package/0000/00000013/0041/921/939/packageMeta.json",
         id: "43000035/198704758065_F",
         internalName: "mora",
         lookup: {
           method: "id",
           value: "43000035/198704758065_F",
         },
-        name: "Mora",
+        name: "mora",
         url: "https://mora.jp/package/43000035/198704758065_F/",
       },
     ],
@@ -144,14 +159,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Poppin'Party",
+              externalIds: [
+                {
+                  id: "2027483",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Poppin'Party",
             },
           ],
           length: 256000,
-          number: 0,
-          recording: {
-            externalIds: [],
-          },
+          number: 1,
           title: "心絵 (Cover)",
           type: "audio",
         },
@@ -159,14 +178,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Poppin'Party",
+              externalIds: [
+                {
+                  id: "2027483",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Poppin'Party",
             },
           ],
           length: 188000,
-          number: 1,
-          recording: {
-            externalIds: [],
-          },
+          number: 2,
           title: "ちゅ、多様性。 (Cover)",
           type: "audio",
         },
@@ -174,14 +197,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Poppin'Party",
+              externalIds: [
+                {
+                  id: "2027483",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Poppin'Party",
             },
           ],
           length: 232000,
-          number: 2,
-          recording: {
-            externalIds: [],
-          },
+          number: 3,
           title: "フィクション (Cover)",
           type: "audio",
         },
@@ -189,14 +216,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Afterglow",
+              externalIds: [
+                {
+                  id: "2027484",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Afterglow",
             },
           ],
           length: 233000,
-          number: 3,
-          recording: {
-            externalIds: [],
-          },
+          number: 4,
           title: "カゲロウデイズ (Cover)",
           type: "audio",
         },
@@ -204,14 +235,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Afterglow",
+              externalIds: [
+                {
+                  id: "2027484",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Afterglow",
             },
           ],
           length: 217000,
-          number: 4,
-          recording: {
-            externalIds: [],
-          },
+          number: 5,
           title: "Bunny Girl (Cover)",
           type: "audio",
         },
@@ -219,14 +254,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Afterglow",
+              externalIds: [
+                {
+                  id: "2027484",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Afterglow",
             },
           ],
           length: 235000,
-          number: 5,
-          recording: {
-            externalIds: [],
-          },
+          number: 6,
           title: "オレンジ (Cover)",
           type: "audio",
         },
@@ -234,14 +273,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Pastel*Palettes",
+              externalIds: [
+                {
+                  id: "2027485",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Pastel*Palettes",
             },
           ],
           length: 215000,
-          number: 6,
-          recording: {
-            externalIds: [],
-          },
+          number: 7,
           title: "サインはB (Cover)",
           type: "audio",
         },
@@ -249,14 +292,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Pastel*Palettes",
+              externalIds: [
+                {
+                  id: "2027485",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Pastel*Palettes",
             },
           ],
           length: 230000,
-          number: 7,
-          recording: {
-            externalIds: [],
-          },
+          number: 8,
           title: "だから、ひとりじゃない (Cover)",
           type: "audio",
         },
@@ -264,14 +311,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Pastel*Palettes",
+              externalIds: [
+                {
+                  id: "2027485",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Pastel*Palettes",
             },
           ],
           length: 191000,
-          number: 8,
-          recording: {
-            externalIds: [],
-          },
+          number: 9,
           title: "最上級にかわいいの！ (Cover)",
           type: "audio",
         },
@@ -279,14 +330,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Roselia",
+              externalIds: [
+                {
+                  id: "2027487",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Roselia",
             },
           ],
           length: 220000,
-          number: 9,
-          recording: {
-            externalIds: [],
-          },
+          number: 10,
           title: "ファタール (Cover)",
           type: "audio",
         },
@@ -294,14 +349,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Roselia",
+              externalIds: [
+                {
+                  id: "2027487",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Roselia",
             },
           ],
           length: 205000,
-          number: 10,
-          recording: {
-            externalIds: [],
-          },
+          number: 11,
           title: "ヒバナ -Reloaded- (Cover)",
           type: "audio",
         },
@@ -309,14 +368,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Roselia",
+              externalIds: [
+                {
+                  id: "2027487",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Roselia",
             },
           ],
           length: 238000,
-          number: 11,
-          recording: {
-            externalIds: [],
-          },
+          number: 12,
           title: "Reweave (Cover)",
           type: "audio",
         },
@@ -324,14 +387,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Poppin'Party, 高松 燈(CV:羊宮妃那)",
+              externalIds: [
+                {
+                  id: "2255981",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Poppin'Party, 高松 燈(CV:羊宮妃那)",
             },
           ],
           length: 275000,
-          number: 12,
-          recording: {
-            externalIds: [],
-          },
+          number: 13,
           title: "幾億光年 (Cover)",
           type: "audio",
         },
@@ -339,14 +406,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Pastel*Palettes, 美竹 蘭(CV:佐倉綾音)",
+              externalIds: [
+                {
+                  id: "2255982",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Pastel*Palettes, 美竹 蘭(CV:佐倉綾音)",
             },
           ],
           length: 222000,
-          number: 13,
-          recording: {
-            externalIds: [],
-          },
+          number: 14,
           title: "愛包ダンスホール (Cover)",
           type: "audio",
         },
@@ -354,14 +425,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "ハロー、ハッピーワールド！",
+              externalIds: [
+                {
+                  id: "2027488",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "ハロー、ハッピーワールド！",
             },
           ],
           length: 226000,
-          number: 14,
-          recording: {
-            externalIds: [],
-          },
+          number: 15,
           title: "最高到達点 (Cover)",
           type: "audio",
         },
@@ -369,14 +444,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "ハロー、ハッピーワールド！",
+              externalIds: [
+                {
+                  id: "2027488",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "ハロー、ハッピーワールド！",
             },
           ],
           length: 135000,
-          number: 15,
-          recording: {
-            externalIds: [],
-          },
+          number: 16,
           title: "強風オールバック (Cover)",
           type: "audio",
         },
@@ -384,14 +463,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "ハロー、ハッピーワールド！",
+              externalIds: [
+                {
+                  id: "2027488",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "ハロー、ハッピーワールド！",
             },
           ],
           length: 160000,
-          number: 16,
-          recording: {
-            externalIds: [],
-          },
+          number: 17,
           title: "はいよろこんで (Cover)",
           type: "audio",
         },
@@ -399,14 +482,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Morfonica",
+              externalIds: [
+                {
+                  id: "2013168",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Morfonica",
             },
           ],
           length: 273000,
-          number: 17,
-          recording: {
-            externalIds: [],
-          },
+          number: 18,
           title: "輪舞-revolution (Cover)",
           type: "audio",
         },
@@ -414,14 +501,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Morfonica",
+              externalIds: [
+                {
+                  id: "2013168",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Morfonica",
             },
           ],
           length: 145000,
-          number: 18,
-          recording: {
-            externalIds: [],
-          },
+          number: 19,
           title: "QUEEN (Cover)",
           type: "audio",
         },
@@ -429,14 +520,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Morfonica",
+              externalIds: [
+                {
+                  id: "2013168",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Morfonica",
             },
           ],
           length: 250000,
-          number: 19,
-          recording: {
-            externalIds: [],
-          },
+          number: 20,
           title: "again (Cover)",
           type: "audio",
         },
@@ -444,14 +539,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "RAISE A SUILEN",
+              externalIds: [
+                {
+                  id: "2027489",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "RAISE A SUILEN",
             },
           ],
           length: 168000,
-          number: 20,
-          recording: {
-            externalIds: [],
-          },
+          number: 21,
           title: "Bling-Bang-Bang-Born (Cover)",
           type: "audio",
         },
@@ -459,14 +558,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "RAISE A SUILEN",
+              externalIds: [
+                {
+                  id: "2027489",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "RAISE A SUILEN",
             },
           ],
           length: 193000,
-          number: 21,
-          recording: {
-            externalIds: [],
-          },
+          number: 22,
           title: "第六感 (Cover)",
           type: "audio",
         },
@@ -474,14 +577,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "MyGO!!!!!",
+              externalIds: [
+                {
+                  id: "2007263",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "MyGO!!!!!",
             },
           ],
           length: 188000,
-          number: 22,
-          recording: {
-            externalIds: [],
-          },
+          number: 23,
           title: "雑踏、僕らの街 (Cover)",
           type: "audio",
         },
@@ -489,14 +596,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "MyGO!!!!!",
+              externalIds: [
+                {
+                  id: "2007263",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "MyGO!!!!!",
             },
           ],
           length: 249000,
-          number: 23,
-          recording: {
-            externalIds: [],
-          },
+          number: 24,
           title: "遥か彼方 (Cover)",
           type: "audio",
         },
@@ -504,14 +615,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "MyGO!!!!!",
+              externalIds: [
+                {
+                  id: "2007263",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "MyGO!!!!!",
             },
           ],
           length: 236000,
-          number: 24,
-          recording: {
-            externalIds: [],
-          },
+          number: 25,
           title: "だれかの心臓になれたなら (Cover)",
           type: "audio",
         },
@@ -519,14 +634,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "Roselia, レイヤ(CV:Raychell)",
+              externalIds: [
+                {
+                  id: "2255983",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "Roselia, レイヤ(CV:Raychell)",
             },
           ],
           length: 227000,
-          number: 25,
-          recording: {
-            externalIds: [],
-          },
+          number: 26,
           title: "悪魔の子 (Cover)",
           type: "audio",
         },
@@ -534,14 +653,18 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           artists: [
             {
               creditedName: "ハロー、ハッピーワールド！, 倉田ましろ(CV:進藤あまね)",
+              externalIds: [
+                {
+                  id: "2255984",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "ハロー、ハッピーワールド！, 倉田ましろ(CV:進藤あまね)",
             },
           ],
           length: 202000,
-          number: 26,
-          recording: {
-            externalIds: [],
-          },
+          number: 27,
           title: "シカ色デイズ (Cover)",
           type: "audio",
         },
@@ -556,9 +679,6 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
   },
   status: "Official",
   title: "バンドリ！ ガールズバンドパーティ！ カバーコレクションVol.10",
-  types: [
-    "Album",
-  ],
 }
 `;
 
@@ -567,6 +687,13 @@ snapshot[`Mora provider > release lookup > video release 1`] = `
   artists: [
     {
       creditedName: "The Last Dinner Party",
+      externalIds: [
+        {
+          id: "1739884",
+          provider: "mora",
+          type: "artist",
+        },
+      ],
       name: "The Last Dinner Party",
     },
   ],
@@ -595,14 +722,14 @@ snapshot[`Mora provider > release lookup > video release 1`] = `
     messages: [],
     providers: [
       {
-        apiUrl: undefined,
+        apiUrl: "https://cf.mora.jp/contents/package/0000/00000083/0042/738/339/packageMeta.json",
         id: "43000006/00199957093194",
         internalName: "mora",
         lookup: {
           method: "id",
           value: "43000006/00199957093194",
         },
-        name: "Mora",
+        name: "mora",
         url: "https://mora.jp/package/43000006/00199957093194/",
       },
     ],
@@ -620,14 +747,18 @@ snapshot[`Mora provider > release lookup > video release 1`] = `
           artists: [
             {
               creditedName: "The Last Dinner Party",
+              externalIds: [
+                {
+                  id: "1739884",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
               name: "The Last Dinner Party",
             },
           ],
           length: 239000,
-          number: 0,
-          recording: {
-            externalIds: [],
-          },
+          number: 1,
           title: "Woman is a Tree",
           type: "video",
         },
@@ -642,8 +773,5 @@ snapshot[`Mora provider > release lookup > video release 1`] = `
   },
   status: "Official",
   title: "Woman is a Tree",
-  types: [
-    "Single",
-  ],
 }
 `;

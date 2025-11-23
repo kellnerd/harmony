@@ -12,14 +12,14 @@ describe('Mora provider', () => {
 
 	describeProvider(bc, {
 		urls: [{
-			description: 'album page',
+			description: 'package page',
 			url: new URL('https://mora.jp/package/43000006/00602488058599/'),
-			id: { type: 'album', id: '43000006/00602488058599' },
+			id: { type: 'package', id: '43000006/00602488058599' },
 			isCanonical: true,
 		}, {
 			description: 'album page with tracking parameter',
 			url: new URL('https://mora.jp/package/43000087/SEXX03051B00Z/?fmid=TOPRNKS'),
-			id: { type: 'album', id: '43000087/SEXX03051B00Z' },
+			id: { type: 'package', id: '43000087/SEXX03051B00Z' },
 		}, {
 			description: 'artist page',
 			url: new URL('https://mora.jp/artist/1739884/'),
