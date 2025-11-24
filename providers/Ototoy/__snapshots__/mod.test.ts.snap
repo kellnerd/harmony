@@ -1,0 +1,1899 @@
+export const snapshot = {};
+
+snapshot[`OTOTOY provider > release lookup > single track release 1`] = `
+{
+  artists: [
+    {
+      creditedName: "sasakure.UK",
+      externalIds: [
+        {
+          id: "153628",
+          provider: "ototoy",
+          type: "artist",
+        },
+      ],
+      name: "sasakure.UK",
+    },
+  ],
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://ototoy.jp/_/default/p/3016055",
+    },
+  ],
+  images: [
+    {
+      noReferrer: true,
+      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/3016/00000003.1756598333.417_320.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://imgs.ototoy.jp/imgs/jacket/3016/00000003.1756598333.417orig.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "3016055",
+        internalName: "ototoy",
+        lookup: {
+          method: "id",
+          value: "3016055",
+        },
+        name: "OTOTOY",
+        url: "https://ototoy.jp/_/default/p/3016055",
+      },
+    ],
+  },
+  labels: [
+    {
+      catalogNumber: undefined,
+      externalIds: [
+        {
+          id: "215734",
+          provider: "ototoy",
+          type: "label",
+        },
+      ],
+      name: "sasakuration",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          length: 238000,
+          number: 1,
+          title: "トゥイー・ボックスの人形劇場",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 1,
+    month: 9,
+    year: 2025,
+  },
+  status: "Official",
+  title: "トゥイー・ボックスの人形劇場",
+}
+`;
+
+snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
+{
+  artists: [
+    {
+      creditedName: "ザ・ビートルズ",
+      externalIds: [
+        {
+          id: "218489",
+          provider: "ototoy",
+          type: "artist",
+        },
+      ],
+      name: "ザ・ビートルズ",
+    },
+  ],
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://ototoy.jp/_/default/p/3237840",
+    },
+  ],
+  images: [
+    {
+      noReferrer: true,
+      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/3237/00000003.3237840.1763733479.356_320.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://imgs.ototoy.jp/imgs/jacket/3237/00000003.3237840.1763733479.356orig.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "3237840",
+        internalName: "ototoy",
+        lookup: {
+          method: "id",
+          value: "3237840",
+        },
+        name: "OTOTOY",
+        url: "https://ototoy.jp/_/default/p/3237840",
+      },
+    ],
+  },
+  labels: [
+    {
+      catalogNumber: undefined,
+      externalIds: [
+        {
+          id: "274620",
+          provider: "ototoy",
+          type: "label",
+        },
+      ],
+      name: "UMC (Universal Music Catalogue)",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          length: 265000,
+          number: 1,
+          title: "Free As A Bird (1995 Mix - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 11000,
+          number: 2,
+          title: "John Lennon Speech 1 (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 129000,
+          number: 3,
+          title: "That'll Be The Day (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 164000,
+          number: 4,
+          title: "In Spite Of All The Danger (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 18000,
+          number: 5,
+          title: "Paul McCartney Speech 1 (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 73000,
+          number: 6,
+          title: "Hallelujah, I Love Her So (Home Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 98000,
+          number: 7,
+          title: "You'll Be Mine (Home Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 73000,
+          number: 8,
+          title: "Cayenne (Home Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 7000,
+          number: 9,
+          title: "Paul McCartney Speech 2 (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 162000,
+          number: 10,
+          title: "My Bonnie (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 133000,
+          number: 11,
+          title: "Ain't She Sweet (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 142000,
+          number: 12,
+          title: "Cry For A Shadow (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 9000,
+          number: 13,
+          title: "John Lennon Speech 2 (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 18000,
+          number: 14,
+          title: "Brian Epstein Speech 1 (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 179000,
+          number: 15,
+          title: "Searchin' (Decca Audition - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 145000,
+          number: 16,
+          title: "Three Cool Cats (Decca Audition - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 103000,
+          number: 17,
+          title: "The Sheik Of Araby (Decca Audition - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 155000,
+          number: 18,
+          title: "Like Dreamers Do (Decca Audition - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 100000,
+          number: 19,
+          title: "Hello Little Girl (Decca Audition - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 32000,
+          number: 20,
+          title: "Brian Epstein Speech 2 (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 156000,
+          number: 21,
+          title: "Besame Mucho (June 1962 Version - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 151000,
+          number: 22,
+          title: "Love Me Do (First Version - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 117000,
+          number: 23,
+          title: "How Do You Do It (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 119000,
+          number: 24,
+          title: "Please Please Me (First Version - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 143000,
+          number: 25,
+          title: "One After 909 (Takes 3, 4 And 5 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 175000,
+          number: 26,
+          title: "One After 909 (Edit Of Takes 4 And 5 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 109000,
+          number: 27,
+          title: "Lend Me Your Comb (BBC Live Recording - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 128000,
+          number: 28,
+          title: "I'll Get You (Live On Sunday Night At The London Palladium - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 12000,
+          number: 29,
+          title: "John Lennon Speech 3 (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 168000,
+          number: 30,
+          title: "I Saw Her Standing There (Live In Stockholm - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 125000,
+          number: 31,
+          title: "From Me To You (Live In Stockholm - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 172000,
+          number: 32,
+          title: "Money (That's What I Want) (Live In Stockholm - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 177000,
+          number: 33,
+          title: "You Really Got A Hold On Me (Live In Stockholm - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 141000,
+          number: 34,
+          title: "Roll Over Beethoven (Live In Stockholm - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 169000,
+          number: 35,
+          title: "She Loves You (Live From The Royal Variety Performance - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 172000,
+          number: 36,
+          title: "Till There Was You (Live From The Royal Variety Performance - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 187000,
+          number: 37,
+          title: "Twist And Shout (Live From The Royal Variety Performance - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 141000,
+          number: 38,
+          title: "This Boy (Live On The Morecambe And Wise Show - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 156000,
+          number: 39,
+          title: "I Want To Hold Your Hand (Live On The Morecambe And Wise Show - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 125000,
+          number: 40,
+          title: "Speech (Live On The Morecambe And Wise Show - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 50000,
+          number: 41,
+          title: "Moonlight Bay (Live On The Morecambe And Wise Show - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 129000,
+          number: 42,
+          title: "Can't Buy Me Love (Take 2 With Solo From Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 139000,
+          number: 43,
+          title: "All My Loving (Live On The Ed Sullivan Show - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 162000,
+          number: 44,
+          title: "You Can't Do That (Take 6 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 112000,
+          number: 45,
+          title: "And I Love Her (Take 2 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 163000,
+          number: 46,
+          title: "A Hard Day's Night (Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 107000,
+          number: 47,
+          title: "I Wanna Be Your Man (Live For Around The Beatles - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 105000,
+          number: 48,
+          title: "Long Tall Sally (Live For Around The Beatles - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 109000,
+          number: 49,
+          title: "Boys (Live Session For Around The Beatles - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 90000,
+          number: 50,
+          title: "Shout (Live For Around The Beatles - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 72000,
+          number: 51,
+          title: "I'll Be Back (Take 2 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 117000,
+          number: 52,
+          title: "I'll Be Back (Take 3 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 118000,
+          number: 53,
+          title: "You Know What To Do (Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 106000,
+          number: 54,
+          title: "No Reply (Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 167000,
+          number: 55,
+          title: "Mr Moonlight (Takes 1 And 4 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 176000,
+          number: 56,
+          title: "Leave My Kitten Alone (Take 5 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 148000,
+          number: 57,
+          title: "No Reply (Take 2 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 85000,
+          number: 58,
+          title: "Eight Days A Week (Takes 1, 2 And 4 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 167000,
+          number: 59,
+          title: "Eight Days A Week (Take 5 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 164000,
+          number: 60,
+          title: "Kansas City / Hey-Hey-Hey-Hey! (Take 2 - Remastered)",
+          type: "audio",
+        },
+      ],
+    },
+    {
+      format: "Digital Media",
+      number: 2,
+      tracklist: [
+        {
+          length: 233000,
+          number: 1,
+          title: "Real Love (1996 Mix / Remastered)",
+          type: "audio",
+        },
+        {
+          length: 110000,
+          number: 2,
+          title: "Yes It Is (Takes 2 And 14 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 173000,
+          number: 3,
+          title: "I'm Down (Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 164000,
+          number: 4,
+          title: "You've Got To Hide Your Love Away (Take 5 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 168000,
+          number: 5,
+          title: "If You've Got Trouble (Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 146000,
+          number: 6,
+          title: "That Means A Lot (Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 153000,
+          number: 7,
+          title: "Yesterday (Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 118000,
+          number: 8,
+          title: "It's Only Love (Takes 3 And 2 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 135000,
+          number: 9,
+          title: "I Feel Fine (Live On Blackpool Night Out - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 164000,
+          number: 10,
+          title: "Ticket To Ride (Live On Blackpool Night Out - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 162000,
+          number: 11,
+          title: "Yesterday (Live On Blackpool Night Out - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 174000,
+          number: 12,
+          title: "Help! (Live On Blackpool Night Out - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 165000,
+          number: 13,
+          title: "Everybody's Trying To Be My Baby (Live At Shea Stadium, New York - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 119000,
+          number: 14,
+          title: "Norwegian Wood (This Bird Has Flown) (Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 173000,
+          number: 15,
+          title: "I'm Looking Through You (Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 175000,
+          number: 16,
+          title: "12-Bar Original (Take 2 Edited  - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 194000,
+          number: 17,
+          title: "Tomorrow Never Knows (Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 174000,
+          number: 18,
+          title: "Got To Get You Into My Life (Take 5 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 133000,
+          number: 19,
+          title: "And Your Bird Can Sing (Takes 1 and 2 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 152000,
+          number: 20,
+          title: "Taxman (Take 11 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 126000,
+          number: 21,
+          title: "Eleanor Rigby (Take 14 - Strings Only - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 40000,
+          number: 22,
+          title: "I'm Only Sleeping (Rehearsal - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 179000,
+          number: 23,
+          title: "I'm Only Sleeping (Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 98000,
+          number: 24,
+          title: "Rock And Roll Music (Live In Tokyo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 176000,
+          number: 25,
+          title: "She's A Woman (Live In Tokyo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 100000,
+          number: 26,
+          title: "Strawberry Fields Forever (Home Demo Sequence - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 154000,
+          number: 27,
+          title: "Strawberry Fields Forever (Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 253000,
+          number: 28,
+          title: "Strawberry Fields Forever (Take 7 And Edit Piece - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 192000,
+          number: 29,
+          title: "Penny Lane (Remix - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 304000,
+          number: 30,
+          title: "A Day In The Life (Takes 1, 2, 6 And Orchestra - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 159000,
+          number: 31,
+          title: "Good Morning Good Morning (Take 8 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 163000,
+          number: 32,
+          title: "Only A Northern Song (Takes 3 And 12 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 65000,
+          number: 33,
+          title: "Being For The Benefit Of Mr Kite! (Takes 1 And 2 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 153000,
+          number: 34,
+          title: "Being For The Benefit Of Mr Kite! (Take 7 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 185000,
+          number: 35,
+          title: "Lucy In The Sky With Diamonds (Takes 6, 7 And 8 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 327000,
+          number: 36,
+          title: "Within You Without You (Instrumental - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 87000,
+          number: 37,
+          title: "Sgt Pepper's Lonely Hearts Club Band (Reprise - Take 5 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 343000,
+          number: 38,
+          title: "You Know My Name (Look Up The Number) (Stereo Remix - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 241000,
+          number: 39,
+          title: "I Am The Walrus (Take 16 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 168000,
+          number: 40,
+          title: "The Fool On The Hill (Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 182000,
+          number: 41,
+          title: "Your Mother Should Know (Take 27 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 224000,
+          number: 42,
+          title: "The Fool On The Hill (Take 4 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 197000,
+          number: 43,
+          title: "Hello, Goodbye (Take 16 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 141000,
+          number: 44,
+          title: "Lady Madonna (Takes 3 And 4 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 210000,
+          number: 45,
+          title: "Across The Universe (Take 2 - Remastered)",
+          type: "audio",
+        },
+      ],
+    },
+    {
+      format: "Digital Media",
+      number: 3,
+      tracklist: [
+        {
+          length: 50000,
+          number: 1,
+          title: "A Beginning (Remastered)",
+          type: "audio",
+        },
+        {
+          length: 134000,
+          number: 2,
+          title: "Happiness Is A Warm Gun (Esher Demo With False Start - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 277000,
+          number: 3,
+          title: "Helter Skelter (Take 2 Edited - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 118000,
+          number: 4,
+          title: "Mean Mr Mustard (Esher Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 86000,
+          number: 5,
+          title: "Polythene Pam (Esher Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 111000,
+          number: 6,
+          title: "Glass Onion (Esher Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 144000,
+          number: 7,
+          title: "Junk (Esher Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 120000,
+          number: 8,
+          title: "Piggies (Esher Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 79000,
+          number: 9,
+          title: "Honey Pie (Esher Demo Edited - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 162000,
+          number: 10,
+          title: "Don't Pass Me By (Take 3 With Take 5 Vocal - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 176000,
+          number: 11,
+          title: "Ob-La-Di, Ob-La-Da (First Version - Take 5 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 158000,
+          number: 12,
+          title: "Good Night (Rehearsal And Take 34 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 166000,
+          number: 13,
+          title: "Cry Baby Cry (Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 138000,
+          number: 14,
+          title: "Blackbird (Take 4 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 246000,
+          number: 15,
+          title: "Sexy Sadie (Take 6 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 207000,
+          number: 16,
+          title: "While My Guitar Gently Weeps (Acoustic Version - Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 261000,
+          number: 17,
+          title: "Hey Jude (Take 2 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 202000,
+          number: 18,
+          title: "Not Guilty (Take 102 Edited - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 197000,
+          number: 19,
+          title: "Mother Nature's Son (Take 2 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 128000,
+          number: 20,
+          title: "Glass Onion (Mono Mix - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 252000,
+          number: 21,
+          title: "Rocky Raccoon (Take 8 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 372000,
+          number: 22,
+          title: "What's The New Mary Jane (Take 4 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 150000,
+          number: 23,
+          title: "Step Inside Love / Los Paranoias (Studio Jam - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 134000,
+          number: 24,
+          title: "I'm So Tired (Edit Of Takes 3, 6 And 9 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 115000,
+          number: 25,
+          title: "I Will (Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 135000,
+          number: 26,
+          title: "Why Don't We Do It In The Road (Take 4 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 118000,
+          number: 27,
+          title: "Julia (Take 2 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 168000,
+          number: 28,
+          title: "I've Got A Feeling (Apple Studio - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 216000,
+          number: 29,
+          title: "She Came In Through The Bathroom Window (Apple Studio - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 258000,
+          number: 30,
+          title: "Dig A Pony (Apple Studio - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 207000,
+          number: 31,
+          title: "Two Of Us (Apple Studio - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 142000,
+          number: 32,
+          title: "For You Blue (Apple Studio - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 198000,
+          number: 33,
+          title: "Teddy Boy (Apple Studio - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 190000,
+          number: 34,
+          title: "Rip It Up / Shake, Rattle And Roll / Blue Suede Shoes (Medley - Apple Studio Jam - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 221000,
+          number: 35,
+          title: "The Long And Winding Road (Apple Studio - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 247000,
+          number: 36,
+          title: "Oh! Darling (Apple Studio - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 184000,
+          number: 37,
+          title: "All Things Must Pass (Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 116000,
+          number: 38,
+          title: "Mailman, Bring Me No More Blues (Apple Studio Jam - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 188000,
+          number: 39,
+          title: "Get Back (Third Rooftop Performance - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 182000,
+          number: 40,
+          title: "Old Brown Shoe (Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 169000,
+          number: 41,
+          title: "Octopus's Garden (Take 2 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 229000,
+          number: 42,
+          title: "Maxwell's Silver Hammer (Take 5 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 198000,
+          number: 43,
+          title: "Something (Demo - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 220000,
+          number: 44,
+          title: "Come Together (Take 1 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 150000,
+          number: 45,
+          title: "Come And Get It (Demo - 1996 Remix - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 128000,
+          number: 46,
+          title: "Ain't She Sweet (Studio Jam - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 143000,
+          number: 47,
+          title: "Because (Vocals Mix - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 245000,
+          number: 48,
+          title: "Let It Be (Apple Studio - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 107000,
+          number: 49,
+          title: "I Me Mine (Take 16 - Remastered)",
+          type: "audio",
+        },
+        {
+          length: 172000,
+          number: 50,
+          title: "The End (Remix With The Final Chord Of A Day In The Life - Remastered)",
+          type: "audio",
+        },
+      ],
+    },
+    {
+      format: "Digital Media",
+      number: 4,
+      tracklist: [
+        {
+          length: 186000,
+          number: 1,
+          title: "I Saw Her Standing There (Take 2)",
+          type: "audio",
+        },
+        {
+          length: 168000,
+          number: 2,
+          title: "Money (That's What I Want) (RM7 Undubbed)",
+          type: "audio",
+        },
+        {
+          length: 198000,
+          number: 3,
+          title: "This Boy (Takes 12 And 13)",
+          type: "audio",
+        },
+        {
+          length: 187000,
+          number: 4,
+          title: "Tell Me Why (Takes 4 And 5)",
+          type: "audio",
+        },
+        {
+          length: 158000,
+          number: 5,
+          title: "If I Fell (Take 11)",
+          type: "audio",
+        },
+        {
+          length: 129000,
+          number: 6,
+          title: "Matchbox (Take 1)",
+          type: "audio",
+        },
+        {
+          length: 208000,
+          number: 7,
+          title: "Every Little Thing (Takes 6 And 7)",
+          type: "audio",
+        },
+        {
+          length: 156000,
+          number: 8,
+          title: "I Need You (Take 1)",
+          type: "audio",
+        },
+        {
+          length: 146000,
+          number: 9,
+          title: "I've Just Seen A Face (Take 3)",
+          type: "audio",
+        },
+        {
+          length: 160000,
+          number: 10,
+          title: "In My Life (Take 1)",
+          type: "audio",
+        },
+        {
+          length: 144000,
+          number: 11,
+          title: "Nowhere Man (First Version - Take 2)",
+          type: "audio",
+        },
+        {
+          length: 155000,
+          number: 12,
+          title: "Got To Get You Into My Life (Second Version - Unnumbered Mix)",
+          type: "audio",
+        },
+        {
+          length: 176000,
+          number: 13,
+          title: "Love You To (Take 7)",
+          type: "audio",
+        },
+        {
+          length: 200000,
+          number: 14,
+          title: "Strawberry Fields Forever (Take 26)",
+          type: "audio",
+        },
+        {
+          length: 230000,
+          number: 15,
+          title: "She's Leaving Home (Take 1 - Instrumental)",
+          type: "audio",
+        },
+        {
+          length: 366000,
+          number: 16,
+          title: "Baby, You're A Rich Man (Takes 11 And 12)",
+          type: "audio",
+        },
+        {
+          length: 371000,
+          number: 17,
+          title: "All You Need Is Love (Rehearsal For BBC Broadcast)",
+          type: "audio",
+        },
+        {
+          length: 282000,
+          number: 18,
+          title: "The Fool On The Hill (Take 5 - Instrumental)",
+          type: "audio",
+        },
+        {
+          length: 296000,
+          number: 19,
+          title: "I Am The Walrus (Take 19 - Strings, Brass, Clarinet Overdub)",
+          type: "audio",
+        },
+        {
+          length: 194000,
+          number: 20,
+          title: "Hey Bulldog (Take 4 - Instrumental)",
+          type: "audio",
+        },
+        {
+          length: 151000,
+          number: 21,
+          title: "Good Night (Take 10 With A Guitar Part From Take 5)",
+          type: "audio",
+        },
+        {
+          length: 198000,
+          number: 22,
+          title: "While My Guitar Gently Weeps (Third Version - Take 27)",
+          type: "audio",
+        },
+        {
+          length: 43000,
+          number: 23,
+          title: "(You're So Square) Baby I Don’t Care (Studio Jam)",
+          type: "audio",
+        },
+        {
+          length: 218000,
+          number: 24,
+          title: "Helter Skelter (Second Version - Take 17)",
+          type: "audio",
+        },
+        {
+          length: 26000,
+          number: 25,
+          title: "I Will (Take 29)",
+          type: "audio",
+        },
+        {
+          length: 142000,
+          number: 26,
+          title: "Can You Take Me Back? (Take 1)",
+          type: "audio",
+        },
+        {
+          length: 266000,
+          number: 27,
+          title: "Julia (Two Rehearsals)",
+          type: "audio",
+        },
+        {
+          length: 231000,
+          number: 28,
+          title: "Get Back (Take 8)",
+          type: "audio",
+        },
+        {
+          length: 109000,
+          number: 29,
+          title: "Octopus’s Garden (Rehearsal)",
+          type: "audio",
+        },
+        {
+          length: 207000,
+          number: 30,
+          title: "Don’t Let Me Down (First Rooftop Performance)",
+          type: "audio",
+        },
+        {
+          length: 317000,
+          number: 31,
+          title: "You Never Give Me Your Money (Take 36)",
+          type: "audio",
+        },
+        {
+          length: 221000,
+          number: 32,
+          title: "Here Comes The Sun (Take 9)",
+          type: "audio",
+        },
+        {
+          length: 155000,
+          number: 33,
+          title: "Something (Take 39 - Strings Only Instrumental)",
+          type: "audio",
+        },
+        {
+          length: 267000,
+          number: 34,
+          title: "Free As A Bird (2025 Mix)",
+          type: "audio",
+        },
+        {
+          length: 214000,
+          number: 35,
+          title: "Real Love (2025 Mix)",
+          type: "audio",
+        },
+        {
+          length: 249000,
+          number: 36,
+          title: "Now And Then",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 21,
+    month: 11,
+    year: 2025,
+  },
+  status: "Official",
+  title: "Anthology Collection",
+}
+`;
+
+snapshot[`OTOTOY provider > release lookup > multiple artists 1`] = `
+{
+  artists: [
+    {
+      creditedName: "sasakure.UK",
+      externalIds: [
+        {
+          id: "153628",
+          provider: "ototoy",
+          type: "artist",
+        },
+      ],
+      name: "sasakure.UK",
+    },
+    {
+      creditedName: "さくらみこ",
+      externalIds: [
+        {
+          id: "818883",
+          provider: "ototoy",
+          type: "artist",
+        },
+      ],
+      name: "さくらみこ",
+    },
+    {
+      creditedName: "白上フブキ",
+      externalIds: [
+        {
+          id: "693805",
+          provider: "ototoy",
+          type: "artist",
+        },
+      ],
+      name: "白上フブキ",
+    },
+    {
+      creditedName: "夏色まつり",
+      externalIds: [
+        {
+          id: "817278",
+          provider: "ototoy",
+          type: "artist",
+        },
+      ],
+      name: "夏色まつり",
+    },
+    {
+      creditedName: "宝鐘マリン",
+      externalIds: [
+        {
+          id: "799749",
+          provider: "ototoy",
+          type: "artist",
+        },
+      ],
+      name: "宝鐘マリン",
+    },
+  ],
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://ototoy.jp/_/default/p/709920",
+    },
+  ],
+  images: [
+    {
+      noReferrer: true,
+      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/0709/00000003.1614153884.5336_320.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://imgs.ototoy.jp/imgs/jacket/0709/00000003.1614153884.5336orig.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "709920",
+        internalName: "ototoy",
+        lookup: {
+          method: "id",
+          value: "709920",
+        },
+        name: "OTOTOY",
+        url: "https://ototoy.jp/_/default/p/709920",
+      },
+    ],
+  },
+  labels: [
+    {
+      catalogNumber: undefined,
+      externalIds: [
+        {
+          id: "215734",
+          provider: "ototoy",
+          type: "label",
+        },
+      ],
+      name: "sasakuration",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          length: 223000,
+          number: 1,
+          title: "Gimme吟味virtuaる最高star!!!! (feat. さくらみこ, 白上フブキ, 夏色まつり & 宝鐘マリン)",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 25,
+    month: 2,
+    year: 2021,
+  },
+  status: "Official",
+  title: "Gimme吟味virtuaる最高star!!!! (feat. さくらみこ, 白上フブキ, 夏色まつり & 宝鐘マリン)",
+}
+`;
+
+snapshot[`OTOTOY provider > release lookup > no label 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Benjazzy",
+      externalIds: [
+        {
+          id: "666017",
+          provider: "ototoy",
+          type: "artist",
+        },
+      ],
+      name: "Benjazzy",
+    },
+  ],
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://ototoy.jp/_/default/p/3228080",
+    },
+  ],
+  images: [
+    {
+      noReferrer: true,
+      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/3228/00000003.3228080.1763569536.7217_320.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://imgs.ototoy.jp/imgs/jacket/3228/00000003.3228080.1763569536.7217orig.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "3228080",
+        internalName: "ototoy",
+        lookup: {
+          method: "id",
+          value: "3228080",
+        },
+        name: "OTOTOY",
+        url: "https://ototoy.jp/_/default/p/3228080",
+      },
+    ],
+  },
+  labels: undefined,
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          length: 212000,
+          number: 1,
+          title: "UNITE",
+          type: "audio",
+        },
+        {
+          length: 207000,
+          number: 2,
+          title: "BLINDLY",
+          type: "audio",
+        },
+        {
+          length: 192000,
+          number: 3,
+          title: "TRAUMATIC",
+          type: "audio",
+        },
+        {
+          length: 314000,
+          number: 4,
+          title: "NOOFFSEASON (feat. Watson, MIKADO & ¥ellow Bucks)",
+          type: "audio",
+        },
+        {
+          length: 186000,
+          number: 5,
+          title: "1 2 3 (feat. CFN MALIK)",
+          type: "audio",
+        },
+        {
+          length: 239000,
+          number: 6,
+          title: "PRIDE",
+          type: "audio",
+        },
+        {
+          length: 212000,
+          number: 7,
+          title: "WWW (feat. Bonbero)",
+          type: "audio",
+        },
+        {
+          length: 186000,
+          number: 8,
+          title: "UWASA (feat. JP THE WAVY)",
+          type: "audio",
+        },
+        {
+          length: 221000,
+          number: 9,
+          title: "シケモク (feat. Daichi Yamamoto)",
+          type: "audio",
+        },
+        {
+          length: 227000,
+          number: 10,
+          title: "NEVER CHANGE (feat. SZK)",
+          type: "audio",
+        },
+        {
+          length: 137000,
+          number: 11,
+          title: "HATERS",
+          type: "audio",
+        },
+        {
+          length: 199000,
+          number: 12,
+          title: "LIFE LINE",
+          type: "audio",
+        },
+        {
+          length: 192000,
+          number: 13,
+          title: "THE BALANCE (feat. 般若)",
+          type: "audio",
+        },
+        {
+          length: 308000,
+          number: 14,
+          title: "UNTIL",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 19,
+    month: 11,
+    year: 2025,
+  },
+  status: "Official",
+  title: "UNTIL",
+}
+`;
+
+snapshot[`OTOTOY provider > release lookup > original release date only 1`] = `
+{
+  artists: [
+    {
+      creditedName: "YOASOBI",
+      externalIds: [
+        {
+          id: "731939",
+          provider: "ototoy",
+          type: "artist",
+        },
+      ],
+      name: "YOASOBI",
+    },
+  ],
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://ototoy.jp/_/default/p/1822344",
+    },
+  ],
+  images: [
+    {
+      noReferrer: true,
+      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1695204881.8512_320.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1695204881.8512orig.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "1822344",
+        internalName: "ototoy",
+        lookup: {
+          method: "id",
+          value: "1822344",
+        },
+        name: "OTOTOY",
+        url: "https://ototoy.jp/_/default/p/1822344",
+      },
+    ],
+  },
+  labels: [
+    {
+      catalogNumber: "YOASOBI-081",
+      externalIds: [
+        {
+          id: "856521",
+          provider: "ototoy",
+          type: "label",
+        },
+      ],
+      name: "YOASOBI",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          length: 194000,
+          number: 1,
+          title: "勇者",
+          type: "audio",
+        },
+        {
+          length: 48000,
+          number: 2,
+          title: 'Interlude "Awakening"',
+          type: "audio",
+        },
+        {
+          length: 192000,
+          number: 3,
+          title: "祝福",
+          type: "audio",
+        },
+        {
+          length: 256000,
+          number: 4,
+          title: "海のまにまに",
+          type: "audio",
+        },
+        {
+          length: 185000,
+          number: 5,
+          title: "ミスター",
+          type: "audio",
+        },
+        {
+          length: 67000,
+          number: 6,
+          title: 'Interlude "Worship"',
+          type: "audio",
+        },
+        {
+          length: 211000,
+          number: 7,
+          title: "アイドル",
+          type: "audio",
+        },
+        {
+          length: 198000,
+          number: 8,
+          title: "セブンティーン",
+          type: "audio",
+        },
+        {
+          length: 198000,
+          number: 9,
+          title: "アドベンチャー",
+          type: "audio",
+        },
+        {
+          length: 217000,
+          number: 10,
+          title: "好きだ",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 4,
+    month: 10,
+    year: 2023,
+  },
+  status: "Official",
+  title: "THE BOOK 3",
+}
+`;
+
+snapshot[`OTOTOY provider > release lookup > catalog number 1`] = `
+{
+  artists: [
+    {
+      creditedName: "YOASOBI",
+      externalIds: [
+        {
+          id: "731939",
+          provider: "ototoy",
+          type: "artist",
+        },
+      ],
+      name: "YOASOBI",
+    },
+  ],
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://ototoy.jp/_/default/p/1822344",
+    },
+  ],
+  images: [
+    {
+      noReferrer: true,
+      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1695204881.8512_320.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1695204881.8512orig.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "1822344",
+        internalName: "ototoy",
+        lookup: {
+          method: "id",
+          value: "1822344",
+        },
+        name: "OTOTOY",
+        url: "https://ototoy.jp/_/default/p/1822344",
+      },
+    ],
+  },
+  labels: [
+    {
+      catalogNumber: "YOASOBI-081",
+      externalIds: [
+        {
+          id: "856521",
+          provider: "ototoy",
+          type: "label",
+        },
+      ],
+      name: "YOASOBI",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          length: 194000,
+          number: 1,
+          title: "勇者",
+          type: "audio",
+        },
+        {
+          length: 48000,
+          number: 2,
+          title: 'Interlude "Awakening"',
+          type: "audio",
+        },
+        {
+          length: 192000,
+          number: 3,
+          title: "祝福",
+          type: "audio",
+        },
+        {
+          length: 256000,
+          number: 4,
+          title: "海のまにまに",
+          type: "audio",
+        },
+        {
+          length: 185000,
+          number: 5,
+          title: "ミスター",
+          type: "audio",
+        },
+        {
+          length: 67000,
+          number: 6,
+          title: 'Interlude "Worship"',
+          type: "audio",
+        },
+        {
+          length: 211000,
+          number: 7,
+          title: "アイドル",
+          type: "audio",
+        },
+        {
+          length: 198000,
+          number: 8,
+          title: "セブンティーン",
+          type: "audio",
+        },
+        {
+          length: 198000,
+          number: 9,
+          title: "アドベンチャー",
+          type: "audio",
+        },
+        {
+          length: 217000,
+          number: 10,
+          title: "好きだ",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 4,
+    month: 10,
+    year: 2023,
+  },
+  status: "Official",
+  title: "THE BOOK 3",
+}
+`;
