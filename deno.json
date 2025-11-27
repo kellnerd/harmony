@@ -12,6 +12,7 @@
 	},
 	"imports": {
 		"@/": "./",
+		"@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom@^0.1.56",
 		"@deno/gfm": "jsr:@deno/gfm@^0.8.0",
 		"@kellnerd/musicbrainz": "jsr:@kellnerd/musicbrainz@^0.4.1",
 		"@std/collections": "jsr:@std/collections@^1.0.10",
@@ -20,9 +21,7 @@
 		"@std/testing": "jsr:@std/testing@^1.0.9",
 		"@std/uuid": "jsr:@std/uuid@^1.0.6",
 		"$fresh/": "https://deno.land/x/fresh@1.6.8/",
-		"@types/jsdom": "npm:@types/jsdom@^27.0.0",
 		"fresh/": "https://deno.land/x/fresh@1.6.8/",
-		"jsdom": "npm:jsdom@^27.2.0",
 		"lande": "https://esm.sh/lande@1.0.10",
 		"preact": "https://esm.sh/preact@10.19.6",
 		"preact/": "https://esm.sh/preact@10.19.6/",

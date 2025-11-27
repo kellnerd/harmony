@@ -13,8 +13,7 @@ import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/ba
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
-// @deno-types="npm:@types/jsdom"
-import { JSDOM } from 'jsdom';
+import { DOMParser, HTMLDocument } from '@b-fuze/deno-dom';
 import { parseDuration } from '../../utils/time.ts';
 
 export default class OtotoyProvider extends MetadataProvider {
@@ -30,7 +29,7 @@ export default class OtotoyProvider extends MetadataProvider {
 		pathname: '/_/default/a/:id',
 	});
 
-	readonly entityPathPattern = /\/_\/default\/(?:a|p)\/(\d+)$/;
+	readonly entityPathPattern = /\/_\/default\/[ap]\/(\d+)$/;
 
 	readonly labelUrlPattern = new URLPattern({
 		hostname: this.supportedUrls.hostname,
@@ -107,19 +106,22 @@ export default class OtotoyProvider extends MetadataProvider {
 	}
 
 	scrapePackage(html: string, webUrl: URL): PackagePage {
-		const { document } = (new JSDOM(html)).window;
+		const doc = new DOMParser().parseFromString(html, 'text/html');
+		if (!doc) {
+			throw new ResponseError(this.name, `Failed to parse HTML`, webUrl);
+		}
 
-		const thumbUrl = this.parseAlbumArtwork(document);
+		const thumbUrl = this.parseAlbumArtwork(doc);
 		if (!thumbUrl) {
 			throw new ResponseError(this.name, `Failed to extract album thumbnail`, webUrl);
 		}
 
-		const albumMeta = this.parseAlbumMeta(document);
+		const albumMeta = this.parseAlbumMeta(doc);
 		if (!albumMeta) {
 			throw new ResponseError(this.name, `Failed to extract album metadata`, webUrl);
 		}
 
-		const trackList = this.parseTracklist(document);
+		const trackList = this.parseTracklist(doc);
 		if (!trackList) {
 			throw new ResponseError(this.name, `Failed to extract tracklist`, webUrl);
 		}
@@ -142,11 +144,11 @@ export default class OtotoyProvider extends MetadataProvider {
 	// </div>
 	//
 	// This is just the small thumbnail, the full size image comes from getArtwork()
-	parseAlbumArtwork(doc: Document): string | undefined {
-		const imageElement = doc.querySelector<HTMLImageElement>('div.album-artwork img.photo');
+	parseAlbumArtwork(doc: HTMLDocument): string | undefined {
+		const imageElement = doc.querySelector('div.album-artwork img.photo');
 		if (!imageElement) return undefined;
 
-		return imageElement.src;
+		return imageElement.getAttribute('src') || undefined;
 	}
 
 	// The format is as follows:
@@ -169,16 +171,15 @@ export default class OtotoyProvider extends MetadataProvider {
 	// </table>
 	//
 	// NOTE: `disc-row` is optional
-	parseTracklist(doc: Document): Track[] | undefined {
-		const trackListRows = doc.querySelectorAll<HTMLTableRowElement>('#tracklist tbody tr');
+	parseTracklist(doc: HTMLDocument): Track[] | undefined {
+		const trackListRows = doc.querySelectorAll('#tracklist tbody tr');
 
 		let currentDisc = null;
 		const tracks: Track[] = [];
 
 		for (const trackRow of trackListRows) {
 			if (trackRow.classList.contains('disc-row')) {
-				const discText = trackRow.textContent || '';
-				const match = discText.match(/\d+/);
+				const match = trackRow.textContent.match(/\d+/);
 
 				if (match) {
 					currentDisc = parseInt(match[0], 10);
@@ -190,17 +191,21 @@ export default class OtotoyProvider extends MetadataProvider {
 			const trackNumberCell = trackRow.querySelector('.num');
 			if (!trackNumberCell) continue;
 
-			const trackNumber = trackNumberCell.textContent.trim();
+			const trackNumber = trackNumberCell.textContent?.trim() ?? '';
+			if (!trackNumber) return undefined;
 
 			const titleSpan = trackRow.querySelector("td.item span[id^='title-']");
 			if (!titleSpan) return undefined;
 
-			const title = titleSpan.textContent.trim();
+			const title = titleSpan.textContent?.trim() ?? '';
+			if (!title) return undefined;
 
 			const durationCell = trackRow.querySelectorAll('td')[3];
 			if (!durationCell) continue;
 
-			const duration = durationCell.textContent.trim();
+			const duration = durationCell.textContent?.trim() ?? '';
+			if (!duration) return undefined;
+
 			tracks.push({
 				title: title,
 				discNumber: currentDisc ?? undefined,
@@ -236,39 +241,43 @@ export default class OtotoyProvider extends MetadataProvider {
 	// * The release can have an "original" release date, a platform release date, or both. "Release date" is the preferred date.
 	//   * In the case that only one date is present, sometimes "Original" is used, sometimes not. Whatever's available will
 	//     be used.
-	parseAlbumMeta(doc: Document): AlbumMeta | undefined {
-		const albumMetadata = doc.querySelector<HTMLDivElement>('div.album-meta-data');
+	parseAlbumMeta(doc: HTMLDocument): AlbumMeta | undefined {
+		const albumMetadata = doc.querySelector('div.album-meta-data');
 		if (!albumMetadata) return undefined;
 
-		const titleHeading = albumMetadata.querySelector<HTMLHeadingElement>('h1.album-title');
+		const titleHeading = albumMetadata.querySelector('h1.album-title');
 		if (!titleHeading) return undefined;
 
-		const title = titleHeading.textContent;
+		const title = titleHeading.textContent?.trim();
+		if (!title) return undefined;
 
-		const artistSpans = albumMetadata.querySelectorAll<HTMLSpanElement>('p.album-artist > span.album-artist');
+		const artistSpans = Array.from(albumMetadata.querySelectorAll('p.album-artist > span.album-artist'));
 		if (artistSpans.length === 0) return undefined;
 
 		const artists: Artist[] = [];
 		for (const span of artistSpans) {
-			const anchor = span.querySelector<HTMLAnchorElement>('a');
+			const anchor = span.querySelector('a');
 			if (!anchor) return undefined;
 
-			const id = anchor.href.match(this.entityPathPattern)?.[1];
+			const id = anchor.getAttribute('href')?.match(this.entityPathPattern)?.[1];
 			if (!id) return undefined;
 
+			const name = span.textContent?.trim();
+			if (!name) return undefined;
+
 			artists.push({
-				name: span.textContent?.trim(),
+				name,
 				id,
 			});
 		}
 
-		const details = albumMetadata.querySelector<HTMLDivElement>('div.detail');
+		const details = albumMetadata.querySelector('div.detail');
 		if (!details) return undefined;
 
 		let releaseDate: string | undefined;
 		let originalReleaseDate: string | undefined;
 
-		const releaseElements = details.querySelectorAll<HTMLParagraphElement>('p.release-day');
+		const releaseElements = details.querySelectorAll('p.release-day');
 
 		releaseElements.forEach((el) => {
 			const text = el.textContent?.trim();
@@ -290,21 +299,24 @@ export default class OtotoyProvider extends MetadataProvider {
 			releaseDate,
 		};
 
-		const labelAnchor = details.querySelector<HTMLAnchorElement>('p.label-name > a');
+		const labelAnchor = details.querySelector('p.label-name > a');
 		if (!labelAnchor) return albumMeta;
 
-		const catalogIdParagraph = details.querySelector<HTMLParagraphElement>('p.catalog-id');
+		const catalogIdParagraph = details.querySelector('p.catalog-id');
 
 		let catalogNumber = undefined;
 		if (catalogIdParagraph) {
-			catalogNumber = catalogIdParagraph.textContent.trim().match(/^Catalog number: (.*?)$/)?.[1];
+			catalogNumber = catalogIdParagraph.textContent?.trim().match(/^Catalog number: (.*?)$/)?.[1];
 		}
 
-		const labelId = labelAnchor.href.match(this.labelPathPattern)?.[1];
+		const labelId = labelAnchor.getAttribute('href')?.match(this.labelPathPattern)?.[1];
 		if (!labelId) return undefined;
 
+		const labelName = labelAnchor.textContent?.trim();
+		if (!labelName) return undefined;
+
 		albumMeta.label = {
-			name: labelAnchor.textContent,
+			name: labelName,
 			id: labelId,
 			catalogNumber,
 		};
