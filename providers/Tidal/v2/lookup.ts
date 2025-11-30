@@ -282,10 +282,11 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		return artists.map((artist) => {
 			const artistResource = artistMap.get(artist.id);
 			if (!artistResource) {
-				throw new ProviderError(
-					this.provider.name,
-					`No artist data found for artist ${artist.id}`,
-				);
+				this.addMessage(`No artist data found for artist ${artist.id}, please check artist credits`, 'error');
+				return {
+					name: `[unknown Tidal artist ${artist.id}]`,
+					externalIds: this.provider.makeExternalIds({ type: 'artist', id: artist.id }),
+				};
 			}
 			return {
 				name: artistResource.attributes.name,
