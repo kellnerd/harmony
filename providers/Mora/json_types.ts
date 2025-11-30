@@ -21,10 +21,10 @@ export interface PackageMeta {
 }
 
 export interface Track {
-	arranger?: string;
-	composer?: string;
+	arranger: string | null;
+	composer: string | null;
 	/** Lyricist name */
-	lyrics?: string;
+	lyrics: string | null;
 
 	artistName: string;
 	artistNo: number;
