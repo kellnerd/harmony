@@ -260,9 +260,10 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		track: TracksResource | VideosResource,
 		artistMap: Map<string, ArtistsResource>,
 	): HarmonyTrack {
+		const { title, version } = track.attributes;
 		return {
 			number: number,
-			title: track.attributes.title,
+			title: version ? `${title} (${version})` : title,
 			length: parseISODuration(track.attributes.duration),
 			isrc: track.attributes.isrc,
 			artists: this.getTrackArtists(track, artistMap),

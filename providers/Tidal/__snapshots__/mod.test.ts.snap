@@ -673,3 +673,35 @@ snapshot[`Tidal provider > release lookup > lyric video (v2 API) 1`] = `
   ],
 }
 `;
+
+snapshot[`Tidal provider > release lookup > release with paginated tracklist and version info (v2 API) 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Air Max '97",
+      externalIds: [
+        {
+          id: "5664171",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Air Max '97",
+    },
+  ],
+  isrc: "AUNMG2400056",
+  length: 135000,
+  number: 46,
+  recording: {
+    externalIds: [
+      {
+        id: "396698966",
+        provider: "tidal",
+        type: "track",
+      },
+    ],
+  },
+  title: "XTYPE",
+  type: "audio",
+}
+`;
