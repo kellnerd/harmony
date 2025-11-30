@@ -20,7 +20,7 @@ export default class MoraProvider extends MetadataProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'mora.jp',
-		pathname: '/package/:labelCode([0-9]+)/:materialNo{/}?',
+		pathname: '/package/:labelCode([0-9]+)/:packageId{/}?',
 	});
 
 	readonly artistUrlPattern = new URLPattern({
@@ -56,14 +56,14 @@ export default class MoraProvider extends MetadataProvider {
 	override extractEntityFromUrl(url: URL): EntityId | undefined {
 		const releaseResult = this.supportedUrls.exec(url);
 		if (releaseResult) {
-			const { labelCode, materialNo } = releaseResult.pathname.groups;
-			if (!labelCode || !materialNo) {
+			const { labelCode, packageId } = releaseResult.pathname.groups;
+			if (!labelCode || !packageId) {
 				return undefined;
 			}
 
 			return {
 				type: 'package',
-				id: [labelCode, materialNo].join('/'),
+				id: [labelCode, packageId].join('/'),
 			};
 		}
 
