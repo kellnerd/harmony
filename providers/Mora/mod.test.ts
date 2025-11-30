@@ -7,17 +7,17 @@ import MoraProvider from './mod.ts';
 import { assertEquals } from 'std/assert/assert_equals.ts';
 
 describe('Mora provider', () => {
-	const bc = new MoraProvider(makeProviderOptions());
-	const lookupStub = stubProviderLookups(bc);
+	const mora = new MoraProvider(makeProviderOptions());
+	const lookupStub = stubProviderLookups(mora);
 
-	describeProvider(bc, {
+	describeProvider(mora, {
 		urls: [{
 			description: 'package page',
 			url: new URL('https://mora.jp/package/43000006/00602488058599/'),
 			id: { type: 'package', id: '43000006/00602488058599' },
 			isCanonical: true,
 		}, {
-			description: 'album page with tracking parameter',
+			description: 'package page with tracking parameter',
 			url: new URL('https://mora.jp/package/43000087/SEXX03051B00Z/?fmid=TOPRNKS'),
 			id: { type: 'package', id: '43000087/SEXX03051B00Z' },
 		}, {
