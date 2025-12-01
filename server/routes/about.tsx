@@ -57,6 +57,21 @@ export default function About() {
 				In addition to the predefined categories, any provider can be added to the combined lookup by appending its
 				internal name as a query parameter without value (or even with a release ID as value).
 			</p>
+			<h3>Examples</h3>
+			<ol>
+				<li>
+					Lookup by URL and using your preferred providers:{' '}
+					<code>
+						/release?url=<em>URL</em>&category=preferred
+					</code>
+				</li>
+				<li>
+					Lookup by barcode on Deezer and Spotify using the region GB:{' '}
+					<code>
+						/release?gtin=<em>BARCODE</em>&deezer&spotify&region=GB
+					</code>
+				</li>
+			</ol>
 			<h2>Supported Providers</h2>
 			<table>
 				<tr>
