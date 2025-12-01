@@ -72,12 +72,14 @@ function makeSvgSymbol(icon: Icon) {
 		children,
 		class: className,
 		fill,
+		id,
 		stroke,
 		'stroke-linecap': strokeLinecap,
 		'stroke-linejoin': strokeLinejoin,
 		viewBox,
 	} = icon({}).props as JSX.SVGAttributes<SVGSVGElement>;
-	const iconName = className!.toString().replace('icon icon-tabler icon-tabler-', '');
+	// Prefer ID attribute of custom icons, fall back to class name suffix for Tabler icons.
+	const iconName = id ? id.toString() : className!.toString().replace('icon icon-tabler icon-tabler-', '');
 
 	return (
 		<symbol
