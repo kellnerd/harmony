@@ -171,12 +171,12 @@ export default class BandcampProvider extends MetadataProvider {
 
 					const description = extractMetadataTag(html, 'og:description');
 					if (description) {
-						jsonEntries.push(['og:description', `"${description}"`]);
+						jsonEntries.push(['og:description', JSON.stringify(description)]);
 					}
 
 					const licenseUrl = extractTextFromHtml(html, /class="cc-icons"\s+href="([^"]+)"/i);
 					if (licenseUrl) {
-						jsonEntries.push(['licenseUrl', `"${licenseUrl}"`]);
+						jsonEntries.push(['licenseUrl', JSON.stringify(licenseUrl)]);
 					}
 
 					const json = `{${jsonEntries.map(([key, serializedValue]) => `"${key}":${serializedValue}`).join(',')}}`;
