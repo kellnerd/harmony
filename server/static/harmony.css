@@ -33,6 +33,7 @@
 	--deezer: #a238ff;
 	--mora: #02082a;
 	--musicbrainz: #ba478f;
+	--ototoy: #e07e01;
 	--spotify: #1db954;
 	--tidal: #000000;
 }
@@ -467,6 +468,9 @@ label.mora, td.mora {
 }
 label.musicbrainz, td.musicbrainz {
 	background-color: var(--musicbrainz);
+}
+label.ototoy, td.ototoy {
+	background-color: var(--ototoy);
 }
 label.spotify, td.spotify {
 	background-color: var(--spotify);

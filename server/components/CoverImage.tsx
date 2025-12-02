@@ -9,10 +9,17 @@ export function CoverImage({ artwork }: { artwork: Artwork }) {
 		description += ` (${artwork.comment})`;
 	}
 
+	const referrerPolicy = artwork.noReferrer ? 'no-referrer' : undefined;
+
 	return (
 		<figure class='cover-image' data-provider={provider}>
-			<a href={artwork.url}>
-				<img src={artwork.thumbUrl ?? artwork.url} alt={description} title={description} />
+			<a href={artwork.url} referrerpolicy={referrerPolicy}>
+				<img
+					src={artwork.thumbUrl ?? artwork.url}
+					alt={description}
+					title={description}
+					referrerpolicy={referrerPolicy}
+				/>
 			</a>
 			<figcaption>
 				{artwork.comment}
