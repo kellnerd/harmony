@@ -1,34 +1,36 @@
 import { musicbrainzTargetServer } from '@/config.ts';
+import { ISRC as ParsedISRC } from '@/harmonizer/isrc.ts';
 import { join } from 'std/url/join.ts';
 import { ProviderIcon } from './ProviderIcon.tsx';
 import { SpriteIcon } from './SpriteIcon.tsx';
 
-const isrcPattern = /^([A-Z]{2})-?([A-Z0-9]{3})-?(\d{2})-?(\d{5})$/i;
-
 export function ISRC({ code }: { code: string }) {
-	const codeMatch = code.trim().match(isrcPattern);
+	try {
+		const isrc = new ParsedISRC(code);
+		const normalizedCode = isrc.toString();
 
-	return codeMatch
-		? (
+		return (
 			<>
 				<span class='entity-links'>
 					<a
 						title='ifpi ISRC search'
-						href={'https://isrcsearch.ifpi.org/?tab="code"&itemsPerPage=100&showReleases=true&isrcCode=' + code}
+						href={`https://isrcsearch.ifpi.org/?tab=code&isrcCode=${normalizedCode}&itemsPerPage=100&showReleases=true`}
 					>
 						<SpriteIcon size={18} name='brand-ifpi' stroke={1.5} />
 					</a>
-					<a href={join(musicbrainzTargetServer, 'isrc', code).href}>
+					<a href={join(musicbrainzTargetServer, 'isrc', normalizedCode).href}>
 						<ProviderIcon providerName='MusicBrainz' size={18} stroke={1.5} />
 					</a>
 				</span>
 				<code class='isrc'>
-					<span class='country'>{codeMatch[1]}</span>
-					<span class='registrant'>{codeMatch[2]}</span>
-					<span class='year'>{codeMatch[3]}</span>
-					<span class='designation'>{codeMatch[4]}</span>
+					<span class='country'>{isrc.country}</span>
+					<span class='registrant'>{isrc.registrant}</span>
+					<span class='year'>{isrc.year}</span>
+					<span class='designation'>{isrc.designation}</span>
 				</code>
 			</>
-		)
-		: <code class='invalid-isrc'>{code}</code>;
+		);
+	} catch {
+		return <code class='invalid-isrc'>{code}</code>;
+	}
 }
