@@ -134,7 +134,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		// Skip bonus items like booklets.
 		const validTrackKinds: Kind[] = ['song', 'music-video'];
 		const tracks = data.results.filter((result) =>
-			result.wrapperType === 'track' && result.collectionId === collection.collectionId &&
+			result.wrapperType === 'track' && 'collectionId' in result && result.collectionId === collection.collectionId &&
 			validTrackKinds.includes(result.kind)
 		) as Track[];
 
@@ -144,7 +144,9 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		}
 
 		// Warn about results which belong to a different collection.
-		const skippedResults = data.results.filter((result) => result.collectionId !== collection.collectionId);
+		const skippedResults = data.results.filter((result) =>
+			'collectionId' in result && result.collectionId !== collection.collectionId
+		) as Array<Collection | Track>;
 		if (skippedResults.length) {
 			const uniqueSkippedIds = [...new Set(skippedResults.map((result) => result.collectionId))];
 			const skippedUrls = uniqueSkippedIds.map((id) =>
