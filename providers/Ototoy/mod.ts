@@ -199,7 +199,7 @@ export default class OtotoyProvider extends MetadataProvider {
 				if (!path) continue;
 
 				artists.push({
-					url: `${this.origin}${path}`,
+					url: new URL(path, this.origin).href,
 					name: artist.textContent.trim(),
 				});
 			}
@@ -271,7 +271,7 @@ export default class OtotoyProvider extends MetadataProvider {
 
 			artists.push({
 				name,
-				url: `${this.origin}${path}`,
+				url: new URL(path, this.origin).href,
 			});
 		}
 
@@ -318,7 +318,7 @@ export default class OtotoyProvider extends MetadataProvider {
 
 		albumMeta.label = {
 			name: labelName,
-			url: `${this.origin}${labelPath}`,
+			url: new URL(labelPath, this.origin).href,
 			catalogNumber,
 		};
 
