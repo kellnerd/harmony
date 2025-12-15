@@ -25,11 +25,11 @@ providers.addMultiple(
 	DeezerProvider,
 	iTunesProvider,
 	SpotifyProvider,
-	OtotoyProvider,
 	TidalProvider,
 	BandcampProvider,
 	BeatportProvider,
 	MoraProvider,
+	OtotoyProvider,
 );
 
 /** Internal names of providers which are enabled by default (for GTIN lookups). */
