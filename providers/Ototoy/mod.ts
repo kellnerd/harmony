@@ -21,12 +21,7 @@ export default class OtotoyProvider extends MetadataProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'ototoy.jp',
-		pathname: '/_/default/p/:id',
-	});
-
-	readonly artistUrlPattern = new URLPattern({
-		hostname: this.supportedUrls.hostname,
-		pathname: '/_/default/a/:id',
+		pathname: '/_/default/:type(a|p)/:id(\\d+)',
 	});
 
 	readonly entityPathPattern = /\/_\/default\/[ap]\/(\d+)$/;
@@ -62,18 +57,21 @@ export default class OtotoyProvider extends MetadataProvider {
 	override extractEntityFromUrl(url: URL): EntityId | undefined {
 		const packageResult = this.supportedUrls.exec(url);
 		if (packageResult) {
-			return {
-				type: 'package',
-				id: packageResult.pathname.groups.id!,
-			};
-		}
+			const type = packageResult.pathname.groups.type!;
+			const id = packageResult.pathname.groups.id!;
+			if (type == 'a') {
+				return {
+					type: 'artist',
+					id,
+				};
+			}
 
-		const artistResult = this.artistUrlPattern.exec(url);
-		if (artistResult) {
-			return {
-				type: 'artist',
-				id: artistResult.pathname.groups.id!,
-			};
+			if (type == 'p') {
+				return {
+					type: 'package',
+					id,
+				};
+			}
 		}
 
 		const labelResult = this.labelUrlPattern.exec(url);
