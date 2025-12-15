@@ -7,7 +7,8 @@ export interface PackagePage {
 export interface AlbumMeta {
 	title: string;
 	artists: Artist[];
-	releaseDate: string;
+	originalReleaseDate?: string;
+	releaseDate?: string;
 	label?: Label;
 }
 

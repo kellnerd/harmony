@@ -253,6 +253,8 @@ export default class OtotoyProvider extends MetadataProvider {
 	// * The release can have an "original" release date, a platform release date, or both. "Release date" is the preferred date.
 	//   * In the case that only one date is present, sometimes "Original" is used, sometimes not. Whatever's available will
 	//     be used.
+	//   * In the case of releases with only an "Original" date (e.g. https://ototoy.jp/_/default/p/1822344), that date seems
+	//     to represent both the original and platform release dates.
 	parseAlbumMeta(doc: HTMLDocument): AlbumMeta | undefined {
 		const albumMetadata = doc.querySelector('div.album-meta-data');
 		if (!albumMetadata) return undefined;
@@ -298,13 +300,11 @@ export default class OtotoyProvider extends MetadataProvider {
 			}
 		});
 
-		releaseDate = releaseDate || originalReleaseDate;
-		if (!releaseDate) return undefined;
-
 		const albumMeta: AlbumMeta = {
 			title,
 			artists,
 			releaseDate,
+			originalReleaseDate,
 		};
 
 		const labelAnchor = details.querySelector('p.label-name > a');
@@ -371,11 +371,16 @@ export class OtotoyReleaseLookup extends ReleaseLookup<OtotoyProvider, PackagePa
 	convertRawRelease(albumPage: PackagePage): HarmonyRelease {
 		const { albumMeta, trackList } = albumPage;
 
+		// OTOTOY might only provide one type of date, see `parseAlbumMeta()`
+		//
+		// For now, `originalReleaseDate` has no special interpretation, and is just used as a fallback when there's no
+		// platform release date specified.
+		const releaseDate = albumMeta.releaseDate || albumMeta.originalReleaseDate;
 		const release: HarmonyRelease = {
 			title: albumMeta.title,
 			artists: albumMeta.artists.map(this.convertRawArtist.bind(this)),
 			labels: albumMeta.label ? [this.convertRawLabel(albumMeta.label)] : undefined,
-			releaseDate: parseISODateTime(albumMeta.releaseDate),
+			releaseDate: releaseDate ? parseISODateTime(releaseDate) : undefined,
 			media: this.convertRawTracklist(trackList),
 			status: 'Official',
 			packaging: 'None',
