@@ -103,8 +103,6 @@ export type Artwork = {
 	types?: ArtworkType[];
 	comment?: string;
 	provider?: ProviderName;
-	/** Whether to set `referrerpolicy="no-referrer"` for the artwork URLs */
-	noReferrer?: boolean;
 };
 
 export type ArtworkType = 'front' | 'back' | 'track';

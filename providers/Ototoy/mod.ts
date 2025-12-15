@@ -454,7 +454,6 @@ export class OtotoyReleaseLookup extends ReleaseLookup<OtotoyProvider, PackagePa
 			url: imageUrl,
 			thumbUrl,
 			types: ['front'],
-			noReferrer: true,
 		};
 	}
 }
