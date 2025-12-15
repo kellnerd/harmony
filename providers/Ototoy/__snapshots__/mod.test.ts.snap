@@ -25,7 +25,6 @@ snapshot[`OTOTOY provider > release lookup > single track release 1`] = `
   ],
   images: [
     {
-      noReferrer: true,
       thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/3016/00000003.1756598333.417_320.jpg",
       types: [
         "front",
@@ -112,12 +111,11 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
   ],
   images: [
     {
-      noReferrer: true,
-      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/3237/00000003.3237840.1763733479.356_320.jpg",
+      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/3237/00000003.3237840.1764965039.7088_320.jpg",
       types: [
         "front",
       ],
-      url: "https://imgs.ototoy.jp/imgs/jacket/3237/00000003.3237840.1763733479.356orig.jpg",
+      url: "https://imgs.ototoy.jp/imgs/jacket/3237/00000003.3237840.1764965039.7088orig.jpg",
     },
   ],
   info: {
@@ -1401,7 +1399,6 @@ snapshot[`OTOTOY provider > release lookup > multiple artists 1`] = `
   ],
   images: [
     {
-      noReferrer: true,
       thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/0709/00000003.1614153884.5336_320.jpg",
       types: [
         "front",
@@ -1488,7 +1485,6 @@ snapshot[`OTOTOY provider > release lookup > no label 1`] = `
   ],
   images: [
     {
-      noReferrer: true,
       thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/3228/00000003.3228080.1763569536.7217_320.jpg",
       types: [
         "front",
@@ -1641,7 +1637,6 @@ snapshot[`OTOTOY provider > release lookup > original release date only 1`] = `
   ],
   images: [
     {
-      noReferrer: true,
       thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1695204881.8512_320.jpg",
       types: [
         "front",
@@ -1782,7 +1777,6 @@ snapshot[`OTOTOY provider > release lookup > catalog number 1`] = `
   ],
   images: [
     {
-      noReferrer: true,
       thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1695204881.8512_320.jpg",
       types: [
         "front",
