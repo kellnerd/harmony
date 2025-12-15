@@ -86,6 +86,32 @@ describe('OTOTOY provider', () => {
 				assertEquals(label.externalIds, provider.makeExternalIds({ type: 'label', id: '856521' }));
 				assertEquals(label.catalogNumber, 'YOASOBI-081');
 			},
+		}, {
+			description: 'per-track artists',
+			release: '3286704',
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+
+				assertEquals(release.media.length, 1);
+				const media = release.media[0];
+
+				assertEquals(media.tracklist.length, 6);
+				const trackArtists = [
+					['880492'],
+					['880492', '1851346'],
+					['880492', '807897'],
+					['880492', '1851348'],
+					['880492', '1329419'],
+					['880492', '807897', '1258599'],
+				];
+
+				media.tracklist.forEach((track, index) => {
+					const expectedArtists = trackArtists[index].flatMap((value) =>
+						provider.makeExternalIds({ type: 'artist', id: value })
+					);
+					assertEquals(track.artists!.flatMap((artist) => artist.externalIds![0]), expectedArtists);
+				});
+			},
 		}],
 	});
 

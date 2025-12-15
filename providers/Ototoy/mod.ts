@@ -24,14 +24,12 @@ export default class OtotoyProvider extends MetadataProvider {
 		pathname: '/_/default/:type(a|p)/:id(\\d+)',
 	});
 
-	readonly entityPathPattern = /\/_\/default\/[ap]\/(\d+)$/;
+	readonly origin = `https://${this.supportedUrls.hostname}`;
 
 	readonly labelUrlPattern = new URLPattern({
 		hostname: this.supportedUrls.hostname,
 		pathname: '/labels/:id',
 	});
-
-	readonly labelPathPattern = /\/labels\/(\d+)$/;
 
 	override readonly features: FeatureQualityMap = {
 		// Seems to between 1500-3000, with 1500 being most common
@@ -194,6 +192,18 @@ export default class OtotoyProvider extends MetadataProvider {
 			const titleSpan = trackRow.querySelector("td.item span[id^='title-']");
 			if (!titleSpan) return undefined;
 
+			const artists: Artist[] = [];
+			const artistsHtml = trackRow.querySelectorAll('td.item a.artist');
+			for (const artist of artistsHtml) {
+				const path = artist.getAttribute('href');
+				if (!path) continue;
+
+				artists.push({
+					url: `${this.origin}${path}`,
+					name: artist.textContent.trim(),
+				});
+			}
+
 			const title = titleSpan.textContent.trim();
 
 			const durationCell = trackRow.querySelectorAll('td')[3];
@@ -203,6 +213,7 @@ export default class OtotoyProvider extends MetadataProvider {
 
 			tracks.push({
 				title: title,
+				artists: artists.length > 0 ? artists : undefined,
 				discNumber: currentDisc,
 				trackNumber: parseInt(trackNumber, 10),
 				duration: parseDuration(duration),
@@ -253,14 +264,14 @@ export default class OtotoyProvider extends MetadataProvider {
 			const anchor = span.querySelector('a');
 			if (!anchor) return undefined;
 
-			const id = anchor.getAttribute('href')?.match(this.entityPathPattern)?.[1];
-			if (!id) return undefined;
+			const path = anchor.getAttribute('href');
+			if (!path) return undefined;
 
 			const name = span.textContent.trim();
 
 			artists.push({
 				name,
-				id,
+				url: `${this.origin}${path}`,
 			});
 		}
 
@@ -300,14 +311,14 @@ export default class OtotoyProvider extends MetadataProvider {
 			catalogNumber = catalogIdParagraph.textContent.trim().match(/^Catalog number: (.*?)$/)?.[1];
 		}
 
-		const labelId = labelAnchor.getAttribute('href')?.match(this.labelPathPattern)?.[1];
-		if (!labelId) return undefined;
+		const labelPath = labelAnchor.getAttribute('href');
+		if (!labelPath) return undefined;
 
 		const labelName = labelAnchor.textContent.trim();
 
 		albumMeta.label = {
 			name: labelName,
-			id: labelId,
+			url: `${this.origin}${labelPath}`,
 			catalogNumber,
 		};
 
@@ -407,6 +418,7 @@ export class OtotoyReleaseLookup extends ReleaseLookup<OtotoyProvider, PackagePa
 		const result: HarmonyTrack = {
 			number: rawTrack.trackNumber,
 			title: rawTrack.title,
+			artists: rawTrack.artists?.map(this.convertRawArtist.bind(this)),
 			length: rawTrack.duration * 1000,
 			type: 'audio',
 		};
@@ -418,7 +430,7 @@ export class OtotoyReleaseLookup extends ReleaseLookup<OtotoyProvider, PackagePa
 		return {
 			name: artist.name,
 			creditedName: artist.name,
-			externalIds: this.provider.makeExternalIds({ type: 'artist', id: artist.id }),
+			externalIds: this.provider.makeExternalIdsFromUrl(artist.url),
 		};
 	}
 
@@ -426,7 +438,7 @@ export class OtotoyReleaseLookup extends ReleaseLookup<OtotoyProvider, PackagePa
 		return {
 			name: label.name,
 			catalogNumber: label.catalogNumber,
-			externalIds: this.provider.makeExternalIds({ type: 'label', id: label.id }),
+			externalIds: this.provider.makeExternalIdsFromUrl(label.url),
 		};
 	}
 

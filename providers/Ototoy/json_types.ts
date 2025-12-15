@@ -13,17 +13,18 @@ export interface AlbumMeta {
 
 export interface Artist {
 	name: string;
-	id: string;
+	url: string;
 }
 
 export interface Label {
 	name: string;
-	id: string;
+	url: string;
 	catalogNumber?: string;
 }
 
 export interface Track {
 	title: string;
+	artists?: Artist[];
 	trackNumber: number;
 	discNumber?: number;
 	/** Track duration in seconds */
