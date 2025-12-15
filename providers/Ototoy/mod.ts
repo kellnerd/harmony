@@ -314,8 +314,8 @@ export default class OtotoyProvider extends MetadataProvider {
 		return albumMeta;
 	}
 
-	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
-		return this.fetchJSON<Data>(webUrl, {
+	fetchAndScrapePackagePage(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<PackagePage>> {
+		return this.fetchJSON<PackagePage>(webUrl, {
 			policy: { maxTimestamp },
 			responseMutator: async (response) => {
 				const html = await response.text();
@@ -342,7 +342,7 @@ export class OtotoyReleaseLookup extends ReleaseLookup<OtotoyProvider, PackagePa
 		// Entity is already defined for ID/URL lookups.
 		const webUrl = this.provider.constructUrl(this.entity!);
 		this.releaseUrl = webUrl;
-		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<PackagePage>(
+		const { content: release, timestamp } = await this.provider.fetchAndScrapePackagePage(
 			webUrl,
 			this.options.snapshotMaxTimestamp,
 		);
