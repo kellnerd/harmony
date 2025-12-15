@@ -172,7 +172,7 @@ export default class OtotoyProvider extends MetadataProvider {
 	parseTracklist(doc: HTMLDocument): Track[] | undefined {
 		const trackListRows = doc.querySelectorAll('#tracklist tbody tr');
 
-		let currentDisc = null;
+		let currentDisc = undefined;
 		const tracks: Track[] = [];
 
 		for (const trackRow of trackListRows) {
@@ -189,24 +189,21 @@ export default class OtotoyProvider extends MetadataProvider {
 			const trackNumberCell = trackRow.querySelector('.num');
 			if (!trackNumberCell) continue;
 
-			const trackNumber = trackNumberCell.textContent?.trim() ?? '';
-			if (!trackNumber) return undefined;
+			const trackNumber = trackNumberCell.textContent.trim();
 
 			const titleSpan = trackRow.querySelector("td.item span[id^='title-']");
 			if (!titleSpan) return undefined;
 
-			const title = titleSpan.textContent?.trim() ?? '';
-			if (!title) return undefined;
+			const title = titleSpan.textContent.trim();
 
 			const durationCell = trackRow.querySelectorAll('td')[3];
 			if (!durationCell) continue;
 
-			const duration = durationCell.textContent?.trim() ?? '';
-			if (!duration) return undefined;
+			const duration = durationCell.textContent.trim();
 
 			tracks.push({
 				title: title,
-				discNumber: currentDisc ?? undefined,
+				discNumber: currentDisc,
 				trackNumber: parseInt(trackNumber, 10),
 				duration: parseDuration(duration),
 			});
@@ -246,8 +243,7 @@ export default class OtotoyProvider extends MetadataProvider {
 		const titleHeading = albumMetadata.querySelector('h1.album-title');
 		if (!titleHeading) return undefined;
 
-		const title = titleHeading.textContent?.trim();
-		if (!title) return undefined;
+		const title = titleHeading.textContent.trim();
 
 		const artistSpans = Array.from(albumMetadata.querySelectorAll('p.album-artist > span.album-artist'));
 		if (artistSpans.length === 0) return undefined;
@@ -260,8 +256,7 @@ export default class OtotoyProvider extends MetadataProvider {
 			const id = anchor.getAttribute('href')?.match(this.entityPathPattern)?.[1];
 			if (!id) return undefined;
 
-			const name = span.textContent?.trim();
-			if (!name) return undefined;
+			const name = span.textContent.trim();
 
 			artists.push({
 				name,
@@ -278,9 +273,7 @@ export default class OtotoyProvider extends MetadataProvider {
 		const releaseElements = details.querySelectorAll('p.release-day');
 
 		releaseElements.forEach((el) => {
-			const text = el.textContent?.trim();
-			if (!text) return;
-
+			const text = el.textContent.trim();
 			if (text.startsWith('Original release date:')) {
 				originalReleaseDate = text.replace('Original release date:', '').trim();
 			} else if (text.startsWith('Release date:')) {
@@ -304,14 +297,13 @@ export default class OtotoyProvider extends MetadataProvider {
 
 		let catalogNumber = undefined;
 		if (catalogIdParagraph) {
-			catalogNumber = catalogIdParagraph.textContent?.trim().match(/^Catalog number: (.*?)$/)?.[1];
+			catalogNumber = catalogIdParagraph.textContent.trim().match(/^Catalog number: (.*?)$/)?.[1];
 		}
 
 		const labelId = labelAnchor.getAttribute('href')?.match(this.labelPathPattern)?.[1];
 		if (!labelId) return undefined;
 
-		const labelName = labelAnchor.textContent?.trim();
-		if (!labelName) return undefined;
+		const labelName = labelAnchor.textContent.trim();
 
 		albumMeta.label = {
 			name: labelName,
