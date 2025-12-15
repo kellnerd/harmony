@@ -160,13 +160,19 @@ export default class OtotoyProvider extends MetadataProvider {
 	//          </td>
 	//          <td class="item">
 	//             <span id="title-123456">Free As A Bird (1995 Mix - Remastered)</span>
+	//             <span>
+	//                 <a class="artist" href="/_/default/a/123456">The Beatles</a>
+	//             </span>
 	//          </td>
 	//          <td class="item center">04:25</td>
 	//       </tr>
 	//    </tbody>
 	// </table>
 	//
-	// NOTE: `disc-row` is optional
+	// NOTES:
+	// * `disc-row` is optional
+	// * Not all releases have per-track artists
+	// * Multiple `artist` anchors can appear within the parent span
 	parseTracklist(doc: HTMLDocument): Track[] | undefined {
 		const trackListRows = doc.querySelectorAll('#tracklist tbody tr');
 
