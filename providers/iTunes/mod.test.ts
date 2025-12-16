@@ -48,6 +48,11 @@ describe('iTunes provider', () => {
 			url: new URL('https://music.apple.com/fr/song/wet-cheese-delirium-2015-remaster/973594909'),
 			id: { type: 'song', id: '973594909', region: 'FR', slug: 'wet-cheese-delirium-2015-remaster' },
 		}, {
+			description: 'Apple Music video URL',
+			url: new URL('https://music.apple.com/gb/music-video/1441458100'),
+			id: { type: 'music-video', id: '1441458100', region: 'GB' },
+			isCanonical: true,
+		}, {
 			description: 'iTunes legacy album URL',
 			url: new URL('https://itunes.apple.com/gb/album/id1722294645'),
 			id: { type: 'album', id: '1722294645', region: 'GB' },

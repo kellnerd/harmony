@@ -25,7 +25,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '{geo.}?(itunes|music).apple.com',
-		pathname: String.raw`/:region(\w{2})?/:type(album|artist|song)/:slug?/{id}?:id(\d+)`,
+		pathname: String.raw`/:region(\w{2})?/:type(album|artist|song|music-video)/:slug?/{id}?:id(\d+)`,
 	});
 
 	override readonly features: FeatureQualityMap = {
@@ -38,7 +38,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: 'album',
-		recording: 'song', // ['song', 'music-video'],
+		recording: ['song', 'music-video'],
 	};
 
 	override readonly availableRegions = new Set(availableRegions);
