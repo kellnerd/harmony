@@ -14,6 +14,7 @@ export default defineApp((_req, ctx) => {
 				<meta charset='utf-8' />
 				<meta name='viewport' content='width=device-width, initial-scale=1.0' />
 				<title>Harmony</title>
+				<meta name='referrer' content='same-origin' />
 				<meta name='description' content='Music Metadata Aggregator and MusicBrainz Importer' />
 				<meta property='og:description' content='Music Metadata Aggregator and MusicBrainz Importer' />
 				<meta property='og:image' content={logoUrl.href} />
