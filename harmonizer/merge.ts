@@ -23,6 +23,12 @@ import type {
 	ResolvableEntity,
 } from './types.ts';
 
+/** Options how release metadata from different providers should be merged. */
+export interface MergeOptions {
+	/** Names of the preferred providers for the whole release or individual properties. */
+	prefer?: ProviderName[] | ProviderPreferences;
+}
+
 /**
  * Merges the given release data from different providers into a single, combined release.
  * @param releaseMap - Source releases from different providers.
@@ -31,7 +37,7 @@ import type {
  */
 export function mergeRelease(
 	releaseMap: ProviderReleaseErrorMap,
-	preferences: ProviderPreferences | ProviderName[] = {},
+	options: MergeOptions = {},
 ): HarmonyRelease {
 	assertReleaseCompatibility(filterErrorEntries(releaseMap));
 
@@ -70,6 +76,7 @@ export function mergeRelease(
 	};
 
 	// check whether we prefer to use the same provider for all properties, fallback to preferred media provider
+	const preferences = options.prefer ?? {};
 	const preferSameProvider = Array.isArray(preferences);
 	const preferredProviders: ProviderName[] = preferSameProvider ? preferences : preferences.media ?? [];
 

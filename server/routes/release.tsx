@@ -57,7 +57,9 @@ export default defineRoute(async (req, ctx) => {
 		if (providerIds.length || urls.length || gtin && providers?.size) {
 			const lookup = new CombinedReleaseLookup({ gtin, providerIds, urls }, options);
 			releaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
-			release = await lookup.getMergedRelease(defaultProviderPreferences);
+			release = await lookup.getMergedRelease({
+				prefer: defaultProviderPreferences,
+			});
 
 			// Resolving MBIDs is expensive, skip this step for fast permalinks.
 			if (snapshotMaxTimestamp === undefined) {
