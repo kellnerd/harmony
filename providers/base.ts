@@ -283,9 +283,13 @@ export abstract class MetadataProvider {
 		const retryAfter = response.headers.get('Retry-After');
 		if (retryAfter) {
 			this.log.info(`${this.name} rate limit (HTTP ${response.status}): Retry-After ${retryAfter}`);
-			const retryAfterMs = parseInt(retryAfter) * 1000;
-			if (retryAfterMs > 0) {
+			let retryAfterMs = parseInt(retryAfter) * 1000;
+			if (retryAfterMs >= 0) {
 				if (retryAfterMs < this.requestMaxDelay) {
+					if (retryAfterMs === 0) {
+						// Avoid short bursts of failed retries for a (badly rounded?) 0s delay.
+						retryAfterMs = 1000;
+					}
 					this.requestDelay = delay(retryAfterMs);
 				} else {
 					throw new ProviderError(

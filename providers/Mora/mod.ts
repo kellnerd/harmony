@@ -1,0 +1,234 @@
+import type { ApiArgs, PackageMeta, Track } from './json_types.ts';
+import { MediaFormat } from './json_types.ts';
+import type {
+	ArtistCreditName,
+	Artwork,
+	EntityId,
+	HarmonyRelease,
+	HarmonyTrack,
+	LinkType,
+} from '@/harmonizer/types.ts';
+import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
+import { parseISODateTime, PartialDate } from '@/utils/date.ts';
+import { ProviderError, ResponseError } from '@/utils/errors.ts';
+import { extractMetadataTag } from '@/utils/html.ts';
+import { isValidGTIN } from '@/utils/gtin.ts';
+
+export default class MoraProvider extends MetadataProvider {
+	readonly name = 'mora';
+
+	readonly supportedUrls = new URLPattern({
+		hostname: 'mora.jp',
+		pathname: '/package/:labelCode([0-9]+)/:packageId{/}?',
+	});
+
+	readonly artistUrlPattern = new URLPattern({
+		hostname: this.supportedUrls.hostname,
+		pathname: '/artist/:id{/}?',
+	});
+
+	override readonly features: FeatureQualityMap = {
+		// The API returns a "full size" image of at most 200x200
+		'cover size': 200,
+		'duration precision': DurationPrecision.SECONDS,
+		'GTIN lookup': FeatureQuality.MISSING,
+		'MBID resolving': FeatureQuality.PRESENT,
+		'release label': FeatureQuality.GOOD,
+	};
+
+	readonly entityTypeMap = {
+		artist: 'artist',
+		release: 'package',
+	};
+
+	override readonly launchDate: PartialDate = {
+		year: 2004,
+		month: 4,
+	};
+
+	readonly releaseLookup = MoraReleaseLookup;
+
+	constructUrl(entity: EntityId): URL {
+		return new URL(`https://mora.jp/${entity.type}/${entity.id}/`);
+	}
+
+	override extractEntityFromUrl(url: URL): EntityId | undefined {
+		const releaseResult = this.supportedUrls.exec(url);
+		if (releaseResult) {
+			const { labelCode, packageId } = releaseResult.pathname.groups;
+			if (!labelCode || !packageId) {
+				return undefined;
+			}
+
+			return {
+				type: 'package',
+				id: [labelCode, packageId].join('/'),
+			};
+		}
+
+		const artistResult = this.artistUrlPattern.exec(url);
+		if (artistResult) {
+			return {
+				type: 'artist',
+				id: artistResult.pathname.groups.id!,
+			};
+		}
+
+		return undefined;
+	}
+
+	override getLinkTypesForEntity(_entity: EntityId): LinkType[] {
+		return ['paid download'];
+	}
+
+	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
+		return this.fetchJSON<Data>(webUrl, {
+			policy: { maxTimestamp },
+			responseMutator: async (response) => {
+				if (!webUrl.pathname.startsWith('/package')) {
+					return response;
+				}
+
+				const html = await response.text();
+				const apiArgsRaw = extractMetadataTag(html, 'msApplication-Arguments');
+				if (!apiArgsRaw) {
+					throw new ResponseError(this.name, 'Response is missing the expected <meta> tag', webUrl);
+				}
+
+				try {
+					const apiArgs: Data = JSON.parse(apiArgsRaw);
+
+					if (apiArgs) {
+						return new Response(JSON.stringify(apiArgs), response);
+					}
+				} catch (_error) {
+					throw new ResponseError(this.name, 'Failed to extract API arguments', webUrl);
+				}
+
+				throw new ResponseError(this.name, 'Failed to extract API arguments', webUrl);
+			},
+		});
+	}
+}
+
+export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> {
+	rawReleaseUrl: URL | undefined;
+	mountPoint: string | undefined;
+	labelId: string | undefined;
+	materialNo: string | undefined;
+
+	apiUrl(): URL {
+		const paddedMaterialNo = this.materialNo!.padStart(10, '0');
+		const slicedMaterialNo = `${paddedMaterialNo.slice(0, 4)}/${paddedMaterialNo.slice(4, 7)}/${
+			paddedMaterialNo.slice(7)
+		}`;
+
+		return new URL(`https://cf.mora.jp/contents/package/${this.mountPoint!}/${this.labelId!}/${slicedMaterialNo}/`);
+	}
+
+	constructReleaseApiUrl(): URL {
+		const apiBase = this.apiUrl();
+
+		const packageMetaUrl = new URL(apiBase);
+		packageMetaUrl.pathname += 'packageMeta.json';
+
+		return packageMetaUrl;
+	}
+
+	async getRawRelease(): Promise<PackageMeta> {
+		if (this.lookup.method === 'gtin') {
+			throw new ProviderError(this.provider.name, 'GTIN lookups are not supported');
+		}
+
+		// Entity is already defined for ID/URL lookups.
+		const webUrl = this.provider.constructUrl(this.entity!);
+		this.rawReleaseUrl = webUrl;
+		const { content: apiArgs, timestamp: apiArgsTimestamp } = await this.provider.extractEmbeddedJson<ApiArgs>(
+			webUrl,
+			this.options.snapshotMaxTimestamp,
+		);
+		this.updateCacheTime(apiArgsTimestamp);
+
+		this.mountPoint = apiArgs.mountPoint;
+		this.labelId = apiArgs.labelId;
+		this.materialNo = apiArgs.materialNo;
+
+		const { content: release, timestamp } = await this.provider.extractEmbeddedJson<PackageMeta>(
+			this.constructReleaseApiUrl(),
+			this.options.snapshotMaxTimestamp,
+		);
+		this.updateCacheTime(timestamp);
+
+		return release;
+	}
+
+	convertRawRelease(albumPage: PackageMeta): HarmonyRelease {
+		const label = { name: albumPage.labelcompanyname };
+		const tracklist = albumPage.trackList.map(this.convertRawTrack.bind(this));
+
+		// `distPartNo` *might* contain the GTIN, but will oftentimes contain either label-specific catalog numbers, or
+		// some package-specific code for mora (e.g. <package number>_F for FLAC releases)
+		let gtin = isValidGTIN(albumPage.distPartNo) ? albumPage.distPartNo : undefined;
+		if (!gtin) {
+			// If we're lucky, the GTIN might be in `cdPartNo`. In testing, the field seems to be `null` most of the time.
+			if (albumPage.cdPartNo && isValidGTIN(albumPage.cdPartNo)) {
+				gtin = albumPage.cdPartNo;
+			} else {
+				this.addMessage('Failed to determine GTIN', 'warning');
+			}
+		}
+
+		const release: HarmonyRelease = {
+			title: albumPage.title,
+			artists: [this.makeArtistCreditName(albumPage.artistName, albumPage.artistNo)],
+			labels: [label],
+			gtin,
+			releaseDate: parseISODateTime(albumPage.startDate + ' +0'),
+			availableIn: ['JP'],
+			media: [{
+				format: 'Digital Media',
+				tracklist,
+			}],
+			status: 'Official',
+			packaging: 'None',
+			externalLinks: [{
+				url: this.rawReleaseUrl!.href,
+				types: ['paid download'],
+			}],
+			images: [this.getArtwork(albumPage)],
+			copyright: albumPage.master,
+			info: this.generateReleaseInfo(),
+		};
+
+		return release;
+	}
+
+	convertRawTrack(rawTrack: Track): HarmonyTrack {
+		return {
+			number: rawTrack.trackNo,
+			title: rawTrack.title,
+			type: rawTrack.mediaFormatNo == MediaFormat.Video ? 'video' : 'audio',
+			artists: [this.makeArtistCreditName(rawTrack.artistName, rawTrack.artistNo)],
+			length: rawTrack.duration * 1000,
+		};
+	}
+
+	makeArtistCreditName(artist: string, artistNo: number): ArtistCreditName {
+		return {
+			name: artist,
+			creditedName: artist,
+			externalIds: this.provider.makeExternalIds({ type: 'artist', id: artistNo.toString() }),
+		};
+	}
+
+	getArtwork(albumPage: PackageMeta): Artwork {
+		const imageUrl = this.apiUrl();
+		imageUrl.pathname += albumPage.fullsizeimage;
+
+		return {
+			url: imageUrl.href,
+			types: ['front'],
+		};
+	}
+}

@@ -63,6 +63,7 @@ export default class TidalProvider extends MetadataApiProvider {
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: ['album', 'video'],
+		recording: 'track',
 	};
 
 	readonly defaultRegion: CountryCode = 'US';

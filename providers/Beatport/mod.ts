@@ -27,6 +27,7 @@ export default class BeatportProvider extends MetadataProvider {
 		artist: 'artist',
 		label: 'label',
 		release: 'release',
+		recording: 'track',
 	};
 
 	readonly releaseLookup = BeatportReleaseLookup;

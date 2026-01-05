@@ -123,7 +123,7 @@ export default class BandcampProvider extends MetadataProvider {
 	getTrackLinkTypes(track: TrackInfo): LinkType[] {
 		const linkTypes: LinkType[] = [];
 
-		if (track.streaming === 1) {
+		if (this.isFreeStreamingTrack(track)) {
 			linkTypes.push('free streaming');
 		}
 
@@ -135,6 +135,11 @@ export default class BandcampProvider extends MetadataProvider {
 				// TODO: And potentially a free download
 			}
 		}
+
+		// Track links without any streaming or download relationship are kept.
+		// It is up to the user to decide what to do.
+		// In the future there might be a separate relationship that can be used.
+		// See https://tickets.metabrainz.org/browse/STYLE-2443
 
 		return linkTypes;
 	}
@@ -166,12 +171,12 @@ export default class BandcampProvider extends MetadataProvider {
 
 					const description = extractMetadataTag(html, 'og:description');
 					if (description) {
-						jsonEntries.push(['og:description', `"${description}"`]);
+						jsonEntries.push(['og:description', JSON.stringify(description)]);
 					}
 
 					const licenseUrl = extractTextFromHtml(html, /class="cc-icons"\s+href="([^"]+)"/i);
 					if (licenseUrl) {
-						jsonEntries.push(['licenseUrl', `"${licenseUrl}"`]);
+						jsonEntries.push(['licenseUrl', JSON.stringify(licenseUrl)]);
 					}
 
 					const json = `{${jsonEntries.map(([key, serializedValue]) => `"${key}":${serializedValue}`).join(',')}}`;
@@ -179,6 +184,10 @@ export default class BandcampProvider extends MetadataProvider {
 				}
 			},
 		});
+	}
+
+	isFreeStreamingTrack(track: TrackInfo): boolean {
+		return track.streaming === 1 && !!track.file;
 	}
 }
 
@@ -314,7 +323,10 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		if (rawRelease.freeDownloadPage || (current.minimum_price === 0.0 && !current.is_set_price)) {
 			linkTypes.push('free download');
 		}
-		if (rawRelease.trackinfo.every((track) => track.streaming)) {
+		if (
+			!rawRelease.tralbum_subscriber_only &&
+			rawRelease.trackinfo.every((track) => this.provider.isFreeStreamingTrack(track))
+		) {
 			linkTypes.push('free streaming');
 		}
 

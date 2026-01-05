@@ -1,3 +1,4 @@
+import { normalizeReleaseISRCs } from '@/harmonizer/isrc.ts';
 import { detectLanguageAndScript } from '@/harmonizer/language_script.ts';
 import { mergeRelease } from '@/harmonizer/merge.ts';
 import { cleanupBogusReleaseLabels } from '@/harmonizer/release_label.ts';
@@ -304,6 +305,7 @@ export class CombinedReleaseLookup {
 
 		// Provider-independent post-processing of the merged release.
 		detectLanguageAndScript(release);
+		normalizeReleaseISRCs(release);
 		if (release.labels) {
 			cleanupBogusReleaseLabels(release.labels);
 		}

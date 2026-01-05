@@ -137,3 +137,1299 @@ suika.love",
   types: undefined,
 }
 `;
+
+snapshot[`Bandcamp provider > release lookup > subscriber-only release 1`] = `
+{
+  artists: [
+    {
+      creditedName: "arbee",
+      externalIds: [
+        {
+          id: "arbee",
+          provider: "bandcamp",
+          type: "artist",
+        },
+      ],
+      name: "arbee",
+    },
+  ],
+  availableIn: [
+    "XW",
+  ],
+  credits: undefined,
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://arbee.bandcamp.com/album/des-papiers-ii",
+    },
+  ],
+  gtin: undefined,
+  images: [
+    {
+      comment: undefined,
+      thumbUrl: "https://f4.bcbits.com/img/a1289075493_9.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://f4.bcbits.com/img/a1289075493_0.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "arbee/des-papiers-ii",
+        internalName: "bandcamp",
+        lookup: {
+          method: "id",
+          value: "arbee/des-papiers-ii",
+        },
+        name: "Bandcamp",
+        url: "https://arbee.bandcamp.com/album/des-papiers-ii",
+      },
+    ],
+  },
+  labels: undefined,
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          artists: undefined,
+          length: 181519,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "arbee/des-papiers-ii",
+                linkTypes: [
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Des papiers II",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 30,
+    month: 4,
+    year: 2025,
+  },
+  status: "Official",
+  title: "Des papiers II",
+  types: undefined,
+}
+`;
+
+snapshot[`Bandcamp provider > release lookup > subscriber-only release with Creative Commons license 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Steve Lawson",
+      externalIds: [
+        {
+          id: "stevelawson",
+          provider: "bandcamp",
+          type: "artist",
+        },
+      ],
+      name: "Steve Lawson",
+    },
+  ],
+  availableIn: [
+    "XW",
+  ],
+  credits: "Recorded at LawSound 3 on July 4th 2025
+
+All the things, Steve. Cover model: Flapjack.",
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://stevelawson.bandcamp.com/album/ambiguous-hands",
+    },
+    {
+      types: [
+        "license",
+      ],
+      url: "http://creativecommons.org/licenses/by-nc-sa/3.0/",
+    },
+  ],
+  gtin: undefined,
+  images: [
+    {
+      comment: undefined,
+      thumbUrl: "https://f4.bcbits.com/img/a1104571646_9.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://f4.bcbits.com/img/a1104571646_0.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "stevelawson/ambiguous-hands",
+        internalName: "bandcamp",
+        lookup: {
+          method: "id",
+          value: "stevelawson/ambiguous-hands",
+        },
+        name: "Bandcamp",
+        url: "https://stevelawson.bandcamp.com/album/ambiguous-hands",
+      },
+    ],
+  },
+  labels: undefined,
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          artists: undefined,
+          length: 1090050,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "stevelawson/ambiguous-hands",
+                linkTypes: [
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Ambiguous Hands",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 4,
+    month: 7,
+    year: 2025,
+  },
+  status: "Official",
+  title: "Ambiguous Hands",
+  types: undefined,
+}
+`;
+
+snapshot[`Bandcamp provider > release lookup > single track release 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Sven Fredrik",
+      externalIds: [
+        {
+          id: "svenfredrik",
+          provider: "bandcamp",
+          type: "artist",
+        },
+      ],
+      name: "Sven Fredrik",
+    },
+  ],
+  availableIn: [
+    "XW",
+  ],
+  credits: "Mix and mastering by Joakim Westlund
+Artwork by David Rundlöf",
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+        "free streaming",
+      ],
+      url: "https://svenfredrik.bandcamp.com/track/mr-florida-81",
+    },
+  ],
+  gtin: undefined,
+  images: [
+    {
+      comment: undefined,
+      thumbUrl: "https://f4.bcbits.com/img/a3703836403_9.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://f4.bcbits.com/img/a3703836403_0.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "svenfredrik/track/mr-florida-81",
+        internalName: "bandcamp",
+        lookup: {
+          method: "id",
+          value: "svenfredrik/track/mr-florida-81",
+        },
+        name: "Bandcamp",
+        url: "https://svenfredrik.bandcamp.com/track/mr-florida-81",
+      },
+    ],
+  },
+  labels: undefined,
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          artists: undefined,
+          isrc: "SE3AB2410001",
+          length: 275333,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "svenfredrik/mr-florida-81",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Mr. Florida '81",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 27,
+    month: 9,
+    year: 2024,
+  },
+  status: "Official",
+  title: "Mr. Florida '81",
+  types: [
+    "Single",
+  ],
+}
+`;
+
+snapshot[`Bandcamp provider > release lookup > release with name your price (non-minimum price), but tracks have minimum price 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Frisyr",
+      externalIds: [
+        {
+          id: "frisyr",
+          provider: "bandcamp",
+          type: "artist",
+        },
+      ],
+      name: "Frisyr",
+    },
+  ],
+  availableIn: [
+    "XW",
+  ],
+  credits: "Artwork by Leon Mattes",
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+        "free download",
+        "free streaming",
+      ],
+      url: "https://frisyr.bandcamp.com/album/demo",
+    },
+  ],
+  gtin: undefined,
+  images: [
+    {
+      comment: undefined,
+      thumbUrl: "https://f4.bcbits.com/img/a2669909502_9.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://f4.bcbits.com/img/a2669909502_0.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "frisyr/demo",
+        internalName: "bandcamp",
+        lookup: {
+          method: "id",
+          value: "frisyr/demo",
+        },
+        name: "Bandcamp",
+        url: "https://frisyr.bandcamp.com/album/demo",
+      },
+    ],
+  },
+  labels: undefined,
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          artists: undefined,
+          length: 120244,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "frisyr/snusjuice-2",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Snusjuice",
+        },
+        {
+          artists: undefined,
+          length: 102831,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "frisyr/rosenstrau-2",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Rosenstrauß",
+        },
+        {
+          artists: undefined,
+          length: 101310,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "frisyr/vollrausch-2",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Vollrausch",
+        },
+        {
+          artists: undefined,
+          length: 106568,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "frisyr/40-grad-2",
+                linkTypes: [
+                  "free streaming",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "40 Grad",
+        },
+        {
+          artists: undefined,
+          length: 82049,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "frisyr/hinterhalt-anzeige-2",
+                linkTypes: [
+                  "free streaming",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Hinterhalt! Anzeige!",
+        },
+        {
+          artists: undefined,
+          length: 161625,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "frisyr/kass-rens-apati-2",
+                linkTypes: [
+                  "free streaming",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Kassörens apati",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 7,
+    month: 4,
+    year: 2023,
+  },
+  status: "Official",
+  title: "demo",
+  types: undefined,
+}
+`;
+
+snapshot[`Bandcamp provider > release lookup > release with name your price (non-minimum price), but most tracks have non-minimum price 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Paul Muzea",
+      externalIds: [
+        {
+          id: "muzea",
+          provider: "bandcamp",
+          type: "artist",
+        },
+      ],
+      name: "Paul Muzea",
+    },
+  ],
+  availableIn: [
+    "XW",
+  ],
+  credits: undefined,
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+        "free download",
+        "free streaming",
+      ],
+      url: "https://muzea.bandcamp.com/album/ambient-energy-name-your-price",
+    },
+  ],
+  gtin: undefined,
+  images: [
+    {
+      comment: undefined,
+      thumbUrl: "https://f4.bcbits.com/img/a2280191666_9.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://f4.bcbits.com/img/a2280191666_0.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "muzea/ambient-energy-name-your-price",
+        internalName: "bandcamp",
+        lookup: {
+          method: "id",
+          value: "muzea/ambient-energy-name-your-price",
+        },
+        name: "Bandcamp",
+        url: "https://muzea.bandcamp.com/album/ambient-energy-name-your-price",
+      },
+    ],
+  },
+  labels: undefined,
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          artists: undefined,
+          length: 401067,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "muzea/immersion-i",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Immersion I",
+        },
+        {
+          artists: undefined,
+          length: 489230,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "muzea/immersion-ii",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Immersion II",
+        },
+        {
+          artists: undefined,
+          length: 417185,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "muzea/lost-in-paradise",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Lost in Paradise",
+        },
+        {
+          artists: undefined,
+          length: 345423,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "muzea/lonely-sky",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Lonely Sky",
+        },
+        {
+          artists: undefined,
+          length: 381000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "muzea/alberio",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Alberio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 8,
+    month: 9,
+    year: 2013,
+  },
+  status: "Official",
+  title: "Ambient Energy (Name your price)",
+  types: undefined,
+}
+`;
+
+snapshot[`Bandcamp provider > release lookup > release with some download only tracks and one streamable track 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Hans Hu\$tle",
+      name: "Hans Hu\$tle",
+    },
+  ],
+  availableIn: [
+    "XW",
+  ],
+  credits: "Hans Vincent Heusterberg",
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://hipdozer.bandcamp.com/album/futon-feels",
+    },
+  ],
+  gtin: "4099885580871",
+  images: [
+    {
+      comment: undefined,
+      thumbUrl: "https://f4.bcbits.com/img/a3611216206_9.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://f4.bcbits.com/img/a3611216206_0.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "hipdozer/futon-feels",
+        internalName: "bandcamp",
+        lookup: {
+          method: "id",
+          value: "hipdozer/futon-feels",
+        },
+        name: "Bandcamp",
+        url: "https://hipdozer.bandcamp.com/album/futon-feels",
+      },
+    ],
+  },
+  labels: [
+    {
+      externalIds: [
+        {
+          id: "hipdozer",
+          provider: "bandcamp",
+          type: "artist",
+        },
+      ],
+      name: "Hip Dozer",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          artists: undefined,
+          length: 135875,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "hipdozer/futon-feels",
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Futon Feels",
+        },
+        {
+          artists: undefined,
+          length: 122625,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "hipdozer/roll-it-up",
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Roll It Up",
+        },
+        {
+          artists: undefined,
+          length: 129780,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "hipdozer/forever-under-my-blanket",
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Forever Under My Blanket",
+        },
+        {
+          artists: undefined,
+          length: 140000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "hipdozer/too-big-without-you",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Too Big Without You",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 22,
+    month: 9,
+    year: 2023,
+  },
+  status: "Official",
+  title: "Futon Feels",
+  types: undefined,
+}
+`;
+
+snapshot[`Bandcamp provider > release lookup > release with a hidden track 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Ragnar Atari",
+      name: "Ragnar Atari",
+    },
+  ],
+  availableIn: [
+    "XW",
+  ],
+  credits: undefined,
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+        "free streaming",
+      ],
+      url: "https://spinningrust.bandcamp.com/album/do-you-like-acid-ep",
+    },
+  ],
+  gtin: undefined,
+  images: [
+    {
+      comment: undefined,
+      thumbUrl: "https://f4.bcbits.com/img/a1792891147_9.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://f4.bcbits.com/img/a1792891147_0.jpg",
+    },
+  ],
+  info: {
+    messages: [
+      {
+        provider: "Bandcamp",
+        text: "1 track is hidden and only available with the download",
+        type: "warning",
+      },
+      {
+        provider: "Bandcamp",
+        text: 'Available physical release packages:
+- **Do You Like Acid EP (2.5" SATA HDD)**: Other (edition of 12, GTIN: null)',
+        type: "info",
+      },
+    ],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "spinningrust/do-you-like-acid-ep",
+        internalName: "bandcamp",
+        lookup: {
+          method: "id",
+          value: "spinningrust/do-you-like-acid-ep",
+        },
+        name: "Bandcamp",
+        url: "https://spinningrust.bandcamp.com/album/do-you-like-acid-ep",
+      },
+    ],
+  },
+  labels: [
+    {
+      externalIds: [
+        {
+          id: "spinningrust",
+          provider: "bandcamp",
+          type: "artist",
+        },
+      ],
+      name: "Spinning Rust",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          artists: undefined,
+          length: 401139,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "spinningrust/do-you-like-acid",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Do You Like Acid",
+        },
+        {
+          artists: undefined,
+          length: 366557,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "spinningrust/through-the-night",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Through the Night",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Ragnar Atari, Otherland",
+              name: "Ragnar Atari, Otherland",
+            },
+          ],
+          length: 303352,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "spinningrust/in-acid-we-trust",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "In Acid We Trust",
+        },
+        {
+          artists: undefined,
+          length: 401139,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "spinningrust/do-you-like-acid-instrumental",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Do You Like Acid (Instrumental)",
+        },
+        {
+          artists: undefined,
+          length: 366636,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "spinningrust/through-the-night-instrumental",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Through the Night (Instrumental)",
+        },
+        {
+          title: "[unknown]",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 12,
+    month: 5,
+    year: 2022,
+  },
+  status: "Official",
+  title: "Do You Like Acid EP",
+  types: undefined,
+}
+`;
+
+snapshot[`Bandcamp provider > release lookup > release with 7/12 tracks streamable, i.e. more than half track as streamable while rest is download only 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Camp of Wolves",
+      name: "Camp of Wolves",
+    },
+  ],
+  availableIn: [
+    "XW",
+  ],
+  credits: "Composed, performed and produced by David Salisbury
+Mastered by Antony Ryan at RedRedPaw
+Artwork by Nick Taylor
+
+LM005",
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://lunar-module.bandcamp.com/album/bear-creek",
+    },
+  ],
+  gtin: undefined,
+  images: [
+    {
+      comment: undefined,
+      thumbUrl: "https://f4.bcbits.com/img/a3048024997_9.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://f4.bcbits.com/img/a3048024997_0.jpg",
+    },
+  ],
+  info: {
+    messages: [
+      {
+        provider: "Bandcamp",
+        text: "Available physical release packages:
+- **Bear Creek CD**: Compact Disc (CD) (edition of null, GTIN: 5060889590868)",
+        type: "info",
+      },
+    ],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "lunar-module/bear-creek",
+        internalName: "bandcamp",
+        lookup: {
+          method: "id",
+          value: "lunar-module/bear-creek",
+        },
+        name: "Bandcamp",
+        url: "https://lunar-module.bandcamp.com/album/bear-creek",
+      },
+    ],
+  },
+  labels: [
+    {
+      externalIds: [
+        {
+          id: "lunar-module",
+          provider: "bandcamp",
+          type: "artist",
+        },
+      ],
+      name: "Lunar Module ",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          artists: undefined,
+          length: 230027,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "lunar-module/labrador-tea-2",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Labrador Tea",
+        },
+        {
+          artists: undefined,
+          length: 137240,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "lunar-module/flickering-light-2",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Flickering Light",
+        },
+        {
+          artists: undefined,
+          length: 219173,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "lunar-module/tumulus-2",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Tumulus",
+        },
+        {
+          artists: undefined,
+          length: 93453.3,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "lunar-module/amongst-firs-2",
+                linkTypes: [
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Amongst Firs",
+        },
+        {
+          artists: undefined,
+          length: 221467,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "lunar-module/this-place-is-a-message-2",
+                linkTypes: [
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "This Place Is a Message",
+        },
+        {
+          artists: undefined,
+          length: 255560,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "lunar-module/little-black-eyes-2",
+                linkTypes: [
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Little Black Eyes",
+        },
+        {
+          artists: undefined,
+          length: 230547,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "lunar-module/summers-end-2",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Summer's End",
+        },
+        {
+          artists: undefined,
+          length: 69133.3,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "lunar-module/old-paws-2",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Old Paws",
+        },
+        {
+          artists: undefined,
+          length: 212333,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "lunar-module/cross-the-townline-2",
+                linkTypes: [
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Cross The Townline",
+        },
+        {
+          artists: undefined,
+          length: 110707,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "lunar-module/billy-the-horse-2",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Billy The Horse",
+        },
+        {
+          artists: undefined,
+          length: 188080,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "lunar-module/the-tunnels-between-houses-2",
+                linkTypes: [
+                  "free streaming",
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "The Tunnels Between Houses",
+        },
+        {
+          artists: undefined,
+          length: 298173,
+          number: 12,
+          recording: {
+            externalIds: [
+              {
+                id: "lunar-module/built-on-bogs-2",
+                linkTypes: [
+                  "paid download",
+                ],
+                provider: "bandcamp",
+                type: "track",
+              },
+            ],
+          },
+          title: "Built On Bogs",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 26,
+    month: 9,
+    year: 2025,
+  },
+  status: "Official",
+  title: "Bear Creek",
+  types: undefined,
+}
+`;

@@ -25,7 +25,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '{geo.}?(itunes|music).apple.com',
-		pathname: String.raw`/:region(\w{2})?/:type(album|artist|song)/:slug?/{id}?:id(\d+)`,
+		pathname: String.raw`/:region(\w{2})?/:type(album|artist|song|music-video)/:slug?/{id}?:id(\d+)`,
 	});
 
 	override readonly features: FeatureQualityMap = {
@@ -38,6 +38,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: 'album',
+		recording: ['song', 'music-video'],
 	};
 
 	override readonly availableRegions = new Set(availableRegions);
@@ -134,7 +135,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		// Skip bonus items like booklets.
 		const validTrackKinds: Kind[] = ['song', 'music-video'];
 		const tracks = data.results.filter((result) =>
-			result.wrapperType === 'track' && result.collectionId === collection.collectionId &&
+			result.wrapperType === 'track' && 'collectionId' in result && result.collectionId === collection.collectionId &&
 			validTrackKinds.includes(result.kind)
 		) as Track[];
 
@@ -144,7 +145,9 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		}
 
 		// Warn about results which belong to a different collection.
-		const skippedResults = data.results.filter((result) => result.collectionId !== collection.collectionId);
+		const skippedResults = data.results.filter((result) =>
+			'collectionId' in result && result.collectionId !== collection.collectionId
+		) as Array<Collection | Track>;
 		if (skippedResults.length) {
 			const uniqueSkippedIds = [...new Set(skippedResults.map((result) => result.collectionId))];
 			const skippedUrls = uniqueSkippedIds.map((id) =>

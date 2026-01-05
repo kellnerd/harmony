@@ -8,6 +8,8 @@ const providerIconMap: Record<string, string> = {
 	deezer: 'brand-deezer',
 	itunes: 'brand-apple',
 	musicbrainz: 'brand-metabrainz',
+	mora: 'brand-mora',
+	ototoy: 'brand-ototoy',
 	spotify: 'brand-spotify',
 	tidal: 'brand-tidal',
 	soundcloud: 'brand-soundcloud',

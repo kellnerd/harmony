@@ -54,6 +54,7 @@ export default class DeezerProvider extends MetadataApiProvider {
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: 'album',
+		recording: 'track',
 	};
 
 	override readonly availableRegions = new Set(availableRegions);

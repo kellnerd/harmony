@@ -122,7 +122,11 @@ export type TracksResource = {
 
 export type TracksAttributes = {
 	title: string;
-	version: string;
+	/**
+	 * Version information, displayed as extra title information in parentheses after the title.
+	 * Optional attribute that is often `null`, but may be missing in older responses.
+	 */
+	version?: string | null;
 	isrc: string;
 	/** ISO-8601 duration (e.g. P41M5S) */
 	duration: string;

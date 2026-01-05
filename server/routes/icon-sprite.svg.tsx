@@ -1,6 +1,8 @@
 import IconBrandBeatport from '@/server/icons/BrandBeatport.tsx';
 import IconBrandIfpi from '@/server/icons/BrandIfpi.tsx';
 import IconBrandMetaBrainz from '@/server/icons/BrandMetaBrainz.tsx';
+import IconBrandOtotoy from '@/server/icons/BrandOtotoy.tsx';
+import IconBrandMora from '@/server/icons/BrandMora.tsx';
 import IconBrandApple from 'tabler-icons/brand-apple.tsx';
 import IconBrandBandcamp from 'tabler-icons/brand-bandcamp.tsx';
 import IconBrandDeezer from 'tabler-icons/brand-deezer.tsx';
@@ -16,6 +18,7 @@ import IconCopyCheck from 'tabler-icons/copy-check.tsx';
 import IconDatabaseEdit from 'tabler-icons/database-edit.tsx';
 import IconDatabaseImport from 'tabler-icons/database-import.tsx';
 import IconDisc from 'tabler-icons/disc.tsx';
+import IconExternalLink from 'tabler-icons/external-link.tsx';
 import IconHelp from 'tabler-icons/help.tsx';
 import IconInfoCircle from 'tabler-icons/info-circle.tsx';
 import IconLink from 'tabler-icons/link.tsx';
@@ -41,6 +44,7 @@ const icons: Icon[] = [
 	IconDatabaseEdit,
 	IconDatabaseImport,
 	IconDisc,
+	IconExternalLink,
 	IconHelp,
 	IconInfoCircle,
 	IconLink,
@@ -58,6 +62,8 @@ const icons: Icon[] = [
 	IconBrandGit,
 	IconBrandIfpi,
 	IconBrandMetaBrainz,
+	IconBrandMora,
+	IconBrandOtotoy,
 	IconBrandSpotify,
 	IconBrandTidal,
 	IconBraindSoundcloud,
@@ -70,12 +76,14 @@ function makeSvgSymbol(icon: Icon) {
 		children,
 		class: className,
 		fill,
+		id,
 		stroke,
 		'stroke-linecap': strokeLinecap,
 		'stroke-linejoin': strokeLinejoin,
 		viewBox,
 	} = icon({}).props as JSX.SVGAttributes<SVGSVGElement>;
-	const iconName = className!.toString().replace('icon icon-tabler icon-tabler-', '');
+	// Prefer ID attribute of custom icons, fall back to class name suffix for Tabler icons.
+	const iconName = id ? id.toString() : className!.toString().replace('icon icon-tabler icon-tabler-', '');
 
 	return (
 		<symbol

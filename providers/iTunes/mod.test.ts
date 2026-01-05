@@ -1,6 +1,7 @@
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
 import { stubProviderLookups } from '@/providers/test_stubs.ts';
 import { assert } from 'std/assert/assert.ts';
+import { assertEquals } from 'std/assert/assert_equals.ts';
 import { afterAll, describe } from '@std/testing/bdd';
 import { assertSnapshot } from '@std/testing/snapshot';
 
@@ -47,6 +48,11 @@ describe('iTunes provider', () => {
 			url: new URL('https://music.apple.com/fr/song/wet-cheese-delirium-2015-remaster/973594909'),
 			id: { type: 'song', id: '973594909', region: 'FR', slug: 'wet-cheese-delirium-2015-remaster' },
 		}, {
+			description: 'Apple Music video URL',
+			url: new URL('https://music.apple.com/gb/music-video/1441458100'),
+			id: { type: 'music-video', id: '1441458100', region: 'GB' },
+			isCanonical: true,
+		}, {
 			description: 'iTunes legacy album URL',
 			url: new URL('https://itunes.apple.com/gb/album/id1722294645'),
 			id: { type: 'album', id: '1722294645', region: 'GB' },
@@ -68,10 +74,20 @@ describe('iTunes provider', () => {
 			release: new URL('https://music.apple.com/gb/album/a-night-at-the-opera-deluxe-edition/1441458047'),
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
-				assert(release.media.length === 2, 'Release should have multiple discs');
-				assert(release.media[1].tracklist[6].type === 'video', 'Track 2.7 should be a video');
+				assertEquals(release.media.length, 2, 'Release should have multiple discs');
+				assertEquals(release.media[1].tracklist[6].type, 'video', 'Track 2.7 should be a video');
 				assert(release.externalLinks[0].types?.includes('paid download'), 'Release should be downloadable');
-				assert(release.info.providers[0].lookup.region === 'GB', 'Lookup should use the region from the URL');
+				assertEquals(release.info.providers[0].lookup.region, 'GB', 'Lookup should use the region from the URL');
+			},
+		}, {
+			description: 'EP lookup ignores standalone music video',
+			release: '1728639278',
+			assert: (release) => {
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assertEquals(allTracks.length, 6, 'Release should have 6 tracks');
+				assert(!allTracks.some((track) => track.type === 'video'), 'No track should be a video');
+				assertEquals(release.types, ['EP'], 'EP should be detected from title');
+				assertEquals(release.title, 'Nightmare·Escape The ERA', 'Automatic " - EP" title suffix should be dropped');
 			},
 		}],
 	});
