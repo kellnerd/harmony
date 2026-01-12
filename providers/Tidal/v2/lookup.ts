@@ -349,10 +349,20 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		resourceType: 'artists' | 'artworks' | 'providers',
 	): T[] {
 		const targetRels = rawRelease.data.relationships[relationship];
-		const relatedIds = new Set(targetRels?.data?.map((item) => item.id));
+		if (!targetRels) {
+			return [];
+		}
+		const relatedIds = new Set(targetRels.data?.map((item) => item.id));
 
-		return rawRelease.included
-			.filter((resource) => resource.type === resourceType && relatedIds.has(resource.id)) as T[];
+		const items = new Map<string, T>();
+		rawRelease.included.forEach((resource) => {
+			if (resource.type === resourceType && relatedIds.has(resource.id)) {
+				items.set(resource.id, resource as T);
+			}
+		});
+		// Rely on the target relationship to get the correct number and order of related
+		// items. Consider the case that an item was not actually returned in the includes.
+		return targetRels.data.map((rel) => items.get(rel.id) || { id: rel.id } as T);
 	}
 
 	private constructReleaseUrlFromRelease(release: ReleaseResource): URL {
