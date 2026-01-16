@@ -1,10 +1,10 @@
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
 import { guessTypesForRelease, mergeTypes } from './release_types.ts';
+import { CompatibilityError } from '@/utils/errors.ts';
 import { isDefined } from '@/utils/predicate.ts';
 import { cloneInto, copyTo, filterErrorEntries, isFilled, uniqueMappedValues } from '@/utils/record.ts';
 import { matchBySimilarName, similarNames } from '@/utils/similarity.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
-import { assert } from 'std/assert/assert.ts';
 
 import type {
 	ArtistCreditName,
@@ -12,6 +12,7 @@ import type {
 	ExternalEntityId,
 	HarmonyRelease,
 	ImmutableTrackProperty,
+	IncompatibilityInfo,
 	Label,
 	MergedHarmonyRelease,
 	PreferenceProperty,
@@ -28,6 +29,8 @@ import type {
 export interface MergeOptions {
 	/** Names of the preferred providers for the whole release or individual properties. */
 	prefer?: ProviderName[] | ProviderPreferences;
+	/** Primary provider whose data should be used in case of any incompatibility. */
+	primaryProvider?: ProviderName;
 }
 
 /**
@@ -40,7 +43,42 @@ export function mergeRelease(
 	releaseMap: ProviderReleaseErrorMap,
 	options: MergeOptions = {},
 ): MergedHarmonyRelease {
-	assertReleaseCompatibility(filterErrorEntries(releaseMap));
+	let incompatibleData: IncompatibilityInfo | undefined;
+	try {
+		assertReleaseCompatibility(filterErrorEntries(releaseMap));
+	} catch (error) {
+		const { primaryProvider } = options;
+		if (error instanceof CompatibilityError && primaryProvider) {
+			incompatibleData = {
+				reason: error.message,
+				compatibleValue: '',
+				clusters: [],
+			};
+			for (const [value, sources] of error.valuesAndSources) {
+				if (sources.includes(primaryProvider)) {
+					incompatibleData.compatibleValue = value;
+				} else {
+					incompatibleData.clusters.push({
+						incompatibleValue: value,
+						// Error entries have already been filtered, map entry is guaranteed to be a release.
+						providers: sources.map((source) => releaseMap[source] as HarmonyRelease)
+							.flatMap((release) => release.info.providers),
+					});
+				}
+			}
+
+			// Delete incompatible data from the release map before the actual merge process.
+			const incompatibleProviders = incompatibleData.clusters.flatMap((cluster) =>
+				cluster.providers.map((provider) => provider.name)
+			);
+			for (const providerName of incompatibleProviders) {
+				delete releaseMap[providerName];
+			}
+			// TODO: Probably has to be made recursive to handle multiple incompatibilities (GTIN and track count).
+		} else {
+			throw error;
+		}
+	}
 
 	const availableProviders: ProviderName[] = Object.entries(releaseMap)
 		.filter(([_providerName, releaseOrError]) => !(releaseOrError instanceof Error))
@@ -75,6 +113,10 @@ export function mergeRelease(
 			sourceMap: {},
 		},
 	};
+
+	if (incompatibleData) {
+		mergedRelease.info.incompatibleData = incompatibleData;
+	}
 
 	// check whether we prefer to use the same provider for all properties, fallback to preferred media provider
 	const preferences = options.prefer ?? {};
@@ -361,14 +403,9 @@ function assertReleaseCompatibility(releaseMap: ProviderReleaseMap) {
 		errorDescription: string,
 	) {
 		const uniqueValues = uniqueMappedValues(releaseMap, propertyAccessor);
-		assert(
-			uniqueValues.length <= 1,
-			`${errorDescription}: ${
-				uniqueValues.map(
-					([value, providerNames]) => `${value} (${providerNames.join(', ')})`,
-				).join(', ')
-			}`,
-		);
+		if (uniqueValues.length > 1) {
+			throw new CompatibilityError(errorDescription, uniqueValues);
+		}
 	}
 }
 

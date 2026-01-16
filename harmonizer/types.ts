@@ -256,4 +256,18 @@ export type ReleaseInfo = {
 export interface MergedReleaseInfo extends ReleaseInfo {
 	/** Mapping from release/track properties to the used provider for these properties. */
 	sourceMap: Partial<Record<PreferenceProperty, ProviderName>>;
+	incompatibleData?: IncompatibilityInfo;
+}
+
+export interface IncompatibilityInfo {
+	/** Reason why the data of some providers is incompatible with the merged release. */
+	reason: string;
+	/** Expected value to be compatible with the merged release. */
+	compatibleValue: string;
+	/** Clusters of providers whose release data is incompatible with the merged release. */
+	clusters: Array<{
+		/** Incompatible value from providers in this cluster. */
+		incompatibleValue: string;
+		providers: ProviderInfo[];
+	}>;
 }
