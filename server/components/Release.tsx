@@ -16,9 +16,9 @@ import { formatLanguageConfidence, formatScriptFrequency, regionName } from '@/u
 import { mapValues } from '@/utils/record.ts';
 import { flagEmoji } from '@/utils/regions.ts';
 
-import type { HarmonyRelease, ProviderReleaseMap } from '@/harmonizer/types.ts';
+import type { MergedHarmonyRelease, ProviderReleaseMap } from '@/harmonizer/types.ts';
 
-export function Release({ release, releaseMap }: { release: HarmonyRelease; releaseMap?: ProviderReleaseMap }) {
+export function Release({ release, releaseMap }: { release: MergedHarmonyRelease; releaseMap?: ProviderReleaseMap }) {
 	const regions = release.availableIn;
 	const excludedRegions = release.excludedFrom;
 	const releaseCountries = determineReleaseEventCountries(release);
@@ -176,7 +176,7 @@ export function Release({ release, releaseMap }: { release: HarmonyRelease; rele
 						<th>Sources</th>
 						<td>
 							<ul>
-								{Object.entries(info.sourceMap!).map(([property, source]) => (
+								{Object.entries(info.sourceMap).map(([property, source]) => (
 									<li key={property}>{property}: {source}</li>
 								))}
 							</ul>

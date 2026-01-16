@@ -15,6 +15,7 @@ import { zipObject } from 'utils/object/zipObject.js';
 import type {
 	GTIN,
 	HarmonyRelease,
+	MergedHarmonyRelease,
 	ProviderMessage,
 	ProviderNameAndId,
 	ProviderReleaseErrorMap,
@@ -295,7 +296,7 @@ export class CombinedReleaseLookup {
 	}
 
 	/** Ensures that all requested providers have been looked up and returns the combined release. */
-	async getMergedRelease(options?: MergeOptions): Promise<HarmonyRelease> {
+	async getMergedRelease(options?: MergeOptions): Promise<MergedHarmonyRelease> {
 		const releaseMap = await this.getCompleteProviderReleaseMapping();
 		const release = mergeRelease(releaseMap, options);
 		// Prepend error and warning messages of the combined lookup.
@@ -357,7 +358,7 @@ export function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<Har
 export function getMergedReleaseByGTIN(
 	gtin: GTIN,
 	options?: ReleaseOptions,
-): Promise<HarmonyRelease> {
+): Promise<MergedHarmonyRelease> {
 	const lookup = new CombinedReleaseLookup({ gtin }, options);
 	return lookup.getMergedRelease({
 		prefer: defaultProviderPreferences,
@@ -368,7 +369,7 @@ export function getMergedReleaseByGTIN(
  * Looks up the given URL with the first matching provider.
  * Then tries to find that release on other providers (by GTIN) and merges the resulting data.
  */
-export function getMergedReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<HarmonyRelease> {
+export function getMergedReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<MergedHarmonyRelease> {
 	const lookup = new CombinedReleaseLookup({ urls: [url] }, options);
 	return lookup.getMergedRelease({
 		prefer: defaultProviderPreferences,

@@ -64,6 +64,10 @@ export type HarmonyRelease = {
 	info: ReleaseInfo;
 };
 
+export interface MergedHarmonyRelease extends HarmonyRelease {
+	info: MergedReleaseInfo;
+}
+
 export type HarmonyMedium = {
 	title?: string;
 	number?: number;
@@ -247,6 +251,9 @@ export type ReleaseInfo = {
 	providers: ProviderInfo[];
 	/** Messages from the providers which were used to lookup the release. */
 	messages: ProviderMessage[];
-	/** Mapping from release/track properties to the used provider for these properties. */
-	sourceMap?: Partial<Record<PreferenceProperty, ProviderName>>;
 };
+
+export interface MergedReleaseInfo extends ReleaseInfo {
+	/** Mapping from release/track properties to the used provider for these properties. */
+	sourceMap: Partial<Record<PreferenceProperty, ProviderName>>;
+}

@@ -12,7 +12,7 @@ import { deduplicateEntities } from '@/harmonizer/deduplicate.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
-	HarmonyRelease,
+	MergedHarmonyRelease,
 	ReleaseOptions,
 	ResolvableEntity,
 } from '@/harmonizer/types.ts';
@@ -33,7 +33,7 @@ import type { EntityWithUrlRels } from '@/musicbrainz/edit_link.ts';
 
 export default defineRoute(async (req, ctx) => {
 	const errors: Error[] = [];
-	let release: HarmonyRelease | undefined = undefined;
+	let release: MergedHarmonyRelease | undefined = undefined;
 	let releaseMbid: string | undefined;
 	let releaseUrl: URL | undefined;
 	let allArtists: ArtistCreditName[] = [];

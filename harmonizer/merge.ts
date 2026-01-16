@@ -13,6 +13,7 @@ import type {
 	HarmonyRelease,
 	ImmutableTrackProperty,
 	Label,
+	MergedHarmonyRelease,
 	PreferenceProperty,
 	ProviderMessage,
 	ProviderName,
@@ -38,7 +39,7 @@ export interface MergeOptions {
 export function mergeRelease(
 	releaseMap: ProviderReleaseErrorMap,
 	options: MergeOptions = {},
-): HarmonyRelease {
+): MergedHarmonyRelease {
 	assertReleaseCompatibility(filterErrorEntries(releaseMap));
 
 	const availableProviders: ProviderName[] = Object.entries(releaseMap)
@@ -62,7 +63,7 @@ export function mergeRelease(
 	}));
 
 	// create an empty merge target
-	const mergedRelease: HarmonyRelease = {
+	const mergedRelease: MergedHarmonyRelease = {
 		title: '',
 		artists: [],
 		externalLinks: [],
@@ -109,7 +110,7 @@ export function mergeRelease(
 			const value = cloneInto(mergedRelease, sourceRelease, property);
 
 			if (isFilled(value)) {
-				mergedRelease.info.sourceMap![property] = providerName;
+				mergedRelease.info.sourceMap[property] = providerName;
 				if (!sourceIsTemplate) {
 					// Template data is still allowed to be overwritten by other providers.
 					// FIXME: Least preferred template would overwrite earlier templates.
@@ -134,7 +135,7 @@ export function mergeRelease(
 				// This is better than overwriting all tracks with data again just because e.g. one track was not filled.
 				// Filling each track separately using data from multiple providers leads to potentially inconsistent data.
 				if (mergedRelease.media.some((medium) => medium.tracklist.some((track) => isFilled(track[property])))) {
-					mergedRelease.info.sourceMap![property] = providerName;
+					mergedRelease.info.sourceMap[property] = providerName;
 					if (!sourceIsTemplate) {
 						missingTrackProperties.delete(property);
 					}
@@ -200,7 +201,7 @@ export function mergeRelease(
 						});
 
 						if (mergedRelease.media.some((medium) => medium.tracklist.some((track) => isFilled(track[property])))) {
-							mergedRelease.info.sourceMap![property] = providerName;
+							mergedRelease.info.sourceMap[property] = providerName;
 							if (!sourceIsTemplate) {
 								break;
 							}
@@ -209,7 +210,7 @@ export function mergeRelease(
 						const value = cloneInto(mergedRelease, sourceRelease, property);
 
 						if (isFilled(value)) {
-							mergedRelease.info.sourceMap![property] = providerName;
+							mergedRelease.info.sourceMap[property] = providerName;
 							if (!sourceIsTemplate) {
 								break;
 							}

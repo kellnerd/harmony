@@ -17,14 +17,20 @@ import { defineRoute } from 'fresh/server.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 import { join } from 'std/url/join.ts';
 
-import type { GTIN, HarmonyRelease, ProviderInfo, ProviderReleaseMap, ReleaseOptions } from '@/harmonizer/types.ts';
+import type {
+	GTIN,
+	MergedHarmonyRelease,
+	ProviderInfo,
+	ProviderReleaseMap,
+	ReleaseOptions,
+} from '@/harmonizer/types.ts';
 
 const seederTargetUrl = join(musicbrainzTargetServer, 'release/add');
 
 export default defineRoute(async (req, ctx) => {
 	const seederSourceUrl = ctx.url;
 	const errors: Error[] = [];
-	let release: HarmonyRelease | undefined;
+	let release: MergedHarmonyRelease | undefined;
 	let releaseMap: ProviderReleaseMap | undefined;
 	let enabledProviders: Set<string> | undefined = undefined;
 	let gtinInput: GTIN = '', urlInput = '', regionsInput: string[] = [];

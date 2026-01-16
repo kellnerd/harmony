@@ -1,7 +1,7 @@
 import { SpriteIcon } from './SpriteIcon.tsx';
 
 import { musicbrainzTargetServer } from '@/config.ts';
-import type { HarmonyRelease, HarmonyTrack, ProviderInfo } from '@/harmonizer/types.ts';
+import type { HarmonyTrack, MergedHarmonyRelease, ProviderInfo } from '@/harmonizer/types.ts';
 import { join } from 'std/url/join.ts';
 import type { EntityWithMbid } from '@kellnerd/musicbrainz/api-types';
 
@@ -10,15 +10,15 @@ export interface EntityWithISRCs extends EntityWithMbid {
 	isrcs?: string[];
 }
 
-function getISRCProvider(release: HarmonyRelease): ProviderInfo | undefined {
-	const isrcSource = release.info.sourceMap?.isrc;
+function getISRCProvider(release: MergedHarmonyRelease): ProviderInfo | undefined {
+	const isrcSource = release.info.sourceMap.isrc;
 	if (!isrcSource) return undefined;
 	return release.info.providers.find((provider) => provider.name === isrcSource);
 }
 
 export function ISRCSubmission(
 	{ release, targetMbid, recordingsCache }: {
-		release: HarmonyRelease;
+		release: MergedHarmonyRelease;
 		targetMbid?: string;
 		recordingsCache?: EntityWithISRCs[];
 	},
