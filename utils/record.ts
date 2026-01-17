@@ -19,7 +19,7 @@ export function copyTo<T>(target: T, source: T, property: keyof T) {
 	return target[property] = value;
 }
 
-/** Filters the error entires of the given record and creates a new error-free record. */
+/** Filters the error entries of the given record and creates a new error-free record. */
 export function filterErrorEntries<Key extends string, Value>(record: Record<Key, Value | Error>): Record<Key, Value> {
 	return Object.fromEntries(
 		Object.entries<Value | Error>(record)
@@ -73,7 +73,6 @@ export function uniqueMappedValues<Key extends string, Value, Result>(
 		const knownKeys = keysByIdentifier.get(identifier);
 		if (knownKeys) {
 			knownKeys.push(key);
-			keysByIdentifier.set(identifier, knownKeys);
 		} else {
 			keysByIdentifier.set(identifier, [key]);
 			uniqueValuesByIdentifier.set(identifier, value);

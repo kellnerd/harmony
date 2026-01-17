@@ -1,10 +1,9 @@
+import { determineReleaseIncompatibility } from './compatibility.ts';
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
 import { guessTypesForRelease, mergeTypes } from './release_types.ts';
-import { CompatibilityError } from '@/utils/errors.ts';
 import { isDefined } from '@/utils/predicate.ts';
-import { cloneInto, copyTo, filterErrorEntries, isFilled, uniqueMappedValues } from '@/utils/record.ts';
+import { cloneInto, copyTo, filterErrorEntries, isFilled } from '@/utils/record.ts';
 import { matchBySimilarName, similarNames } from '@/utils/similarity.ts';
-import { trackCountSummary } from '@/utils/tracklist.ts';
 
 import type {
 	ArtistCreditName,
@@ -12,7 +11,6 @@ import type {
 	ExternalEntityId,
 	HarmonyRelease,
 	ImmutableTrackProperty,
-	IncompatibilityInfo,
 	Label,
 	MergedHarmonyRelease,
 	PreferenceProperty,
@@ -20,7 +18,6 @@ import type {
 	ProviderName,
 	ProviderPreferences,
 	ProviderReleaseErrorMap,
-	ProviderReleaseMap,
 	ReleaseGroupType,
 	ResolvableEntity,
 } from './types.ts';
@@ -43,40 +40,14 @@ export function mergeRelease(
 	releaseMap: ProviderReleaseErrorMap,
 	options: MergeOptions = {},
 ): MergedHarmonyRelease {
-	let incompatibleData: IncompatibilityInfo | undefined;
-	try {
-		assertReleaseCompatibility(filterErrorEntries(releaseMap));
-	} catch (error) {
-		const { primaryProvider } = options;
-		if (error instanceof CompatibilityError && primaryProvider) {
-			incompatibleData = {
-				reason: error.message,
-				compatibleValue: '',
-				clusters: [],
-			};
-			for (const [value, sources] of error.valuesAndSources) {
-				if (sources.includes(primaryProvider)) {
-					incompatibleData.compatibleValue = value;
-				} else {
-					incompatibleData.clusters.push({
-						incompatibleValue: value,
-						// Error entries have already been filtered, map entry is guaranteed to be a release.
-						providers: sources.map((source) => releaseMap[source] as HarmonyRelease)
-							.flatMap((release) => release.info.providers),
-					});
-				}
-			}
-
-			// Delete incompatible data from the release map before the actual merge process.
-			const incompatibleProviders = incompatibleData.clusters.flatMap((cluster) =>
-				cluster.providers.map((provider) => provider.name)
-			);
-			for (const providerName of incompatibleProviders) {
-				delete releaseMap[providerName];
-			}
-			// TODO: Probably has to be made recursive to handle multiple incompatibilities (GTIN and track count).
-		} else {
-			throw error;
+	const incompatibleData = determineReleaseIncompatibility(filterErrorEntries(releaseMap), options.primaryProvider);
+	if (incompatibleData) {
+		// Delete incompatible data from the release map before the actual merge process.
+		const incompatibleProviders = incompatibleData.clusters.flatMap((cluster) =>
+			cluster.providers.map((provider) => provider.name)
+		);
+		for (const providerName of incompatibleProviders) {
+			delete releaseMap[providerName];
 		}
 	}
 
@@ -381,32 +352,6 @@ export function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T
 function makeEntityIdKey(entityId: ExternalEntityId): string {
 	const { provider, type, id } = entityId;
 	return [provider, type, id].join('\n');
-}
-
-/** Ensures that the given releases are compatible and can be merged. */
-function assertReleaseCompatibility(releaseMap: ProviderReleaseMap) {
-	if (!Object.keys(releaseMap).length) return;
-
-	assertUniquePropertyValue(
-		(release) => (release.gtin) ? Number(release.gtin) : undefined,
-		'Providers have returned multiple different GTIN',
-	);
-
-	// TODO: Support releases with the same total track count.
-	assertUniquePropertyValue(
-		trackCountSummary,
-		'Providers have returned incompatible track lists',
-	);
-
-	function assertUniquePropertyValue<Value extends string | number>(
-		propertyAccessor: (release: HarmonyRelease) => Value | undefined,
-		errorDescription: string,
-	) {
-		const uniqueValues = uniqueMappedValues(releaseMap, propertyAccessor);
-		if (uniqueValues.length > 1) {
-			throw new CompatibilityError(errorDescription, uniqueValues);
-		}
-	}
 }
 
 function isTrackProperty(property: PreferenceProperty): property is ImmutableTrackProperty {
