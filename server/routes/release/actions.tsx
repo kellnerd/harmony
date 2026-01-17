@@ -12,6 +12,7 @@ import { deduplicateEntities } from '@/harmonizer/deduplicate.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
+	IncompatibilityInfo,
 	MergedHarmonyRelease,
 	ReleaseOptions,
 	ResolvableEntity,
@@ -87,6 +88,7 @@ export default defineRoute(async (req, ctx) => {
 			release = await lookup.getMergedRelease({
 				// Since the release has already been imported and has MBIDs, prefer MB data as merge target.
 				prefer: ['MusicBrainz'],
+				primaryProvider: 'MusicBrainz',
 			});
 
 			const providerReleaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
@@ -158,6 +160,7 @@ export default defineRoute(async (req, ctx) => {
 						<ProviderList providers={release.info.providers} />
 					</>
 				)}
+				{release?.info.incompatibleData && <IncompatibilityWarning incompatibilities={release.info.incompatibleData} />}
 				<h2>Release Actions</h2>
 				{!release && (
 					<form>
@@ -234,3 +237,20 @@ export default defineRoute(async (req, ctx) => {
 		</>
 	);
 });
+
+function IncompatibilityWarning({ incompatibilities }: { incompatibilities: IncompatibilityInfo[] }) {
+	const lines = incompatibilities.map((incompatibility) =>
+		[
+			`${incompatibility.reason}:`,
+			...incompatibility.clusters.map((cluster) =>
+				`- ${
+					cluster.providers.map((provider) => `[${provider.name}](${provider.url})`).join(', ')
+				}: ${cluster.incompatibleValue}`
+			),
+			`- Expected value: ${incompatibility.compatibleValue}`,
+		].join('\n')
+	);
+	lines.unshift('Some external links have been ignored. Please check that they belong to this specific release!');
+
+	return <MessageBox message={{ type: 'warning', text: lines.join('\n\n') }} />;
+}
