@@ -51,7 +51,7 @@ export default class SpotifyProvider extends MetadataApiProvider {
 	});
 
 	override readonly features: FeatureQualityMap = {
-		'cover size': 640,
+		'cover size': 2000,
 		'duration precision': DurationPrecision.MS,
 		'GTIN lookup': FeatureQuality.GOOD,
 		'MBID resolving': FeatureQuality.GOOD,
