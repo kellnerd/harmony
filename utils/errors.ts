@@ -1,5 +1,5 @@
 import { CustomError } from 'ts-custom-error';
-import type { ProviderName } from '@/harmonizer/types.ts';
+import type { IncompatibilityInfo, ProviderName } from '@/harmonizer/types.ts';
 
 /** Replacement for the built-in type which is apparently incompatible with 'ts-custom-error'. */
 export type ErrorConstructor = new (...options: ConstructorParameters<typeof Error>) => Error;
@@ -23,6 +23,21 @@ export class ResponseError extends ProviderError {
 
 /** No matching snapshot was found in the cache. */
 export class CacheMissError extends CustomError {}
+
+/**
+ * Different providers have returned incompatible data.
+ */
+export class MergeError extends CustomError {
+	constructor(message: string, readonly incompatibility: IncompatibilityInfo) {
+		super(message);
+	}
+
+	get details() {
+		return this.incompatibility.clusters.map((cluster) =>
+			`${cluster.incompatibleValue} (${cluster.providers.map(({ name }) => name).join(', ')})`
+		);
+	}
+}
 
 /**
  * Different providers have returned incompatible data.

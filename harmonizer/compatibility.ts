@@ -1,4 +1,4 @@
-import { CompatibilityError } from '@/utils/errors.ts';
+import { CompatibilityError, MergeError } from '@/utils/errors.ts';
 import { filterErrorEntries, uniqueMappedValues } from '@/utils/record.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
 import type {
@@ -50,15 +50,14 @@ function determineReleaseIncompatibility(
 		// TODO: Probably has to be made recursive to handle multiple incompatibilities (GTIN and track count).
 		assertReleaseCompatibility(releaseMap);
 	} catch (error) {
-		if (error instanceof CompatibilityError && primaryProvider) {
+		if (error instanceof CompatibilityError) {
 			const incompatibleData: IncompatibilityInfo = {
 				reason: error.message,
-				compatibleValue: '',
 				clusters: [],
 			};
 
 			for (const [value, sources] of error.valuesAndSources) {
-				if (sources.includes(primaryProvider)) {
+				if (primaryProvider && sources.includes(primaryProvider)) {
 					incompatibleData.compatibleValue = value;
 				} else {
 					incompatibleData.clusters.push({
@@ -69,7 +68,12 @@ function determineReleaseIncompatibility(
 				}
 			}
 
-			return incompatibleData;
+			if (incompatibleData.compatibleValue) {
+				return incompatibleData;
+			} else {
+				// There is no primary provider which can be used as merge target.
+				throw new MergeError(error.message, incompatibleData);
+			}
 		} else {
 			throw error;
 		}
