@@ -22,6 +22,7 @@ import { MB } from '@/musicbrainz/api_client.ts';
 import { extractMBID } from '@/musicbrainz/extract_mbid.ts';
 import { variousArtists } from '@/musicbrainz/special_entities.ts';
 import { providers as providerRegistry } from '@/providers/mod.ts';
+import { encodeReleaseLookupState } from '@/server/permalink.ts';
 import { extractReleaseLookupState } from '@/server/state.ts';
 import { LookupError, ProviderError } from '@/utils/errors.ts';
 import { isDefined } from '@/utils/predicate.ts';
@@ -179,6 +180,16 @@ export default defineRoute(async (req, ctx) => {
 						}}
 					/>
 				))}
+				{release && (
+					<div class='action'>
+						<SpriteIcon name='search' />
+						<p>
+							<a href={makeLookupLink(release)}>
+								Switch to Release Lookup
+							</a>
+						</p>
+					</div>
+				)}
 				{releaseUrl && (
 					<div class='action'>
 						<SpriteIcon name='brand-metabrainz' />
@@ -253,4 +264,11 @@ function IncompatibilityWarning({ incompatibilities }: { incompatibilities: Inco
 	lines.unshift('Some external links have been ignored. Please check that they belong to this specific release!');
 
 	return <MessageBox message={{ type: 'warning', text: lines.join('\n\n') }} />;
+}
+
+function makeLookupLink(release: MergedHarmonyRelease) {
+	const lookupState = encodeReleaseLookupState(release.info);
+	// Remove timestamp to create a regular lookup link instead of a permalink.
+	lookupState.delete('ts');
+	return `../release?${lookupState}`;
 }
