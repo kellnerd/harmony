@@ -1,9 +1,48 @@
 import { CompatibilityError } from '@/utils/errors.ts';
-import { uniqueMappedValues } from '@/utils/record.ts';
+import { filterErrorEntries, uniqueMappedValues } from '@/utils/record.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
-import type { HarmonyRelease, IncompatibilityInfo, ProviderName, ProviderReleaseMap } from './types.ts';
+import type {
+	HarmonyRelease,
+	IncompatibilityInfo,
+	ProviderName,
+	ProviderReleaseErrorMap,
+	ProviderReleaseMap,
+} from './types.ts';
 
-export function determineReleaseIncompatibility(
+/**
+ * Guarantees that the provider release map only contains compatible releases.
+ *
+ * Handles and reports all failing release compatibility checks.
+ * Releases that are incompatible with the primary provider's release will be deleted from the map.
+ * All incompatible providers are clustered using the value of the property which is incompatible with the primary provider.
+ *
+ * @throws when the releases are incompatible and no primary provider has been given.
+ */
+export function makeReleasesCompatible(
+	releaseErrorMap: ProviderReleaseErrorMap,
+	primaryProvider?: ProviderName,
+): IncompatibilityInfo[] {
+	const incompatibilities: IncompatibilityInfo[] = [];
+	let incompatibility: IncompatibilityInfo | undefined;
+	const releaseMap = filterErrorEntries(releaseErrorMap);
+	do {
+		incompatibility = determineReleaseIncompatibility(releaseMap, primaryProvider);
+		if (incompatibility) {
+			incompatibilities.push(incompatibility);
+			const incompatibleProviders = incompatibility.clusters.flatMap((cluster) =>
+				cluster.providers.map((provider) => provider.name)
+			);
+			// Delete incompatible data from the release map.
+			for (const providerName of incompatibleProviders) {
+				delete releaseMap[providerName];
+				delete releaseErrorMap[providerName];
+			}
+		}
+	} while (incompatibility);
+	return incompatibilities;
+}
+
+function determineReleaseIncompatibility(
 	releaseMap: ProviderReleaseMap,
 	primaryProvider?: ProviderName,
 ): IncompatibilityInfo | undefined {

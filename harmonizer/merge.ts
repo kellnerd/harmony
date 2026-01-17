@@ -1,8 +1,8 @@
-import { determineReleaseIncompatibility } from './compatibility.ts';
+import { makeReleasesCompatible } from './compatibility.ts';
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
 import { guessTypesForRelease, mergeTypes } from './release_types.ts';
 import { isDefined } from '@/utils/predicate.ts';
-import { cloneInto, copyTo, filterErrorEntries, isFilled } from '@/utils/record.ts';
+import { cloneInto, copyTo, isFilled } from '@/utils/record.ts';
 import { matchBySimilarName, similarNames } from '@/utils/similarity.ts';
 
 import type {
@@ -40,16 +40,7 @@ export function mergeRelease(
 	releaseMap: ProviderReleaseErrorMap,
 	options: MergeOptions = {},
 ): MergedHarmonyRelease {
-	const incompatibleData = determineReleaseIncompatibility(filterErrorEntries(releaseMap), options.primaryProvider);
-	if (incompatibleData) {
-		// Delete incompatible data from the release map before the actual merge process.
-		const incompatibleProviders = incompatibleData.clusters.flatMap((cluster) =>
-			cluster.providers.map((provider) => provider.name)
-		);
-		for (const providerName of incompatibleProviders) {
-			delete releaseMap[providerName];
-		}
-	}
+	const incompatibleData = makeReleasesCompatible(releaseMap, options.primaryProvider);
 
 	const availableProviders: ProviderName[] = Object.entries(releaseMap)
 		.filter(([_providerName, releaseOrError]) => !(releaseOrError instanceof Error))
@@ -82,12 +73,9 @@ export function mergeRelease(
 			providers: [],
 			messages: errorMessages,
 			sourceMap: {},
+			incompatibleData,
 		},
 	};
-
-	if (incompatibleData) {
-		mergedRelease.info.incompatibleData = incompatibleData;
-	}
 
 	// check whether we prefer to use the same provider for all properties, fallback to preferred media provider
 	const preferences = options.prefer ?? {};
