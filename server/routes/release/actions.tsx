@@ -3,7 +3,7 @@ import { CoverImage } from '@/server/components/CoverImage.tsx';
 import { ISRCSubmission } from '@/server/components/ISRCSubmission.tsx';
 import { LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
 import { MBIDInput } from '@/server/components/MBIDInput.tsx';
-import { MessageBox } from '@/server/components/MessageBox.tsx';
+import { ErrorMessageBox } from '@/server/components/MessageBox.tsx';
 import { ProviderList } from '@/server/components/ProviderList.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
@@ -24,7 +24,7 @@ import { variousArtists } from '@/musicbrainz/special_entities.ts';
 import { providers as providerRegistry } from '@/providers/mod.ts';
 import { encodeReleaseLookupState } from '@/server/permalink.ts';
 import { extractReleaseLookupState } from '@/server/state.ts';
-import { LookupError, ProviderError } from '@/utils/errors.ts';
+import { LookupError } from '@/utils/errors.ts';
 import { isDefined } from '@/utils/predicate.ts';
 import { filterErrorEntries } from '@/utils/record.ts';
 import { Head } from 'fresh/runtime.ts';
@@ -171,15 +171,7 @@ export default defineRoute(async (req, ctx) => {
 						</div>
 					</form>
 				)}
-				{errors.map((error) => (
-					<MessageBox
-						message={{
-							provider: (error as ProviderError).providerName,
-							text: error.message,
-							type: 'error',
-						}}
-					/>
-				))}
+				{errors.map((error, index) => <ErrorMessageBox error={error} key={index} />)}
 				{release && (
 					<div class='action'>
 						<SpriteIcon name='search' />

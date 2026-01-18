@@ -3,8 +3,9 @@ import { ProviderIcon } from './ProviderIcon.tsx';
 import { SpriteIcon } from './SpriteIcon.tsx';
 
 import type { MessageType, ProviderMessage } from '@/harmonizer/types.ts';
+import { CompatibilityError, ProviderError } from '@/utils/errors.ts';
 
-const massageIconMap: Record<MessageType, string> = {
+const messageIconMap: Record<MessageType, string> = {
 	debug: 'bug',
 	error: 'alert-triangle',
 	info: 'info-circle',
@@ -12,7 +13,7 @@ const massageIconMap: Record<MessageType, string> = {
 };
 
 export function MessageBox({ message }: { message: ProviderMessage }) {
-	const iconName = massageIconMap[message.type];
+	const iconName = messageIconMap[message.type];
 
 	return (
 		<div class={['message', message.type].join(' ')}>
@@ -25,5 +26,21 @@ export function MessageBox({ message }: { message: ProviderMessage }) {
 			)}
 			<Markdown content={message.text} />
 		</div>
+	);
+}
+
+export function ErrorMessageBox({ error }: { error: Error }) {
+	let { message } = error;
+	if (error instanceof CompatibilityError) {
+		message += `: ${error.details.join(', ')}`;
+	}
+	return (
+		<MessageBox
+			message={{
+				provider: error instanceof ProviderError ? error.providerName : undefined,
+				text: message,
+				type: 'error',
+			}}
+		/>
 	);
 }
