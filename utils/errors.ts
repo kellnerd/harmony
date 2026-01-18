@@ -27,7 +27,7 @@ export class CacheMissError extends CustomError {}
 /**
  * Different providers have returned incompatible data.
  */
-export class CompatibilityError extends CustomError {
+export class CompatibilityError extends LookupError {
 	constructor(message: string, readonly incompatibility: IncompatibilityInfo) {
 		super(message);
 	}
