@@ -3,7 +3,7 @@ import { CoverImage } from '@/server/components/CoverImage.tsx';
 import { ISRCSubmission } from '@/server/components/ISRCSubmission.tsx';
 import { LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
 import { MBIDInput } from '@/server/components/MBIDInput.tsx';
-import { ErrorMessageBox } from '@/server/components/MessageBox.tsx';
+import { ErrorMessageBox, MessageBox } from '@/server/components/MessageBox.tsx';
 import { ProviderList } from '@/server/components/ProviderList.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
@@ -172,6 +172,7 @@ export default defineRoute(async (req, ctx) => {
 					</form>
 				)}
 				{errors.map((error, index) => <ErrorMessageBox error={error} key={index} />)}
+				{release?.info.messages.map((message, index) => <MessageBox message={message} key={index} />)}
 				{release && (
 					<div class='action'>
 						<SpriteIcon name='search' />
