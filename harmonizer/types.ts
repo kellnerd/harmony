@@ -263,11 +263,11 @@ export interface IncompatibilityInfo {
 	/** Reason why the data of some providers is incompatible with the merged release. */
 	reason: string;
 	/** Expected value to be compatible with the merged release. */
-	compatibleValue?: string;
+	compatibleValue?: string | number;
 	/** Clusters of providers whose release data is incompatible with the merged release. */
 	clusters: Array<{
 		/** Incompatible value from providers in this cluster. */
-		incompatibleValue: string;
+		incompatibleValue: string | number;
 		providers: ProviderInfo[];
 	}>;
 }

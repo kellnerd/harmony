@@ -1,4 +1,4 @@
-import { CompatibilityError, MergeError } from '@/utils/errors.ts';
+import { CompatibilityError } from '@/utils/errors.ts';
 import { filterErrorEntries, uniqueMappedValues } from '@/utils/record.ts';
 import { trackCountSummary } from '@/utils/tracklist.ts';
 import type {
@@ -22,9 +22,13 @@ export function makeReleasesCompatible(
 	releaseErrorMap: ProviderReleaseErrorMap,
 	primaryProvider?: ProviderName,
 ): IncompatibilityInfo[] {
+	const releaseMap = filterErrorEntries(releaseErrorMap);
+	if (!Object.keys(releaseMap).length) {
+		return [];
+	}
+
 	const incompatibilities: IncompatibilityInfo[] = [];
 	let incompatibility: IncompatibilityInfo | undefined;
-	const releaseMap = filterErrorEntries(releaseErrorMap);
 	do {
 		incompatibility = determineReleaseIncompatibility(releaseMap, primaryProvider);
 		if (incompatibility) {
@@ -42,21 +46,40 @@ export function makeReleasesCompatible(
 	return incompatibilities;
 }
 
+/** Specification of a compatibility check for multiple entities. */
+interface CompatibilityCheck<Entity> {
+	/**
+	 * Extracts the property which has to be compatible.
+	 * The computed value has to be identical (or nullish) for all of the compared entities.
+	 */
+	property: (entity: Entity) => string | number | undefined;
+	/** Message which explains the incompatibility. */
+	errorMessage: string;
+}
+
+const releaseCompatibilityChecks: CompatibilityCheck<HarmonyRelease>[] = [{
+	property: (release) => release.gtin ? Number(release.gtin) : undefined,
+	errorMessage: 'Providers have returned multiple different GTIN',
+}, {
+	property: trackCountSummary,
+	// TODO: Support releases with the same total track count.
+	errorMessage: 'Providers have returned incompatible track lists',
+}];
+
+/** Determines whether the given releases are compatible and can be merged (with the primary provider's data). */
 function determineReleaseIncompatibility(
 	releaseMap: ProviderReleaseMap,
 	primaryProvider?: ProviderName,
 ): IncompatibilityInfo | undefined {
-	try {
-		// TODO: Probably has to be made recursive to handle multiple incompatibilities (GTIN and track count).
-		assertReleaseCompatibility(releaseMap);
-	} catch (error) {
-		if (error instanceof CompatibilityError) {
+	for (const check of releaseCompatibilityChecks) {
+		const uniquePropertyValues = uniqueMappedValues(releaseMap, check.property);
+		if (uniquePropertyValues.length > 1) {
 			const incompatibleData: IncompatibilityInfo = {
-				reason: error.message,
+				reason: check.errorMessage,
 				clusters: [],
 			};
 
-			for (const [value, sources] of error.valuesAndSources) {
+			for (const [value, sources] of uniquePropertyValues) {
 				if (primaryProvider && sources.includes(primaryProvider)) {
 					incompatibleData.compatibleValue = value;
 				} else {
@@ -72,36 +95,8 @@ function determineReleaseIncompatibility(
 				return incompatibleData;
 			} else {
 				// There is no primary provider which can be used as merge target.
-				throw new MergeError(error.message, incompatibleData);
+				throw new CompatibilityError(check.errorMessage, incompatibleData);
 			}
-		} else {
-			throw error;
-		}
-	}
-}
-
-/** Ensures that the given releases are compatible and can be merged. */
-function assertReleaseCompatibility(releaseMap: ProviderReleaseMap) {
-	if (!Object.keys(releaseMap).length) return;
-
-	assertUniquePropertyValue(
-		(release) => (release.gtin) ? Number(release.gtin) : undefined,
-		'Providers have returned multiple different GTIN',
-	);
-
-	// TODO: Support releases with the same total track count.
-	assertUniquePropertyValue(
-		trackCountSummary,
-		'Providers have returned incompatible track lists',
-	);
-
-	function assertUniquePropertyValue<Value extends string | number>(
-		propertyAccessor: (release: HarmonyRelease) => Value | undefined,
-		errorDescription: string,
-	) {
-		const uniqueValues = uniqueMappedValues(releaseMap, propertyAccessor);
-		if (uniqueValues.length > 1) {
-			throw new CompatibilityError(errorDescription, uniqueValues);
 		}
 	}
 }
