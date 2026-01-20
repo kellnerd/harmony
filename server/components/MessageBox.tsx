@@ -29,10 +29,14 @@ export function MessageBox({ message }: { message: ProviderMessage }) {
 	);
 }
 
-export function ErrorMessageBox({ error }: { error: Error }) {
+export function ErrorMessageBox({ error, currentUrl }: { error: Error; currentUrl?: URL }) {
 	let { message } = error;
 	if (error instanceof CompatibilityError) {
-		message += `: ${error.details.join(', ')}`;
+		if (currentUrl) {
+			message += `:\n- ${error.makeAlternativeLinks(currentUrl).join('\n- ')}`;
+		} else {
+			message += `: ${error.details.join(', ')}`;
+		}
 	}
 	return (
 		<MessageBox

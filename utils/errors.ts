@@ -1,5 +1,6 @@
 import { CustomError } from 'ts-custom-error';
 import type { IncompatibilityInfo } from '@/harmonizer/types.ts';
+import { encodeReleaseLookupState } from '@/server/permalink.ts';
 
 /** Replacement for the built-in type which is apparently incompatible with 'ts-custom-error'. */
 export type ErrorConstructor = new (...options: ConstructorParameters<typeof Error>) => Error;
@@ -36,5 +37,19 @@ export class CompatibilityError extends LookupError {
 		return this.incompatibility.clusters.map((cluster) =>
 			`${cluster.incompatibleValue} (${cluster.providers.map(({ name }) => name).join(', ')})`
 		);
+	}
+
+	/** Generates a markdown (lookup) link for each incompatible cluster. */
+	makeAlternativeLinks(currentUrl: URL) {
+		return this.incompatibility.clusters.map((cluster) => {
+			const clusterLookup = encodeReleaseLookupState({
+				providers: cluster.providers,
+				messages: [],
+			});
+			clusterLookup.delete('ts'); // no permalink
+			return `[${cluster.incompatibleValue}](${currentUrl.pathname}?${clusterLookup}) (${
+				cluster.providers.map((provider) => provider.name).join(', ')
+			})`;
+		});
 	}
 }

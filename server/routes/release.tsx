@@ -140,7 +140,7 @@ export default defineRoute(async (req, ctx) => {
 						</a>
 					</p>
 				)}
-				{errors.map((error, index) => <ErrorMessageBox error={error} key={index} />)}
+				{errors.map((error, index) => <ErrorMessageBox error={error} currentUrl={ctx.url} key={index} />)}
 				{release && <Release release={release} releaseMap={releaseMap} />}
 				{release && (
 					<div class='row'>
