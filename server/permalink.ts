@@ -1,11 +1,13 @@
 import { getMaxCacheTimestamp } from '@/harmonizer/timestamp.ts';
-import type { ReleaseInfo } from '@/harmonizer/types.ts';
+import type { ProviderName, ReleaseInfo } from '@/harmonizer/types.ts';
 import { isDefined } from '@/utils/predicate.ts';
 
 /** Options how a lookup state should be encoded. */
 export interface LookupStateOptions {
 	/** Include a timestamp for usage as a permalink. */
 	permalink?: boolean;
+	/** Prefer the URL over the ID for the given providers. */
+	preferUrlFor?: ProviderName[];
 }
 
 /** Encodes the given release info into release lookup state query parameters. */
@@ -18,9 +20,13 @@ export function encodeReleaseLookupState(info: ReleaseInfo, options: LookupState
 	const usedRegion = info.providers.map((provider) => provider.lookup.region).find(isDefined);
 
 	// Add provider IDs for all providers which were looked up by ID or URL.
-	const state = new URLSearchParams(
-		providersLookedUpById.map((provider) => [provider.internalName, provider.id]),
-	);
+	const state = new URLSearchParams(providersLookedUpById.map((provider) => {
+		if (options.preferUrlFor?.includes(provider.name)) {
+			return ['url', provider.url];
+		} else {
+			return [provider.internalName, provider.id];
+		}
+	}));
 
 	if (providersLookedUpByGtin.length) {
 		// In an ideal world, a GTIN is just a number, but we have providers where zero-padding matters.

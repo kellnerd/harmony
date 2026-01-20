@@ -177,7 +177,7 @@ export default defineRoute(async (req, ctx) => {
 					<div class='action'>
 						<SpriteIcon name='search' />
 						<p>
-							<a href={`../release?${encodeReleaseLookupState(release.info)}`}>
+							<a href={`../release?${encodeReleaseLookupState(release.info, { preferUrlFor: ['MusicBrainz'] })}`}>
 								Switch to Release Lookup
 							</a>
 						</p>
