@@ -243,6 +243,8 @@ export default defineRoute(async (req, ctx) => {
 });
 
 function IncompatibilityWarning({ incompatibilities }: { incompatibilities: IncompatibilityInfo[] }) {
+	if (!incompatibilities.length) return null;
+
 	const lines = incompatibilities.map((incompatibility) =>
 		[
 			`${incompatibility.reason}:`,
