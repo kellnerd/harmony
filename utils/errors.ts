@@ -46,7 +46,6 @@ export class CompatibilityError extends LookupError {
 				providers: cluster.providers,
 				messages: [],
 			});
-			clusterLookup.delete('ts'); // no permalink
 			return `[${cluster.incompatibleValue}](${currentUrl.pathname}?${clusterLookup}) (${
 				cluster.providers.map((provider) => provider.name).join(', ')
 			})`;

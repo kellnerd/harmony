@@ -38,9 +38,10 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 
 	if (redirectUrl) {
 		// Preserve lookup parameters such as the used providers.
-		const lookupState = encodeReleaseLookupState(release.info);
-		// Timestamp `ts` is not needed and may even lead to cache misses when different lookup options are used.
-		lookupState.delete('ts');
+		const lookupState = encodeReleaseLookupState(release.info, {
+			// Timestamp is not needed and may even lead to cache misses when different lookup options are used.
+			permalink: false,
+		});
 		redirectUrl.search = lookupState.toString();
 	}
 

@@ -2,8 +2,14 @@ import { getMaxCacheTimestamp } from '@/harmonizer/timestamp.ts';
 import type { ReleaseInfo } from '@/harmonizer/types.ts';
 import { isDefined } from '@/utils/predicate.ts';
 
+/** Options how a lookup state should be encoded. */
+export interface LookupStateOptions {
+	/** Include a timestamp for usage as a permalink. */
+	permalink?: boolean;
+}
+
 /** Encodes the given release info into release lookup state query parameters. */
-export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
+export function encodeReleaseLookupState(info: ReleaseInfo, options: LookupStateOptions = {}): URLSearchParams {
 	const providersLookedUpByGtin = info.providers.filter((provider) => provider.lookup.method === 'gtin');
 	const providersLookedUpById = info.providers.filter((provider) =>
 		provider.lookup.method === 'id' && !provider.isTemplate
@@ -40,10 +46,12 @@ export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
 		state.append('region', usedRegion);
 	}
 
-	// Maximum timestamp can be used to load the latest snapshot up to this timestamp for each provider.
-	const maxTimestamp = getMaxCacheTimestamp(info);
-	if (maxTimestamp) {
-		state.append('ts', maxTimestamp.toFixed(0));
+	if (options.permalink) {
+		// Maximum timestamp can be used to load the latest snapshot up to this timestamp for each provider.
+		const maxTimestamp = getMaxCacheTimestamp(info);
+		if (maxTimestamp) {
+			state.append('ts', maxTimestamp.toFixed(0));
+		}
 	}
 
 	return state;
@@ -56,7 +64,9 @@ export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
  */
 export function createReleasePermalink(info: ReleaseInfo, baseUrl: URL): URL {
 	const permalink = new URL('release', baseUrl);
-	permalink.search = encodeReleaseLookupState(info).toString();
+	permalink.search = encodeReleaseLookupState(info, {
+		permalink: true,
+	}).toString();
 
 	return permalink;
 }
