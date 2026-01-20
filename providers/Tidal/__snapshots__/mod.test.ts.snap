@@ -442,17 +442,6 @@ snapshot[`Tidal provider > release lookup > single by two artists (v2 API) 1`] =
 {
   artists: [
     {
-      creditedName: "Bruno Mars",
-      externalIds: [
-        {
-          id: "3658521",
-          provider: "tidal",
-          type: "artist",
-        },
-      ],
-      name: "Bruno Mars",
-    },
-    {
       creditedName: "Lady Gaga",
       externalIds: [
         {
@@ -462,6 +451,17 @@ snapshot[`Tidal provider > release lookup > single by two artists (v2 API) 1`] =
         },
       ],
       name: "Lady Gaga",
+    },
+    {
+      creditedName: "Bruno Mars",
+      externalIds: [
+        {
+          id: "3658521",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Bruno Mars",
     },
   ],
   copyright: "© 2024 Interscope Records",
