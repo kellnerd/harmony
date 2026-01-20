@@ -45,7 +45,11 @@ export class CompatibilityError extends LookupError {
 			const clusterLookup = encodeReleaseLookupState({
 				providers: cluster.providers,
 				messages: [],
+			}, {
+				permalink: false,
+				preferUrlFor: 'all',
 			});
+
 			return `[${cluster.incompatibleValue}](${currentUrl.pathname}?${clusterLookup}) (${
 				cluster.providers.map((provider) => provider.name).join(', ')
 			})`;
