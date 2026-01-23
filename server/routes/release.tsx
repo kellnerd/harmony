@@ -26,6 +26,8 @@ import type {
 } from '@/harmonizer/types.ts';
 
 const seederTargetUrl = join(musicbrainzTargetServer, 'release/add');
+// Skip MusicBrainz "Confirm Form Submission" page.
+seederTargetUrl.searchParams.set('skip_confirmation', '1');
 
 export default defineRoute(async (req, ctx) => {
 	const seederSourceUrl = ctx.url;
