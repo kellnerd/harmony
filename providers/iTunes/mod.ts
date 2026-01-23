@@ -1,6 +1,7 @@
 import { availableRegions } from './regions.ts';
 import { type ApiQueryOptions, type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
+import { fillMediumsTracklistGaps } from '@/harmonizer/tracklist_gap.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
 
@@ -210,6 +211,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		}
 
 		const mediumCount = tracklist[0].discCount;
+		const totalTrackCount = tracklist[0].trackCount;
 		const media: HarmonyMedium[] = new Array(mediumCount).fill(null).map((_, index) => ({
 			format: 'Digital Media',
 			number: index + 1,
@@ -251,6 +253,14 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 				},
 			});
 		});
+
+		if (tracklist.length < totalTrackCount) {
+			this.addMessage(
+				`The API returned only ${tracklist.length} of ${totalTrackCount} tracks for ${this.lookup.region}, other regions may have more`,
+				'warning',
+			);
+			fillMediumsTracklistGaps(media, totalTrackCount);
+		}
 
 		return media;
 	}

@@ -89,6 +89,20 @@ describe('iTunes provider', () => {
 				assertEquals(release.types, ['EP'], 'EP should be detected from title');
 				assertEquals(release.title, 'Nightmare·Escape The ERA', 'Automatic " - EP" title suffix should be dropped');
 			},
+		}, {
+			description: 'VA compilation with missing tracks',
+			release: new URL('https://music.apple.com/gb/album/hits-of-the-90s/255636575'),
+			assert: (release) => {
+				const tracklist = release.media[0].tracklist;
+				assertEquals(tracklist.length, 19, 'Release should have 19 tracks');
+				assertEquals(tracklist[2].title, '[unknown]', 'Track 3 is a placeholder');
+				assert(
+					release.info.messages.some((message) =>
+						message.type === 'warning' && message.text.includes('API returned only 15 of 19 tracks')
+					),
+					'Lookup generates a warning about the missing tracks',
+				);
+			},
 		}],
 	});
 
