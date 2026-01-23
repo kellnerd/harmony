@@ -215,6 +215,10 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 				`The API returned only ${items.length} of ${realTrackCount} tracks for ${this.lookup.region}, other regions may have more`,
 				'warning',
 			);
+			if (items.length === 0) {
+				// Since we don't know the medium count, it is better to return no medium rather than one empty medium.
+				return [];
+			}
 		}
 
 		const result: HarmonyMedium[] = [];
