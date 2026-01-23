@@ -28,3 +28,19 @@ export function fillTracklistGaps(medium: HarmonyMedium, trackCount?: number) {
 		}
 	}
 }
+
+/**
+ * Fills gaps in the tracklists of the given mediums.
+ *
+ * Assumes that the tracks have consecutive numbers starting with 1 on each medium.
+ * If a total track count is given, and there is only one medium, even gaps at the end can be filled.
+ */
+export function fillMediumsTracklistGaps(mediums: HarmonyMedium[], totalTrackCount?: number) {
+	if (mediums.length === 1) {
+		fillTracklistGaps(mediums[0], totalTrackCount);
+	} else {
+		for (const medium of mediums) {
+			fillTracklistGaps(medium);
+		}
+	}
+}

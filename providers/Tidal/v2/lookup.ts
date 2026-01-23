@@ -4,6 +4,7 @@ import { ReleaseApiLookup } from '@/providers/base.ts';
 import type TidalProvider from '@/providers/Tidal/mod.ts';
 import { formatCopyrightSymbols } from '@/utils/copyright.ts';
 import { capitalizeReleaseType } from '@/harmonizer/release_types.ts';
+import { fillMediumsTracklistGaps } from '@/harmonizer/tracklist_gap.ts';
 import { selectLargestImage } from '@/utils/image.ts';
 import { CacheMissError, ProviderError } from '@/utils/errors.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
@@ -251,6 +252,10 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 
 		// store the final medium
 		result.push(medium);
+
+		if (items.length < realTrackCount) {
+			fillMediumsTracklistGaps(result, realTrackCount);
+		}
 
 		return result;
 	}
