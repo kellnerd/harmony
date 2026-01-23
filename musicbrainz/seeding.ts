@@ -34,10 +34,12 @@ export interface ReleaseSeedOptions {
 
 export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedOptions): FormDataRecord {
 	const countries = preferArray(determineReleaseEventCountries(release));
-	const { redirectUrl } = options;
+	const { isUpdate, redirectUrl } = options;
 
-	if (redirectUrl) {
+	if (redirectUrl && !isUpdate) {
 		// Preserve lookup parameters such as the used providers.
+		// This makes them available to the redirect page without an additional MB API request.
+		// For seeded updates this is undesired as it would ignore already existing external links on MB.
 		const lookupState = encodeReleaseLookupState(release.info, {
 			// Timestamp is not needed and may even lead to cache misses when different lookup options are used.
 			permalink: false,
@@ -56,7 +58,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 			})
 	);
 
-	if (options.isUpdate) {
+	if (isUpdate) {
 		// Only seed external links for now, updating other properties is more controversial.
 		// For some properties (such as the tracklist) seeding updates is even affected by bugs:
 		// https://tickets.metabrainz.org/browse/MBS-13688
