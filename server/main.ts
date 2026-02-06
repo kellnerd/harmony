@@ -2,6 +2,21 @@
 import '@std/dotenv/load';
 import './logging.ts';
 
+// ---- Harmony local API bootstrap (read-only) --------------------------------
+// Only start when HARMONY_API_PORT is defined. Binds to 127.0.0.1.
+// Runs alongside the Fresh app.
+{
+  const apiPort = Deno.env.get("HARMONY_API_PORT");
+  if (apiPort) {
+    const { startApi } = await import("./api.ts");
+    const port = Number(apiPort);
+    if (Number.isFinite(port) && port > 0) {
+      startApi(port, "127.0.0.1");
+    }
+  }
+}
+// ---- END Harmony local API bootstrap ----------------------------------------
+
 import { shortRevision } from '@/config.ts';
 import { start } from 'fresh/server.ts';
 import { getLogger } from 'std/log/get_logger.ts';
