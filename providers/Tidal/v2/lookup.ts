@@ -13,10 +13,11 @@ import { parseISODuration } from '@/utils/time.ts';
 import type {
 	AlbumItemResourceIdentifier,
 	AlbumsResource,
-	ArtistsResource,
-	ArtworksResource,
+	IncludedResource,
 	MultiDataDocument,
-	ProvidersResource,
+	ResourceIdentifier,
+	ResourceType,
+	ResourceTypeMap,
 	SingleDataDocument,
 	TracksResource,
 	VideosResource,
@@ -45,6 +46,12 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 	readonly apiBaseUrl = 'https://openapi.tidal.com/v2/';
 
 	private compatibility = LookupCompatibility.Original;
+
+	/**
+	 * Caches included resources from API responses by their ID.
+	 * IDs are unique across all resource types.
+	 */
+	private resourceMap = new Map<string, IncludedResource>();
 
 	constructReleaseApiUrl(): URL {
 		let { method, value, region } = this.lookup;
@@ -101,6 +108,8 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			);
 		}
 
+		this.setResources(result.included);
+
 		return {
 			data: result.data[0],
 			links: result.links,
@@ -132,7 +141,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 
 		return {
 			title: attributes.title,
-			artists: this.getArtists(rawRelease),
+			artists: this.getArtists(rawRelease.data),
 			gtin: 'barcodeId' in attributes ? attributes.barcodeId : undefined,
 			externalLinks: [{
 				url: this.constructReleaseUrlFromRelease(rawRelease.data).href,
@@ -159,32 +168,18 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 	}
 
 	private getFullVideoTracklist(rawRelease: SingleDataDocument<VideosResource>): HarmonyMedium[] {
-		const artistMap = new Map(
-			this.getRelatedItems<ArtistsResource>(rawRelease, 'artists', 'artists').map((artist) => [artist.id, artist]),
-		);
-
 		// A video only contains a single track
 		return [{
 			number: 1,
 			format: 'Digital Media',
 			tracklist: [
-				this.convertTrack(1, rawRelease.data, artistMap),
+				this.convertTrack(1, rawRelease.data),
 			],
 		}];
 	}
 
 	private async getFullAlbumTracklist(rawRelease: SingleDataDocument<AlbumsResource>): Promise<HarmonyMedium[]> {
 		const items: AlbumItemResourceIdentifier[] = rawRelease.data.relationships.items.data;
-		const tracksMap = new Map<string, TracksResource | VideosResource>();
-		const artistMap = new Map<string, ArtistsResource>();
-
-		rawRelease.included.forEach((resource) => {
-			if (resource.type === 'tracks' || resource.type === 'videos') {
-				tracksMap.set(resource.id, resource);
-			} else if (resource.type === 'artists') {
-				artistMap.set(resource.id, resource);
-			}
-		});
 
 		let next = rawRelease.data.relationships.items.links.next;
 		while (next) {
@@ -198,13 +193,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			});
 
 			items.push(...content.data);
-			content.included.forEach((resource) => {
-				if (resource.type === 'tracks' || resource.type === 'videos') {
-					tracksMap.set(resource.id, resource);
-				} else if (resource.type === 'artists') {
-					artistMap.set(resource.id, resource);
-				}
-			});
+			this.setResources(content.included);
 			this.updateCacheTime(timestamp);
 			next = content.links.next;
 		}
@@ -229,7 +218,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		};
 
 		items.forEach((item) => {
-			const track = tracksMap.get(item.id);
+			const track = this.getResource(item);
 			if (!track) {
 				throw new ProviderError(
 					this.provider.name,
@@ -250,7 +239,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			}
 
 			medium.tracklist.push(
-				this.convertTrack(item.meta.trackNumber, track, artistMap),
+				this.convertTrack(item.meta.trackNumber, track),
 			);
 		});
 
@@ -267,7 +256,6 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 	private convertTrack(
 		number: number,
 		track: TracksResource | VideosResource,
-		artistMap: Map<string, ArtistsResource>,
 	): HarmonyTrack {
 		const { title, version } = track.attributes;
 		return {
@@ -275,7 +263,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			title: version ? `${title} (${version})` : title,
 			length: parseISODuration(track.attributes.duration),
 			isrc: track.attributes.isrc,
-			artists: this.getTrackArtists(track, artistMap),
+			artists: this.getArtists(track),
 			type: track.type === 'videos' ? 'video' : 'audio',
 			recording: {
 				externalIds: this.provider.makeExternalIds({ type: track.type === 'videos' ? 'video' : 'track', id: track.id }),
@@ -283,13 +271,9 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		};
 	}
 
-	private getTrackArtists(
-		track: TracksResource | VideosResource,
-		artistMap: Map<string, ArtistsResource>,
-	): ArtistCreditName[] {
-		const artists = track.relationships.artists.data;
-		return artists.map((artist) => {
-			const artistResource = artistMap.get(artist.id);
+	private getArtists(resource: ReleaseResource | TracksResource | VideosResource): ArtistCreditName[] {
+		return resource.relationships.artists.data.map((artist) => {
+			const artistResource = this.getResource(artist);
 			if (!artistResource) {
 				this.addMessage(`No artist data found for artist ${artist.id}, please check artist credits`, 'error');
 				return {
@@ -305,45 +289,39 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		});
 	}
 
-	private getArtists(rawRelease: SingleDataDocument<ReleaseResource>): ArtistCreditName[] {
-		const artists = this.getRelatedItems<ArtistsResource>(rawRelease, 'artists', 'artists');
-		return artists
-			.map((resource) => {
-				return {
-					name: resource.attributes.name,
-					creditedName: resource.attributes.name,
-					externalIds: this.provider.makeExternalIds({ type: 'artist', id: resource.id }),
-				};
-			});
-	}
-
 	private getArtwork(rawRelease: SingleDataDocument<ReleaseResource>): Artwork | undefined {
 		let { imageLinks } = rawRelease.data.attributes;
 		if (!imageLinks) {
-			const relationship = rawRelease.data.type === 'videos' ? 'thumbnailArt' : 'coverArt';
-			// @ts-ignore: Not all `relationship` values are keys of `AlbumsResource` and `VideosResource` (TODO: improve types)
-			const artworks = this.getRelatedItems<ArtworksResource>(rawRelease, relationship, 'artworks');
-			imageLinks = artworks.find((artwork) => artwork.attributes.mediaType === 'IMAGE')?.attributes.files ?? [];
-			if (artworks.length > 1) {
-				getLogger('harmony.provider').warn(`Tidal release ${rawRelease.data.id} has multiple artworks`);
+			let artworkIds;
+			if (rawRelease.data.type === 'videos') {
+				artworkIds = rawRelease.data.relationships.thumbnailArt?.data;
+			} else {
+				artworkIds = rawRelease.data.relationships.coverArt?.data;
+			}
+			if (artworkIds) {
+				const artworks = artworkIds.map(this.getResource.bind(this));
+				imageLinks = artworks.find((artwork) => artwork && artwork.attributes.mediaType === 'IMAGE')?.attributes.files;
+				if (artworks?.length > 1) {
+					getLogger('harmony.provider').warn(`Tidal release ${rawRelease.data.id} has multiple artworks`);
+				}
 			}
 		}
-		const allImages = imageLinks.map((link) => {
+		const allImages = imageLinks?.map((link) => {
 			return {
 				url: link.href,
 				width: link.meta.width,
 				height: link.meta.height,
 			};
-		});
+		}) ?? [];
 		return selectLargestImage(allImages, ['front']);
 	}
 
 	private getLabels(rawRelease: SingleDataDocument<ReleaseResource>): Label[] {
-		const providers = this.getRelatedItems<ProvidersResource>(rawRelease, 'providers', 'providers');
-		return providers
-			.map((resource) => {
+		return rawRelease.data.relationships.providers.data
+			.map((provider) => {
+				const resource = this.getResource(provider);
 				return {
-					name: resource.attributes.name,
+					name: resource?.attributes.name ?? `[unknown Tidal provider ${provider.id}]`,
 					// On Tidal the providers (labels) have separate IDs, but there is no
 					// corresponding public URL. Not setting the IDs here, as otherwise
 					// Harmony would attempt to generate URLs.
@@ -352,32 +330,25 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			});
 	}
 
-	private getRelatedItems<T>(
-		rawRelease: SingleDataDocument<ReleaseResource>,
-		relationship: keyof ReleaseResource['relationships'],
-		resourceType: 'artists' | 'artworks' | 'providers',
-	): T[] {
-		const targetRels = rawRelease.data.relationships[relationship];
-		if (!targetRels) {
-			return [];
-		}
-		const relatedIds = new Set(targetRels.data?.map((item) => item.id));
-
-		const items = new Map<string, T>();
-		rawRelease.included.forEach((resource) => {
-			if (resource.type === resourceType && relatedIds.has(resource.id)) {
-				items.set(resource.id, resource as T);
-			}
-		});
-		// Rely on the target relationship to get the correct number and order of related
-		// items. Consider the case that an item was not actually returned in the includes.
-		return targetRels.data.map((rel) => items.get(rel.id) || { id: rel.id } as T);
-	}
-
 	private constructReleaseUrlFromRelease(release: ReleaseResource): URL {
 		return this.provider.constructUrl({
 			type: release.type === 'videos' ? 'video' : 'album',
 			id: release.id,
 		});
+	}
+
+	/** Stores included resources from API responses for later use with {@linkcode getResource}. */
+	private setResources(included: IncludedResource[]) {
+		for (const resource of included) {
+			this.resourceMap.set(resource.id, resource);
+		}
+	}
+
+	/** Retrieves a resource which has been cached with {@linkcode setResources}. */
+	private getResource<T extends ResourceType>(id: ResourceIdentifier<T>): ResourceTypeMap[T] | undefined {
+		const resource = this.resourceMap.get(id.id);
+		if (resource?.type === id.type) {
+			return resource as ResourceTypeMap[T];
+		}
 	}
 }
