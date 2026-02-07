@@ -705,3 +705,113 @@ snapshot[`Tidal provider > release lookup > release with paginated tracklist and
   type: "audio",
 }
 `;
+
+snapshot[`Tidal provider > release lookup > release with missing tracks and missing artist (v2 API) 1`] = `
+{
+  artists: [
+    {
+      externalIds: [
+        {
+          id: "4854640",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "[unknown Tidal artist 4854640]",
+    },
+    {
+      creditedName: "Sousou Cissoko",
+      externalIds: [
+        {
+          id: "10884257",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Sousou Cissoko",
+    },
+    {
+      creditedName: "Maher Cissoko",
+      externalIds: [
+        {
+          id: "8157407",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Maher Cissoko",
+    },
+  ],
+  isrc: "SE3X91800101",
+  length: 298000,
+  number: 1,
+  recording: {
+    externalIds: [
+      {
+        id: "443692757",
+        provider: "tidal",
+        type: "track",
+      },
+    ],
+  },
+  title: "Bour Yalla",
+  type: "audio",
+}
+`;
+
+snapshot[`Tidal provider > release lookup > release with missing tracks and missing artist (v2 API) 2`] = `
+[
+  {
+    externalIds: [
+      {
+        id: "4854640",
+        provider: "tidal",
+        type: "artist",
+      },
+    ],
+    name: "[unknown Tidal artist 4854640]",
+  },
+  {
+    creditedName: "Maher Cissoko",
+    externalIds: [
+      {
+        id: "8157407",
+        provider: "tidal",
+        type: "artist",
+      },
+    ],
+    name: "Maher Cissoko",
+  },
+  {
+    creditedName: "Sousou Cissoko",
+    externalIds: [
+      {
+        id: "10884257",
+        provider: "tidal",
+        type: "artist",
+      },
+    ],
+    name: "Sousou Cissoko",
+  },
+]
+`;
+
+snapshot[`Tidal provider > release lookup > release with missing tracks and missing artist (v2 API) 3`] = `
+[
+  {
+    provider: "Tidal",
+    text: "The API returned only 8 of 10 tracks for SE, other regions may have more",
+    type: "warning",
+  },
+  {
+    provider: "Tidal",
+    text: "No artist data found for artist 4854640, please check artist credits",
+    type: "error",
+  },
+  {
+    provider: "Tidal",
+    text: "No artist data found for artist 4854640, please check artist credits",
+    type: "error",
+  },
+]
+`;

@@ -139,6 +139,20 @@ describe('Tidal provider', () => {
 				const trackWithVersion = allTracks[7];
 				assertEquals(trackWithVersion.title, 'CELESTIAL (DUB)', 'Track title should contain version info as ETI');
 			},
+		}, {
+			description: 'release with missing tracks and missing artist (v2 API)',
+			release: new URL('https://tidal.com/album/443692756'),
+			options: {
+				regions: new Set(['SE']),
+			},
+			assert: async (release, ctx) => {
+				const tracklist = release.media[0].tracklist;
+				assertEquals(tracklist.length, 10, 'Release should have 10 tracks');
+				await assertSnapshot(ctx, tracklist[0], 'Track 1 has a placeholder artist');
+				assertEquals(tracklist[1].title, '[unknown]', 'Track 2 is a placeholder');
+				await assertSnapshot(ctx, release.artists, 'Release has a placeholder artist');
+				await assertSnapshot(ctx, release.info.messages, 'Lookup generates warnings for missing tracks and artist');
+			},
 		}],
 	});
 
