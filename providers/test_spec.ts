@@ -123,6 +123,8 @@ export interface ReleaseLookupTest {
 	release: ReleaseSpecifier;
 	/** Lookup options which should be passed to the provider. */
 	options?: ReleaseOptions;
+	/** Only execute this test case (temporarily). */
+	only?: boolean;
 	/** Custom assertion(s) which should be performed for the looked up release. */
 	assert: (actualRelease: HarmonyRelease, context: Deno.TestContext) => void | Promise<void>;
 }
@@ -143,7 +145,9 @@ function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookup
 				}
 			}
 
-			it(description, async (context) => {
+			it(description, {
+				only: test.only,
+			}, async (context) => {
 				const actualRelease = await provider.getRelease(release, test.options);
 
 				// Remove properties which are not stable across multiple runs.
