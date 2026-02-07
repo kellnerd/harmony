@@ -30,6 +30,7 @@ import type {
 	HarmonyTrack,
 	Label,
 	ReleaseGroupType,
+	ReleaseInfo,
 } from '@/harmonizer/types.ts';
 
 type ReleaseResource = AlbumsResource | VideosResource;
@@ -52,6 +53,9 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 	 * IDs are unique across all resource types.
 	 */
 	private resourceMap = new Map<string, IncludedResource>();
+
+	/** Resources which should have been included in the API response, but were missing. */
+	private missingResources: ResourceIdentifier[] = [];
 
 	constructReleaseApiUrl(): URL {
 		let { method, value, region } = this.lookup;
@@ -275,7 +279,6 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		return resource.relationships.artists.data.map((artist) => {
 			const artistResource = this.getResource(artist);
 			if (!artistResource) {
-				this.addMessage(`No artist data found for artist ${artist.id}, please check artist credits`, 'error');
 				return {
 					name: `[unknown Tidal artist ${artist.id}]`,
 					externalIds: this.provider.makeExternalIds({ type: 'artist', id: artist.id }),
@@ -349,6 +352,16 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 		const resource = this.resourceMap.get(id.id);
 		if (resource?.type === id.type) {
 			return resource as ResourceTypeMap[T];
+		} else {
+			this.missingResources.push(id);
 		}
+	}
+
+	protected override generateReleaseInfo(): ReleaseInfo {
+		const missingArtists = this.missingResources.filter((resource) => resource.type === 'artists');
+		if (missingArtists.length) {
+			this.addMessage('The API returned no data for some artists, please check the artist credits', 'error');
+		}
+		return super.generateReleaseInfo();
 	}
 }

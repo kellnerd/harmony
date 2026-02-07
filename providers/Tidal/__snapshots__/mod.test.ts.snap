@@ -805,12 +805,7 @@ snapshot[`Tidal provider > release lookup > release with missing tracks and miss
   },
   {
     provider: "Tidal",
-    text: "No artist data found for artist 4854640, please check artist credits",
-    type: "error",
-  },
-  {
-    provider: "Tidal",
-    text: "No artist data found for artist 4854640, please check artist credits",
+    text: "The API returned no data for some artists, please check the artist credits",
     type: "error",
   },
 ]
