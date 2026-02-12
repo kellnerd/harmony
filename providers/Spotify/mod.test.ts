@@ -15,7 +15,9 @@ import SpotifyProvider from './mod.ts';
 
 describe('Spotify provider', () => {
 	const spotify = new SpotifyProvider(makeProviderOptions());
-	const stubs: Stub[] = [stubProviderLookups(spotify)];
+	const stubs: Stub[] = [stubProviderLookups(spotify, {
+		ignoreTrailingSlash: false,
+	})];
 
 	if (!downloadMode) {
 		stubs.push(stubTokenRetrieval(spotify));
@@ -78,6 +80,14 @@ describe('Spotify provider', () => {
 					release.externalLinks.find((link) => link.url === 'https://open.spotify.com/album/10FLjwfpbxLmW8c25Xyc2N'),
 					'GTIN search did not return the expected release',
 				);
+			},
+		}, {
+			description: 'unavailable VA compilation with paginated tracklist',
+			release: new URL('https://open.spotify.com/album/32nryzA6XBCX9ZUspVc1yz'),
+			assert: (release) => {
+				assertEquals(release.availableIn?.length, 0, 'Release is no longer available in any region');
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assertEquals(allTracks.length, 55, 'Release should have 55 tracks');
 			},
 		}],
 	});
