@@ -238,10 +238,15 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 
 		// Load full details including ISRCs
 		if (this.options.withISRC) {
-			return this.getRawTrackDetails(allTracks);
-		} else {
-			return allTracks;
+			// Anticipate failures after the removal of the `/tracks` API endpoint.
+			// TODO: Update condition to use the timestamp once the endpoint is gone.
+			try {
+				return this.getRawTrackDetails(allTracks);
+			} catch (error) {
+				this.addMessage(`Failed to load track details, ISRCs will be missing: ${error}`, 'error');
+			}
 		}
+		return allTracks;
 	}
 
 	private async getRawTrackDetails(simplifiedTracks: SimplifiedTrack[]): Promise<Track[]> {
@@ -346,7 +351,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 	 * For unavailable releases, Spotify tries to be smart and substitute track IDs with those of similar but available
 	 * tracks, for which we have no use. In that case (and only then) the original IDs can be obtained from the optional
 	 * `linked_from` track, otherwise we fall back to the regular ID.
-	 * 
+	 *
 	 * @see https://developer.spotify.com/documentation/web-api/concepts/track-relinking
 	 */
 	private getTrackId(track: SimplifiedTrack): string {
