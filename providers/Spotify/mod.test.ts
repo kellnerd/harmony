@@ -6,6 +6,7 @@ import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts'
 import { stubProviderLookups, stubTokenRetrieval } from '@/providers/test_stubs.ts';
 import { downloadMode } from '@/utils/fetch_stub.ts';
 import { assert } from 'std/assert/assert.ts';
+import { assertEquals } from 'std/assert/assert_equals.ts';
 import { afterAll, describe } from '@std/testing/bdd';
 import type { Stub } from '@std/testing/mock';
 import { assertSnapshot } from '@std/testing/snapshot';
@@ -57,7 +58,7 @@ describe('Spotify provider', () => {
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
-				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
+				assertEquals(allTracks[0].artists?.length, 2, 'Main track should have two artists');
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
 			},
 		}, {
@@ -65,8 +66,18 @@ describe('Spotify provider', () => {
 			release: '10FLjwfpbxLmW8c25Xyc2N', // same single as in the previous test
 			assert: (release) => {
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
-				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
+				assertEquals(allTracks[0].artists?.length, 2, 'Main track should have two artists');
 				assert(allTracks.every((track) => !track.isrc), 'Tracks should not have an ISRC');
+			},
+		}, {
+			description: 'find release by (zero-padded) GTIN',
+			release: 602475093060, // same single as in the previous test
+			assert: (release) => {
+				assertEquals(release.gtin, '00602475093060', 'Spotify GTIN should be zero-padded');
+				assert(
+					release.externalLinks.find((link) => link.url === 'https://open.spotify.com/album/10FLjwfpbxLmW8c25Xyc2N'),
+					'GTIN search did not return the expected release',
+				);
 			},
 		}],
 	});
