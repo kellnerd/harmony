@@ -88,6 +88,16 @@ describe('Spotify provider', () => {
 				assertEquals(release.availableIn?.length, 0, 'Release is no longer available in any region');
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
 				assertEquals(allTracks.length, 55, 'Release should have 55 tracks');
+				assertEquals(allTracks[0].recording?.externalIds, [{
+					id: '2PgUEovk43jcRT7xkRjXfa',
+					provider: 'spotify',
+					type: 'track',
+				}], 'Track 1 has its original track ID, not the ID of the replacement track');
+				assertEquals(allTracks[54].recording?.externalIds, [{
+					id: '7qr3YdKMUGaTfCNXnH09Zn',
+					provider: 'spotify',
+					type: 'track',
+				}], 'Track 55 has its original track ID, not the ID of the replacement track');
 			},
 		}],
 	});

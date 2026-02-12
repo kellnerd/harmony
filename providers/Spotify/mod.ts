@@ -246,12 +246,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 
 	private async getRawTrackDetails(simplifiedTracks: SimplifiedTrack[]): Promise<Track[]> {
 		const allTracks: Track[] = [];
-
-		// For unavailable releases, Spotify tries to be smart and substitute track
-		// IDs with those of similar but available tracks, for which we have no use.
-		// In that case (and only then) the original IDs can be obtained from the
-		// optional `linked_from` track, otherwise we fall back to the regular ID.
-		const trackIds = simplifiedTracks.map((track) => track.linked_from?.id ?? track.id);
+		const trackIds = simplifiedTracks.map(this.getTrackId.bind(this));
 
 		// The SimplifiedTrack entries do not contain ISRCs.
 		// Perform track queries to obtain the full details of all tracks.
@@ -338,11 +333,24 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			artists: track.artists.map(this.convertRawArtist.bind(this)),
 			availableIn: track.available_markets,
 			recording: {
-				externalIds: this.provider.makeExternalIds({ type: 'track', id: track.id }),
+				externalIds: this.provider.makeExternalIds({ type: 'track', id: this.getTrackId(track) }),
 			},
 		};
 
 		return result;
+	}
+
+	/**
+	 * Returns the correct track ID for the given track.
+	 *
+	 * For unavailable releases, Spotify tries to be smart and substitute track IDs with those of similar but available
+	 * tracks, for which we have no use. In that case (and only then) the original IDs can be obtained from the optional
+	 * `linked_from` track, otherwise we fall back to the regular ID.
+	 * 
+	 * @see https://developer.spotify.com/documentation/web-api/concepts/track-relinking
+	 */
+	private getTrackId(track: SimplifiedTrack): string {
+		return track.linked_from?.id ?? track.id;
 	}
 
 	private convertRawArtist(artist: SimplifiedArtist): ArtistCreditName {
