@@ -11,18 +11,24 @@ export type SimplifiedAlbum = {
 	release_date_precision: ReleaseDatePrecision;
 	external_urls: { spotify: string };
 	images: Image[];
-	available_markets: string[];
+	/** The markets in which the album is available: ISO 3166-1 alpha-2 country codes. @deprecated Removed 2026-02. */
+	available_markets?: string[];
 	restrictions: { reason: string };
 };
 
 export type Album = SimplifiedAlbum & {
 	tracks: ResultList<SimplifiedTrack>;
 	copyrights: Copyright[];
-	external_ids: ExternalIds;
+	/** Known external IDs for the album. @deprecated Removed 2026-02. */
+	external_ids?: ExternalIds;
 	genres: string[];
-	label: string;
-	/** The popularity of the album. The value will be between 0 and 100, with 100 being the most popular. */
-	popularity: number;
+	/** The label associated with the album. @deprecated Removed 2026-02. */
+	label?: string;
+	/**
+	 * The popularity of the album. The value will be between 0 and 100, with 100 being the most popular.
+	 * @deprecated Removed 2026-02.
+	 */
+	popularity?: number;
 };
 
 export type SimplifiedArtist = {
@@ -55,16 +61,26 @@ export type SimplifiedTrack = LinkedTrack & {
 	is_playable: boolean | undefined;
 	is_local: boolean;
 	preview_url: string;
-	linked_from: LinkedTrack | undefined;
-	available_markets: string[];
+	/** Original track when relinked. @deprecated Removed 2026-02. */
+	linked_from?: LinkedTrack | undefined;
+	/**
+	 * A list of the countries in which the track can be played, identified by their ISO 3166-1 alpha-2 code.
+	 * @deprecated Removed 2026-02.
+	 */
+	available_markets?: string[];
 	restrictions: { reason: string };
 };
 
 export type Track = SimplifiedTrack & {
 	album: Album;
 	artists: Artist[];
-	external_ids: ExternalIds;
-	popularity: number;
+	/** Known external IDs for the track. @deprecated Removed 2026-02. */
+	external_ids?: ExternalIds;
+	/**
+	 * The popularity of the track. The value will be between 0 and 100, with 100 being the most popular.
+	 * @deprecated Removed 2026-02.
+	 */
+	popularity?: number;
 };
 
 export type Image = {

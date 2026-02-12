@@ -276,7 +276,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		return {
 			title: rawRelease.name,
 			artists: rawRelease.artists.map(this.convertRawArtist.bind(this)),
-			gtin: rawRelease.external_ids.ean || rawRelease.external_ids.upc,
+			gtin: rawRelease.external_ids?.ean || rawRelease.external_ids?.upc,
 			externalLinks: [{
 				url: rawRelease.external_urls.spotify,
 				types: this.provider.getLinkTypesForEntity(),
@@ -288,7 +288,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			types: [capitalizeReleaseType(rawRelease.album_type)],
 			packaging: 'None',
 			images: artwork ? [artwork] : [],
-			labels: splitLabels(rawRelease.label),
+			labels: rawRelease.label ? splitLabels(rawRelease.label) : undefined,
 			availableIn: rawRelease.available_markets,
 			info: this.generateReleaseInfo(),
 		};
