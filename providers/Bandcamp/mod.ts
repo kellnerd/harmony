@@ -77,16 +77,20 @@ export default class BandcampProvider extends MetadataProvider {
 	}
 
 	constructUrl(entity: EntityId): URL {
-		const [artist, title] = entity.id.split('/', 2);
-		const artistUrl = new URL(`https://${artist}.bandcamp.com`);
-
-		if (entity.type === 'artist') return artistUrl;
-
-		// else if (type === 'album' || type === 'track')
-		if (!title) {
-			throw new ProviderError(this.name, `Incomplete release ID '${entity.id}' does not match format \`band/title\``);
+		const { band, title } = entity.id.match(this.idPattern)?.groups ?? {};
+		if (!band) {
+			throw new ProviderError(this.name, `Invalid provider ID '${entity.id}'`);
 		}
-		return new URL([entity.type, title].join('/'), artistUrl);
+		const bandUrl = new URL(`https://${band}.bandcamp.com`);
+
+		if (entity.type === 'album' || entity.type === 'track') {
+			if (!title) {
+				throw new ProviderError(this.name, `Incomplete release ID '${entity.id}' does not match format \`band/title\``);
+			}
+			return new URL([entity.type, title].join('/'), bandUrl);
+		} else { // artist or label
+			return bandUrl;
+		}
 	}
 
 	protected override idPattern = /^(?<band>[\w-]+)(?:(?:\/(?<type>track))?\/(?<title>[\w-]+))?$/;
