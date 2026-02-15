@@ -156,6 +156,7 @@ export abstract class MetadataProvider {
 	 * Maps a provider ID of the given MusicBrainz entity type to provider entity type and ID.
 	 *
 	 * Accepts provider IDs which were serialized by {@linkcode serializeProviderId}.
+	 * Throws for invalid provider entity IDs.
 	 */
 	parseProviderId(id: string, entityType: HarmonyEntityType): EntityId {
 		const type = this.entityTypeMap[entityType];
@@ -165,7 +166,19 @@ export abstract class MetadataProvider {
 				`Unable to parse provider ID as the provider supports multiple ${entityType} types, please override parser`,
 			);
 		}
-		return { id, type };
+
+		if (!this.idPattern) {
+			// Initialize ID pattern with the RegExp group from the supported URLs pattern if possible.
+			// We can not do this inside the constructor already, since `supportedUrls` is an abstract property.
+			const idPattern = this.supportedUrls.hasRegExpGroups && this.supportedUrls.pathname.match(/:id\((.+?)\)/)?.[1];
+			// We want to match against the full ID (which the URLPattern does implicitly).
+			this.idPattern = new RegExp(`^${idPattern || '\\w+'}$`);
+		}
+		if (this.idPattern.test(id)) {
+			return { id, type };
+		} else {
+			throw new ProviderError(this.name, `Invalid provider ID '${id}'`);
+		}
 	}
 
 	/** Returns the appropriate external link types for the given entity. */
@@ -204,6 +217,9 @@ export abstract class MetadataProvider {
 	protected get log(): Logger {
 		return getLogger('harmony.provider');
 	}
+
+	/** Pattern which is used to validate (serialized) provider IDs. */
+	protected idPattern: RegExp | undefined;
 
 	protected snaps: SnapStorage | undefined;
 

@@ -68,6 +68,7 @@ describe('Tidal provider', () => {
 			serializedId: 'video/358461354',
 			isCanonical: true,
 		}],
+		invalidIds: ['text'],
 		releaseLookup: [{
 			description: 'live album with video tracks and featured artist (v1 API)',
 			release: new URL('https://tidal.com/album/130201923'),

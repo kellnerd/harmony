@@ -89,6 +89,8 @@ export default class BandcampProvider extends MetadataProvider {
 		return new URL([entity.type, title].join('/'), artistUrl);
 	}
 
+	protected override idPattern = /^(?<band>[\w-]+)(?:(?:\/(?<type>track))?\/(?<title>[\w-]+))?$/;
+
 	override serializeProviderId(entity: EntityId): string {
 		if (entity.type === 'track') {
 			return entity.id.replace('/', '/track/');
@@ -98,14 +100,21 @@ export default class BandcampProvider extends MetadataProvider {
 	}
 
 	override parseProviderId(id: string, entityType: HarmonyEntityType): EntityId {
+		const { band, type, title } = id.match(this.idPattern)?.groups ?? {};
+		if (!band) {
+			throw new ProviderError(this.name, `Invalid provider ID '${id}'`);
+		}
 		if (entityType === 'release') {
-			if (id.includes('/track/')) {
-				return { id: id.replace('/track/', '/'), type: 'track' };
+			if (title) {
+				return { id: [band, title].join('/'), type: type ?? 'album' };
 			} else {
-				return { id, type: 'album' };
+				throw new ProviderError(
+					this.name,
+					`Incomplete release ID '${id}' does not match format \`band/title\``,
+				);
 			}
 		} else {
-			return { id, type: this.entityTypeMap[entityType] };
+			return { id: band, type: this.entityTypeMap[entityType] };
 		}
 	}
 

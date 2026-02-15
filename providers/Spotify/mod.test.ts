@@ -53,6 +53,7 @@ describe('Spotify provider', () => {
 			id: { type: 'track', id: '1EDPVGbyPKJPeGqATwXZvN' },
 			isCanonical: true,
 		}],
+		invalidIds: ['https://open.spotify.com/url'],
 		releaseLookup: [{
 			description: 'single by two artists',
 			release: new URL('https://open.spotify.com/album/10FLjwfpbxLmW8c25Xyc2N'),

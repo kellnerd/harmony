@@ -7,7 +7,7 @@ import {
 } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { getFromEnv } from '@/utils/config.ts';
-import { ResponseError } from '@/utils/errors.ts';
+import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
 import { encodeBase64 } from 'std/encoding/base64.ts';
 import { join } from 'std/url/join.ts';
@@ -92,6 +92,8 @@ export default class TidalProvider extends MetadataApiProvider {
 		return join('https://tidal.com', entity.type, entity.id);
 	}
 
+	protected override idPattern = /^(?:video\/)?\d+$/;
+
 	override serializeProviderId(entity: EntityId): string {
 		if (entity.type === 'video') {
 			return [entity.type, entity.id].join('/');
@@ -101,6 +103,9 @@ export default class TidalProvider extends MetadataApiProvider {
 	}
 
 	override parseProviderId(id: string, entityType: HarmonyEntityType): EntityId {
+		if (!this.idPattern.test(id)) {
+			throw new ProviderError(this.name, `Invalid provider ID '${id}'`);
+		}
 		if (entityType === 'release') {
 			if (id.startsWith('video/')) {
 				return { id: id.replace('video/', ''), type: 'video' };

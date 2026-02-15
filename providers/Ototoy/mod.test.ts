@@ -23,6 +23,7 @@ describe('OTOTOY provider', () => {
 			id: { type: 'artist', id: '693805' },
 			isCanonical: true,
 		}],
+		invalidIds: ['text'],
 		releaseLookup: [{
 			description: 'single track release',
 			release: '3016055',

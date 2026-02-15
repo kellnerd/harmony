@@ -26,6 +26,7 @@ describe('Mora provider', () => {
 			id: { type: 'artist', id: '1739884' },
 			isCanonical: true,
 		}],
+		invalidIds: ['text'],
 		releaseLookup: [{
 			description: 'release with GTIN in distPartNo',
 			release: '43000006/00602488058599',

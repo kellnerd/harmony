@@ -43,6 +43,7 @@ describe('Bandcamp provider', () => {
 			url: new URL('https://bandcamp.com/discover'),
 			id: undefined,
 		}],
+		invalidIds: ['https://example.bandcamp.com/url'],
 		releaseLookup: [{
 			description: 'label release with fixed price (which is not free despite minimum_price of 0.0)',
 			release: 'thedarkthursday/and-it-was-a-burned-into-my-mind-yet-i-faltered-like-a-broken-record',

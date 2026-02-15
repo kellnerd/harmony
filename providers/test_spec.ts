@@ -11,6 +11,7 @@ import { isDefined } from '@/utils/predicate.ts';
 
 import { assert } from 'std/assert/assert.ts';
 import { assertEquals } from 'std/assert/assert_equals.ts';
+import { assertThrows } from 'std/assert/assert_throws.ts';
 import { filterValues } from '@std/collections/filter-values';
 import { describe, it } from '@std/testing/bdd';
 import { preferArray } from 'utils/array/scalar.js';
@@ -24,6 +25,8 @@ export interface ProviderSpecification {
 	 * All other tests describe unsupported URLs which are ignored by the provider.
 	 */
 	urls: EntityUrlTest[];
+	/** Invalid (serialized) entity IDs which should be rejected. */
+	invalidIds: string[];
 	/**
 	 * Releases which the provider should be able to lookup.
 	 *
@@ -36,6 +39,14 @@ export interface ProviderSpecification {
 export function describeProvider(provider: MetadataProvider, spec: ProviderSpecification) {
 	describeEntityUrlExtraction(provider, spec.urls);
 	describeEntityUrlConstruction(provider, spec.urls);
+	it('rejects invalid release IDs', () => {
+		for (const invalidId of spec.invalidIds) {
+			assertThrows(
+				() => provider.parseProviderId(invalidId, 'release'),
+				`Provider ID '${invalidId}' should be considered invalid`,
+			);
+		}
+	});
 	describeReleaseLookups(provider, spec.releaseLookup);
 }
 

@@ -44,7 +44,7 @@ export default class MusicBrainzProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '{(beta|test).}?musicbrainz.(org|eu)',
-		pathname: '/:type(artist|release)/:id',
+		pathname: '/:type(artist|release)/:id([0-9a-f-]{36})',
 	});
 
 	override readonly features: FeatureQualityMap = {

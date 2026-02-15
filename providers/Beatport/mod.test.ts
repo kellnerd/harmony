@@ -28,6 +28,7 @@ describe('Beatport provider', () => {
 			id: { type: 'track', id: '19209410', slug: 'tokyo-night' },
 			isCanonical: true,
 		}],
+		invalidIds: ['text'],
 		releaseLookup: [],
 	});
 });

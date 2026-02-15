@@ -20,13 +20,15 @@ export default class MoraProvider extends MetadataProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'mora.jp',
-		pathname: '/package/:labelCode([0-9]+)/:packageId{/}?',
+		pathname: '/package/:labelCode(\\d+)/:packageId{/}?',
 	});
 
 	readonly artistUrlPattern = new URLPattern({
 		hostname: this.supportedUrls.hostname,
 		pathname: '/artist/:id{/}?',
 	});
+
+	protected override idPattern = /^\d+(?:\/[\w-]+)$/;
 
 	override readonly features: FeatureQualityMap = {
 		// The API returns a "full size" image of at most 200x200

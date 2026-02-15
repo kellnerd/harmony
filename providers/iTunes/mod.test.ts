@@ -69,6 +69,7 @@ describe('iTunes provider', () => {
 			url: new URL('https://geo.itunes.apple.com/album/id1135913516'),
 			id: { type: 'album', id: '1135913516', region: 'US' },
 		}],
+		invalidIds: ['text'],
 		releaseLookup: [{
 			description: 'multi-disc download with video tracks',
 			release: new URL('https://music.apple.com/gb/album/a-night-at-the-opera-deluxe-edition/1441458047'),
