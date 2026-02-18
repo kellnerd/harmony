@@ -13,3 +13,4 @@ local/
 
 # Coverage directory
 coverage/
+.DS_Store
