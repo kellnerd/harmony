@@ -11,6 +11,7 @@ import MusicBrainzProvider from './MusicBrainz/mod.ts';
 import OtotoyProvider from './Ototoy/mod.ts';
 import SpotifyProvider from './Spotify/mod.ts';
 import TidalProvider from './Tidal/mod.ts';
+import SoundCloudProvider from './SoundCloud/mod.ts';
 import MoraProvider from './Mora/mod.ts';
 
 /** Registry with all supported providers. */
@@ -28,6 +29,7 @@ providers.addMultiple(
 	TidalProvider,
 	BandcampProvider,
 	BeatportProvider,
+	SoundCloudProvider,
 	MoraProvider,
 	OtotoyProvider,
 );

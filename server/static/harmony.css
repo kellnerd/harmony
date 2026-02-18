@@ -36,6 +36,7 @@
 	--ototoy: #e07e01;
 	--spotify: #1db954;
 	--tidal: #000000;
+	--soundcloud: #f37422;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -477,6 +478,9 @@ label.spotify, td.spotify {
 }
 label.tidal, td.tidal {
 	background-color: var(--tidal);
+}
+label.soundcloud, td.soundcloud {
+	background-color: var(--soundcloud);
 }
 
 /* ProviderIcon.tsx */
