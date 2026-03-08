@@ -113,8 +113,12 @@ export abstract class MetadataProvider {
 
 	/** Looks up the release which is identified by the given specifier (URL, GTIN/barcode or provider ID). */
 	getRelease(specifier: ReleaseSpecifier, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
-		const lookup = new this.releaseLookup(this, specifier, options);
-		return lookup.getRelease();
+		try {
+			const lookup = new this.releaseLookup(this, specifier, options);
+			return lookup.getRelease();
+		} catch (error) {
+			return Promise.reject(error);
+		}
 	}
 
 	/** Checks whether the provider supports the domain of the given URL. */
