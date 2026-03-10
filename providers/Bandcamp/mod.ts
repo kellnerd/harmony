@@ -10,6 +10,8 @@ import type {
 	HarmonyTrack,
 	Label,
 	LinkType,
+	ReleaseOptions,
+	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
 import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
@@ -22,7 +24,7 @@ import { similarNames } from '@/utils/similarity.ts';
 import { toTrackRanges } from '@/utils/tracklist.ts';
 import { simplifyName } from 'utils/string/simplify.js';
 
-export default class BandcampProvider extends MetadataProvider {
+export default class BandcampProvider extends MetadataProvider<BandcampProvider> {
 	readonly name = 'Bandcamp';
 
 	readonly supportedUrls = new URLPattern({
@@ -52,7 +54,9 @@ export default class BandcampProvider extends MetadataProvider {
 		month: 9,
 	};
 
-	readonly releaseLookup = BandcampReleaseLookup;
+	releaseLookup(specifier: ReleaseSpecifier, options: ReleaseOptions = {}) {
+		return new BandcampReleaseLookup(this, specifier, options);
+	}
 
 	override extractEntityFromUrl(url: URL): EntityId | undefined {
 		const albumResult = this.supportedUrls.exec(url);

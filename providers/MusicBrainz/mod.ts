@@ -6,6 +6,8 @@ import type {
 	HarmonyTrack,
 	MediumFormat,
 	ReleaseGroupType,
+	ReleaseOptions,
+	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
 import {
 	type ApiQueryOptions,
@@ -60,7 +62,9 @@ export default class MusicBrainzProvider extends MetadataApiProvider {
 		release: 'release',
 	};
 
-	readonly releaseLookup = MusicBrainzReleaseLookup;
+	releaseLookup(specifier: ReleaseSpecifier, options: ReleaseOptions = {}) {
+		return new MusicBrainzReleaseLookup(this, specifier, options);
+	}
 
 	readonly apiBaseUrl = musicbrainzApiBaseUrl;
 

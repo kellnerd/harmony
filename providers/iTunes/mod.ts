@@ -17,6 +17,8 @@ import type {
 	HarmonyRelease,
 	LinkType,
 	ReleaseGroupType,
+	ReleaseOptions,
+	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
 
 // See https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI
@@ -44,7 +46,9 @@ export default class iTunesProvider extends MetadataApiProvider {
 
 	override readonly availableRegions = new Set(availableRegions);
 
-	readonly releaseLookup = iTunesReleaseLookup;
+	releaseLookup(specifier: ReleaseSpecifier, options: ReleaseOptions = {}) {
+		return new iTunesReleaseLookup(this, specifier, options);
+	}
 
 	override readonly launchDate: PartialDate = {
 		year: 2003,

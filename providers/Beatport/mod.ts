@@ -1,5 +1,13 @@
 import type { Artist, BeatportNextData, BeatportRelease, Release, Track } from './json_types.ts';
-import type { ArtistCreditName, EntityId, HarmonyRelease, HarmonyTrack, LinkType } from '@/harmonizer/types.ts';
+import type {
+	ArtistCreditName,
+	EntityId,
+	HarmonyRelease,
+	HarmonyTrack,
+	LinkType,
+	ReleaseOptions,
+	ReleaseSpecifier,
+} from '@/harmonizer/types.ts';
 import { variousArtists } from '@/musicbrainz/special_entities.ts';
 import { CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
@@ -30,7 +38,9 @@ export default class BeatportProvider extends MetadataProvider {
 		recording: 'track',
 	};
 
-	readonly releaseLookup = BeatportReleaseLookup;
+	releaseLookup(specifier: ReleaseSpecifier, options: ReleaseOptions = {}) {
+		return new BeatportReleaseLookup(this, specifier, options);
+	}
 
 	override readonly launchDate: PartialDate = {
 		year: 2005,
