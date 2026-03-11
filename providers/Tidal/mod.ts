@@ -82,9 +82,9 @@ export default class TidalProvider extends MetadataApiProvider {
 
 	getRelease(specifier: ReleaseSpecifier, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
 		if (!options.snapshotMaxTimestamp || options.snapshotMaxTimestamp > tidalV1MaxTimestamp) {
-			return new TidalV2ReleaseLookup(this,specifier,options).getRelease();
-		} 
-		return new TidalV1ReleaseLookup(this,specifier,options).getRelease();
+			return new TidalV2ReleaseLookup(this, specifier, options).getRelease();
+		}
+		return new TidalV1ReleaseLookup(this, specifier, options).getRelease();
 	}
 
 	constructUrl(entity: EntityId): URL {
