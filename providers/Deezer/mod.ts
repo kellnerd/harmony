@@ -289,7 +289,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 	}
 
 	private convertReleaseType(sourceType: string): ReleaseGroupType {
-		return capitalizeReleaseType(sourceType.replace('COMPILE', 'COMPILATION'));
+		return capitalizeReleaseType(sourceType.toLowerCase().replace('compile', 'compilation'));
 	}
 
 	private determineAvailability(media: HarmonyMedium[]): string[] | undefined {
