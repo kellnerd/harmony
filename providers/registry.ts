@@ -13,6 +13,8 @@ import type OtotoyProvider from './Ototoy/mod.ts';
 import type SpotifyProvider from './Spotify/mod.ts';
 import type TidalProvider from './Tidal/mod.ts';
 
+// deno-lint-ignore no-explicit-any
+export type ConstructorOf<TConstructed> = new (...args: Array<any>) => TConstructed;
 export type MetadataProviders =
 	| BandcampProvider
 	| BeatportProvider
@@ -23,6 +25,16 @@ export type MetadataProviders =
 	| OtotoyProvider
 	| SpotifyProvider
 	| TidalProvider;
+export type MetadataProviderClasses =
+	| ConstructorOf<BandcampProvider>
+	| ConstructorOf<BeatportProvider>
+	| ConstructorOf<DeezerProvider>
+	| ConstructorOf<iTunesProvider>
+	| ConstructorOf<MoraProvider>
+	| ConstructorOf<MusicBrainzProvider>
+	| ConstructorOf<OtotoyProvider>
+	| ConstructorOf<SpotifyProvider>
+	| ConstructorOf<TidalProvider>;
 
 export interface ProviderRegistryOptions {
 	/** Information about the application which is passed to each provider. */
@@ -39,7 +51,7 @@ export class ProviderRegistry {
 	}
 
 	/** Adds an instance of the given provider to the registry. */
-	add<Provider extends MetadataProviders & (new (...args: unknown[]) => MetadataProviders)>(ProviderClass: Provider) {
+	add(ProviderClass: MetadataProviderClasses) {
 		const provider = new ProviderClass({ snaps: this.#snaps, appInfo: this.#appInfo });
 
 		const { name, internalName } = provider;
@@ -59,7 +71,7 @@ export class ProviderRegistry {
 	}
 
 	/** Adds an instance for each of the given providers to the registry. */
-	addMultiple(...providers: Array<MetadataProviders & (new (...args: unknown[]) => MetadataProviders)>) {
+	addMultiple(...providers: Array<MetadataProviderClasses>) {
 		for (const Provider of providers) {
 			this.add(Provider);
 		}
