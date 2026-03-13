@@ -1,8 +1,40 @@
-import type { MetadataProvider, MetadataProviderConstructor } from './base.ts';
+import type { MetadataProvider } from './base.ts';
 import { FeatureQuality, type ProviderFeature } from './features.ts';
 import type { AppInfo } from '@/app.ts';
 import type { ExternalEntityId } from '@/harmonizer/types.ts';
 import { SnapStorage } from 'snap-storage';
+import type BandcampProvider from './Bandcamp/mod.ts';
+import type BeatportProvider from './Beatport/mod.ts';
+import type DeezerProvider from './Deezer/mod.ts';
+import type iTunesProvider from './iTunes/mod.ts';
+import type MoraProvider from './Mora/mod.ts';
+import type MusicBrainzProvider from './MusicBrainz/mod.ts';
+import type OtotoyProvider from './Ototoy/mod.ts';
+import type SpotifyProvider from './Spotify/mod.ts';
+import type TidalProvider from './Tidal/mod.ts';
+
+// deno-lint-ignore no-explicit-any
+export type ConstructorOf<TConstructed> = new (...args: Array<any>) => TConstructed;
+export type MetadataProviders =
+	| BandcampProvider
+	| BeatportProvider
+	| DeezerProvider
+	| iTunesProvider
+	| MoraProvider
+	| MusicBrainzProvider
+	| OtotoyProvider
+	| SpotifyProvider
+	| TidalProvider;
+export type MetadataProviderClasses =
+	| ConstructorOf<BandcampProvider>
+	| ConstructorOf<BeatportProvider>
+	| ConstructorOf<DeezerProvider>
+	| ConstructorOf<iTunesProvider>
+	| ConstructorOf<MoraProvider>
+	| ConstructorOf<MusicBrainzProvider>
+	| ConstructorOf<OtotoyProvider>
+	| ConstructorOf<SpotifyProvider>
+	| ConstructorOf<TidalProvider>;
 
 export interface ProviderRegistryOptions {
 	/** Information about the application which is passed to each provider. */
@@ -19,8 +51,8 @@ export class ProviderRegistry {
 	}
 
 	/** Adds an instance of the given provider to the registry. */
-	add(Provider: MetadataProviderConstructor) {
-		const provider = new Provider({ snaps: this.#snaps, appInfo: this.#appInfo });
+	add(ProviderClass: MetadataProviderClasses) {
+		const provider = new ProviderClass({ snaps: this.#snaps, appInfo: this.#appInfo });
 
 		const { name, internalName } = provider;
 		if (this.#displayNames.has(name)) {
@@ -39,7 +71,7 @@ export class ProviderRegistry {
 	}
 
 	/** Adds an instance for each of the given providers to the registry. */
-	addMultiple(...providers: MetadataProviderConstructor[]) {
+	addMultiple(...providers: Array<MetadataProviderClasses>) {
 		for (const Provider of providers) {
 			this.add(Provider);
 		}
@@ -100,13 +132,13 @@ export class ProviderRegistry {
 	}
 
 	/** Finds a registered provider by name (internal name or display name). */
-	findByName(name: string): MetadataProvider | undefined {
+	findByName(name: string): MetadataProviders | undefined {
 		const internalName = this.toInternalName(name);
 		return internalName ? this.#providerMap[internalName] : undefined;
 	}
 
 	/** Finds a registered provider which supports the domain of the given URL. */
-	findByUrl(url: URL | string): MetadataProvider | undefined {
+	findByUrl(url: URL | string): MetadataProviders | undefined {
 		return this.#providerList.find((provider) => provider.supportsDomain(url));
 	}
 
@@ -142,8 +174,8 @@ export class ProviderRegistry {
 	}
 
 	#appInfo: AppInfo | undefined;
-	#providerList: MetadataProvider[] = [];
-	#providerMap: Record<string, MetadataProvider> = {};
+	#providerList: MetadataProviders[] = [];
+	#providerMap: Record<string, MetadataProviders> = {};
 	#displayNames = new Set<string>();
 	#internalNames = new Set<string>();
 	#displayToInternal: Record<string, string | undefined> = {};

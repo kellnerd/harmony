@@ -59,7 +59,9 @@ export default class DeezerProvider extends MetadataApiProvider {
 
 	override readonly availableRegions = new Set(availableRegions);
 
-	readonly releaseLookup = DeezerReleaseLookup;
+	releaseLookup(specifier: ReleaseSpecifier, options: ReleaseOptions = {}) {
+		return new DeezerReleaseLookup(this, specifier, options);
+	}
 
 	override readonly launchDate: PartialDate = {
 		year: 2007,

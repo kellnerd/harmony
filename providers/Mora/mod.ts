@@ -7,6 +7,8 @@ import type {
 	HarmonyRelease,
 	HarmonyTrack,
 	LinkType,
+	ReleaseOptions,
+	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
 import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
@@ -49,7 +51,9 @@ export default class MoraProvider extends MetadataProvider {
 		month: 4,
 	};
 
-	readonly releaseLookup = MoraReleaseLookup;
+	releaseLookup(specifier: ReleaseSpecifier, options: ReleaseOptions = {}) {
+		return new MoraReleaseLookup(this, specifier, options);
+	}
 
 	constructUrl(entity: EntityId): URL {
 		return new URL(`https://mora.jp/${entity.type}/${entity.id}/`);
