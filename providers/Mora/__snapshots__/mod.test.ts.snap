@@ -85,9 +85,12 @@ snapshot[`Mora provider > release lookup > release with GTIN in distPartNo 1`] =
   ],
   packaging: "None",
   releaseDate: {
-    day: 31,
-    month: 10,
-    year: 2025,
+    date: {
+      day: 31,
+      month: 10,
+      year: 2025,
+    },
+    quality: "assumed-valid",
   },
   status: "Official",
   title: "MAGIC",
@@ -673,9 +676,12 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
   ],
   packaging: "None",
   releaseDate: {
-    day: 15,
-    month: 10,
-    year: 2025,
+    date: {
+      day: 15,
+      month: 10,
+      year: 2025,
+    },
+    quality: "assumed-valid",
   },
   status: "Official",
   title: "バンドリ！ ガールズバンドパーティ！ カバーコレクションVol.10",
@@ -767,9 +773,12 @@ snapshot[`Mora provider > release lookup > video release 1`] = `
   ],
   packaging: "None",
   releaseDate: {
-    day: 22,
-    month: 11,
-    year: 2025,
+    date: {
+      day: 22,
+      month: 11,
+      year: 2025,
+    },
+    quality: "assumed-valid",
   },
   status: "Official",
   title: "Woman is a Tree",

@@ -50,9 +50,9 @@ export function Release({ release, releaseMap }: { release: MergedHarmonyRelease
 				<tr>
 					<th>Release date</th>
 					<td>
-						{formatPartialDate(release.releaseDate ?? {}) || '[unknown]'}
+						{formatPartialDate(release.releaseDate?.date ?? {}) || '[unknown]'}
 						<AlternativeValues
-							property={(release) => release.releaseDate}
+							property={(release) => release.releaseDate?.date}
 							display={formatPartialDate}
 							identifier={formatPartialDate}
 						/>

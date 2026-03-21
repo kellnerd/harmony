@@ -426,9 +426,13 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
   ],
   packaging: "None",
   releaseDate: {
-    day: 1,
-    month: 1,
-    year: 2012,
+    date: {
+      day: 1,
+      month: 1,
+      year: 2012,
+    },
+    note: "Release predates platform launch date.",
+    quality: "assumed-invalid",
   },
   status: "Official",
   title: "Live In Brooklyn",
@@ -555,9 +559,12 @@ snapshot[`Tidal provider > release lookup > single by two artists (v2 API) 1`] =
   ],
   packaging: "None",
   releaseDate: {
-    day: 16,
-    month: 8,
-    year: 2024,
+    date: {
+      day: 16,
+      month: 8,
+      year: 2024,
+    },
+    quality: "assumed-valid",
   },
   status: "Official",
   title: "Die With A Smile",
@@ -662,9 +669,12 @@ snapshot[`Tidal provider > release lookup > lyric video (v2 API) 1`] = `
   ],
   packaging: "None",
   releaseDate: {
-    day: 19,
-    month: 4,
-    year: 2024,
+    date: {
+      day: 19,
+      month: 4,
+      year: 2024,
+    },
+    quality: "assumed-valid",
   },
   status: "Official",
   title: "My Boy Only Breaks His Favorite Toys (Lyric Video)",

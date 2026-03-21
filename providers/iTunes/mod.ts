@@ -193,7 +193,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 				types: linkTypes,
 			}],
 			media: this.convertRawTracklist(tracks),
-			releaseDate: parseISODateTime(collection.releaseDate),
+			releaseDate: this.convertReleaseDate(parseISODateTime(collection.releaseDate)),
 			status: 'Official',
 			types,
 			packaging: 'None',

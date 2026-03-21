@@ -380,7 +380,7 @@ export class OtotoyReleaseLookup extends ReleaseLookup<OtotoyProvider, PackagePa
 			title: albumMeta.title,
 			artists: albumMeta.artists.map(this.convertRawArtist.bind(this)),
 			labels: albumMeta.label ? [this.convertRawLabel(albumMeta.label)] : undefined,
-			releaseDate: releaseDate ? parseISODateTime(releaseDate) : undefined,
+			releaseDate: this.convertReleaseDate(releaseDate ? parseISODateTime(releaseDate) : undefined),
 			media: this.convertRawTracklist(trackList),
 			status: 'Official',
 			packaging: 'None',

@@ -6,6 +6,12 @@ export type PartialDate = Partial<{
 	year: number;
 }>;
 
+export interface ReleaseDate {
+	date?: PartialDate;
+	quality: 'assumed-invalid' | 'assumed-valid' | 'none-found';
+	note?: string;
+}
+
 export function formatPartialDate(date: PartialDate) {
 	const dateComponents: string[] = [];
 

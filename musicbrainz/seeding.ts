@@ -77,7 +77,7 @@ export function createReleaseSeed(release: HarmonyRelease, options: ReleaseSeedO
 		release_group: release.releaseGroup?.mbid,
 		barcode: release.gtin?.toString(),
 		events: countries.map<ReleaseEventSeed>((country) => ({
-			date: release.releaseDate,
+			date: release.releaseDate?.date,
 			country,
 		})),
 		labels: release.labels?.map<ReleaseLabelSeed>((label) => ({

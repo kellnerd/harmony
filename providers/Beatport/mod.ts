@@ -145,7 +145,7 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 				}),
 			}],
 			gtin: rawRelease.upc ?? undefined,
-			releaseDate: parseHyphenatedDate(rawRelease.new_release_date),
+			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.new_release_date)),
 			media: [{
 				format: 'Digital Media',
 				tracklist: rawRelease.track_objects.map(this.convertRawTrack.bind(this)),

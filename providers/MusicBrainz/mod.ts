@@ -164,7 +164,7 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 					type: track.recording.video ? 'video' : 'audio',
 				})) ?? [],
 			})),
-			releaseDate: parseHyphenatedDate(rawRelease.date ?? ''),
+			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.date ?? '')),
 			labels: rawRelease['label-info'].map((info) => ({
 				name: info.label?.name,
 				catalogNumber: info['catalog-number'] ?? undefined,

@@ -152,7 +152,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,
-			releaseDate: parseHyphenatedDate(attributes.releaseDate),
+			releaseDate: this.convertReleaseDate(parseHyphenatedDate(attributes.releaseDate)),
 			copyright: copyright ? formatCopyrightSymbols(copyright) : undefined,
 			status: 'Official',
 			types,

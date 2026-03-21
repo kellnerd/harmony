@@ -287,7 +287,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,
-			releaseDate: parseHyphenatedDate(rawRelease.release_date),
+			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.release_date)),
 			copyright: this.getCopyright(rawRelease.copyrights),
 			status: 'Official',
 			types: [capitalizeReleaseType(rawRelease.album_type)],

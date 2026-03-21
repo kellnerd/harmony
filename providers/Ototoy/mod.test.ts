@@ -68,7 +68,7 @@ describe('OTOTOY provider', () => {
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
 
-				assertEquals(release.releaseDate, {
+				assertEquals(release.releaseDate?.date, {
 					day: 4,
 					month: 10,
 					year: 2023,

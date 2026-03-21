@@ -208,7 +208,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,
-			releaseDate: parseHyphenatedDate(rawRelease.release_date),
+			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.release_date)),
 			labels: splitLabels(rawRelease.label),
 			status: 'Official',
 			types: [this.convertReleaseType(rawRelease.record_type)],

@@ -22,7 +22,7 @@ import type {
 	ReleaseOptions,
 	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
-import type { PartialDate } from '@/utils/date.ts';
+import type { PartialDate, ReleaseDate } from '@/utils/date.ts';
 import type { CacheOptions, Policy, Snapshot, SnapStorage } from 'snap-storage';
 import type { MaybePromise } from 'utils/types.d.ts';
 import type { Logger } from 'std/log/logger.ts';
@@ -436,6 +436,34 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 
 	/** Converts the given provider-specific raw release metadata into a common representation. */
 	protected abstract convertRawRelease(rawRelease: RawRelease): MaybePromise<HarmonyRelease>;
+
+	protected convertReleaseDate(date?: PartialDate): ReleaseDate {
+		const launchDate = this.provider.launchDate;
+		if (
+			date === undefined ||
+			(launchDate.day === undefined && launchDate.month === undefined && launchDate.year === undefined)
+		) {
+			return {
+				date,
+				quality: 'none-found',
+			};
+		}
+
+		if (
+			!date?.year || date.year < launchDate.year! || (date.year === launchDate.year && date.month! < launchDate.month!)
+		) {
+			return {
+				date,
+				quality: 'assumed-invalid',
+				note: 'Release predates platform launch date.',
+			};
+		}
+
+		return {
+			date,
+			quality: 'assumed-valid',
+		};
+	}
 
 	/** Adds a message to the generated release info. */
 	protected addMessage(text: string, type: MessageType = 'info'): void {

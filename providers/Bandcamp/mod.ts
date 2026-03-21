@@ -13,7 +13,7 @@ import type {
 } from '@/harmonizer/types.ts';
 import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
-import { parseISODateTime, PartialDate } from '@/utils/date.ts';
+import { parseISODateTime, PartialDate, type ReleaseDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { extractDataAttribute, extractMetadataTag, extractTextFromHtml } from '@/utils/html.ts';
 import { plural, pluralWithCount } from '@/utils/plural.ts';
@@ -436,7 +436,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		};
 	}
 
-	getReleaseDate(current: AlbumCurrent | TrackCurrent): PartialDate | undefined {
+	getReleaseDate(current: AlbumCurrent | TrackCurrent): ReleaseDate | undefined {
 		let date = current.release_date ? parseISODateTime(current.release_date) : undefined;
 
 		// Use publish date if release date is before Bandcamp launch (2008-09)
@@ -445,9 +445,17 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			!date?.year || date.year < launchDate.year! || (date.year === launchDate.year && date.month! < launchDate.month!)
 		) {
 			date = current.publish_date ? parseISODateTime(current.publish_date) : undefined;
+			return {
+				date,
+				quality: date === undefined ? 'none-found' : 'assumed-valid',
+				note: 'Release predates platform launch. Using publish date instead.',
+			};
 		}
 
-		return date;
+		return {
+			date,
+			quality: date === undefined ? 'none-found' : 'assumed-valid',
+		};
 	}
 
 	async getEmbeddedPlayerRelease(albumId: number): Promise<PlayerData> {

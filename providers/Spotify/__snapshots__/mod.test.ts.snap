@@ -490,9 +490,12 @@ snapshot[`Spotify provider > release lookup > single by two artists 1`] = `
   ],
   packaging: "None",
   releaseDate: {
-    day: 16,
-    month: 8,
-    year: 2024,
+    date: {
+      day: 16,
+      month: 8,
+      year: 2024,
+    },
+    quality: "assumed-valid",
   },
   status: "Official",
   title: "Die With A Smile",
