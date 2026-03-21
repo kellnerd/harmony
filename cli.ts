@@ -13,7 +13,7 @@ if (args._.length === 1) {
 	let specifier: GTIN | URL = args._[0];
 
 	try {
-		specifier = new URL(specifier);
+		specifier = new URL(String(specifier));
 	} catch {
 		// not a valid URL, treat specifier as GTIN
 	}

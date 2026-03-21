@@ -76,7 +76,7 @@ export class CombinedReleaseLookup {
 				});
 				return false;
 			} else {
-				this.queuedReleases.push(provider.getRelease(id, this.options));
+				this.queuedReleases.push(() => provider.releaseLookup(id, this.options).getRelease());
 				this.queuedProviderNames.add(displayName);
 				this.gtinLookupProviders.delete(provider.internalName);
 				return true;
@@ -102,7 +102,7 @@ export class CombinedReleaseLookup {
 				});
 				return false;
 			} else {
-				this.queuedReleases.push(provider.getRelease(url, this.options));
+				this.queuedReleases.push(() => provider.releaseLookup(url, this.options).getRelease());
 				this.queuedProviderNames.add(displayName);
 				this.gtinLookupProviders.delete(provider.internalName);
 				return true;
@@ -143,7 +143,7 @@ export class CombinedReleaseLookup {
 			const provider = providers.findByName(providerName);
 			if (provider) {
 				if (provider.getQuality('GTIN lookup') != FeatureQuality.MISSING) {
-					this.queuedReleases.push(provider.getRelease(['gtin', this.gtin], this.options));
+					this.queuedReleases.push(() => provider.releaseLookup(['gtin', gtin.toString()], this.options).getRelease());
 					this.queuedProviderNames.add(provider.name);
 				} else {
 					this.messages.push({
@@ -183,7 +183,7 @@ export class CombinedReleaseLookup {
 			return this.cachedReleaseMap;
 		}
 
-		const releaseResults = await Promise.allSettled(this.queuedReleases);
+		const releaseResults = await Promise.allSettled(this.queuedReleases.map((_) => _()));
 		const releasesOrErrors: Array<HarmonyRelease | Error> = await Promise.all(releaseResults.map(async (result) => {
 			if (result.status === 'fulfilled') {
 				return result.value;
@@ -321,7 +321,7 @@ export class CombinedReleaseLookup {
 	/** Internal names of providers which will be used for GTIN lookups. */
 	private gtinLookupProviders: Set<string>;
 
-	private queuedReleases: Promise<HarmonyRelease>[] = [];
+	private queuedReleases: Array<() => Promise<HarmonyRelease>> = [];
 
 	/** Display names of all queued providers. */
 	private queuedProviderNames = new Set<string>();
@@ -349,7 +349,7 @@ export function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<Har
 		throw new LookupError(`No provider supports ${url}`);
 	}
 
-	return matchingProvider.getRelease(url, options);
+	return matchingProvider.releaseLookup(url, options).getRelease();
 }
 
 /**

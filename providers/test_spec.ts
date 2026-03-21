@@ -15,6 +15,7 @@ import { assertThrows } from 'std/assert/assert_throws.ts';
 import { filterValues } from '@std/collections/filter-values';
 import { describe, it } from '@std/testing/bdd';
 import { preferArray } from 'utils/array/scalar.js';
+import type { MetadataProviders } from './registry.ts';
 
 /** Specification which describes the expected behavior of a {@linkcode MetadataProvider}. */
 export interface ProviderSpecification {
@@ -36,7 +37,7 @@ export interface ProviderSpecification {
 }
 
 /** Registers test suites to compare the given provider against its specification. */
-export function describeProvider(provider: MetadataProvider, spec: ProviderSpecification) {
+export function describeProvider(provider: MetadataProviders, spec: ProviderSpecification) {
 	describeEntityUrlExtraction(provider, spec.urls);
 	describeEntityUrlConstruction(provider, spec.urls);
 	it('rejects invalid release IDs', () => {
@@ -140,7 +141,7 @@ export interface ReleaseLookupTest {
 	assert: (actualRelease: HarmonyRelease, context: Deno.TestContext) => void | Promise<void>;
 }
 
-function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookupTest[]) {
+function describeReleaseLookups(provider: MetadataProviders, tests: ReleaseLookupTest[]) {
 	describe('release lookup', () => {
 		for (const test of tests) {
 			let { description, release } = test;
@@ -159,7 +160,7 @@ function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookup
 			it(description, {
 				only: test.only,
 			}, async (context) => {
-				const actualRelease = await provider.getRelease(release, test.options);
+				const actualRelease = await provider.releaseLookup(release, test.options).getRelease();
 
 				// Remove properties which are not stable across multiple runs.
 				actualRelease.info.providers.forEach((providerInfo) => {

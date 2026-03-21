@@ -58,7 +58,7 @@ export type MetadataProviderConstructor = new (
  * Abstract metadata provider which looks up releases from a specific source.
  * Converts the raw metadata into a common representation.
  */
-export abstract class MetadataProvider {
+export abstract class MetadataProvider<Provider extends MetadataProvider<Provider> | unknown = unknown> {
 	constructor({
 		rateLimitInterval = null,
 		concurrentRequests = 1,
@@ -104,22 +104,10 @@ export abstract class MetadataProvider {
 	/** Maps MusicBrainz entity types to the corresponding entity types of the provider. */
 	abstract readonly entityTypeMap: Record<HarmonyEntityType, string | string[]>;
 
-	protected abstract releaseLookup: ReleaseLookupConstructor;
-
 	/** Country codes of regions in which the provider offers its services (optional). */
 	readonly availableRegions?: Set<CountryCode>;
 
 	readonly launchDate: PartialDate = {};
-
-	/** Looks up the release which is identified by the given specifier (URL, GTIN/barcode or provider ID). */
-	getRelease(specifier: ReleaseSpecifier, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
-		try {
-			const lookup = new this.releaseLookup(this, specifier, options);
-			return lookup.getRelease();
-		} catch (error) {
-			return Promise.reject(error);
-		}
-	}
 
 	/** Checks whether the provider supports the domain of the given URL. */
 	supportsDomain(url: URL | string): boolean {
@@ -322,15 +310,7 @@ export abstract class MetadataProvider {
 	}
 }
 
-type ReleaseLookupConstructor = new (
-	// It is probably impossible to specify the correct provider subclass here.
-	// deno-lint-ignore no-explicit-any
-	provider: any,
-	specifier: ReleaseSpecifier,
-	options: ReleaseOptions,
-) => ReleaseLookup<MetadataProvider, unknown>;
-
-export abstract class ReleaseLookup<Provider extends MetadataProvider, RawRelease> {
+export abstract class ReleaseLookup<Provider extends MetadataProvider<Provider>, RawRelease> {
 	/** Initializes the release lookup for the given release specifier. */
 	constructor(
 		protected provider: Provider,

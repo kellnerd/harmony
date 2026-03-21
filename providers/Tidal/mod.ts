@@ -70,7 +70,9 @@ export default class TidalProvider extends MetadataApiProvider {
 
 	override readonly availableRegions = new Set(availableRegions);
 
-	protected releaseLookup: typeof TidalV1ReleaseLookup | typeof TidalV2ReleaseLookup = TidalV2ReleaseLookup;
+	releaseLookup(specifier: ReleaseSpecifier, options: ReleaseOptions = {}) {
+		return new TidalV2ReleaseLookup(this, specifier, options);
+	}
 
 	override readonly launchDate: PartialDate = {
 		year: 2014,
@@ -78,14 +80,11 @@ export default class TidalProvider extends MetadataApiProvider {
 		day: 28,
 	};
 
-	override getRelease(specifier: ReleaseSpecifier, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
+	getRelease(specifier: ReleaseSpecifier, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
 		if (!options.snapshotMaxTimestamp || options.snapshotMaxTimestamp > tidalV1MaxTimestamp) {
-			this.releaseLookup = TidalV2ReleaseLookup;
-		} else {
-			this.releaseLookup = TidalV1ReleaseLookup;
+			return new TidalV2ReleaseLookup(this, specifier, options).getRelease();
 		}
-
-		return super.getRelease(specifier, options);
+		return new TidalV1ReleaseLookup(this, specifier, options).getRelease();
 	}
 
 	constructUrl(entity: EntityId): URL {

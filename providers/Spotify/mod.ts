@@ -35,6 +35,8 @@ import type {
 	HarmonyRelease,
 	HarmonyTrack,
 	LinkType,
+	ReleaseOptions,
+	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
 
 // See https://developer.spotify.com/documentation/web-api
@@ -66,7 +68,9 @@ export default class SpotifyProvider extends MetadataApiProvider {
 
 	override readonly availableRegions = new Set(availableRegions);
 
-	readonly releaseLookup = SpotifyReleaseLookup;
+	releaseLookup(specifier: ReleaseSpecifier, options: ReleaseOptions = {}) {
+		return new SpotifyReleaseLookup(this, specifier, options);
+	}
 
 	override readonly launchDate: PartialDate = {
 		year: 2008,

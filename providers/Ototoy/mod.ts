@@ -8,6 +8,8 @@ import type {
 	HarmonyTrack,
 	Label,
 	LinkType,
+	ReleaseOptions,
+	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
 import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
@@ -16,7 +18,7 @@ import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { DOMParser, HTMLDocument } from '@b-fuze/deno-dom';
 import { parseDuration } from '../../utils/time.ts';
 
-export default class OtotoyProvider extends MetadataProvider {
+export default class OtotoyProvider extends MetadataProvider<OtotoyProvider> {
 	readonly name = 'OTOTOY';
 
 	readonly supportedUrls = new URLPattern({
@@ -50,7 +52,9 @@ export default class OtotoyProvider extends MetadataProvider {
 		month: 8,
 	};
 
-	readonly releaseLookup = OtotoyReleaseLookup;
+	releaseLookup(specifier: ReleaseSpecifier, options: ReleaseOptions = {}) {
+		return new OtotoyReleaseLookup(this, specifier, options);
+	}
 
 	override extractEntityFromUrl(url: URL): EntityId | undefined {
 		const packageResult = this.supportedUrls.exec(url);
