@@ -5,9 +5,13 @@ export interface Release {
 	artists: Artist[];
 	/** Release date (YYYY-MM-DD). */
 	released: string;
+	/** Name of the country (or region) of release. */
+	country: string;
 	/** Release labels with catalog numbers. */
 	labels: Label[];
 	series: Label[];
+	/** Discogs ID of the master release. */
+	master_id: number;
 	/** Identifiers (barcode, label code, rights society, matrix etc.) */
 	identifiers: Identifier[];
 	tracklist: Track[];
@@ -57,6 +61,7 @@ export interface Track {
 	position: string;
 	title: string;
 	artists: Artist[];
+	/** Duration in m:ss format. */
 	duration: string;
 	/** Credited artists and their roles. */
 	extraartists: Artist[];

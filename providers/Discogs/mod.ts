@@ -1,5 +1,6 @@
 import type {
 	ArtistCreditName,
+	CountryCode,
 	EntityId,
 	HarmonyRelease,
 	HarmonyTrack,
@@ -10,15 +11,17 @@ import { ApiQueryOptions, CacheEntry, MetadataApiProvider, ReleaseApiLookup } fr
 import { FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
 import { cleanBarcode, uniqueGtinSet } from '@/utils/gtin.ts';
-import type { Artist, Identifier, Label, Release, Track } from './api_types.ts';
 import { isDefined } from '@/utils/predicate.ts';
+import { parseDuration } from '@/utils/time.ts';
+import type { Artist, Identifier, Label, Release, Track } from './api_types.ts';
+import { countryNameToCode } from './regions.ts';
 
 export default class DiscogsProvider extends MetadataApiProvider {
 	readonly name = 'Discogs';
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'www.discogs.com',
-		pathname: String.raw`/:locale?/:type(artist|label|release)/:id(\d+){-:slug}?`,
+		pathname: String.raw`/:locale?/:type(artist|label|release|master)/:id(\d+){-:slug}?`,
 	});
 
 	// TODO: Also try to override optional properties which are (or return) empty arrays/objects in the base class.
@@ -90,8 +93,11 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 			// status: 'Official',
 			// types,
 			// packaging: 'None',
+			releaseGroup: {
+				externalIds: this.provider.makeExternalIds({ type: 'master', id: rawRelease.master_id.toString() }),
+			},
 			images: [],
-			// availableIn: [rawRelease.country],
+			availableIn: this.convertCountry(rawRelease.country),
 			info: this.generateReleaseInfo(),
 		};
 	}
@@ -101,7 +107,7 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 			number: track.position,
 			title: track.title,
 			artists: track.artists.map(this.convertRawArtist.bind(this)),
-			// length: parseDuration(track.duration),
+			length: parseDuration(track.duration) * 1000,
 		};
 	}
 
@@ -138,6 +144,16 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 				id: label.id.toString(),
 			}),
 		};
+	}
+
+	convertCountry(countryName: string): CountryCode[] | undefined {
+		// TODO: handle groups of multiple countries and historical regions
+		const countryCode = countryNameToCode[countryName];
+		if (countryCode) {
+			return [countryCode];
+		} else {
+			this.addMessage(`Unknown country '${countryName}' was ignored`, 'warning');
+		}
 	}
 
 	findBarcode(identifiers: Identifier[]): string | undefined {
