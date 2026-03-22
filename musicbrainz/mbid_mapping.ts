@@ -196,7 +196,7 @@ async function lookupUrlToMbidMapping(
 export async function resolveReleaseMbids(release: HarmonyRelease) {
 	const log = getLogger('harmony.mbid');
 	const startTime = performance.now();
-	const { artists, labels, media } = release;
+	const { artists, labels, media, releaseGroup } = release;
 	const trackArtists = media.flatMap((medium) => medium.tracklist).flatMap((track) => track.artists ?? []);
 
 	// Cache external artist IDs for identically named artists without IDs.
@@ -225,6 +225,7 @@ export async function resolveReleaseMbids(release: HarmonyRelease) {
 	// Collect all resolvable entities, dedupe them (by reference).
 	// TODO: Share references in merge algorithm to dedupe by value?
 	const resolvableEntities: Set<ResolvableEntity> = new Set([
+		releaseGroup ?? {},
 		...releaseStubs,
 		...artists,
 		...(labels ?? []),
@@ -237,7 +238,7 @@ export async function resolveReleaseMbids(release: HarmonyRelease) {
 			requests,
 			lookedUpMbids,
 			lookedUpUrls,
-		} = await resolveMbids(resolvableEntities, ['artist', 'label', 'release']);
+		} = await resolveMbids(resolvableEntities, ['artist', 'label', 'release', 'release-group']);
 		const elapsedTime = performance.now() - startTime;
 		let message = `Resolving external IDs to MBIDs took ${elapsedTime.toFixed(0)} ms and ${
 			pluralWithCount(requests, 'API request')
