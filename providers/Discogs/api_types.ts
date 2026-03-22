@@ -14,6 +14,8 @@ export interface Release {
 	master_id: number;
 	/** Identifiers (barcode, label code, rights society, matrix etc.) */
 	identifiers: Identifier[];
+	/** Release format, including medium format, packaging, status etc. */
+	formats: ReleaseFormat[];
 	tracklist: Track[];
 	/** Credited artists and their roles. */
 	extraartists: Artist[];
@@ -71,4 +73,15 @@ export interface Identifier {
 	type: string;
 	value: string;
 	description?: string;
+}
+
+export interface ReleaseFormat {
+	/** Name of the format. CD */
+	name: string;
+	/** Numeric quantity of the format. */
+	qty: string;
+	/** Descriptions like size, speed, status etc. */
+	descriptions: string[];
+	/** Freeform text, may contain packaging. */
+	text: string;
 }

@@ -127,6 +127,8 @@ export type LinkType =
 
 /** MusicBrainz medium formats (incomplete). */
 export type MediumFormat =
+	| 'Acetate'
+	| 'Blu-ray'
 	| 'Cassette'
 	| 'CD'
 	| 'CD-R'
@@ -135,6 +137,8 @@ export type MediumFormat =
 	| 'DVD'
 	| 'DVD-Audio'
 	| 'DVD-Video'
+	| 'Flexi-disc'
+	| 'Shellac'
 	| 'Vinyl'
 	| '7" Vinyl'
 	| '12" Vinyl';

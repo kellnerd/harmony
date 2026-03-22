@@ -2,10 +2,12 @@ import type {
 	ArtistCreditName,
 	CountryCode,
 	EntityId,
+	HarmonyMedium,
 	HarmonyRelease,
 	HarmonyTrack,
 	Label as HarmonyLabel,
 	LinkType,
+	MediumFormat,
 } from '@/harmonizer/types.ts';
 import { ApiQueryOptions, CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
 import { FeatureQualityMap } from '@/providers/features.ts';
@@ -13,7 +15,8 @@ import { parseHyphenatedDate } from '@/utils/date.ts';
 import { cleanBarcode, uniqueGtinSet } from '@/utils/gtin.ts';
 import { isDefined } from '@/utils/predicate.ts';
 import { parseDuration } from '@/utils/time.ts';
-import type { Artist, Identifier, Label, Release, Track } from './api_types.ts';
+import type { Artist, Identifier, Label, Release, ReleaseFormat, Track } from './api_types.ts';
+import { mediumFormatMap } from './format.ts';
 import { countryNameToCode } from './regions.ts';
 
 export default class DiscogsProvider extends MetadataApiProvider {
@@ -85,9 +88,7 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 				url: this.provider.constructUrl(this.entity).href,
 				types: this.provider.getLinkTypesForEntity(),
 			}],
-			media: [{
-				tracklist: rawRelease.tracklist.map(this.convertRawTrack.bind(this)),
-			}],
+			media: this.convertMedia(rawRelease),
 			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.released)),
 			labels: rawRelease.labels.map(this.convertRawLabel.bind(this)),
 			// status: 'Official',
@@ -100,6 +101,22 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 			availableIn: this.convertCountry(rawRelease.country),
 			info: this.generateReleaseInfo(),
 		};
+	}
+
+	convertMedia(rawRelease: Release): HarmonyMedium[] {
+		const mediumFormats = rawRelease.formats.flatMap(this.convertFormat);
+		const media: HarmonyMedium[] = mediumFormats.map((format, index) => ({
+			number: index + 1,
+			format,
+			tracklist: [],
+		}));
+
+		if (media.length >= 1) {
+			// TODO: split flat tracklist into multiple media
+			media[0].tracklist = rawRelease.tracklist.map(this.convertRawTrack.bind(this));
+		}
+
+		return media;
 	}
 
 	convertRawTrack(track: Track): HarmonyTrack {
@@ -154,6 +171,12 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 		} else {
 			this.addMessage(`Unknown country '${countryName}' was ignored`, 'warning');
 		}
+	}
+
+	convertFormat(format: ReleaseFormat): Array<MediumFormat | undefined> {
+		const mediumFormat = mediumFormatMap[format.name];
+		const quantity = Number.parseInt(format.qty, 10);
+		return new Array(quantity).fill(mediumFormat);
 	}
 
 	findBarcode(identifiers: Identifier[]): string | undefined {
