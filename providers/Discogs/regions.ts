@@ -5,7 +5,7 @@ import type { CountryCode } from '@/harmonizer/types.ts';
  *
  * Country names extracted from "subform/view:countries" data on release edit page.
  */
-export const countryNameToCode: Record<string, CountryCode> = {
+export const countryNameToCode: Record<string, CountryCode | undefined> = {
 	Afghanistan: 'AF',
 	Albania: 'AL',
 	Algeria: 'DZ',
@@ -159,7 +159,6 @@ export const countryNameToCode: Record<string, CountryCode> = {
 	Nauru: 'NR',
 	Nepal: 'NP',
 	Netherlands: 'NL',
-	'Netherlands Antilles': 'AN',
 	'New Caledonia': 'NC',
 	'New Zealand': 'NZ',
 	Nicaragua: 'NI',
@@ -254,6 +253,7 @@ export const countryNameToCode: Record<string, CountryCode> = {
 	// Historical ISO codes
 	Czechoslovakia: 'XC',
 	'German Democratic Republic (GDR)': 'XG',
+	'Netherlands Antilles': 'AN',
 	'Serbia and Montenegro': 'CS',
 	USSR: 'SU',
 	Yugoslavia: 'YU',

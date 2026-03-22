@@ -10,12 +10,26 @@ export function regionName(code: CountryCode) {
 	});
 	code = code.toUpperCase();
 
-	// handle special codes which are used by MusicBrainz
-	if (code === 'XW') return '[Worldwide]';
-	else if (code === 'XE') return 'Europe';
+	const specialRegionName = specialRegionCodes[code];
+	if (specialRegionName) {
+		return specialRegionName;
+	}
 
 	return regionNames.of(code);
 }
+
+const specialRegionCodes: Record<string, string | undefined> = {
+	// Special codes which are used by MusicBrainz
+	XW: '[Worldwide]',
+	XE: 'Europe',
+	// Historical ISO codes
+	AN: 'Netherlands Antilles',
+	CS: 'Serbia and Montenegro',
+	SU: 'Soviet Union',
+	XC: 'Czechoslovakia',
+	XG: 'East Germany',
+	YU: 'Yugoslavia',
+};
 
 /** Formats a language's code and its optional confidence for display. */
 export function formatLanguageConfidence({ code, confidence }: Language): string {
