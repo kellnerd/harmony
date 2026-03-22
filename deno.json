@@ -4,7 +4,7 @@
 		"jsxImportSource": "preact"
 	},
 	"fmt": {
-		"exclude": ["**/*.svg"],
+		"exclude": ["**/*.svg", "./testdata/**"],
 		"lineWidth": 120,
 		"proseWrap": "preserve",
 		"singleQuote": true,
@@ -12,9 +12,11 @@
 	},
 	"imports": {
 		"@/": "./",
+		"@b-fuze/deno-dom": "jsr:@b-fuze/deno-dom@^0.1.56",
 		"@deno/gfm": "jsr:@deno/gfm@^0.8.0",
 		"@kellnerd/musicbrainz": "jsr:@kellnerd/musicbrainz@^0.4.1",
 		"@std/collections": "jsr:@std/collections@^1.0.10",
+		"@std/dotenv": "jsr:@std/dotenv@^0.225.5",
 		"@std/path": "jsr:@std/path@^1.0.8",
 		"@std/testing": "jsr:@std/testing@^1.0.9",
 		"@std/uuid": "jsr:@std/uuid@^1.0.6",

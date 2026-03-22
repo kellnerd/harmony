@@ -22,7 +22,7 @@ export default function ReleaseLookup({
 	formAction = '',
 }: ReleaseLookupProps) {
 	const regionValue = regions.join(',');
-	const isActiveLookup = (externalUrl !== '') || (gtin !== '' && Boolean(enabledProviders?.size));
+	const isActiveLookup = (externalUrl !== '') || (gtin !== '') || Boolean(enabledProviders?.size);
 	if (!isActiveLookup) {
 		enabledProviders = defaultProviders;
 	}

@@ -2,6 +2,7 @@ import { urlToFilePath } from './file_path.ts';
 
 import { assert } from 'std/assert/assert.ts';
 import { assertEquals } from 'std/assert/assert_equals.ts';
+import { assertNotEquals } from 'std/assert/assert_not_equals.ts';
 import { SEPARATOR } from 'std/path/constants.ts';
 import { describe, it } from '@std/testing/bdd';
 
@@ -40,6 +41,7 @@ describe('urlToFilePath', () => {
 			maxLength,
 		);
 		assert(pathSegments.every((segment) => segment.length <= maxLength));
+		assertEquals(pathSegments, ['https!', 'com.example', 'all-work-and#65383ca']);
 	});
 
 	it('decodes URI components', async () => {
@@ -47,5 +49,21 @@ describe('urlToFilePath', () => {
 			await urlToPathSegments('https://example.com/spaced%20path/tést?k€y=valµe#h%C3%A4sh'),
 			['https!', 'com.example', 'spaced path', 'tést!k€y=valµe#häsh'],
 		);
+	});
+
+	it('can avoid a name conflict between file and directory', async () => {
+		const fileUrl = new URL('file:///resource');
+		const folderUrl = new URL('file:///resource/');
+
+		const filePath = await urlToFilePath(fileUrl);
+		const folderPath = await urlToFilePath(folderUrl);
+		assertEquals(filePath, folderPath, 'Paths conflict by default');
+
+		const safeOptions = { ignoreTrailingSlash: false };
+		const safeFilePath = await urlToFilePath(fileUrl, safeOptions);
+		const safeFolderPath = await urlToFilePath(folderUrl, safeOptions);
+		assertNotEquals(safeFilePath, safeFolderPath, 'Safe paths do not conflict');
+		assertEquals(safeFolderPath, folderPath, 'Folder path is not affected by safe options');
+		assertEquals(safeFilePath, folderPath + '!', 'Safe file path has a special suffix');
 	});
 });

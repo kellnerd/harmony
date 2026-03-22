@@ -51,7 +51,7 @@ export default class SpotifyProvider extends MetadataApiProvider {
 	});
 
 	override readonly features: FeatureQualityMap = {
-		'cover size': 640,
+		'cover size': 2000,
 		'duration precision': DurationPrecision.MS,
 		'GTIN lookup': FeatureQuality.GOOD,
 		'MBID resolving': FeatureQuality.GOOD,
@@ -61,6 +61,7 @@ export default class SpotifyProvider extends MetadataApiProvider {
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: 'album',
+		recording: 'track',
 	};
 
 	override readonly availableRegions = new Set(availableRegions);
@@ -237,20 +238,20 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 
 		// Load full details including ISRCs
 		if (this.options.withISRC) {
-			return this.getRawTrackDetails(allTracks);
-		} else {
-			return allTracks;
+			// Anticipate failures after the removal of the `/tracks` API endpoint.
+			// TODO: Update condition to use the timestamp once the endpoint is gone.
+			try {
+				return this.getRawTrackDetails(allTracks);
+			} catch (error) {
+				this.addMessage(`Failed to load track details, ISRCs will be missing: ${error}`, 'error');
+			}
 		}
+		return allTracks;
 	}
 
 	private async getRawTrackDetails(simplifiedTracks: SimplifiedTrack[]): Promise<Track[]> {
 		const allTracks: Track[] = [];
-
-		// For unavailable releases, Spotify tries to be smart and substitute track
-		// IDs with those of similar but available tracks, for which we have no use.
-		// In that case (and only then) the original IDs can be obtained from the
-		// optional `linked_from` track, otherwise we fall back to the regular ID.
-		const trackIds = simplifiedTracks.map((track) => track.linked_from?.id ?? track.id);
+		const trackIds = simplifiedTracks.map(this.getTrackId.bind(this));
 
 		// The SimplifiedTrack entries do not contain ISRCs.
 		// Perform track queries to obtain the full details of all tracks.
@@ -280,19 +281,19 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 		return {
 			title: rawRelease.name,
 			artists: rawRelease.artists.map(this.convertRawArtist.bind(this)),
-			gtin: rawRelease.external_ids.ean || rawRelease.external_ids.upc,
+			gtin: rawRelease.external_ids?.ean || rawRelease.external_ids?.upc,
 			externalLinks: [{
 				url: rawRelease.external_urls.spotify,
 				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,
-			releaseDate: parseHyphenatedDate(rawRelease.release_date),
+			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.release_date)),
 			copyright: this.getCopyright(rawRelease.copyrights),
 			status: 'Official',
 			types: [capitalizeReleaseType(rawRelease.album_type)],
 			packaging: 'None',
 			images: artwork ? [artwork] : [],
-			labels: splitLabels(rawRelease.label),
+			labels: rawRelease.label ? splitLabels(rawRelease.label) : undefined,
 			availableIn: rawRelease.available_markets,
 			info: this.generateReleaseInfo(),
 		};
@@ -337,11 +338,24 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			artists: track.artists.map(this.convertRawArtist.bind(this)),
 			availableIn: track.available_markets,
 			recording: {
-				externalIds: this.provider.makeExternalIds({ type: 'track', id: track.id }),
+				externalIds: this.provider.makeExternalIds({ type: 'track', id: this.getTrackId(track) }),
 			},
 		};
 
 		return result;
+	}
+
+	/**
+	 * Returns the correct track ID for the given track.
+	 *
+	 * For unavailable releases, Spotify tries to be smart and substitute track IDs with those of similar but available
+	 * tracks, for which we have no use. In that case (and only then) the original IDs can be obtained from the optional
+	 * `linked_from` track, otherwise we fall back to the regular ID.
+	 *
+	 * @see https://developer.spotify.com/documentation/web-api/concepts/track-relinking
+	 */
+	private getTrackId(track: SimplifiedTrack): string {
+		return track.linked_from?.id ?? track.id;
 	}
 
 	private convertRawArtist(artist: SimplifiedArtist): ArtistCreditName {

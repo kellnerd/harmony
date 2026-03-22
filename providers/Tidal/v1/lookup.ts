@@ -108,7 +108,7 @@ export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album>
 				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,
-			releaseDate: parseHyphenatedDate(rawRelease.releaseDate),
+			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.releaseDate)),
 			copyright: rawRelease.copyright ? formatCopyrightSymbols(rawRelease.copyright) : undefined,
 			status: 'Official',
 			types: [capitalizeReleaseType(rawRelease.type)],

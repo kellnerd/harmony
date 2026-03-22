@@ -1,0 +1,52 @@
+export interface ApiArgs {
+	mountPoint: string;
+	labelId: string;
+	materialNo: string;
+}
+
+export interface PackageMeta {
+	artistName: string;
+	artistNo: number;
+	cdPartNo: string | null;
+	fullsizeimage: string;
+	title: string;
+	labelCode: string;
+	labelcompanyname: string;
+	master: string;
+	distPartNo: string;
+	startDate: string;
+	mediaFormatNo: MediaFormat;
+	mediaType: MediaType;
+	trackList: Track[];
+}
+
+export interface Track {
+	arranger: string | null;
+	composer: string | null;
+	/** Lyricist name */
+	lyrics: string | null;
+
+	artistName: string;
+	artistNo: number;
+	/** Track duration in seconds */
+	duration: number;
+	mediaFormatNo: MediaFormat;
+	mediaType: MediaType;
+	title: string;
+	trackNo: number;
+}
+
+export enum MediaFormat {
+	Music = 10,
+	Video = 11,
+	HiRes = 12,
+	Lossless = 15,
+}
+
+export enum MediaType {
+	AAC = 6,
+	AVC_H264 = 7,
+	FLAC = 8,
+	DSD_DSF = 9,
+	DSD_DFF = 10,
+}

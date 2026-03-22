@@ -1,29 +1,34 @@
 export type SingleDataDocument<T> = {
 	data: T;
 	links: ResourceLinks;
-	included:
-		| AlbumsResource[]
-		| ArtistsResource[]
-		| ArtworksResource[]
-		| TracksResource[]
-		| VideosResource[]
-		| ProvidersResource[];
+	included: IncludedResource[];
 };
 
 export type MultiDataDocument<T> = {
 	data: T[];
 	links: ResourceLinks;
-	included:
-		| AlbumsResource[]
-		| ArtistsResource[]
-		| ArtworksResource[]
-		| TracksResource[]
-		| VideosResource[]
-		| ProvidersResource[];
+	included: IncludedResource[];
 };
 
+export type IncludedResource =
+	| AlbumsResource
+	| ArtistsResource
+	| ArtworksResource
+	| TracksResource
+	| VideosResource
+	| ProvidersResource;
+
 // FIXME: complete list?
-export type ResourceType = 'albums' | 'artists' | 'artworks' | 'providers' | 'tracks' | 'videos';
+export type ResourceType = IncludedResource['type'];
+
+export type ResourceTypeMap = {
+	albums: AlbumsResource;
+	artists: ArtistsResource;
+	artworks: ArtworksResource;
+	providers: ProvidersResource;
+	tracks: TracksResource;
+	videos: VideosResource;
+};
 
 export type Availability = 'STREAM' | 'DJ' | 'STEM';
 
@@ -46,7 +51,8 @@ export type AlbumsAttributes = {
 	explicit: boolean;
 	/** Release date in YYYY-MM-DD format */
 	releaseDate: string;
-	copyright?: string;
+	/** Copyright text. No longer a plain string since 2025-09-06. */
+	copyright?: string | { text: string };
 	/** Album popularity (ranged in 0.00 ... 1.00). Conditionally visible */
 	popularity: number;
 	/** Defines an album availability e.g. for streaming, DJs, stems */
@@ -61,12 +67,12 @@ export type AlbumsAttributes = {
 };
 
 export type AlbumsRelationships = {
-	artists: MultiDataRelationship;
-	similarAlbums: MultiDataRelationship;
+	artists: MultiDataRelationship<'artists'>;
+	similarAlbums: MultiDataRelationship<'albums'>;
 	/** Replaces {@linkcode AlbumsAttributes.imageLinks} and {@linkcode AlbumsAttributes.videoLinks}. */
-	coverArt?: MultiDataRelationship;
+	coverArt?: MultiDataRelationship<'artworks'>;
 	items: AlbumItemMultiDataRelationship;
-	providers: MultiDataRelationship;
+	providers: MultiDataRelationship<'providers'>;
 };
 
 export type ArtistsResource = {
@@ -89,12 +95,12 @@ export type ArtistsAttributes = {
 };
 
 export type ArtistsRelationships = {
-	similarArtists: MultiDataRelationship;
-	albums: MultiDataRelationship;
+	similarArtists: MultiDataRelationship<'artists'>;
+	albums: MultiDataRelationship<'albums'>;
 	roles: MultiDataRelationship;
-	videos: MultiDataRelationship;
+	videos: MultiDataRelationship<'videos'>;
 	// trackProviders: ArtistTrackProvidersMultiDataRelationship; // FIXME
-	tracks: MultiDataRelationship;
+	tracks: MultiDataRelationship<'tracks'>;
 	radio: MultiDataRelationship;
 };
 
@@ -121,10 +127,15 @@ export type TracksResource = {
 
 export type TracksAttributes = {
 	title: string;
-	version: string;
+	/**
+	 * Version information, displayed as extra title information in parentheses after the title.
+	 * Optional attribute that is often `null`, but may be missing in older responses.
+	 */
+	version?: string | null;
 	isrc: string;
 	/** ISO-8601 duration (e.g. P41M5S) */
 	duration: string;
+	/** Copyright text. */
 	copyright: string;
 	explicit: boolean;
 	/** Track popularity (ranged in 0.00 ... 1.00). Conditionally visible */
@@ -136,10 +147,10 @@ export type TracksAttributes = {
 };
 
 export type TracksRelationships = {
-	albums: MultiDataRelationship;
-	artists: MultiDataRelationship;
-	similarTracks: MultiDataRelationship;
-	providers: MultiDataRelationship;
+	albums: MultiDataRelationship<'albums'>;
+	artists: MultiDataRelationship<'artists'>;
+	similarTracks: MultiDataRelationship<'tracks'>;
+	providers: MultiDataRelationship<'providers'>;
 	radio: MultiDataRelationship;
 };
 
@@ -158,11 +169,11 @@ export type VideosAttributes = TracksAttributes & {
 };
 
 export type VideosRelationships = {
-	albums: MultiDataRelationship;
-	artists: MultiDataRelationship;
+	albums: MultiDataRelationship<'albums'>;
+	artists: MultiDataRelationship<'artists'>;
 	/** Replaces {@linkcode AlbumsAttributes.imageLinks} and {@linkcode AlbumsAttributes.videoLinks}. */
-	thumbnailArt?: MultiDataRelationship;
-	providers: MultiDataRelationship;
+	thumbnailArt?: MultiDataRelationship<'artworks'>;
+	providers: MultiDataRelationship<'providers'>;
 };
 
 export type ProvidersResource = {
@@ -177,14 +188,14 @@ export type ProvidersAttributes = {
 	name: string;
 };
 
-export type MultiDataRelationship = {
-	data: ResourceIdentifier[];
+export type MultiDataRelationship<T extends ResourceType = ResourceType> = {
+	data: ResourceIdentifier<T>[];
 	links: ResourceLinks;
 };
 
-export type ResourceIdentifier = {
+export type ResourceIdentifier<T extends ResourceType = ResourceType> = {
 	id: string;
-	type: string;
+	type: T;
 };
 
 export type ResourceLinks = {
@@ -199,7 +210,7 @@ export type AlbumItemMultiDataRelationship = {
 	links: ResourceLinks;
 };
 
-export type AlbumItemResourceIdentifier = ResourceIdentifier & {
+export type AlbumItemResourceIdentifier = ResourceIdentifier<'tracks' | 'videos'> & {
 	meta: AlbumItemResourceIdentifierMeta;
 };
 

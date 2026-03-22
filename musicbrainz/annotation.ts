@@ -1,5 +1,5 @@
 import { formatTimestampAsISODate, getMaxCacheTimestamp } from '@/harmonizer/timestamp.ts';
-import type { CountryCode, HarmonyRelease } from '@/harmonizer/types.ts';
+import type { CountryCode, HarmonyRelease, MergedHarmonyRelease } from '@/harmonizer/types.ts';
 import { formatRegionList } from '@/utils/regions.ts';
 import { determineReleaseEventCountries } from './release_countries.ts';
 import { transform } from 'utils/string/transform.js';
@@ -15,14 +15,19 @@ export interface AnnotationIncludes {
 }
 
 /** Builds a MusicBrainz annotation from the given release data. */
-export function buildAnnotation(release: HarmonyRelease, include: AnnotationIncludes = {}): string {
+export function buildAnnotation(
+	release: HarmonyRelease | MergedHarmonyRelease,
+	include: AnnotationIncludes = {},
+): string {
 	const sections: string[] = [];
 
 	if (include.copyright && release.copyright) {
 		sections.push(`Copyright: ${release.copyright}`);
 	}
 	if (include.textCredits && release.credits) {
-		sections.push(`=== Credits from ${(release.info.sourceMap?.credits)!} ===`, release.credits);
+		// In case the release is not the result of a merge, the sole provider is the source.
+		const creditsSource = (release as MergedHarmonyRelease).info.sourceMap.credits ?? release.info.providers[0].name;
+		sections.push(`=== Credits from ${creditsSource} ===`, release.credits);
 	}
 	if (include.availability) {
 		const { availableIn, excludedFrom } = release;

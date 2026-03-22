@@ -811,9 +811,13 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
   ],
   packaging: "None",
   releaseDate: {
-    day: 21,
-    month: 11,
-    year: 1975,
+    date: {
+      day: 21,
+      month: 11,
+      year: 1975,
+    },
+    note: "Release predates platform launch date.",
+    quality: "assumed-invalid",
   },
   status: "Official",
   title: "A Night at the Opera (Deluxe Edition)",

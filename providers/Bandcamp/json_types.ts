@@ -51,6 +51,7 @@ interface TrAlbum {
 	licensed_version_ids: null;
 	package_associated_license_id: null;
 	has_video: null;
+	/** Indicates whether the release is for paid subscribers only */
 	tralbum_subscriber_only: boolean;
 	/** Indicates whether the release is currently available for pre-order (`null` for standalone tracks). */
 	album_is_preorder: boolean | null;

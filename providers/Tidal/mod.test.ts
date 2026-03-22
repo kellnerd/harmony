@@ -1,11 +1,12 @@
 // Automatically load .env environment variable file (before anything else).
-import 'std/dotenv/load.ts';
+import '@std/dotenv/load';
 
 import type { HarmonyRelease } from '@/harmonizer/types.ts';
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
 import { stubProviderLookups, stubTokenRetrieval } from '@/providers/test_stubs.ts';
 import { downloadMode } from '@/utils/fetch_stub.ts';
 import { assert } from 'std/assert/assert.ts';
+import { assertEquals } from 'std/assert/assert_equals.ts';
 import { afterAll, describe } from '@std/testing/bdd';
 import type { Stub } from '@std/testing/mock';
 import { assertSnapshot } from '@std/testing/snapshot';
@@ -67,6 +68,7 @@ describe('Tidal provider', () => {
 			serializedId: 'video/358461354',
 			isCanonical: true,
 		}],
+		invalidIds: ['text'],
 		releaseLookup: [{
 			description: 'live album with video tracks and featured artist (v1 API)',
 			release: new URL('https://tidal.com/album/130201923'),
@@ -78,8 +80,8 @@ describe('Tidal provider', () => {
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
-				assert(allTracks[5].artists?.length === 2, 'Track 6 should have two artists');
-				assert(allTracks[8].type === 'video', 'Track 9 should be a video');
+				assertEquals(allTracks[5].artists?.length, 2, 'Track 6 should have two artists');
+				assertEquals(allTracks[8].type, 'video', 'Track 9 should be a video');
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
 			},
 		}, {
@@ -93,16 +95,16 @@ describe('Tidal provider', () => {
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
-				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
+				assertEquals(allTracks[0].artists?.length, 2, 'Main track should have two artists');
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
-				assert(release.images?.length === 1, 'Release should have a cover');
+				assertEquals(release.images?.length, 1, 'Release should have a cover');
 				assert(!apiUrlIncludes(release).includes('coverArt'), 'API URL should not contain coverArt include');
 			},
 		}, {
 			description: 'single by two artists (v2 API, with include=coverArt)',
 			release: new URL('https://tidal.com/album/381265361'),
 			assert: (release) => {
-				assert(release.images?.length === 1, 'Release should have a cover');
+				assertEquals(release.images?.length, 1, 'Release should have a cover');
 				assert(apiUrlIncludes(release).includes('coverArt'), 'API URL should contain coverArt include');
 			},
 		}, {
@@ -116,17 +118,41 @@ describe('Tidal provider', () => {
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
 				const videoTrack = release.media[0].tracklist[0];
-				assert(videoTrack.type === 'video', 'Only track should be a video');
+				assertEquals(videoTrack.type, 'video', 'Only track should be a video');
 				assert(videoTrack.isrc, 'Video should have an ISRC');
-				assert(release.images?.length === 1, 'Video should have a cover/thumbnail');
+				assertEquals(release.images?.length, 1, 'Video should have a cover/thumbnail');
 				assert(!apiUrlIncludes(release).includes('thumbnailArt'), 'API URL should not contain thumbnailArt include');
 			},
 		}, {
 			description: 'lyric video (v2 API, with include=thumbnailArt)',
 			release: new URL('https://tidal.com/video/358461354'),
 			assert: (release) => {
-				assert(release.images?.length === 1, 'Video should have a cover/thumbnail');
+				assertEquals(release.images?.length, 1, 'Video should have a cover/thumbnail');
 				assert(apiUrlIncludes(release).includes('thumbnailArt'), 'API URL should contain thumbnailArt include');
+			},
+		}, {
+			description: 'release with paginated tracklist and version info (v2 API)',
+			release: new URL('https://tidal.com/album/396698918'),
+			assert: async (release, ctx) => {
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assertEquals(allTracks.length, 46, 'Failed to load all tracks of the paginated tracklist');
+				await assertSnapshot(ctx, allTracks.at(-1), 'Failed to load all data for the last track');
+				const trackWithVersion = allTracks[7];
+				assertEquals(trackWithVersion.title, 'CELESTIAL (DUB)', 'Track title should contain version info as ETI');
+			},
+		}, {
+			description: 'release with missing tracks and missing artist (v2 API)',
+			release: new URL('https://tidal.com/album/443692756'),
+			options: {
+				regions: new Set(['SE']),
+			},
+			assert: async (release, ctx) => {
+				const tracklist = release.media[0].tracklist;
+				assertEquals(tracklist.length, 10, 'Release should have 10 tracks');
+				await assertSnapshot(ctx, tracklist[0], 'Track 1 has a placeholder artist');
+				assertEquals(tracklist[1].title, '[unknown]', 'Track 2 is a placeholder');
+				await assertSnapshot(ctx, release.artists, 'Release has a placeholder artist');
+				await assertSnapshot(ctx, release.info.messages, 'Lookup generates warnings for missing tracks and artist');
 			},
 		}],
 	});

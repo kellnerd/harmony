@@ -18,12 +18,18 @@ const encoder = new TextEncoder();
 export async function urlToFilePath(url: URL, {
 	baseDir = '.',
 	segmentMaxLength = 64,
+	ignoreTrailingSlash = true,
 } = {}): Promise<string> {
 	// Reverse domain names to allow hierarchical sorting of the resulting paths.
 	// Skip this step if the hostname is an IPv4 (which contains dots, but no letters).
 	const { hostname } = url;
 	if (/[a-z]/i.test(hostname)) {
 		url.hostname = hostname.split('.').reverse().join('.');
+	}
+
+	if (!ignoreTrailingSlash && !url.search && !url.pathname.endsWith('/')) {
+		// Use an empty search query to prevent name conflict between a file and a folder.
+		url.href += '?';
 	}
 
 	const pathSegments = url.href.split('/').map(async (segment) => {

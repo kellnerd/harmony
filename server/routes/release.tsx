@@ -1,4 +1,4 @@
-import { MessageBox } from '@/server/components/MessageBox.tsx';
+import { ErrorMessageBox } from '@/server/components/MessageBox.tsx';
 import { Release } from '@/server/components/Release.tsx';
 import ReleaseLookup from '@/server/components/ReleaseLookup.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
@@ -10,21 +10,29 @@ import { resolveReleaseMbids } from '@/musicbrainz/mbid_mapping.ts';
 import { defaultProviderPreferences } from '@/providers/mod.ts';
 import { createReleasePermalink } from '@/server/permalink.ts';
 import { extractReleaseLookupState } from '@/server/state.ts';
-import { LookupError, type ProviderError } from '@/utils/errors.ts';
+import { LookupError } from '@/utils/errors.ts';
 import { filterErrorEntries } from '@/utils/record.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 import { join } from 'std/url/join.ts';
 
-import type { GTIN, HarmonyRelease, ProviderInfo, ProviderReleaseMap, ReleaseOptions } from '@/harmonizer/types.ts';
+import type {
+	GTIN,
+	MergedHarmonyRelease,
+	ProviderInfo,
+	ProviderReleaseMap,
+	ReleaseOptions,
+} from '@/harmonizer/types.ts';
 
 const seederTargetUrl = join(musicbrainzTargetServer, 'release/add');
+// Skip MusicBrainz "Confirm Form Submission" page.
+seederTargetUrl.searchParams.set('skip_confirmation', '1');
 
 export default defineRoute(async (req, ctx) => {
 	const seederSourceUrl = ctx.url;
 	const errors: Error[] = [];
-	let release: HarmonyRelease | undefined;
+	let release: MergedHarmonyRelease | undefined;
 	let releaseMap: ProviderReleaseMap | undefined;
 	let enabledProviders: Set<string> | undefined = undefined;
 	let gtinInput: GTIN = '', urlInput = '', regionsInput: string[] = [];
@@ -57,7 +65,9 @@ export default defineRoute(async (req, ctx) => {
 		if (providerIds.length || urls.length || gtin && providers?.size) {
 			const lookup = new CombinedReleaseLookup({ gtin, providerIds, urls }, options);
 			releaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
-			release = await lookup.getMergedRelease(defaultProviderPreferences);
+			release = await lookup.getMergedRelease({
+				prefer: defaultProviderPreferences,
+			});
 
 			// Resolving MBIDs is expensive, skip this step for fast permalinks.
 			if (snapshotMaxTimestamp === undefined) {
@@ -132,15 +142,7 @@ export default defineRoute(async (req, ctx) => {
 						</a>
 					</p>
 				)}
-				{errors.map((error) => (
-					<MessageBox
-						message={{
-							provider: (error as ProviderError).providerName,
-							text: error.message,
-							type: 'error',
-						}}
-					/>
-				))}
+				{errors.map((error, index) => <ErrorMessageBox error={error} currentUrl={ctx.url} key={index} />)}
 				{release && <Release release={release} releaseMap={releaseMap} />}
 				{release && (
 					<div class='row'>

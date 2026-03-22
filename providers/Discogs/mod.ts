@@ -85,7 +85,7 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 			media: [{
 				tracklist: rawRelease.tracklist.map(this.convertRawTrack.bind(this)),
 			}],
-			releaseDate: parseHyphenatedDate(rawRelease.released),
+			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.released)),
 			labels: rawRelease.labels.map(this.convertRawLabel.bind(this)),
 			// status: 'Official',
 			// types,

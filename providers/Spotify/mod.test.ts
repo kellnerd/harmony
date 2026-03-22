@@ -1,11 +1,12 @@
 // Automatically load .env environment variable file (before anything else).
-import 'std/dotenv/load.ts';
+import '@std/dotenv/load';
 
 import type { ReleaseOptions } from '@/harmonizer/types.ts';
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
 import { stubProviderLookups, stubTokenRetrieval } from '@/providers/test_stubs.ts';
 import { downloadMode } from '@/utils/fetch_stub.ts';
 import { assert } from 'std/assert/assert.ts';
+import { assertEquals } from 'std/assert/assert_equals.ts';
 import { afterAll, describe } from '@std/testing/bdd';
 import type { Stub } from '@std/testing/mock';
 import { assertSnapshot } from '@std/testing/snapshot';
@@ -14,7 +15,9 @@ import SpotifyProvider from './mod.ts';
 
 describe('Spotify provider', () => {
 	const spotify = new SpotifyProvider(makeProviderOptions());
-	const stubs: Stub[] = [stubProviderLookups(spotify)];
+	const stubs: Stub[] = [stubProviderLookups(spotify, {
+		ignoreTrailingSlash: false,
+	})];
 
 	if (!downloadMode) {
 		stubs.push(stubTokenRetrieval(spotify));
@@ -50,6 +53,7 @@ describe('Spotify provider', () => {
 			id: { type: 'track', id: '1EDPVGbyPKJPeGqATwXZvN' },
 			isCanonical: true,
 		}],
+		invalidIds: ['https://open.spotify.com/url'],
 		releaseLookup: [{
 			description: 'single by two artists',
 			release: new URL('https://open.spotify.com/album/10FLjwfpbxLmW8c25Xyc2N'),
@@ -57,7 +61,7 @@ describe('Spotify provider', () => {
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
-				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
+				assertEquals(allTracks[0].artists?.length, 2, 'Main track should have two artists');
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
 			},
 		}, {
@@ -65,8 +69,36 @@ describe('Spotify provider', () => {
 			release: '10FLjwfpbxLmW8c25Xyc2N', // same single as in the previous test
 			assert: (release) => {
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
-				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
+				assertEquals(allTracks[0].artists?.length, 2, 'Main track should have two artists');
 				assert(allTracks.every((track) => !track.isrc), 'Tracks should not have an ISRC');
+			},
+		}, {
+			description: 'find release by (zero-padded) GTIN',
+			release: 602475093060, // same single as in the previous test
+			assert: (release) => {
+				assertEquals(release.gtin, '00602475093060', 'Spotify GTIN should be zero-padded');
+				assert(
+					release.externalLinks.find((link) => link.url === 'https://open.spotify.com/album/10FLjwfpbxLmW8c25Xyc2N'),
+					'GTIN search did not return the expected release',
+				);
+			},
+		}, {
+			description: 'unavailable VA compilation with paginated tracklist',
+			release: new URL('https://open.spotify.com/album/32nryzA6XBCX9ZUspVc1yz'),
+			assert: (release) => {
+				assertEquals(release.availableIn?.length, 0, 'Release is no longer available in any region');
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assertEquals(allTracks.length, 55, 'Release should have 55 tracks');
+				assertEquals(allTracks[0].recording?.externalIds, [{
+					id: '2PgUEovk43jcRT7xkRjXfa',
+					provider: 'spotify',
+					type: 'track',
+				}], 'Track 1 has its original track ID, not the ID of the replacement track');
+				assertEquals(allTracks[54].recording?.externalIds, [{
+					id: '7qr3YdKMUGaTfCNXnH09Zn',
+					provider: 'spotify',
+					type: 'track',
+				}], 'Track 55 has its original track ID, not the ID of the replacement track');
 			},
 		}],
 	});

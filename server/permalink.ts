@@ -1,9 +1,17 @@
 import { getMaxCacheTimestamp } from '@/harmonizer/timestamp.ts';
-import type { ReleaseInfo } from '@/harmonizer/types.ts';
+import type { ProviderName, ReleaseInfo } from '@/harmonizer/types.ts';
 import { isDefined } from '@/utils/predicate.ts';
 
+/** Options how a lookup state should be encoded. */
+export interface LookupStateOptions {
+	/** Include a timestamp for usage as a permalink. */
+	permalink?: boolean;
+	/** Prefer the URL over the ID for the given providers, or all providers. */
+	preferUrlFor?: ProviderName[] | 'all';
+}
+
 /** Encodes the given release info into release lookup state query parameters. */
-export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
+export function encodeReleaseLookupState(info: ReleaseInfo, options: LookupStateOptions = {}): URLSearchParams {
 	const providersLookedUpByGtin = info.providers.filter((provider) => provider.lookup.method === 'gtin');
 	const providersLookedUpById = info.providers.filter((provider) =>
 		provider.lookup.method === 'id' && !provider.isTemplate
@@ -11,10 +19,14 @@ export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
 	const providersUsedAsTemplate = info.providers.filter((provider) => provider.isTemplate);
 	const usedRegion = info.providers.map((provider) => provider.lookup.region).find(isDefined);
 
-	// Add provider IDs for all providers which were looked up by ID or URL.
-	const state = new URLSearchParams(
-		providersLookedUpById.map((provider) => [provider.internalName, provider.id]),
-	);
+	// Add provider IDs (or URLs, if preferred) for all providers which were looked up by ID or URL.
+	const state = new URLSearchParams(providersLookedUpById.map((provider) => {
+		if (options.preferUrlFor === 'all' || options.preferUrlFor?.includes(provider.name)) {
+			return ['url', provider.url];
+		} else {
+			return [provider.internalName, provider.id];
+		}
+	}));
 
 	if (providersLookedUpByGtin.length) {
 		// In an ideal world, a GTIN is just a number, but we have providers where zero-padding matters.
@@ -40,10 +52,12 @@ export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
 		state.append('region', usedRegion);
 	}
 
-	// Maximum timestamp can be used to load the latest snapshot up to this timestamp for each provider.
-	const maxTimestamp = getMaxCacheTimestamp(info);
-	if (maxTimestamp) {
-		state.append('ts', maxTimestamp.toFixed(0));
+	if (options.permalink) {
+		// Maximum timestamp can be used to load the latest snapshot up to this timestamp for each provider.
+		const maxTimestamp = getMaxCacheTimestamp(info);
+		if (maxTimestamp) {
+			state.append('ts', maxTimestamp.toFixed(0));
+		}
 	}
 
 	return state;
@@ -56,7 +70,9 @@ export function encodeReleaseLookupState(info: ReleaseInfo): URLSearchParams {
  */
 export function createReleasePermalink(info: ReleaseInfo, baseUrl: URL): URL {
 	const permalink = new URL('release', baseUrl);
-	permalink.search = encodeReleaseLookupState(info).toString();
+	permalink.search = encodeReleaseLookupState(info, {
+		permalink: true,
+	}).toString();
 
 	return permalink;
 }

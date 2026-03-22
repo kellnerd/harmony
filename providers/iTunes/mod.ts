@@ -1,6 +1,7 @@
 import { availableRegions } from './regions.ts';
 import { type ApiQueryOptions, type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
+import { fillMediumsTracklistGaps } from '@/harmonizer/tracklist_gap.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
 
@@ -25,7 +26,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '{geo.}?(itunes|music).apple.com',
-		pathname: String.raw`/:region(\w{2})?/:type(album|artist|song)/:slug?/{id}?:id(\d+)`,
+		pathname: String.raw`/:region(\w{2})?/:type(album|artist|song|music-video)/:slug?/{id}?:id(\d+)`,
 	});
 
 	override readonly features: FeatureQualityMap = {
@@ -38,6 +39,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: 'album',
+		recording: ['song', 'music-video'],
 	};
 
 	override readonly availableRegions = new Set(availableRegions);
@@ -134,7 +136,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		// Skip bonus items like booklets.
 		const validTrackKinds: Kind[] = ['song', 'music-video'];
 		const tracks = data.results.filter((result) =>
-			result.wrapperType === 'track' && result.collectionId === collection.collectionId &&
+			result.wrapperType === 'track' && 'collectionId' in result && result.collectionId === collection.collectionId &&
 			validTrackKinds.includes(result.kind)
 		) as Track[];
 
@@ -144,7 +146,9 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		}
 
 		// Warn about results which belong to a different collection.
-		const skippedResults = data.results.filter((result) => result.collectionId !== collection.collectionId);
+		const skippedResults = data.results.filter((result) =>
+			'collectionId' in result && result.collectionId !== collection.collectionId
+		) as Array<Collection | Track>;
 		if (skippedResults.length) {
 			const uniqueSkippedIds = [...new Set(skippedResults.map((result) => result.collectionId))];
 			const skippedUrls = uniqueSkippedIds.map((id) =>
@@ -189,7 +193,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 				types: linkTypes,
 			}],
 			media: this.convertRawTracklist(tracks),
-			releaseDate: parseISODateTime(collection.releaseDate),
+			releaseDate: this.convertReleaseDate(parseISODateTime(collection.releaseDate)),
 			status: 'Official',
 			types,
 			packaging: 'None',
@@ -207,6 +211,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		}
 
 		const mediumCount = tracklist[0].discCount;
+		const totalTrackCount = tracklist[0].trackCount;
 		const media: HarmonyMedium[] = new Array(mediumCount).fill(null).map((_, index) => ({
 			format: 'Digital Media',
 			number: index + 1,
@@ -248,6 +253,14 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 				},
 			});
 		});
+
+		if (tracklist.length < totalTrackCount) {
+			this.addMessage(
+				`The API returned only ${tracklist.length} of ${totalTrackCount} tracks for ${this.lookup.region}, other regions may have more`,
+				'warning',
+			);
+			fillMediumsTracklistGaps(media, totalTrackCount);
+		}
 
 		return media;
 	}

@@ -12,7 +12,7 @@ export default class BeatportProvider extends MetadataProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'www.beatport.com',
-		pathname: '/:language(\\w{2})?/:type(artist|label|release|track)/:slug/:id',
+		pathname: '/:language(\\w{2})?/:type(artist|label|release|track)/:slug/:id(\\d+)',
 	});
 
 	override readonly features: FeatureQualityMap = {
@@ -27,6 +27,7 @@ export default class BeatportProvider extends MetadataProvider {
 		artist: 'artist',
 		label: 'label',
 		release: 'release',
+		recording: 'track',
 	};
 
 	readonly releaseLookup = BeatportReleaseLookup;
@@ -144,7 +145,7 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 				}),
 			}],
 			gtin: rawRelease.upc ?? undefined,
-			releaseDate: parseHyphenatedDate(rawRelease.new_release_date),
+			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.new_release_date)),
 			media: [{
 				format: 'Digital Media',
 				tracklist: rawRelease.track_objects.map(this.convertRawTrack.bind(this)),

@@ -19,13 +19,19 @@ export function stubTokenRetrieval(provider: MetadataApiProvider) {
  *
  * Only in {@linkcode downloadMode} the resource will be fetched and written to the cache (as a file).
  */
-export function stubProviderLookups(provider: MetadataProvider, cacheDir = 'testdata') {
+export function stubProviderLookups(provider: MetadataProvider, {
+	cacheDir = 'testdata',
+	ignoreTrailingSlash = true,
+} = {}) {
 	return stub(
 		provider,
 		// @ts-ignore-error -- Private method is not visible in TS, but accessible in JS.
 		'fetchSnapshot',
 		async function (input: string | URL, options?: OfflineCacheOptions) {
-			const path = await urlToFilePath(new URL(input), { baseDir: cacheDir });
+			const path = await urlToFilePath(new URL(input), {
+				baseDir: cacheDir,
+				ignoreTrailingSlash,
+			});
 			let response: Response;
 
 			if (downloadMode) {

@@ -1,9 +1,9 @@
 import { ArtistCredit } from '@/server/components/ArtistCredit.tsx';
 import { CoverImage } from '@/server/components/CoverImage.tsx';
-import { MagicISRC } from '@/server/components/ISRCSubmission.tsx';
-import { type EntityWithUrlRels, LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
+import { ISRCSubmission } from '@/server/components/ISRCSubmission.tsx';
+import { LinkWithMusicBrainz } from '@/server/components/LinkWithMusicBrainz.tsx';
 import { MBIDInput } from '@/server/components/MBIDInput.tsx';
-import { MessageBox } from '@/server/components/MessageBox.tsx';
+import { ErrorMessageBox, MessageBox } from '@/server/components/MessageBox.tsx';
 import { ProviderList } from '@/server/components/ProviderList.tsx';
 import { SpriteIcon } from '@/server/components/SpriteIcon.tsx';
 
@@ -12,8 +12,8 @@ import { deduplicateEntities } from '@/harmonizer/deduplicate.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
-	HarmonyRelease,
-	ProviderInfo,
+	IncompatibilityInfo,
+	MergedHarmonyRelease,
 	ReleaseOptions,
 	ResolvableEntity,
 } from '@/harmonizer/types.ts';
@@ -22,21 +22,22 @@ import { MB } from '@/musicbrainz/api_client.ts';
 import { extractMBID } from '@/musicbrainz/extract_mbid.ts';
 import { variousArtists } from '@/musicbrainz/special_entities.ts';
 import { providers as providerRegistry } from '@/providers/mod.ts';
+import { encodeReleaseLookupState } from '@/server/permalink.ts';
 import { extractReleaseLookupState } from '@/server/state.ts';
-import { LookupError, ProviderError } from '@/utils/errors.ts';
+import { LookupError } from '@/utils/errors.ts';
 import { isDefined } from '@/utils/predicate.ts';
 import { filterErrorEntries } from '@/utils/record.ts';
 import { Head } from 'fresh/runtime.ts';
 import { defineRoute } from 'fresh/server.ts';
 import { getLogger } from 'std/log/get_logger.ts';
 import { join } from 'std/url/join.ts';
+import type { EntityWithUrlRels } from '@/musicbrainz/edit_link.ts';
 
 export default defineRoute(async (req, ctx) => {
 	const errors: Error[] = [];
-	let release: HarmonyRelease | undefined = undefined;
+	let release: MergedHarmonyRelease | undefined = undefined;
 	let releaseMbid: string | undefined;
 	let releaseUrl: URL | undefined;
-	let isrcProvider: ProviderInfo | undefined;
 	let allArtists: ArtistCreditName[] = [];
 	let mbArtists: EntityWithUrlRels[] = [];
 	let mbLabels: EntityWithUrlRels[] = [];
@@ -85,17 +86,16 @@ export default defineRoute(async (req, ctx) => {
 			providerIds.push(['MusicBrainz', releaseMbid]);
 
 			const lookup = new CombinedReleaseLookup({ urls, gtin, providerIds }, options);
-			// Since the release has already been imported and has MBIDs, prefer MB data as merge target.
-			release = await lookup.getMergedRelease(['MusicBrainz']);
+			release = await lookup.getMergedRelease({
+				// Since the release has already been imported and has MBIDs, prefer MB data as merge target.
+				prefer: ['MusicBrainz'],
+				primaryProvider: 'MusicBrainz',
+			});
 
 			const providerReleaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
 			allImages = Object.entries(providerReleaseMap).flatMap(([provider, release]) =>
 				release.images?.map((image) => ({ ...image, provider })) ?? []
 			);
-
-			const { info } = release;
-			const isrcSource = info.sourceMap?.isrc;
-			isrcProvider = info.providers.find((provider) => provider.name === isrcSource);
 
 			const allTracks = release.media.flatMap((medium) => medium.tracklist);
 
@@ -112,9 +112,14 @@ export default defineRoute(async (req, ctx) => {
 
 			// Load URL relationships for related artists, recordings and labels of the release.
 			// These will be used to skip suggestions to seed external links which already exist.
+			// For recordings it also includes ISRCs to determine if there are new ones to submit.
 			const mbArtistBrowseResult = await MB.get('artist', { release: releaseMbid, inc: 'url-rels', limit: 100 });
 			mbArtists = mbArtistBrowseResult.artists;
-			const mbRecordingBrowseResult = await MB.get('recording', { release: releaseMbid, inc: 'url-rels', limit: 100 });
+			const mbRecordingBrowseResult = await MB.get('recording', {
+				release: releaseMbid,
+				inc: 'url-rels+isrcs',
+				limit: 100,
+			});
 			mbRecordings = mbRecordingBrowseResult.recordings;
 			// Labels often have no external links which could be linked, save pointless API call.
 			if (release.labels?.some((label) => label.externalIds?.length)) {
@@ -156,6 +161,7 @@ export default defineRoute(async (req, ctx) => {
 						<ProviderList providers={release.info.providers} />
 					</>
 				)}
+				{release?.info.incompatibleData && <IncompatibilityWarning incompatibilities={release.info.incompatibleData} />}
 				<h2>Release Actions</h2>
 				{!release && (
 					<form>
@@ -165,17 +171,20 @@ export default defineRoute(async (req, ctx) => {
 						</div>
 					</form>
 				)}
-				{errors.map((error) => (
-					<MessageBox
-						message={{
-							provider: (error as ProviderError).providerName,
-							text: error.message,
-							type: 'error',
-						}}
-					/>
-				))}
+				{errors.map((error, index) => <ErrorMessageBox error={error} key={index} />)}
+				{release?.info.messages.map((message, index) => <MessageBox message={message} key={index} />)}
+				{release && (
+					<div class='action'>
+						<SpriteIcon name='search' />
+						<p>
+							<a href={`../release?${encodeReleaseLookupState(release.info, { preferUrlFor: ['MusicBrainz'] })}`}>
+								Switch to Release Lookup
+							</a>
+						</p>
+					</div>
+				)}
 				{releaseUrl && (
-					<div class='message'>
+					<div class='action'>
 						<SpriteIcon name='brand-metabrainz' />
 						<p>
 							<a href={releaseUrl.href}>
@@ -184,29 +193,31 @@ export default defineRoute(async (req, ctx) => {
 						</p>
 					</div>
 				)}
-				{release && isrcProvider && (
-					<div class='message'>
-						<SpriteIcon name='disc' />
-						<p>
-							<MagicISRC release={release} targetMbid={releaseMbid!} />
-							: Submit ISRCs from <a href={isrcProvider.url}>{isrcProvider.name}</a> to MusicBrainz
-						</p>
-					</div>
+				{release && (
+					<ISRCSubmission
+						release={release}
+						targetMbid={releaseMbid}
+						recordingsCache={mbRecordings}
+					/>
 				)}
-				{releaseUrl &&
-					allArtists.map((artist) => (
-						<LinkWithMusicBrainz
-							entity={artist}
-							entityType='artist'
-							sourceEntityUrl={releaseUrl}
-							entityCache={mbArtists}
-						/>
-					))}
-				{release?.labels?.map((label) => (
-					<LinkWithMusicBrainz entity={label} entityType='label' sourceEntityUrl={releaseUrl!} entityCache={mbLabels} />
-				))}
 				{releaseUrl && (
-					<div class='message'>
+					<LinkWithMusicBrainz
+						entities={allArtists}
+						entityType='artist'
+						sourceEntityUrl={releaseUrl}
+						entityCache={mbArtists}
+					/>
+				)}
+				{releaseUrl && release?.labels && (
+					<LinkWithMusicBrainz
+						entities={release.labels}
+						entityType='label'
+						sourceEntityUrl={releaseUrl!}
+						entityCache={mbLabels}
+					/>
+				)}
+				{releaseUrl && (
+					<div class='action'>
 						<SpriteIcon name='photo-plus' />
 						<div>
 							<p>
@@ -218,15 +229,34 @@ export default defineRoute(async (req, ctx) => {
 					</div>
 				)}
 				{allImages.map((artwork) => <CoverImage artwork={artwork} key={artwork.url} />)}
-				{allRecordings.map((recording) => (
+				{releaseUrl && (
 					<LinkWithMusicBrainz
-						entity={recording}
+						entities={allRecordings}
 						entityType='recording'
-						sourceEntityUrl={releaseUrl!}
+						sourceEntityUrl={releaseUrl}
 						entityCache={mbRecordings}
 					/>
-				))}
+				)}
 			</main>
 		</>
 	);
 });
+
+function IncompatibilityWarning({ incompatibilities }: { incompatibilities: IncompatibilityInfo[] }) {
+	if (!incompatibilities.length) return null;
+
+	const lines = incompatibilities.map((incompatibility) =>
+		[
+			`${incompatibility.reason}:`,
+			...incompatibility.clusters.map((cluster) =>
+				`- ${
+					cluster.providers.map((provider) => `[${provider.name}](${provider.url})`).join(', ')
+				}: ${cluster.incompatibleValue}`
+			),
+			`- Expected value: ${incompatibility.compatibleValue}`,
+		].join('\n')
+	);
+	lines.unshift('Some external links have been ignored. Please check that they belong to this specific release!');
+
+	return <MessageBox message={{ type: 'warning', text: lines.join('\n\n') }} />;
+}

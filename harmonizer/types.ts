@@ -4,7 +4,7 @@ import type { EntityType } from '@kellnerd/musicbrainz';
 import type { ReleasePackaging, ReleaseStatus } from '@kellnerd/musicbrainz/data/release';
 import type { ReleaseGroupType } from '@kellnerd/musicbrainz/data/release-group';
 export type { ReleaseGroupType } from '@kellnerd/musicbrainz/data/release-group';
-import type { PartialDate } from '../utils/date.ts';
+import type { ReleaseDate } from '../utils/date.ts';
 import type { ScriptFrequency } from '../utils/script.ts';
 
 /** MusicBrainz entity types which Harmony supports. */
@@ -52,7 +52,7 @@ export type HarmonyRelease = {
 	script?: ScriptFrequency;
 	status?: ReleaseStatus;
 	types?: ReleaseGroupType[];
-	releaseDate?: PartialDate;
+	releaseDate?: ReleaseDate;
 	labels?: Label[];
 	packaging?: ReleasePackaging;
 	images?: Artwork[];
@@ -63,6 +63,10 @@ export type HarmonyRelease = {
 	releaseGroup?: ResolvableEntity;
 	info: ReleaseInfo;
 };
+
+export interface MergedHarmonyRelease extends HarmonyRelease {
+	info: MergedReleaseInfo;
+}
 
 export type HarmonyMedium = {
 	title?: string;
@@ -247,6 +251,23 @@ export type ReleaseInfo = {
 	providers: ProviderInfo[];
 	/** Messages from the providers which were used to lookup the release. */
 	messages: ProviderMessage[];
-	/** Mapping from release/track properties to the used provider for these properties. */
-	sourceMap?: Partial<Record<PreferenceProperty, ProviderName>>;
 };
+
+export interface MergedReleaseInfo extends ReleaseInfo {
+	/** Mapping from release/track properties to the used provider for these properties. */
+	sourceMap: Partial<Record<PreferenceProperty, ProviderName>>;
+	incompatibleData: IncompatibilityInfo[];
+}
+
+export interface IncompatibilityInfo {
+	/** Reason why the data of some providers is incompatible with the merged release. */
+	reason: string;
+	/** Expected value to be compatible with the merged release. */
+	compatibleValue?: string | number;
+	/** Clusters of providers whose release data is incompatible with the merged release. */
+	clusters: Array<{
+		/** Incompatible value from providers in this cluster. */
+		incompatibleValue: string | number;
+		providers: ProviderInfo[];
+	}>;
+}

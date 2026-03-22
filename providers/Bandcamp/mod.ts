@@ -13,7 +13,7 @@ import type {
 } from '@/harmonizer/types.ts';
 import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
-import { parseISODateTime, PartialDate } from '@/utils/date.ts';
+import { parseISODateTime, PartialDate, type ReleaseDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { extractDataAttribute, extractMetadataTag, extractTextFromHtml } from '@/utils/html.ts';
 import { plural, pluralWithCount } from '@/utils/plural.ts';
@@ -77,17 +77,23 @@ export default class BandcampProvider extends MetadataProvider {
 	}
 
 	constructUrl(entity: EntityId): URL {
-		const [artist, title] = entity.id.split('/', 2);
-		const artistUrl = new URL(`https://${artist}.bandcamp.com`);
-
-		if (entity.type === 'artist') return artistUrl;
-
-		// else if (type === 'album' || type === 'track')
-		if (!title) {
-			throw new ProviderError(this.name, `Incomplete release ID '${entity.id}' does not match format \`band/title\``);
+		const { band, title } = entity.id.match(this.idPattern)?.groups ?? {};
+		if (!band) {
+			throw new ProviderError(this.name, `Invalid provider ID '${entity.id}'`);
 		}
-		return new URL([entity.type, title].join('/'), artistUrl);
+		const bandUrl = new URL(`https://${band}.bandcamp.com`);
+
+		if (entity.type === 'album' || entity.type === 'track') {
+			if (!title) {
+				throw new ProviderError(this.name, `Incomplete release ID '${entity.id}' does not match format \`band/title\``);
+			}
+			return new URL([entity.type, title].join('/'), bandUrl);
+		} else { // artist or label
+			return bandUrl;
+		}
 	}
+
+	protected override idPattern = /^(?<band>[\w-]+)(?:(?:\/(?<type>track))?\/(?<title>[\w-]+))?$/;
 
 	override serializeProviderId(entity: EntityId): string {
 		if (entity.type === 'track') {
@@ -98,14 +104,21 @@ export default class BandcampProvider extends MetadataProvider {
 	}
 
 	override parseProviderId(id: string, entityType: HarmonyEntityType): EntityId {
+		const { band, type, title } = id.match(this.idPattern)?.groups ?? {};
+		if (!band) {
+			throw new ProviderError(this.name, `Invalid provider ID '${id}'`);
+		}
 		if (entityType === 'release') {
-			if (id.includes('/track/')) {
-				return { id: id.replace('/track/', '/'), type: 'track' };
+			if (title) {
+				return { id: [band, title].join('/'), type: type ?? 'album' };
 			} else {
-				return { id, type: 'album' };
+				throw new ProviderError(
+					this.name,
+					`Incomplete release ID '${id}' does not match format \`band/title\``,
+				);
 			}
 		} else {
-			return { id, type: this.entityTypeMap[entityType] };
+			return { id: band, type: this.entityTypeMap[entityType] };
 		}
 	}
 
@@ -123,7 +136,7 @@ export default class BandcampProvider extends MetadataProvider {
 	getTrackLinkTypes(track: TrackInfo): LinkType[] {
 		const linkTypes: LinkType[] = [];
 
-		if (track.streaming === 1) {
+		if (this.isFreeStreamingTrack(track)) {
 			linkTypes.push('free streaming');
 		}
 
@@ -135,6 +148,11 @@ export default class BandcampProvider extends MetadataProvider {
 				// TODO: And potentially a free download
 			}
 		}
+
+		// Track links without any streaming or download relationship are kept.
+		// It is up to the user to decide what to do.
+		// In the future there might be a separate relationship that can be used.
+		// See https://tickets.metabrainz.org/browse/STYLE-2443
 
 		return linkTypes;
 	}
@@ -166,12 +184,12 @@ export default class BandcampProvider extends MetadataProvider {
 
 					const description = extractMetadataTag(html, 'og:description');
 					if (description) {
-						jsonEntries.push(['og:description', `"${description}"`]);
+						jsonEntries.push(['og:description', JSON.stringify(description)]);
 					}
 
 					const licenseUrl = extractTextFromHtml(html, /class="cc-icons"\s+href="([^"]+)"/i);
 					if (licenseUrl) {
-						jsonEntries.push(['licenseUrl', `"${licenseUrl}"`]);
+						jsonEntries.push(['licenseUrl', JSON.stringify(licenseUrl)]);
 					}
 
 					const json = `{${jsonEntries.map(([key, serializedValue]) => `"${key}":${serializedValue}`).join(',')}}`;
@@ -179,6 +197,10 @@ export default class BandcampProvider extends MetadataProvider {
 				}
 			},
 		});
+	}
+
+	isFreeStreamingTrack(track: TrackInfo): boolean {
+		return track.streaming === 1 && !!track.file;
 	}
 }
 
@@ -314,7 +336,10 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		if (rawRelease.freeDownloadPage || (current.minimum_price === 0.0 && !current.is_set_price)) {
 			linkTypes.push('free download');
 		}
-		if (rawRelease.trackinfo.every((track) => track.streaming)) {
+		if (
+			!rawRelease.tralbum_subscriber_only &&
+			rawRelease.trackinfo.every((track) => this.provider.isFreeStreamingTrack(track))
+		) {
 			linkTypes.push('free streaming');
 		}
 
@@ -411,7 +436,7 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 		};
 	}
 
-	getReleaseDate(current: AlbumCurrent | TrackCurrent): PartialDate | undefined {
+	getReleaseDate(current: AlbumCurrent | TrackCurrent): ReleaseDate | undefined {
 		let date = current.release_date ? parseISODateTime(current.release_date) : undefined;
 
 		// Use publish date if release date is before Bandcamp launch (2008-09)
@@ -420,9 +445,17 @@ export class BandcampReleaseLookup extends ReleaseLookup<BandcampProvider, Relea
 			!date?.year || date.year < launchDate.year! || (date.year === launchDate.year && date.month! < launchDate.month!)
 		) {
 			date = current.publish_date ? parseISODateTime(current.publish_date) : undefined;
+			return {
+				date,
+				quality: date === undefined ? 'none-found' : 'assumed-valid',
+				note: 'Release predates platform launch. Using publish date instead.',
+			};
 		}
 
-		return date;
+		return {
+			date,
+			quality: date === undefined ? 'none-found' : 'assumed-valid',
+		};
 	}
 
 	async getEmbeddedPlayerRelease(albumId: number): Promise<PlayerData> {

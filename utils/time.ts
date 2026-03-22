@@ -46,3 +46,9 @@ export function parseISODuration(duration: string): number {
 	const seconds = match[3] ? parseInt(match[3], 10) : 0;
 	return (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
 }
+
+/** Converts colon-separated duration strings (e.g. HH:mm:ss) to seconds */
+export function parseDuration(duration: string): number {
+	return duration.split(':')
+		.reduce((acc, val) => acc * 60 + Number(val), 0);
+}

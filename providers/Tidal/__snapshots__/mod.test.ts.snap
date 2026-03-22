@@ -426,9 +426,13 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
   ],
   packaging: "None",
   releaseDate: {
-    day: 1,
-    month: 1,
-    year: 2012,
+    date: {
+      day: 1,
+      month: 1,
+      year: 2012,
+    },
+    note: "Release predates platform launch date.",
+    quality: "assumed-invalid",
   },
   status: "Official",
   title: "Live In Brooklyn",
@@ -442,17 +446,6 @@ snapshot[`Tidal provider > release lookup > single by two artists (v2 API) 1`] =
 {
   artists: [
     {
-      creditedName: "Bruno Mars",
-      externalIds: [
-        {
-          id: "3658521",
-          provider: "tidal",
-          type: "artist",
-        },
-      ],
-      name: "Bruno Mars",
-    },
-    {
       creditedName: "Lady Gaga",
       externalIds: [
         {
@@ -462,6 +455,17 @@ snapshot[`Tidal provider > release lookup > single by two artists (v2 API) 1`] =
         },
       ],
       name: "Lady Gaga",
+    },
+    {
+      creditedName: "Bruno Mars",
+      externalIds: [
+        {
+          id: "3658521",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Bruno Mars",
     },
   ],
   copyright: "© 2024 Interscope Records",
@@ -555,9 +559,12 @@ snapshot[`Tidal provider > release lookup > single by two artists (v2 API) 1`] =
   ],
   packaging: "None",
   releaseDate: {
-    day: 16,
-    month: 8,
-    year: 2024,
+    date: {
+      day: 16,
+      month: 8,
+      year: 2024,
+    },
+    quality: "assumed-valid",
   },
   status: "Official",
   title: "Die With A Smile",
@@ -662,9 +669,12 @@ snapshot[`Tidal provider > release lookup > lyric video (v2 API) 1`] = `
   ],
   packaging: "None",
   releaseDate: {
-    day: 19,
-    month: 4,
-    year: 2024,
+    date: {
+      day: 19,
+      month: 4,
+      year: 2024,
+    },
+    quality: "assumed-valid",
   },
   status: "Official",
   title: "My Boy Only Breaks His Favorite Toys (Lyric Video)",
@@ -672,4 +682,141 @@ snapshot[`Tidal provider > release lookup > lyric video (v2 API) 1`] = `
     "Single",
   ],
 }
+`;
+
+snapshot[`Tidal provider > release lookup > release with paginated tracklist and version info (v2 API) 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Air Max '97",
+      externalIds: [
+        {
+          id: "5664171",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Air Max '97",
+    },
+  ],
+  isrc: "AUNMG2400056",
+  length: 135000,
+  number: 46,
+  recording: {
+    externalIds: [
+      {
+        id: "396698966",
+        provider: "tidal",
+        type: "track",
+      },
+    ],
+  },
+  title: "XTYPE",
+  type: "audio",
+}
+`;
+
+snapshot[`Tidal provider > release lookup > release with missing tracks and missing artist (v2 API) 1`] = `
+{
+  artists: [
+    {
+      externalIds: [
+        {
+          id: "4854640",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "[unknown Tidal artist 4854640]",
+    },
+    {
+      creditedName: "Sousou Cissoko",
+      externalIds: [
+        {
+          id: "10884257",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Sousou Cissoko",
+    },
+    {
+      creditedName: "Maher Cissoko",
+      externalIds: [
+        {
+          id: "8157407",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Maher Cissoko",
+    },
+  ],
+  isrc: "SE3X91800101",
+  length: 298000,
+  number: 1,
+  recording: {
+    externalIds: [
+      {
+        id: "443692757",
+        provider: "tidal",
+        type: "track",
+      },
+    ],
+  },
+  title: "Bour Yalla",
+  type: "audio",
+}
+`;
+
+snapshot[`Tidal provider > release lookup > release with missing tracks and missing artist (v2 API) 2`] = `
+[
+  {
+    externalIds: [
+      {
+        id: "4854640",
+        provider: "tidal",
+        type: "artist",
+      },
+    ],
+    name: "[unknown Tidal artist 4854640]",
+  },
+  {
+    creditedName: "Maher Cissoko",
+    externalIds: [
+      {
+        id: "8157407",
+        provider: "tidal",
+        type: "artist",
+      },
+    ],
+    name: "Maher Cissoko",
+  },
+  {
+    creditedName: "Sousou Cissoko",
+    externalIds: [
+      {
+        id: "10884257",
+        provider: "tidal",
+        type: "artist",
+      },
+    ],
+    name: "Sousou Cissoko",
+  },
+]
+`;
+
+snapshot[`Tidal provider > release lookup > release with missing tracks and missing artist (v2 API) 3`] = `
+[
+  {
+    provider: "Tidal",
+    text: "The API returned only 8 of 10 tracks for SE, other regions may have more",
+    type: "warning",
+  },
+  {
+    provider: "Tidal",
+    text: "The API returned no data for some artists, please check the artist credits",
+    type: "error",
+  },
+]
 `;

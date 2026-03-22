@@ -54,6 +54,7 @@ export default class DeezerProvider extends MetadataApiProvider {
 	readonly entityTypeMap = {
 		artist: 'artist',
 		release: 'album',
+		recording: 'track',
 	};
 
 	override readonly availableRegions = new Set(availableRegions);
@@ -207,7 +208,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media,
-			releaseDate: parseHyphenatedDate(rawRelease.release_date),
+			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.release_date)),
 			labels: splitLabels(rawRelease.label),
 			status: 'Official',
 			types: [this.convertReleaseType(rawRelease.record_type)],
@@ -288,7 +289,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 	}
 
 	private convertReleaseType(sourceType: string): ReleaseGroupType {
-		return capitalizeReleaseType(sourceType.replace('COMPILE', 'COMPILATION'));
+		return capitalizeReleaseType(sourceType.toLowerCase().replace('compile', 'compilation'));
 	}
 
 	private determineAvailability(media: HarmonyMedium[]): string[] | undefined {

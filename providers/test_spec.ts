@@ -1,11 +1,20 @@
 import type { MetadataProvider, ProviderOptions } from './base.ts';
-import type { EntityId, HarmonyRelease, ReleaseOptions, ReleaseSpecifier } from '@/harmonizer/types.ts';
+import type {
+	EntityId,
+	HarmonyEntityType,
+	HarmonyRelease,
+	ReleaseOptions,
+	ReleaseSpecifier,
+} from '@/harmonizer/types.ts';
 import { downloadMode } from '@/utils/fetch_stub.ts';
 import { isDefined } from '@/utils/predicate.ts';
 
+import { assert } from 'std/assert/assert.ts';
 import { assertEquals } from 'std/assert/assert_equals.ts';
+import { assertThrows } from 'std/assert/assert_throws.ts';
 import { filterValues } from '@std/collections/filter-values';
 import { describe, it } from '@std/testing/bdd';
+import { preferArray } from 'utils/array/scalar.js';
 
 /** Specification which describes the expected behavior of a {@linkcode MetadataProvider}. */
 export interface ProviderSpecification {
@@ -16,6 +25,8 @@ export interface ProviderSpecification {
 	 * All other tests describe unsupported URLs which are ignored by the provider.
 	 */
 	urls: EntityUrlTest[];
+	/** Invalid (serialized) entity IDs which should be rejected. */
+	invalidIds: string[];
 	/**
 	 * Releases which the provider should be able to lookup.
 	 *
@@ -28,6 +39,14 @@ export interface ProviderSpecification {
 export function describeProvider(provider: MetadataProvider, spec: ProviderSpecification) {
 	describeEntityUrlExtraction(provider, spec.urls);
 	describeEntityUrlConstruction(provider, spec.urls);
+	it('rejects invalid release IDs', () => {
+		for (const invalidId of spec.invalidIds) {
+			assertThrows(
+				() => provider.parseProviderId(invalidId, 'release'),
+				`Provider ID '${invalidId}' should be considered invalid`,
+			);
+		}
+	});
 	describeReleaseLookups(provider, spec.releaseLookup);
 }
 
@@ -51,6 +70,19 @@ export interface EntityUrlTest {
 
 function describeEntityUrlExtraction(provider: MetadataProvider, tests: EntityUrlTest[]) {
 	describe('extraction of entity type and ID from an URL', () => {
+		// Construct the inverse entity type mapping.
+		const inverseEntityTypeMap: Record<string, HarmonyEntityType> = {};
+		for (const [harmonyType, providerTypes] of Object.entries(provider.entityTypeMap)) {
+			for (const providerType of preferArray(providerTypes)) {
+				const mappedHarmonyType = inverseEntityTypeMap[providerType];
+				assert(
+					!mappedHarmonyType,
+					`Entity type "${providerType}" has an ambiguous mapping, it can be ${mappedHarmonyType} or ${harmonyType}`,
+				);
+				inverseEntityTypeMap[providerType] = harmonyType as HarmonyEntityType;
+			}
+		}
+
 		for (const test of tests) {
 			it(`${test.id ? 'supports' : 'ignores'} ${test.description ?? test.url}`, () => {
 				let actualId = provider.extractEntityFromUrl(test.url);
@@ -62,6 +94,19 @@ function describeEntityUrlExtraction(provider: MetadataProvider, tests: EntityUr
 				const serializedId = test.serializedId ?? test.id?.id;
 				if (serializedId && actualId) {
 					assertEquals(provider.serializeProviderId(actualId), serializedId, 'Serialized entity ID is wrong');
+					const harmonyType = inverseEntityTypeMap[actualId.type];
+					assert(harmonyType, `Type "${actualId.type}" is missing from the provider's entity type mapping`);
+					if (harmonyType === 'release') {
+						// ID deserialization is only needed for releases so far.
+						// We should not yet force providers to implement it for other ambiguous entity types.
+						const deserializedId = provider.parseProviderId(serializedId, harmonyType);
+						assertEquals(deserializedId.id, actualId.id, 'Failed to parse serialized provider ID');
+						assertEquals(
+							deserializedId.type,
+							actualId.type,
+							'Failed to extract entity type from serialized provider ID',
+						);
+					}
 				}
 			});
 		}
@@ -89,6 +134,8 @@ export interface ReleaseLookupTest {
 	release: ReleaseSpecifier;
 	/** Lookup options which should be passed to the provider. */
 	options?: ReleaseOptions;
+	/** Only execute this test case (temporarily). */
+	only?: boolean;
 	/** Custom assertion(s) which should be performed for the looked up release. */
 	assert: (actualRelease: HarmonyRelease, context: Deno.TestContext) => void | Promise<void>;
 }
@@ -109,7 +156,9 @@ function describeReleaseLookups(provider: MetadataProvider, tests: ReleaseLookup
 				}
 			}
 
-			it(description, async (context) => {
+			it(description, {
+				only: test.only,
+			}, async (context) => {
 				const actualRelease = await provider.getRelease(release, test.options);
 
 				// Remove properties which are not stable across multiple runs.

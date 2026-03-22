@@ -1,5 +1,6 @@
+import { normalizeReleaseISRCs } from '@/harmonizer/isrc.ts';
 import { detectLanguageAndScript } from '@/harmonizer/language_script.ts';
-import { mergeRelease } from '@/harmonizer/merge.ts';
+import { MergeOptions, mergeRelease } from '@/harmonizer/merge.ts';
 import { cleanupBogusReleaseLabels } from '@/harmonizer/release_label.ts';
 import { defaultProviderPreferences, providers } from '@/providers/mod.ts';
 import { FeatureQuality } from '@/providers/features.ts';
@@ -14,10 +15,9 @@ import { zipObject } from 'utils/object/zipObject.js';
 import type {
 	GTIN,
 	HarmonyRelease,
+	MergedHarmonyRelease,
 	ProviderMessage,
-	ProviderName,
 	ProviderNameAndId,
-	ProviderPreferences,
 	ProviderReleaseErrorMap,
 	ReleaseOptions,
 } from '@/harmonizer/types.ts';
@@ -296,14 +296,15 @@ export class CombinedReleaseLookup {
 	}
 
 	/** Ensures that all requested providers have been looked up and returns the combined release. */
-	async getMergedRelease(providerPreferences?: ProviderPreferences | ProviderName[]): Promise<HarmonyRelease> {
+	async getMergedRelease(options?: MergeOptions): Promise<MergedHarmonyRelease> {
 		const releaseMap = await this.getCompleteProviderReleaseMapping();
-		const release = mergeRelease(releaseMap, providerPreferences);
+		const release = mergeRelease(releaseMap, options);
 		// Prepend error and warning messages of the combined lookup.
 		release.info.messages.unshift(...this.messages);
 
 		// Provider-independent post-processing of the merged release.
 		detectLanguageAndScript(release);
+		normalizeReleaseISRCs(release);
 		if (release.labels) {
 			cleanupBogusReleaseLabels(release.labels);
 		}
@@ -357,16 +358,20 @@ export function getReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<Har
 export function getMergedReleaseByGTIN(
 	gtin: GTIN,
 	options?: ReleaseOptions,
-): Promise<HarmonyRelease> {
+): Promise<MergedHarmonyRelease> {
 	const lookup = new CombinedReleaseLookup({ gtin }, options);
-	return lookup.getMergedRelease(defaultProviderPreferences);
+	return lookup.getMergedRelease({
+		prefer: defaultProviderPreferences,
+	});
 }
 
 /**
  * Looks up the given URL with the first matching provider.
  * Then tries to find that release on other providers (by GTIN) and merges the resulting data.
  */
-export function getMergedReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<HarmonyRelease> {
+export function getMergedReleaseByUrl(url: URL, options?: ReleaseOptions): Promise<MergedHarmonyRelease> {
 	const lookup = new CombinedReleaseLookup({ urls: [url] }, options);
-	return lookup.getMergedRelease(defaultProviderPreferences);
+	return lookup.getMergedRelease({
+		prefer: defaultProviderPreferences,
+	});
 }

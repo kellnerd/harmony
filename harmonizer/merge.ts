@@ -1,10 +1,9 @@
+import { makeReleasesCompatible } from './compatibility.ts';
 import { immutableReleaseProperties, immutableTrackProperties } from './properties.ts';
 import { guessTypesForRelease, mergeTypes } from './release_types.ts';
 import { isDefined } from '@/utils/predicate.ts';
-import { cloneInto, copyTo, filterErrorEntries, isFilled, uniqueMappedValues } from '@/utils/record.ts';
+import { cloneInto, copyTo, isFilled } from '@/utils/record.ts';
 import { matchBySimilarName, similarNames } from '@/utils/similarity.ts';
-import { trackCountSummary } from '@/utils/tracklist.ts';
-import { assert } from 'std/assert/assert.ts';
 
 import type {
 	ArtistCreditName,
@@ -13,15 +12,23 @@ import type {
 	HarmonyRelease,
 	ImmutableTrackProperty,
 	Label,
+	MergedHarmonyRelease,
 	PreferenceProperty,
 	ProviderMessage,
 	ProviderName,
 	ProviderPreferences,
 	ProviderReleaseErrorMap,
-	ProviderReleaseMap,
 	ReleaseGroupType,
 	ResolvableEntity,
 } from './types.ts';
+
+/** Options how release metadata from different providers should be merged. */
+export interface MergeOptions {
+	/** Names of the preferred providers for the whole release or individual properties. */
+	prefer?: ProviderName[] | ProviderPreferences;
+	/** Primary provider whose data should be used in case of any incompatibility. */
+	primaryProvider?: ProviderName;
+}
 
 /**
  * Merges the given release data from different providers into a single, combined release.
@@ -31,9 +38,9 @@ import type {
  */
 export function mergeRelease(
 	releaseMap: ProviderReleaseErrorMap,
-	preferences: ProviderPreferences | ProviderName[] = {},
-): HarmonyRelease {
-	assertReleaseCompatibility(filterErrorEntries(releaseMap));
+	options: MergeOptions = {},
+): MergedHarmonyRelease {
+	const incompatibleData = makeReleasesCompatible(releaseMap, options.primaryProvider);
 
 	const availableProviders: ProviderName[] = Object.entries(releaseMap)
 		.filter(([_providerName, releaseOrError]) => !(releaseOrError instanceof Error))
@@ -56,7 +63,7 @@ export function mergeRelease(
 	}));
 
 	// create an empty merge target
-	const mergedRelease: HarmonyRelease = {
+	const mergedRelease: MergedHarmonyRelease = {
 		title: '',
 		artists: [],
 		externalLinks: [],
@@ -66,10 +73,12 @@ export function mergeRelease(
 			providers: [],
 			messages: errorMessages,
 			sourceMap: {},
+			incompatibleData,
 		},
 	};
 
 	// check whether we prefer to use the same provider for all properties, fallback to preferred media provider
+	const preferences = options.prefer ?? {};
 	const preferSameProvider = Array.isArray(preferences);
 	const preferredProviders: ProviderName[] = preferSameProvider ? preferences : preferences.media ?? [];
 
@@ -102,7 +111,7 @@ export function mergeRelease(
 			const value = cloneInto(mergedRelease, sourceRelease, property);
 
 			if (isFilled(value)) {
-				mergedRelease.info.sourceMap![property] = providerName;
+				mergedRelease.info.sourceMap[property] = providerName;
 				if (!sourceIsTemplate) {
 					// Template data is still allowed to be overwritten by other providers.
 					// FIXME: Least preferred template would overwrite earlier templates.
@@ -127,7 +136,7 @@ export function mergeRelease(
 				// This is better than overwriting all tracks with data again just because e.g. one track was not filled.
 				// Filling each track separately using data from multiple providers leads to potentially inconsistent data.
 				if (mergedRelease.media.some((medium) => medium.tracklist.some((track) => isFilled(track[property])))) {
-					mergedRelease.info.sourceMap![property] = providerName;
+					mergedRelease.info.sourceMap[property] = providerName;
 					if (!sourceIsTemplate) {
 						missingTrackProperties.delete(property);
 					}
@@ -193,7 +202,7 @@ export function mergeRelease(
 						});
 
 						if (mergedRelease.media.some((medium) => medium.tracklist.some((track) => isFilled(track[property])))) {
-							mergedRelease.info.sourceMap![property] = providerName;
+							mergedRelease.info.sourceMap[property] = providerName;
 							if (!sourceIsTemplate) {
 								break;
 							}
@@ -202,7 +211,7 @@ export function mergeRelease(
 						const value = cloneInto(mergedRelease, sourceRelease, property);
 
 						if (isFilled(value)) {
-							mergedRelease.info.sourceMap![property] = providerName;
+							mergedRelease.info.sourceMap[property] = providerName;
 							if (!sourceIsTemplate) {
 								break;
 							}
@@ -331,37 +340,6 @@ export function mergeResolvableEntityArray<T extends ResolvableEntity>(target: T
 function makeEntityIdKey(entityId: ExternalEntityId): string {
 	const { provider, type, id } = entityId;
 	return [provider, type, id].join('\n');
-}
-
-/** Ensures that the given releases are compatible and can be merged. */
-function assertReleaseCompatibility(releaseMap: ProviderReleaseMap) {
-	if (!Object.keys(releaseMap).length) return;
-
-	assertUniquePropertyValue(
-		(release) => (release.gtin) ? Number(release.gtin) : undefined,
-		'Providers have returned multiple different GTIN',
-	);
-
-	// TODO: Support releases with the same total track count.
-	assertUniquePropertyValue(
-		trackCountSummary,
-		'Providers have returned incompatible track lists',
-	);
-
-	function assertUniquePropertyValue<Value extends string | number>(
-		propertyAccessor: (release: HarmonyRelease) => Value | undefined,
-		errorDescription: string,
-	) {
-		const uniqueValues = uniqueMappedValues(releaseMap, propertyAccessor);
-		assert(
-			uniqueValues.length <= 1,
-			`${errorDescription}: ${
-				uniqueValues.map(
-					([value, providerNames]) => `${value} (${providerNames.join(', ')})`,
-				).join(', ')
-			}`,
-		);
-	}
 }
 
 function isTrackProperty(property: PreferenceProperty): property is ImmutableTrackProperty {

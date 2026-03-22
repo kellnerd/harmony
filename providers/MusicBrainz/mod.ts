@@ -44,7 +44,7 @@ export default class MusicBrainzProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '{(beta|test).}?musicbrainz.(org|eu)',
-		pathname: '/:type(artist|release)/:id',
+		pathname: '/:type(artist|release)/:id([0-9a-f-]{36})',
 	});
 
 	override readonly features: FeatureQualityMap = {
@@ -164,7 +164,7 @@ export class MusicBrainzReleaseLookup extends ReleaseApiLookup<MusicBrainzProvid
 					type: track.recording.video ? 'video' : 'audio',
 				})) ?? [],
 			})),
-			releaseDate: parseHyphenatedDate(rawRelease.date ?? ''),
+			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.date ?? '')),
 			labels: rawRelease['label-info'].map((info) => ({
 				name: info.label?.name,
 				catalogNumber: info['catalog-number'] ?? undefined,

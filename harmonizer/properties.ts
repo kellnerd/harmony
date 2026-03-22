@@ -1,12 +1,12 @@
 import type { HarmonyRelease, HarmonyTrack } from './types.ts';
 
 /** Release properties which can be combined from data of multiple providers. */
-export const combinableReleaseProperties: Array<keyof HarmonyRelease> = [
+export const combinableReleaseProperties = [
 	'externalLinks',
 	'availableIn',
 	'excludedFrom',
 	'info',
-];
+] as const satisfies Array<keyof HarmonyRelease>;
 
 /**
  * Release properties which have to be taken from one provider and can not be combined from data of multiple providers.
@@ -27,15 +27,15 @@ export const immutableReleaseProperties = [
 	'images', // TODO: make images combinable? combine if not only front covers?
 	'copyright',
 	'credits',
-] as const;
+] as const satisfies Array<keyof HarmonyRelease>;
 
 /** Track properties which have to be taken from one provider and can not be combined from data of multiple providers. */
 export const immutableTrackProperties = [
 	'isrc',
 	'length',
-] as const;
+] as const satisfies Array<keyof HarmonyTrack>;
 
 /** Track properties which can be combined from data of multiple providers. */
-export const combinableTrackProperties: Array<keyof HarmonyTrack> = [
+export const combinableTrackProperties = [
 	'recording',
-];
+] as const satisfies Array<keyof HarmonyTrack>;

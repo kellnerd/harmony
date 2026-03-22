@@ -22,7 +22,7 @@ import type {
 	ReleaseOptions,
 	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
-import type { PartialDate } from '@/utils/date.ts';
+import type { PartialDate, ReleaseDate } from '@/utils/date.ts';
 import type { CacheOptions, Policy, Snapshot, SnapStorage } from 'snap-storage';
 import type { MaybePromise } from 'utils/types.d.ts';
 import type { Logger } from 'std/log/logger.ts';
@@ -113,8 +113,12 @@ export abstract class MetadataProvider {
 
 	/** Looks up the release which is identified by the given specifier (URL, GTIN/barcode or provider ID). */
 	getRelease(specifier: ReleaseSpecifier, options: ReleaseOptions = {}): Promise<HarmonyRelease> {
-		const lookup = new this.releaseLookup(this, specifier, options);
-		return lookup.getRelease();
+		try {
+			const lookup = new this.releaseLookup(this, specifier, options);
+			return lookup.getRelease();
+		} catch (error) {
+			return Promise.reject(error);
+		}
 	}
 
 	/** Checks whether the provider supports the domain of the given URL. */
@@ -156,6 +160,7 @@ export abstract class MetadataProvider {
 	 * Maps a provider ID of the given MusicBrainz entity type to provider entity type and ID.
 	 *
 	 * Accepts provider IDs which were serialized by {@linkcode serializeProviderId}.
+	 * Throws for invalid provider entity IDs.
 	 */
 	parseProviderId(id: string, entityType: HarmonyEntityType): EntityId {
 		const type = this.entityTypeMap[entityType];
@@ -165,7 +170,19 @@ export abstract class MetadataProvider {
 				`Unable to parse provider ID as the provider supports multiple ${entityType} types, please override parser`,
 			);
 		}
-		return { id, type };
+
+		if (!this.idPattern) {
+			// Initialize ID pattern with the RegExp group from the supported URLs pattern if possible.
+			// We can not do this inside the constructor already, since `supportedUrls` is an abstract property.
+			const idPattern = this.supportedUrls.hasRegExpGroups && this.supportedUrls.pathname.match(/:id\((.+?)\)/)?.[1];
+			// We want to match against the full ID (which the URLPattern does implicitly).
+			this.idPattern = new RegExp(`^${idPattern || '\\w+'}$`);
+		}
+		if (this.idPattern.test(id)) {
+			return { id, type };
+		} else {
+			throw new ProviderError(this.name, `Invalid provider ID '${id}'`);
+		}
 	}
 
 	/** Returns the appropriate external link types for the given entity. */
@@ -204,6 +221,9 @@ export abstract class MetadataProvider {
 	protected get log(): Logger {
 		return getLogger('harmony.provider');
 	}
+
+	/** Pattern which is used to validate (serialized) provider IDs. */
+	protected idPattern: RegExp | undefined;
 
 	protected snaps: SnapStorage | undefined;
 
@@ -283,9 +303,13 @@ export abstract class MetadataProvider {
 		const retryAfter = response.headers.get('Retry-After');
 		if (retryAfter) {
 			this.log.info(`${this.name} rate limit (HTTP ${response.status}): Retry-After ${retryAfter}`);
-			const retryAfterMs = parseInt(retryAfter) * 1000;
-			if (retryAfterMs > 0) {
+			let retryAfterMs = parseInt(retryAfter) * 1000;
+			if (retryAfterMs >= 0) {
 				if (retryAfterMs < this.requestMaxDelay) {
+					if (retryAfterMs === 0) {
+						// Avoid short bursts of failed retries for a (badly rounded?) 0s delay.
+						retryAfterMs = 1000;
+					}
 					this.requestDelay = delay(retryAfterMs);
 				} else {
 					throw new ProviderError(
@@ -412,6 +436,34 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 
 	/** Converts the given provider-specific raw release metadata into a common representation. */
 	protected abstract convertRawRelease(rawRelease: RawRelease): MaybePromise<HarmonyRelease>;
+
+	protected convertReleaseDate(date?: PartialDate): ReleaseDate {
+		const launchDate = this.provider.launchDate;
+		if (
+			date === undefined ||
+			(launchDate.day === undefined && launchDate.month === undefined && launchDate.year === undefined)
+		) {
+			return {
+				date,
+				quality: 'none-found',
+			};
+		}
+
+		if (
+			!date?.year || date.year < launchDate.year! || (date.year === launchDate.year && date.month! < launchDate.month!)
+		) {
+			return {
+				date,
+				quality: 'assumed-invalid',
+				note: 'Release predates platform launch date.',
+			};
+		}
+
+		return {
+			date,
+			quality: 'assumed-valid',
+		};
+	}
 
 	/** Adds a message to the generated release info. */
 	protected addMessage(text: string, type: MessageType = 'info'): void {

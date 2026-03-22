@@ -82,7 +82,7 @@ export type Release = MinimalRelease & {
 	/** The number of album's Fans */
 	fans: number;
 	rating: number; // missing from https://developers.deezer.com/api/album
-	/** The record type of the album (EP / ALBUM / COMPILE etc..)	 */
+	/** The record type of the album (ep / album / compile etc..)	 */
 	record_type: string;
 	available: boolean;
 	/** Whether the album contains explicit lyrics */
