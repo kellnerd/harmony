@@ -174,7 +174,26 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 	}
 
 	convertFormat(format: ReleaseFormat): Array<MediumFormat | undefined> {
-		const mediumFormat = mediumFormatMap[format.name];
+		let mediumFormat = mediumFormatMap[format.name];
+		if (mediumFormat) {
+			for (const description of format.descriptions) {
+				if (['Vinyl', 'Acetate', 'Shellac'].includes(mediumFormat)) {
+					if (description === 'LP') {
+						mediumFormat = `12" ${mediumFormat}` as MediumFormat;
+					} else if (/^(3|7|10|12)"$/.test(description)) {
+						mediumFormat = `${description} ${mediumFormat}` as MediumFormat;
+					}
+				} else if (mediumFormat === 'CD') {
+					if (description === 'Mini') {
+						mediumFormat = `8cm ${mediumFormat}` as MediumFormat;
+					}
+				} else if (mediumFormat === 'DVD') {
+					if (description === 'DVD-Video' || description === 'DVD-Audio') {
+						mediumFormat = description;
+					}
+				}
+			}
+		}
 		const quantity = Number.parseInt(format.qty, 10);
 		return new Array(quantity).fill(mediumFormat);
 	}
