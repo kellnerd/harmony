@@ -7,7 +7,6 @@ import type {
 	HarmonyTrack,
 	Label as HarmonyLabel,
 	LinkType,
-	MediumFormat,
 } from '@/harmonizer/types.ts';
 import { ApiQueryOptions, CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
 import { FeatureQualityMap } from '@/providers/features.ts';
@@ -15,9 +14,9 @@ import { parseHyphenatedDate } from '@/utils/date.ts';
 import { cleanBarcode, uniqueGtinSet } from '@/utils/gtin.ts';
 import { isDefined } from '@/utils/predicate.ts';
 import { parseDuration } from '@/utils/time.ts';
-import type { Artist, Identifier, Label, Release, ReleaseFormat, Track } from './api_types.ts';
-import { mediumFormatMap } from './format.ts';
-import { countryNameToCode } from './regions.ts';
+import type { Artist, Identifier, Label, Release, Track } from './api_types.ts';
+import { convertFormat } from './format.ts';
+import { convertCountryStringToCodes } from './regions.ts';
 
 export default class DiscogsProvider extends MetadataApiProvider {
 	readonly name = 'Discogs';
@@ -106,7 +105,7 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 	}
 
 	convertMedia(rawRelease: Release): HarmonyMedium[] {
-		const mediumFormats = rawRelease.formats.flatMap(this.convertFormat);
+		const mediumFormats = rawRelease.formats.flatMap(convertFormat);
 		const media: HarmonyMedium[] = mediumFormats.map((format, index) => ({
 			number: index + 1,
 			format,
@@ -171,38 +170,12 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 	}
 
 	convertCountry(countryName: string): CountryCode[] | undefined {
-		// TODO: handle groups of multiple countries and historical regions
-		const countryCode = countryNameToCode[countryName];
-		if (countryCode) {
-			return [countryCode];
+		const countryCodes = convertCountryStringToCodes(countryName);
+		if (countryCodes) {
+			return countryCodes;
 		} else {
 			this.addMessage(`Unknown country '${countryName}' was ignored`, 'warning');
 		}
-	}
-
-	convertFormat(format: ReleaseFormat): Array<MediumFormat | undefined> {
-		let mediumFormat = mediumFormatMap[format.name];
-		if (mediumFormat) {
-			for (const description of format.descriptions) {
-				if (['Vinyl', 'Acetate', 'Shellac'].includes(mediumFormat)) {
-					if (description === 'LP') {
-						mediumFormat = `12" ${mediumFormat}` as MediumFormat;
-					} else if (/^(3|7|10|12)"$/.test(description)) {
-						mediumFormat = `${description} ${mediumFormat}` as MediumFormat;
-					}
-				} else if (mediumFormat === 'CD') {
-					if (description === 'Mini') {
-						mediumFormat = `8cm ${mediumFormat}` as MediumFormat;
-					}
-				} else if (mediumFormat === 'DVD') {
-					if (description === 'DVD-Video' || description === 'DVD-Audio') {
-						mediumFormat = description;
-					}
-				}
-			}
-		}
-		const quantity = Number.parseInt(format.qty, 10);
-		return new Array(quantity).fill(mediumFormat);
 	}
 
 	findBarcode(identifiers: Identifier[]): string | undefined {

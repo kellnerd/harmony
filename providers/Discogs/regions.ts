@@ -1,11 +1,22 @@
 import type { CountryCode } from '@/harmonizer/types.ts';
 
 /**
+ * Converts a Discogs "country" name into an array of country codes.
+ */
+export function convertCountryStringToCodes(countryName: string): CountryCode[] | undefined {
+	// TODO: handle groups of multiple countries and historical regions
+	const countryCode = countryNameToCode[countryName];
+	if (countryCode) {
+		return [countryCode];
+	}
+}
+
+/**
  * Maps a country name (as used on Discogs) to a country code.
  *
  * Country names extracted from "subform/view:countries" data on release edit page.
  */
-export const countryNameToCode: Record<string, CountryCode | undefined> = {
+const countryNameToCode: Record<string, CountryCode | undefined> = {
 	Afghanistan: 'AF',
 	Albania: 'AL',
 	Algeria: 'DZ',
