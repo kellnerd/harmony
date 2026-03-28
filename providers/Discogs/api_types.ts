@@ -47,10 +47,11 @@ export interface Label {
 	/** Discogs ID of the label. */
 	id: number;
 	name: string;
+	/** Catalog number, can be "none" (release label) or empty (company credit). */
 	catno: string;
-	/** Numeric label type. */
+	/** Numeric label credit type. */
 	entity_type: string;
-	/** Name of the label type. */
+	/** Name of the label credit type. */
 	entity_type_name: string;
 	/** API URL of the label. */
 	resource_url: string;

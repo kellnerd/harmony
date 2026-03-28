@@ -155,9 +155,14 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 	}
 
 	convertRawLabel(label: Label): HarmonyLabel {
+		let catalogNumber = label.catno;
+		if (catalogNumber === 'none') {
+			catalogNumber = '[none]';
+		}
+
 		return {
 			name: this.provider.cleanName(label.name),
-			catalogNumber: label.catno || undefined,
+			catalogNumber: catalogNumber || undefined,
 			externalIds: this.provider.makeExternalIds({
 				type: 'label',
 				id: label.id.toString(),
