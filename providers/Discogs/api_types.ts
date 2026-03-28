@@ -6,43 +6,41 @@ export interface Release {
 	/** Release date (YYYY-MM-DD). */
 	released: string;
 	/** Name of the country (or region) of release. */
-	country: string;
+	country: string | null;
 	/** Release labels with catalog numbers. */
 	labels: Label[];
 	series: Label[];
 	/** Discogs ID of the master release. */
-	master_id: number;
+	master_id?: number;
 	/** Identifiers (barcode, label code, rights society, matrix etc.) */
 	identifiers: Identifier[];
 	/** Release format, including medium format, packaging, status etc. */
 	formats: ReleaseFormat[];
 	tracklist: Track[];
 	/** Credited artists and their roles. */
-	extraartists: Artist[];
+	extraartists?: Artist[];
 	/** Credited companies. */
 	companies: Label[];
 	/** API URL of the release. */
 	resource_url: string;
 }
 
-/**
- * Artist object as returned by the API:
- * - `anv` is empty if no name variation is used.
- * - `role` may contain a role credit in square brackets.
- */
 export interface Artist {
 	/** Discogs ID of the artist. */
 	id: number;
 	/** Primary artist name (PAN). */
 	name: string;
-	/** Artist name variation (ANV). */
+	/** Artist name variation (ANV), can be empty (when no variation is used). */
 	anv: string;
+	/** Artist credit join phrase, can be empty. */
 	join: string;
-	/** Role of the artist. */
+	/** Role of the artist, can be empty. May contain a role credit in square brackets. */
 	role: string;
+	/** Track ranges for which the role applies, can be empty. */
 	tracks: string;
 	/** API URL of the artist. */
 	resource_url: string;
+	thumbnail_url?: string;
 }
 
 export interface Label {
@@ -62,11 +60,11 @@ export interface Label {
 export interface Track {
 	position: string;
 	title: string;
-	artists: Artist[];
-	/** Duration in m:ss format. */
+	artists?: Artist[];
+	/** Duration in m:ss format, can be empty. */
 	duration: string;
 	/** Credited artists and their roles. */
-	extraartists: Artist[];
+	extraartists?: Artist[];
 }
 
 export interface Identifier {
@@ -83,5 +81,5 @@ export interface ReleaseFormat {
 	/** Descriptions like size, speed, status etc. */
 	descriptions: string[];
 	/** Freeform text, may contain packaging. */
-	text: string;
+	text?: string;
 }

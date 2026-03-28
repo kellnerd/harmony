@@ -94,11 +94,13 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 			// status: 'Official',
 			// types,
 			// packaging: 'None',
-			releaseGroup: {
-				externalIds: this.provider.makeExternalIds({ type: 'master', id: rawRelease.master_id.toString() }),
-			},
+			releaseGroup: rawRelease.master_id
+				? {
+					externalIds: this.provider.makeExternalIds({ type: 'master', id: rawRelease.master_id.toString() }),
+				}
+				: undefined,
 			images: [],
-			availableIn: this.convertCountry(rawRelease.country),
+			availableIn: rawRelease.country ? this.convertCountry(rawRelease.country) : undefined,
 			info: this.generateReleaseInfo(),
 		};
 	}
@@ -123,8 +125,8 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 		return {
 			number: track.position,
 			title: track.title,
-			artists: track.artists.map(this.convertRawArtist.bind(this)),
-			length: parseDuration(track.duration) * 1000,
+			artists: track.artists?.map(this.convertRawArtist.bind(this)),
+			length: track.duration ? parseDuration(track.duration) * 1000 : undefined,
 		};
 	}
 
