@@ -16,7 +16,7 @@ import { pluralWithCount } from '@/utils/plural.ts';
 import { isDefined } from '@/utils/predicate.ts';
 import { parseDuration } from '@/utils/time.ts';
 import type { Artist, Identifier, Label, Release, Track } from './api_types.ts';
-import { convertFormat } from './format.ts';
+import { convertFormat, extractMoreDetailsFromFormats } from './format.ts';
 import { convertCountryStringToCodes } from './regions.ts';
 import { combineTracklistSectionsToMedia, splitTracklistIntoSections, type TracklistSection } from './tracklist.ts';
 
@@ -92,9 +92,7 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 			media: this.convertMedia(rawRelease),
 			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.released)),
 			labels: rawRelease.labels.map(this.convertRawLabel.bind(this)),
-			// status: 'Official',
-			// types,
-			// packaging: 'None',
+			...extractMoreDetailsFromFormats(rawRelease.formats),
 			releaseGroup: rawRelease.master_id
 				? {
 					externalIds: this.provider.makeExternalIds({ type: 'master', id: rawRelease.master_id.toString() }),
