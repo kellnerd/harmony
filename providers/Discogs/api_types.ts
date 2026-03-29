@@ -59,7 +59,10 @@ export interface Label {
 }
 
 export interface Track {
+	/** Track position, can be empty. */
 	position: string;
+	/** Indicates whether the object is a proper track or a structural element. */
+	type_: 'track' | 'heading';
 	title: string;
 	artists?: Artist[];
 	/** Duration in m:ss format, can be empty. */
@@ -75,7 +78,7 @@ export interface Identifier {
 }
 
 export interface ReleaseFormat {
-	/** Name of the format. CD */
+	/** Name of the format. */
 	name: string;
 	/** Numeric quantity of the format. */
 	qty: string;

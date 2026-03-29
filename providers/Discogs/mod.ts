@@ -12,11 +12,13 @@ import { ApiQueryOptions, CacheEntry, MetadataApiProvider, ReleaseApiLookup } fr
 import { FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
 import { cleanBarcode, uniqueGtinSet } from '@/utils/gtin.ts';
+import { pluralWithCount } from '@/utils/plural.ts';
 import { isDefined } from '@/utils/predicate.ts';
 import { parseDuration } from '@/utils/time.ts';
 import type { Artist, Identifier, Label, Release, Track } from './api_types.ts';
 import { convertFormat } from './format.ts';
 import { convertCountryStringToCodes } from './regions.ts';
+import { combineTracklistSectionsToMedia, splitTracklistIntoSections, type TracklistSection } from './tracklist.ts';
 
 export default class DiscogsProvider extends MetadataApiProvider {
 	readonly name = 'Discogs';
@@ -106,24 +108,43 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 
 	convertMedia(rawRelease: Release): HarmonyMedium[] {
 		const mediumFormats = rawRelease.formats.flatMap(convertFormat);
-		const media: HarmonyMedium[] = mediumFormats.map((format, index) => ({
-			number: index + 1,
-			format,
-			tracklist: [],
-		}));
+		const tracklistSections = splitTracklistIntoSections(rawRelease.tracklist);
+		const rawMedia = combineTracklistSectionsToMedia(tracklistSections);
+		const hasBrokenTracklist = rawMedia.length !== mediumFormats.length;
 
-		if (media.length >= 1) {
-			// TODO: split flat tracklist into multiple media
-			media[0].tracklist = rawRelease.tracklist.map(this.convertRawTrack.bind(this));
+		if (hasBrokenTracklist) {
+			this.addMessage(
+				`Tracklist could not be split into ${
+					pluralWithCount(mediumFormats.length, 'medium', 'media')
+				} as expected, found ${pluralWithCount(rawMedia.length, 'medium', 'media')}`,
+				'error',
+			);
 		}
 
-		return media;
+		return rawMedia.map((rawMedium, index) => ({
+			number: index + 1,
+			format: hasBrokenTracklist ? undefined : mediumFormats[index],
+			title: rawMedium.title,
+			tracklist: rawMedium.sections.flatMap((section) =>
+				section.tracks.map((track) => this.convertRawTrack(track, section))
+			),
+		}));
 	}
 
-	convertRawTrack(track: Track): HarmonyTrack {
+	convertRawTrack(track: Track, section?: TracklistSection): HarmonyTrack {
+		let trackNumber = track.position;
+		if (section?.hasMediumPrefix && section.positionPrefix) {
+			trackNumber = trackNumber.replace(section.positionPrefix, '');
+		}
+
+		let trackTitle = track.title;
+		if (section?.heading && section.type === 'track group') {
+			trackTitle = `${section.heading}: ${trackTitle}`;
+		}
+
 		return {
-			number: track.position,
-			title: track.title,
+			number: trackNumber,
+			title: trackTitle,
 			artists: track.artists?.map(this.convertRawArtist.bind(this)),
 			length: track.duration ? parseDuration(track.duration) * 1000 : undefined,
 		};
