@@ -1,7 +1,8 @@
+import type { FunctionSpec } from '@/utils/test_spec.ts';
 import { assertEquals } from 'std/assert/assert_equals.ts';
 import { describe, it } from '@std/testing/bdd';
 import type { ReleaseFormat } from './api_types.ts';
-import { extractMoreDetailsFromFormats } from './format.ts';
+import { convertFormat, extractMoreDetailsFromFormats } from './format.ts';
 
 const exampleFormats = {
 	vinylAlbum: {
@@ -25,6 +26,18 @@ const exampleFormats = {
 		descriptions: ['Mixtape'],
 	},
 } satisfies Record<string, ReleaseFormat>;
+
+const formatConversionTests: FunctionSpec<typeof convertFormat> = [
+	['File', exampleFormats.digitalPromoSingle, ['Digital Media']],
+	['3x CD', exampleFormats.bootlegCompilationCDs, ['CD', 'CD', 'CD']],
+	['2x Vinyl LP', exampleFormats.vinylAlbum, ['12" Vinyl', '12" Vinyl']],
+];
+
+describe('convertFormat', () => {
+	for (const [description, specifier, expectedFormats] of formatConversionTests) {
+		it(description, () => assertEquals(convertFormat(specifier), expectedFormats));
+	}
+});
 
 describe('extractMoreDetailsFromFormats', () => {
 	it('detects Album and defaults to Official', () => {
