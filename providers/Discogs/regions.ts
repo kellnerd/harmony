@@ -1,4 +1,5 @@
 import type { CountryCode } from '@/harmonizer/types.ts';
+import { isDefined } from '@/utils/predicate.ts';
 
 /**
  * Converts a Discogs "country" name into an array of country codes.
@@ -8,6 +9,11 @@ export function convertCountryStringToCodes(countryName: string): CountryCode[] 
 	const countryCode = countryNameToCode[countryName];
 	if (countryCode) {
 		return [countryCode];
+	}
+
+	const countryCodes = countryName.split(countrySeparator).map((part) => countryNameToCode[part]);
+	if (countryCodes.every(isDefined)) {
+		return countryCodes;
 	}
 }
 
@@ -243,6 +249,7 @@ const countryNameToCode: Record<string, CountryCode | undefined> = {
 	Tuvalu: 'TV',
 	UK: 'GB',
 	US: 'US',
+	USA: 'US', // only in combinations
 	Uganda: 'UG',
 	Ukraine: 'UA',
 	'United Arab Emirates': 'AE',
@@ -279,6 +286,9 @@ const _missingSubRegions = [
 	{ label: 'Zanzibar', value: '', pos: 278 }, // Tanzania
 	{ label: 'Saar', value: '', pos: 219 }, // Germany
 ];
+
+/** Separator that is used when Discogs joins multiple country/region names. */
+const countrySeparator = /,? & |, /;
 
 const _countryGroups = [
 	{ label: 'Africa', value: '', pos: 22 },
