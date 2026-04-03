@@ -215,7 +215,7 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 
 	private convertRawTrack(rawTrack: QobuzPartialTrack): HarmonyTrack {
 		return {
-			title: rawTrack.title,
+			title: `${rawTrack.title}${rawTrack.version ? ` (${rawTrack.version})` : ''}`,
 			artists: rawTrack.album ? this.getAlbumCredits(rawTrack.album) : [],
 			number: rawTrack.track_number,
 			length: rawTrack.duration * 1000,
