@@ -68,8 +68,8 @@ describe('Qobuz provider', () => {
 			options: releaseOptions,
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
+				assert(release.artists?.length === 2, 'Release should have two artists');
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
-				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
 			},
 		}, {

@@ -39,6 +39,7 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
   gtin: "0748777112495",
   images: [
     {
+      thumbUrl: "https://static.qobuz.com/images/covers/0b/gy/rjrikcvbggy0b_230.jpg",
       types: [
         "front",
       ],
@@ -79,30 +80,7 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
       number: 1,
       tracklist: [
         {
-          artists: [
-            {
-              creditedName: "ivycomb",
-              externalIds: [
-                {
-                  id: "11054867",
-                  provider: "qobuz",
-                  type: "artist",
-                },
-              ],
-              name: "ivycomb",
-            },
-            {
-              creditedName: "Stephanafro",
-              externalIds: [
-                {
-                  id: "11054867",
-                  provider: "qobuz",
-                  type: "artist",
-                },
-              ],
-              name: "Stephanafro",
-            },
-          ],
+          artists: undefined,
           isrc: "QZPEW2452614",
           length: 181000,
           number: 1,
@@ -118,30 +96,7 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
           title: "Suspend My Belief",
         },
         {
-          artists: [
-            {
-              creditedName: "ivycomb",
-              externalIds: [
-                {
-                  id: "11054867",
-                  provider: "qobuz",
-                  type: "artist",
-                },
-              ],
-              name: "ivycomb",
-            },
-            {
-              creditedName: "Stephanafro",
-              externalIds: [
-                {
-                  id: "11054867",
-                  provider: "qobuz",
-                  type: "artist",
-                },
-              ],
-              name: "Stephanafro",
-            },
-          ],
+          artists: undefined,
           isrc: "QZPEW2452615",
           length: 181000,
           number: 2,
