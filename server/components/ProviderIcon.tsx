@@ -12,6 +12,7 @@ const providerIconMap: Record<string, string> = {
 	ototoy: 'brand-ototoy',
 	spotify: 'brand-spotify',
 	tidal: 'brand-tidal',
+	qobuz: 'brand-qobuz',
 };
 
 export type ProviderIconProps = Omit<SpriteIconProps, 'name'> & {

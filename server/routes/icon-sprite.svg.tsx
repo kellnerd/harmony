@@ -27,6 +27,7 @@ import IconSearch from 'tabler-icons/search.tsx';
 import IconVideo from 'tabler-icons/video.tsx';
 import IconWorldPin from 'tabler-icons/world-pin.tsx';
 import IconWorldWww from 'tabler-icons/world-www.tsx';
+import IconBrandQobuz from '@/server/icons/QobuzOutline.tsx';
 
 import type { Handlers } from 'fresh/server.ts';
 import type { JSX } from 'preact';
@@ -65,6 +66,7 @@ const icons: Icon[] = [
 	IconBrandOtotoy,
 	IconBrandSpotify,
 	IconBrandTidal,
+	IconBrandQobuz,
 	IconPuzzle,
 ];
 

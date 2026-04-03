@@ -36,6 +36,7 @@
 	--ototoy: #e07e01;
 	--spotify: #1db954;
 	--tidal: #000000;
+	--qobuz: #000000;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -477,6 +478,9 @@ label.spotify, td.spotify {
 }
 label.tidal, td.tidal {
 	background-color: var(--tidal);
+}
+label.qobuz, td.qobuz {
+	background-color: var(--qobuz);
 }
 
 /* ProviderIcon.tsx */
