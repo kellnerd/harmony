@@ -21,6 +21,8 @@ import {
 } from '@/providers/Qobuz/api_types.ts';
 
 const qobuzAppId = getFromEnv('HARMONY_QOBUZ_APP_ID') || '';
+const qobuzAuthToken = getFromEnv('HARMONY_QOBUZ_AUTH_TOKEN') || '';
+
 export default class QobuzProvider extends MetadataApiProvider {
 	readonly name = 'Qobuz';
 
@@ -70,6 +72,7 @@ export default class QobuzProvider extends MetadataApiProvider {
 			requestInit: {
 				headers: {
 					'X-App-Id': qobuzAppId,
+					'X-User-Auth-Token': qobuzAuthToken
 				},
 			},
 		});
