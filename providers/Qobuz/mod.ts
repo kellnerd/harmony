@@ -6,6 +6,7 @@ import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
 import {
 	ArtistCreditName,
+	Artwork,
 	EntityId,
 	HarmonyMedium,
 	HarmonyRelease,
@@ -19,6 +20,7 @@ import {
 	QobuzPartialTrack,
 	QobuzSearchResponse,
 } from '@/providers/Qobuz/api_types.ts';
+import { isEqualGTIN } from '../../utils/gtin.ts';
 
 const qobuzAppId = getFromEnv('HARMONY_QOBUZ_APP_ID') || '';
 const qobuzAuthToken = getFromEnv('HARMONY_QOBUZ_AUTH_TOKEN') || '';
@@ -94,10 +96,6 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 		return barcode.padStart(13, '0');
 	}
 
-	private removeLeadingZeros(barcode: string): string {
-		return barcode.replace(/^0+/, '');
-	}
-
 	constructReleaseApiUrl(): URL {
 		if (this.lookup.method === 'gtin') {
 			return new URL(`album/search?query=${this.padBarcode(String(this.lookup.value))}`, this.provider.apiBaseUrl);
@@ -113,9 +111,7 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
 			});
 			this.updateCacheTime(timestamp);
-			const matchingAlbum = searchResponse.albums?.items.find((album) =>
-				this.removeLeadingZeros(album.upc) == this.removeLeadingZeros(this.lookup.value)
-			);
+			const matchingAlbum = searchResponse.albums?.items.find((album) => isEqualGTIN(album.upc, this.lookup.value));
 			if (!matchingAlbum) {
 				throw new ResponseError(this.provider.name, 'API returned no matching results', this.constructReleaseApiUrl());
 			}
@@ -153,9 +149,9 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.release_date_stream)),
 			copyright: rawRelease.copyright || undefined,
 			status: 'Official',
-			types: [capitalizeReleaseType(rawRelease.release_type || (rawRelease.tracks_count > 1 ? 'album' : 'single'))],
+			types: rawRelease.release_type ? [capitalizeReleaseType(rawRelease.release_type)] : undefined,
 			packaging: 'None',
-			images: [{ url: this.getMaxImage(rawRelease.image.small), types: ['front'] }],
+			images: this.getAlbumImage(rawRelease.image.small),
 			labels: [{
 				name: rawRelease.label.name,
 				externalIds: this.provider.makeExternalIds({ type: 'label', id: String(rawRelease.label.id) }),
@@ -169,8 +165,13 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 		};
 	}
 
-	private getMaxImage(url: string): string {
-		return url.replace(/_\d+/, '_org');
+	private getAlbumImage(url: string | undefined): Artwork[] | undefined {
+		if (!url) return undefined;
+		return [{
+			url: url.replace(/_\d+/, '_org'),
+			thumbUrl: url,
+			types: ['front'],
+		}];
 	}
 
 	private getAlbumCredits(album: QobuzExtendedAlbum): ArtistCreditName[] {
@@ -207,7 +208,6 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 					tracklist: [],
 				};
 			}
-			track.album = album; // pass album info to track for artist credits
 			medium.tracklist.push(this.convertRawTrack(track));
 		});
 		result.push(medium);
@@ -217,7 +217,7 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 	private convertRawTrack(rawTrack: QobuzPartialTrack): HarmonyTrack {
 		return {
 			title: `${rawTrack.title}${rawTrack.version ? ` (${rawTrack.version})` : ''}`,
-			artists: rawTrack.album ? this.getAlbumCredits(rawTrack.album) : [],
+			artists: undefined,
 			number: rawTrack.track_number,
 			length: rawTrack.duration * 1000,
 			isrc: rawTrack.isrc,
