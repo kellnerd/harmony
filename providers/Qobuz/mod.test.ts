@@ -1,3 +1,4 @@
+import '@std/dotenv/load';
 import type { ReleaseOptions } from '@/harmonizer/types.ts';
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
 import { stubProviderLookups } from '@/providers/test_stubs.ts';
@@ -50,11 +51,6 @@ describe('Qobuz provider', () => {
 			description: 'play.qobuz track page',
 			url: new URL('https://play.qobuz.com/track/285222652'),
 			id: { type: 'track', id: '285222652' },
-		}, {
-			description: 'label page',
-			url: new URL('https://play.qobuz.com/label/97377'),
-			id: { type: 'label', id: '97377' },
-			isCanonical: true,
 		}, {
 			description: 'label page',
 			url: new URL('https://play.qobuz.com/label/97377'),
