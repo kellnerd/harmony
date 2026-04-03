@@ -28,10 +28,10 @@ providers.addMultiple(
 	SpotifyProvider,
 	TidalProvider,
 	BandcampProvider,
+	QobuzProvider,
 	BeatportProvider,
 	MoraProvider,
 	OtotoyProvider,
-	QobuzProvider,
 );
 
 /** Internal names of providers which are enabled by default (for GTIN lookups). */
