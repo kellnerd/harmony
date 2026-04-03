@@ -24,8 +24,6 @@ const qobuzAppId = getFromEnv('HARMONY_QOBUZ_APP_ID') || '';
 export default class QobuzProvider extends MetadataApiProvider {
 	readonly name = 'Qobuz';
 
-	//
-
 	readonly supportedUrls = new URLPattern({
 		hostname: '(play|www|open).qobuz.com',
 		pathname: '/:region?/:type(artist|album|track|interpreter|label)/:slug?/:id',

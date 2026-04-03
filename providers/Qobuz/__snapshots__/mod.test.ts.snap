@@ -1,0 +1,177 @@
+export const snapshot = {};
+
+snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
+{
+  artists: [
+    {
+      creditedName: "ivycomb",
+      externalIds: [
+        {
+          id: "11054867",
+          provider: "qobuz",
+          type: "artist",
+        },
+      ],
+      name: "ivycomb",
+    },
+    {
+      creditedName: "Stephanafro",
+      externalIds: [
+        {
+          id: "11054867",
+          provider: "qobuz",
+          type: "artist",
+        },
+      ],
+      name: "Stephanafro",
+    },
+  ],
+  copyright: "2024 Honeycomb Records 2024 Honeycomb Records",
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://www.qobuz.com/fr-fr/album/suspend-my-belief-ivycomb-stephanafro/rjrikcvbggy0b",
+    },
+  ],
+  gtin: "0748777112495",
+  images: [
+    {
+      types: [
+        "front",
+      ],
+      url: "https://static.qobuz.com/images/covers/0b/gy/rjrikcvbggy0b_org.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://www.qobuz.com/api.json/0.2/album/get?album_id=rjrikcvbggy0b",
+        id: "rjrikcvbggy0b",
+        internalName: "qobuz",
+        lookup: {
+          method: "id",
+          value: "rjrikcvbggy0b",
+        },
+        name: "Qobuz",
+        url: "https://open.qobuz.com/album/rjrikcvbggy0b",
+      },
+    ],
+  },
+  labels: [
+    {
+      externalIds: [
+        {
+          id: "6464867",
+          provider: "qobuz",
+          type: "label",
+        },
+      ],
+      name: "Honeycomb Records",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "ivycomb",
+              externalIds: [
+                {
+                  id: "11054867",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "ivycomb",
+            },
+            {
+              creditedName: "Stephanafro",
+              externalIds: [
+                {
+                  id: "11054867",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Stephanafro",
+            },
+          ],
+          isrc: "QZPEW2452614",
+          length: 181000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "266726922",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "Suspend My Belief",
+        },
+        {
+          artists: [
+            {
+              creditedName: "ivycomb",
+              externalIds: [
+                {
+                  id: "11054867",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "ivycomb",
+            },
+            {
+              creditedName: "Stephanafro",
+              externalIds: [
+                {
+                  id: "11054867",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Stephanafro",
+            },
+          ],
+          isrc: "QZPEW2452615",
+          length: 181000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "266726923",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "Suspend My Belief (Instrumental)",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 13,
+      month: 5,
+      year: 2024,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Suspend My Belief",
+  types: [
+    "Epmini",
+  ],
+}
+`;

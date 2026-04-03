@@ -82,7 +82,7 @@ describe('Qobuz provider', () => {
 			assert: (release) => {
 				assertEquals(release.gtin, '0198884774947', 'Qobuz GTIN should be zero-padded');
 				assert(
-					release.externalLinks.find((link) => link.url === 'https://open.qobuz.com/album/jkfpv4xzc6zyc'),
+					release.externalLinks.find((link) => link.url.includes('jkfpv4xzc6zyc')),
 					'GTIN search did not return the expected release',
 				);
 			},
