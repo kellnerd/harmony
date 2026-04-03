@@ -72,7 +72,7 @@ export default class QobuzProvider extends MetadataApiProvider {
 			requestInit: {
 				headers: {
 					'X-App-Id': qobuzAppId,
-					'X-User-Auth-Token': qobuzAuthToken
+					'X-User-Auth-Token': qobuzAuthToken,
 				},
 			},
 		});
