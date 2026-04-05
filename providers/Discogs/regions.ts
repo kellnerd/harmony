@@ -5,10 +5,15 @@ import { isDefined } from '@/utils/predicate.ts';
  * Converts a Discogs "country" name into an array of country codes.
  */
 export function convertCountryStringToCodes(countryName: string): CountryCode[] | undefined {
-	// TODO: handle groups of multiple countries and historical regions
+	// TODO: handle historical regions and region names?
 	const countryCode = countryNameToCode[countryName];
 	if (countryCode) {
 		return [countryCode];
+	}
+
+	const countryGroupCodes = countryGroupToCodes[countryName];
+	if (countryGroupCodes) {
+		return countryGroupCodes;
 	}
 
 	const countryCodes = countryName.split(countrySeparator).map((part) => countryNameToCode[part]);
@@ -290,43 +295,29 @@ const _missingSubRegions = [
 /** Separator that is used when Discogs joins multiple country/region names. */
 const countrySeparator = /,? & |, /;
 
-const _countryGroups = [
-	{ label: 'Africa', value: '', pos: 22 },
-	{ label: 'Asia', value: '', pos: 23 },
-	{ label: 'Central America', value: '', pos: 24 },
-	{ label: 'North America (inc Mexico)', value: '', pos: 26 },
-	{ label: 'South America', value: '', pos: 27 },
-	{ label: 'UK & Ireland', value: '', pos: 28 },
-	{ label: 'USA & Canada', value: '', pos: 29 },
-	{ label: 'Scandinavia', value: '', pos: 27 },
-	{ label: 'Australia & New Zealand', value: '', pos: 23 },
-	{ label: 'Benelux', value: '', pos: 23 },
-	{ label: 'Gulf Cooperation Council', value: '', pos: 25 },
-	{ label: 'UK, Europe & US', value: '', pos: 28 },
-	{ label: 'UK & Europe', value: '', pos: 28 },
-	{ label: 'Germany, Austria, & Switzerland', value: '', pos: 25 },
-	{ label: 'Australasia', value: '', pos: 23 },
-	{ label: 'USA, Canada & UK', value: '', pos: 29 },
-	{ label: 'Germany & Switzerland', value: '', pos: 25 },
-	{ label: 'UK & US', value: '', pos: 28 },
-	{ label: 'France & Benelux', value: '', pos: 25 },
-	{ label: 'UK & France', value: '', pos: 28 },
-	{ label: 'UK, Europe & Japan', value: '', pos: 28 },
-	{ label: 'Singapore, Malaysia & Hong Kong', value: '', pos: 232 },
-	{ label: 'UK, Europe & Israel', value: '', pos: 28 },
-	{ label: 'Middle East', value: '', pos: 25 },
-	{ label: 'South East Asia', value: '', pos: 27 },
-	{ label: 'USA, Canada & Europe', value: '', pos: 29 },
-	{ label: 'Czech Republic & Slovakia', value: '', pos: 24 },
-	{ label: 'USA & Europe', value: '', pos: 29 },
-	{ label: 'South Pacific', value: '', pos: 239 },
-	{ label: 'Singapore & Malaysia', value: '', pos: 232 },
-	{ label: 'Hong Kong & Thailand', value: '', pos: 134 },
-	{ label: 'North & South America', value: '', pos: 26 },
-	{ label: 'UK & Germany', value: '', pos: 28 },
-	{ label: 'Singapore, Malaysia, Hong Kong & Thailand', value: '', pos: 232 },
-	{ label: 'Russia & CIS', value: '', pos: 217 },
-];
+/**
+ * Maps a country (group) name from Discogs to multiple country codes.
+ *
+ * Since not all terms are unambiguous, we use the most commonly included countries.
+ * Dependent territories with their own ISO codes have been excluded.
+ */
+const countryGroupToCodes: Record<string, CountryCode[] | undefined> = {
+	'Africa': undefined, // too many
+	'Asia': undefined, // too many
+	'Australasia': ['AU', 'NZ', 'PG'], // potentially ID for Western New Guinea
+	'Benelux': ['BE', 'NL', 'LU'],
+	'Central America': ['BZ', 'CR', 'SV', 'GT', 'HN', 'NI', 'PA'],
+	'France & Benelux': ['FR', 'BE', 'NL', 'LU'],
+	'Gulf Cooperation Council': ['AE', 'BA', 'KW', 'OM', 'QA', 'SA'],
+	'Middle East': undefined, // 16 is too many
+	'North America (inc Mexico)': ['CA', 'MX', 'US'],
+	'Russia & CIS': ['RU', 'AM', 'AZ', 'BY', 'GE', 'KG', 'KZ', 'MD', 'TJ', 'TM', 'UA', 'UZ'], // 12 is too many?
+	'Scandinavia': ['DK', 'NO', 'SE'], // potentially FI, IS
+	'South America': ['AR', 'BO', 'BR', 'CL', 'CO', 'EC', 'GY', 'PE', 'PY', 'SR', 'UY', 'VE'], // 12 is too many?
+	'North & South America': undefined, // too many
+	'South East Asia': ['BN', 'ID', 'KH', 'LA', 'MM', 'MY', 'PH', 'SG', 'TH', 'TL', 'VN'], // 11 is too many?
+	'South Pacific': ['FJ', 'SB', 'TO', 'TV', 'VU', 'WS'], // = Melanesia + Polynesia - Australasia ?
+};
 
 const _historicalRegions = [
 	{ label: 'Austria-Hungary', value: 'AUT/HUN', pos: 45 },

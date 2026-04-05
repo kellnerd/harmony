@@ -18,20 +18,29 @@ const countryTestCases: FunctionSpec<typeof convertCountryStringToCodes> = [
 ];
 
 const countryGroupTestCases: Record<string, CountryCode[] | undefined> = {
+	'Africa': undefined, // too many
+	'Asia': undefined, // too many
+	'Australasia': ['AU', 'NZ', 'PG'],
 	'Australia & New Zealand': ['AU', 'NZ'],
-	'Benelux': undefined,
-	'Central America': undefined,
-	'North America (inc Mexico)': undefined,
+	'Benelux': ['BE', 'NL', 'LU'],
+	'Central America': ['BZ', 'CR', 'SV', 'GT', 'HN', 'NI', 'PA'],
 	'Czech Republic & Slovakia': ['CZ', 'SK'],
-	'France & Benelux': undefined,
+	'France & Benelux': ['FR', 'BE', 'NL', 'LU'],
 	'Germany & Switzerland': ['DE', 'CH'],
 	'Germany, Austria, & Switzerland': ['DE', 'AT', 'CH'],
-	'Gulf Cooperation Council': undefined,
+	'Gulf Cooperation Council': ['AE', 'BA', 'KW', 'OM', 'QA', 'SA'],
 	'Hong Kong & Thailand': ['HK', 'TH'],
-	'Scandinavia': undefined,
+	'Middle East': undefined, // too many
+	'North America (inc Mexico)': ['CA', 'MX', 'US'],
+	'North & South America': undefined, // too many
+	'Russia & CIS': ['RU', 'AM', 'AZ', 'BY', 'GE', 'KG', 'KZ', 'MD', 'TJ', 'TM', 'UA', 'UZ'],
+	'Scandinavia': ['DK', 'NO', 'SE'],
 	'Singapore & Malaysia': ['SG', 'MY'],
 	'Singapore, Malaysia & Hong Kong': ['SG', 'MY', 'HK'],
 	'Singapore, Malaysia, Hong Kong & Thailand': ['SG', 'MY', 'HK', 'TH'],
+	'South America': ['AR', 'BO', 'BR', 'CL', 'CO', 'EC', 'GY', 'PE', 'PY', 'SR', 'UY', 'VE'],
+	'South East Asia': ['BN', 'ID', 'KH', 'LA', 'MM', 'MY', 'PH', 'SG', 'TH', 'TL', 'VN'],
+	'South Pacific': ['FJ', 'SB', 'TO', 'TV', 'VU', 'WS'],
 	'UK & Europe': ['GB', 'XE'],
 	'UK, Europe & Israel': ['GB', 'XE', 'IL'],
 	'UK, Europe & Japan': ['GB', 'XE', 'JP'],
@@ -44,7 +53,6 @@ const countryGroupTestCases: Record<string, CountryCode[] | undefined> = {
 	'USA & Europe': ['US', 'XE'],
 	'USA, Canada & Europe': ['US', 'CA', 'XE'],
 	'USA, Canada & UK': ['US', 'CA', 'GB'],
-	'Russia & CIS': undefined,
 };
 
 describe('convertCountryStringToCodes', () => {
