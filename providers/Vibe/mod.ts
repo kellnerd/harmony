@@ -21,6 +21,7 @@ import {
 	NaverParticipant,
 	NaverResponse,
 	NaverTrack,
+	NaverTrackCredits,
 	NaverTrackCreditsResult,
 } from './api_types.ts';
 
@@ -158,7 +159,7 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 			tracklist: [],
 		};
 
-		const tracks = (await this.getRawTracklist(album.albumId)).response.result.tracks;
+		const tracks = await this.getRawTracklist(album.albumId);
 		for (const track of tracks) {
 			if (track.discNumber !== medium.number) {
 				result.push(medium);
@@ -174,16 +175,16 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 		return result;
 	}
 
-	private async getRawTracklist(id: number): Promise<NaverResponse<NaverArtistTracksResult>> {
+	private async getRawTracklist(id: number): Promise<NaverTrack[]> {
 		const apiUrl = new URL(`album/${id}/tracks.json`, this.provider.apiBaseUrl);
-		const { content: naverResult, timestamp } = await this.provider.query<NaverResponse<NaverArtistTracksResult>>(
+		const { content, timestamp } = await this.provider.query<NaverResponse<NaverArtistTracksResult>>(
 			apiUrl,
 			{
 				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
 			},
 		);
 		this.updateCacheTime(timestamp);
-		return naverResult;
+		return content.response.result.tracks;
 	}
 
 	private async convertRawTrack(rawTrack: NaverTrack): Promise<HarmonyTrack> {
@@ -218,7 +219,7 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 			return rawTrack.artists.map((artist) => this.convertRawArtist(artist));
 		}
 		// Fetching credits is pretty inexpensive, so maybe ^ isn't neccesary to avoid extra calls
-		const trackCredits = (await this.getRawTrackCredits(rawTrack.trackId)).response.result.trackCredits;
+		const trackCredits = await this.getRawTrackCredits(rawTrack.trackId);
 		const roles = trackCredits.participantGroupList;
 		const featuringArtists = roles.filter((role) => role.roleName === '피쳐링').flatMap((role) => role.participantList);
 		// const otherArtists = roles.flatMap((role) => role.participantList);
@@ -265,16 +266,16 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 		};
 	}
 
-	private async getRawTrackCredits(id: number): Promise<NaverResponse<NaverTrackCreditsResult>> {
+	private async getRawTrackCredits(id: number): Promise<NaverTrackCredits> {
 		const apiUrl = new URL(`track/${id}/credits.json`, this.provider.apiBaseUrl);
-		const { content: naverResult, timestamp } = await this.provider.query<NaverResponse<NaverTrackCreditsResult>>(
+		const { content, timestamp } = await this.provider.query<NaverResponse<NaverTrackCreditsResult>>(
 			apiUrl,
 			{
 				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
 			},
 		);
 		this.updateCacheTime(timestamp);
-		return naverResult;
+		return content.response.result.trackCredits;
 	}
 
 	private getTrackDuration(duration: string): number {
