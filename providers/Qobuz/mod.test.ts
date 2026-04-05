@@ -30,18 +30,18 @@ describe('Qobuz provider', () => {
 			url: new URL('https://play.qobuz.com/album/n288n588k0dza'),
 			id: { type: 'album', id: 'n288n588k0dza' },
 		}, {
-			description: 'www.qobuz release page with region and slug',
+			description: 'www.qobuz release page with locale and slug',
 			url: new URL('https://www.qobuz.com/fr-fr/album/let-me-battle-9lana/n288n588k0dza'),
-			id: { type: 'album', id: 'n288n588k0dza', region: 'FR-FR', slug: 'let-me-battle-9lana' },
+			id: { type: 'album', id: 'n288n588k0dza', slug: 'let-me-battle-9lana' },
 		}, {
 			description: 'open.qobuz artist page',
 			url: new URL('https://open.qobuz.com/artist/19452726'),
 			id: { type: 'artist', id: '19452726' },
 			isCanonical: true,
 		}, {
-			description: 'www.qobuz artist page with region and slug',
+			description: 'www.qobuz artist page with locale and slug',
 			url: new URL('https://www.qobuz.com/us-en/interpreter/9lana/19452726'),
-			id: { type: 'interpreter', id: '19452726', region: 'US-EN', slug: '9lana' },
+			id: { type: 'interpreter', id: '19452726', slug: '9lana' },
 		}, {
 			description: 'open.qobuz track page',
 			url: new URL('https://open.qobuz.com/track/285222652'),

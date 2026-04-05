@@ -31,7 +31,7 @@ export default class QobuzProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '(play|www|open).qobuz.com',
-		pathname: '/:region?/:type(artist|album|track|interpreter|label)/:slug?/:id',
+		pathname: '/:locale?/:type(artist|album|track|interpreter|label)/:slug?/:id',
 	});
 
 	override readonly features: FeatureQualityMap = {
