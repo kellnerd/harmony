@@ -9,7 +9,7 @@ import type {
 	LinkType,
 } from '@/harmonizer/types.ts';
 import { ApiQueryOptions, CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
-import { FeatureQualityMap } from '@/providers/features.ts';
+import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
 import { cleanBarcode, uniqueGtinSet } from '@/utils/gtin.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
@@ -28,13 +28,19 @@ export default class DiscogsProvider extends MetadataApiProvider {
 		pathname: String.raw`/:locale?/:type(artist|label|release|master)/:id(\d+){-:slug}?`,
 	});
 
-	// TODO: Also try to override optional properties which are (or return) empty arrays/objects in the base class.
-	override readonly features: FeatureQualityMap = {};
+	override readonly features: FeatureQualityMap = {
+		'cover size': 600,
+		'duration precision': DurationPrecision.SECONDS,
+		'GTIN lookup': FeatureQuality.MISSING,
+		'MBID resolving': FeatureQuality.GOOD,
+		'release label': FeatureQuality.GOOD,
+	};
 
 	readonly entityTypeMap = {
 		artist: 'artist',
 		label: 'label',
 		release: 'release',
+		'release-group': 'master',
 	};
 
 	readonly releaseLookup = DiscogsReleaseLookup;
