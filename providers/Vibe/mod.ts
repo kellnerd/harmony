@@ -1,6 +1,7 @@
 import { type ApiQueryOptions, type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
+import { parseDuration } from '@/utils/time.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import {
 	ArtistCreditName,
@@ -193,7 +194,7 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 			// artists: rawTrack.artists.map((artist) => this.convertRawArtist(artist)), <- Misses featuring artist info
 			artists: await this.getTrackArtists(rawTrack),
 			number: rawTrack.trackNumber,
-			length: this.getTrackDuration(rawTrack.playTime),
+			length: parseDuration(rawTrack.playTime) * 1000,
 			recording: {
 				externalIds: this.provider.makeExternalIds({ type: 'track', id: String(rawTrack.trackId) }),
 			},
@@ -276,18 +277,6 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 		);
 		this.updateCacheTime(timestamp);
 		return content.response.result.trackCredits;
-	}
-
-	private getTrackDuration(duration: string): number {
-		const segments = duration.split(':');
-		let ms = 0;
-		if (segments.length == 2) {
-			ms += Number(segments[0]) * 60 * 1000;
-			ms += Number(segments[1]) * 1000;
-		} else if (segments.length == 1) {
-			ms += Number(segments[1]) * 1000;
-		}
-		return ms;
 	}
 }
 
