@@ -135,28 +135,28 @@ export interface NaverTrackInformation {
 
 // Track Credits (/track/{id}/credits.json)
 export interface NaverTrackCreditsResult {
-    trackCredits: NaverTrackCredits
+	trackCredits: NaverTrackCredits;
 }
 
 export interface NaverTrackCredits {
-    trackId: number
-    trackName: string
-    artistIds: string
-    artistNames: string
-    releaseDate: string
-    participantGroupList: NaverParticipantGroup[]
+	trackId: number;
+	trackName: string;
+	artistIds: string;
+	artistNames: string;
+	releaseDate: string;
+	participantGroupList: NaverParticipantGroup[];
 }
 
 export interface NaverParticipantGroup {
-    roleName: string
-    participantList: NaverParticipant[]
+	roleName: string;
+	participantList: NaverParticipant[];
 }
 
 export interface NaverParticipant {
-    id: number
-    name: string
-    likeCount: number
-    imageUrl: string | null
+	id: number;
+	name: string;
+	likeCount: number;
+	imageUrl: string | null;
 }
 
 // Track Detail (/track/{id}.json)
@@ -255,8 +255,8 @@ export interface NaverPartialAlbumWithTracks extends NaverPartialAlbum {
 export interface ApiError {
 	response: {
 		message: {
-			apiStatusCode: string // Seems to be either `NO_SUCH_RESOURCE` or `PROCESS_FAIL`
-			text: string
-		}
-	}
+			apiStatusCode: string; // Seems to be either `NO_SUCH_RESOURCE` or `PROCESS_FAIL`
+			text: string;
+		};
+	};
 }

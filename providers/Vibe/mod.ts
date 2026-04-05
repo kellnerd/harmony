@@ -12,13 +12,23 @@ import {
 	Label,
 	LinkType,
 } from '@/harmonizer/types.ts';
-import { ApiError, NaverAlbum, NaverAlbumResult, NaverArtistTracksResult, NaverPartialArtist, NaverParticipant, NaverResponse, NaverTrack, NaverTrackCreditsResult } from './api_types.ts';
+import {
+	ApiError,
+	NaverAlbum,
+	NaverAlbumResult,
+	NaverArtistTracksResult,
+	NaverPartialArtist,
+	NaverParticipant,
+	NaverResponse,
+	NaverTrack,
+	NaverTrackCreditsResult,
+} from './api_types.ts';
 
 export default class VibeProvider extends MetadataApiProvider {
 	readonly name = 'Naver VIBE';
 
 	override get internalName(): string {
-		return 'vibe'
+		return 'vibe';
 	}
 
 	readonly supportedUrls = new URLPattern({
@@ -45,7 +55,7 @@ export default class VibeProvider extends MetadataApiProvider {
 	override readonly launchDate: PartialDate = {
 		year: 2018,
 		month: 6,
-		day: 11
+		day: 11,
 	};
 
 	readonly apiBaseUrl = 'https://apis.naver.com/vibeWeb/musicapiweb/';
@@ -71,7 +81,6 @@ export default class VibeProvider extends MetadataApiProvider {
 }
 
 export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum> {
-
 	constructReleaseApiUrl(): URL {
 		return new URL(`album/${this.lookup.value}.json`, this.provider.apiBaseUrl);
 	}
@@ -113,19 +122,19 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 	}
 
 	private getAlbumLabels(album: NaverAlbum): Label[] {
-		const rawLabels = [album.agencyName, album.productionName].filter((label) => label != undefined && label!=null);
+		const rawLabels = [album.agencyName, album.productionName].filter((label) => label != undefined && label != null);
 		return rawLabels.map((label) => ({
 			name: label,
 		}));
 	}
 
 	private formatAlbumDate(date: string): string {
-    return date.split(".").join("-");
+		return date.split('.').join('-');
 	}
 
 	private getAlbumImage(url: string | undefined): Artwork[] | undefined {
 		if (!url) return undefined;
-		const imgRegex = /https:\/\/musicmeta-phinf\.pstatic\.net\/[^?]*/
+		const imgRegex = /https:\/\/musicmeta-phinf\.pstatic\.net\/[^?]*/;
 		return [{
 			url: url.match(imgRegex)?.[0] || url,
 			thumbUrl: url,
@@ -167,9 +176,12 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 
 	private async getRawTracklist(id: number): Promise<NaverResponse<NaverArtistTracksResult>> {
 		const apiUrl = new URL(`album/${id}/tracks.json`, this.provider.apiBaseUrl);
-		const { content: naverResult, timestamp } = await this.provider.query<NaverResponse<NaverArtistTracksResult>>(apiUrl, {
-			snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
-		});
+		const { content: naverResult, timestamp } = await this.provider.query<NaverResponse<NaverArtistTracksResult>>(
+			apiUrl,
+			{
+				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+			},
+		);
 		this.updateCacheTime(timestamp);
 		return naverResult;
 	}
@@ -193,13 +205,13 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 				name: artist.artistName,
 				id: artist.artistId,
 				likeCount: 0,
-				imageUrl: artist.imageUrl || null
-			})
-		})
+				imageUrl: artist.imageUrl || null,
+			});
+		});
 	}
 
 	private async getTrackArtists(rawTrack: NaverTrack): Promise<ArtistCreditName[]> {
-		const trackFeatVariations = ['feat.', 'ft.', 'with']
+		const trackFeatVariations = ['feat.', 'ft.', 'with'];
 		if (!trackFeatVariations.some((fv) => rawTrack.trackTitle.toLocaleLowerCase().includes(fv))) {
 			// Skip fetching credits if track name doesn't have some variation of 'feat.' since harmony can't use anything else at the moment
 			// From what I can tell, all tracks on naver with featuring artists have one of the above variations in the title, even the ones with titles in other languages
@@ -208,7 +220,7 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 		// Fetching credits is pretty inexpensive, so maybe ^ isn't neccesary to avoid extra calls
 		const trackCredits = (await this.getRawTrackCredits(rawTrack.trackId)).response.result.trackCredits;
 		const roles = trackCredits.participantGroupList;
-		const featuringArtists = roles.filter((role) => role.roleName === "피쳐링").flatMap((role) => role.participantList);
+		const featuringArtists = roles.filter((role) => role.roleName === '피쳐링').flatMap((role) => role.participantList);
 		// const otherArtists = roles.flatMap((role) => role.participantList);
 		// ^ other artist roles:
 		// 작사 (Lyricist)
@@ -225,49 +237,57 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 		// 피아노 (Piano)
 		// ...
 		const featuringIds = featuringArtists.map((artist) => artist.id);
-		const allArtists = [... this.toParticipants(rawTrack.artists), ...featuringArtists];
-		const uniqueArtists = Array.from(new Map(allArtists.map(artist => [artist.id, artist])).values());
-		const credits: ArtistCreditName[] = []
+		const allArtists = [...this.toParticipants(rawTrack.artists), ...featuringArtists];
+		const uniqueArtists = Array.from(new Map(allArtists.map((artist) => [artist.id, artist])).values());
+		const credits: ArtistCreditName[] = [];
 		let hasMarkedFeat = false;
 		uniqueArtists.forEach((aritst, index) => {
-			const nextFeaturing = (index < uniqueArtists.length - 1 && featuringIds.includes(uniqueArtists[index+1].id));
-			const secondNextFeaturing = (index < uniqueArtists.length - 2 && featuringIds.includes(uniqueArtists[index+2].id));
-			credits.push(this.convertRawParticipant(aritst, nextFeaturing, hasMarkedFeat, secondNextFeaturing))
+			const nextFeaturing = index < uniqueArtists.length - 1 && featuringIds.includes(uniqueArtists[index + 1].id);
+			const secondNextFeaturing = index < uniqueArtists.length - 2 &&
+				featuringIds.includes(uniqueArtists[index + 2].id);
+			credits.push(this.convertRawParticipant(aritst, nextFeaturing, hasMarkedFeat, secondNextFeaturing));
 			if (nextFeaturing) hasMarkedFeat = true;
-		})
+		});
 		return credits;
 	}
 
-	private convertRawParticipant(rawArtist: NaverParticipant, nextFeaturing = false, hasMarkedFeat = false, secondNextFeaturing = false): ArtistCreditName {
+	private convertRawParticipant(
+		rawArtist: NaverParticipant,
+		nextFeaturing = false,
+		hasMarkedFeat = false,
+		secondNextFeaturing = false,
+	): ArtistCreditName {
 		return {
 			name: rawArtist.name,
 			creditedName: rawArtist.name,
 			externalIds: this.provider.makeExternalIds({ type: 'artist', id: String(rawArtist.id) }),
-			joinPhrase: !hasMarkedFeat ? nextFeaturing  ? ' feat. ' : secondNextFeaturing ? ' & ': undefined: undefined
+			joinPhrase: !hasMarkedFeat ? nextFeaturing ? ' feat. ' : secondNextFeaturing ? ' & ' : undefined : undefined,
 		};
 	}
 
 	private async getRawTrackCredits(id: number): Promise<NaverResponse<NaverTrackCreditsResult>> {
 		const apiUrl = new URL(`track/${id}/credits.json`, this.provider.apiBaseUrl);
-		const { content: naverResult, timestamp } = await this.provider.query<NaverResponse<NaverTrackCreditsResult>>(apiUrl, {
-			snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
-		});
+		const { content: naverResult, timestamp } = await this.provider.query<NaverResponse<NaverTrackCreditsResult>>(
+			apiUrl,
+			{
+				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+			},
+		);
 		this.updateCacheTime(timestamp);
 		return naverResult;
 	}
 
 	private getTrackDuration(duration: string): number {
-			const segments = duration.split(":");
-			let ms = 0;
-			if (segments.length == 2) {
-					ms += Number(segments[0]) * 60 * 1000;
-					ms += Number(segments[1]) * 1000;
-			} else if (segments.length == 1){
-					ms += Number(segments[1]) * 1000;
-			}
-			return ms;
+		const segments = duration.split(':');
+		let ms = 0;
+		if (segments.length == 2) {
+			ms += Number(segments[0]) * 60 * 1000;
+			ms += Number(segments[1]) * 1000;
+		} else if (segments.length == 1) {
+			ms += Number(segments[1]) * 1000;
+		}
+		return ms;
 	}
-
 }
 
 class VibeResponseError extends ResponseError {
