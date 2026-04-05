@@ -23,29 +23,29 @@ export default class VibeProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: 'vibe.naver.com',
-		pathname: '/:type(artist|album|track)/:id',
+		pathname: '/:type(artist|album|track)/:id(\\d+)',
 	});
 
 	override readonly features: FeatureQualityMap = {
 		'cover size': 3000,
 		'duration precision': DurationPrecision.SECONDS,
 		'GTIN lookup': FeatureQuality.MISSING,
-		'MBID resolving': FeatureQuality.GOOD,
+		'MBID resolving': FeatureQuality.PRESENT,
 		'release label': FeatureQuality.PRESENT,
 	};
 
 	readonly entityTypeMap = {
-		artist: ['artist', 'interpreter'],
+		artist: 'artist',
 		release: 'album',
 		recording: 'track',
-		label: 'label',
 	};
 
 	readonly releaseLookup = VibeReleaseLookup;
 
 	override readonly launchDate: PartialDate = {
-		year: 2007,
-		month: 8,
+		year: 2018,
+		month: 6,
+		day: 11
 	};
 
 	readonly apiBaseUrl = 'https://apis.naver.com/vibeWeb/musicapiweb/';
@@ -64,7 +64,7 @@ export default class VibeProvider extends MetadataApiProvider {
 		});
 		const error = cacheEntry.content as ApiError;
 		if (error.response.message) {
-			throw new QobuzResponseError(error, apiUrl);
+			throw new VibeResponseError(error, apiUrl);
 		}
 		return cacheEntry;
 	}
@@ -81,12 +81,11 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 		if (this.lookup.method === 'gtin') {
 			throw new ProviderError(this.provider.name, 'GTIN lookups are not supported');
 		} else {
-			const { content: naverResult, timestamp } = await this.provider.query<NaverResponse<NaverAlbumResult>>(apiUrl, {
+			const { content, timestamp } = await this.provider.query<NaverResponse<NaverAlbumResult>>(apiUrl, {
 				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
 			});
 			this.updateCacheTime(timestamp);
-			const release = naverResult.response.result.album;
-			return release;
+			return content.response.result.album;
 		}
 	}
 
@@ -271,8 +270,8 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 
 }
 
-class QobuzResponseError extends ResponseError {
+class VibeResponseError extends ResponseError {
 	constructor(readonly details: ApiError, url: URL) {
-		super('Qobuz', `${details.response.message.text} (${details.response.message.apiStatusCode})`, url);
+		super('Naver VIBE', `${details.response.message.text} (${details.response.message.apiStatusCode})`, url);
 	}
 }
