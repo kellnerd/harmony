@@ -66,13 +66,19 @@ describe('Naver provider', () => {
 					[' & ', ' feat. ', undefined, undefined, undefined],
 					[' & ', ' feat. ', undefined, undefined, undefined],
 					[' & ', ' feat. ', undefined, undefined, undefined],
-					[' & ', ' feat. ', undefined, undefined, undefined]
-				]
+					[' & ', ' feat. ', undefined, undefined, undefined],
+				];
 				assert(allTracks.length == creditsMatrix.length, `Album has the correct number of tracks`);
 				allTracks.forEach((track, index) => {
-					assert(track.artists?.length == creditsMatrix[index].length, `Track ${index+1} has the right number of artists`);
-					assert(track.artists?.every((artist, aIndex) => artist.joinPhrase == creditsMatrix[index][aIndex]), `Track ${index+1} artists match join phrases`);
-				})
+					assert(
+						track.artists?.length == creditsMatrix[index].length,
+						`Track ${index + 1} has the right number of artists`,
+					);
+					assert(
+						track.artists?.every((artist, aIndex) => artist.joinPhrase == creditsMatrix[index][aIndex]),
+						`Track ${index + 1} artists match join phrases`,
+					);
+				});
 			},
 		}, {
 			description: 'album with differing numbers of featuring artists',
@@ -99,12 +105,18 @@ describe('Naver provider', () => {
 					[undefined, undefined],
 					[undefined, undefined, ' & ', ' feat. ', undefined],
 					[' feat. ', undefined],
-				]
+				];
 				assert(allTracks.length == creditsMatrix.length, `Album has the correct number of tracks`);
 				allTracks.forEach((track, index) => {
-					assert(track.artists?.length == creditsMatrix[index].length, `Track ${index+1} has the right number of artists`);
-					assert(track.artists?.every((artist, aIndex) => artist.joinPhrase == creditsMatrix[index][aIndex]), `Track ${index+1} matches join phrases`);
-				})
+					assert(
+						track.artists?.length == creditsMatrix[index].length,
+						`Track ${index + 1} has the right number of artists`,
+					);
+					assert(
+						track.artists?.every((artist, aIndex) => artist.joinPhrase == creditsMatrix[index][aIndex]),
+						`Track ${index + 1} matches join phrases`,
+					);
+				});
 			},
 		}],
 	});
