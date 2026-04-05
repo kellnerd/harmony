@@ -12,6 +12,7 @@ import {
 	HarmonyRelease,
 	HarmonyTrack,
 	LinkType,
+	ReleaseGroupType,
 } from '@/harmonizer/types.ts';
 import {
 	ApiError,
@@ -149,7 +150,7 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.release_date_stream)),
 			copyright: rawRelease.copyright || undefined,
 			status: 'Official',
-			types: rawRelease.release_type ? [capitalizeReleaseType(rawRelease.release_type)] : undefined,
+			types: this.mapAlbumType(rawRelease.release_type),
 			packaging: 'None',
 			images: this.getAlbumImage(rawRelease.image.small),
 			labels: [{
@@ -163,6 +164,16 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 			info: this.generateReleaseInfo(),
 			gtin: rawRelease.upc,
 		};
+	}
+
+	private mapAlbumType(rawType: string | undefined): ReleaseGroupType[] | undefined {
+		if (!rawType) return undefined;
+		switch (rawType.toLocaleLowerCase()) {
+			case 'epmini':
+				return ['EP'];
+			default:
+				return [capitalizeReleaseType(rawType)];
+		}
 	}
 
 	private getAlbumImage(url: string | undefined): Artwork[] | undefined {

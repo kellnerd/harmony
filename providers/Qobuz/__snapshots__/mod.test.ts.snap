@@ -126,7 +126,7 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
   status: "Official",
   title: "Suspend My Belief",
   types: [
-    "Epmini",
+    "EP",
   ],
 }
 `;
