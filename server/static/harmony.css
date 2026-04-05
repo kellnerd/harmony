@@ -34,9 +34,9 @@
 	--mora: #02082a;
 	--musicbrainz: #ba478f;
 	--ototoy: #e07e01;
+	--qobuz: #000000;
 	--spotify: #1db954;
 	--tidal: #000000;
-	--qobuz: #000000;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -473,14 +473,14 @@ label.musicbrainz, td.musicbrainz {
 label.ototoy, td.ototoy {
 	background-color: var(--ototoy);
 }
+label.qobuz, td.qobuz {
+	background-color: var(--qobuz);
+}
 label.spotify, td.spotify {
 	background-color: var(--spotify);
 }
 label.tidal, td.tidal {
 	background-color: var(--tidal);
-}
-label.qobuz, td.qobuz {
-	background-color: var(--qobuz);
 }
 
 /* ProviderIcon.tsx */
