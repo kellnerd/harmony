@@ -1,0 +1,187 @@
+export const snapshot = {};
+
+snapshot[`Naver provider > release lookup > single with a featuring artist 1`] = `
+{
+  artists: [
+    {
+      creditedName: "ivycomb",
+      externalIds: [
+        {
+          id: "8956811",
+          provider: "vibe",
+          type: "artist",
+        },
+      ],
+      name: "ivycomb",
+    },
+  ],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://vibe.naver.com/album/34923420",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://musicmeta-phinf.pstatic.net/album/034/923/34923420.jpg?type=r480Fll&v=20250810043508",
+      types: [
+        "front",
+      ],
+      url: "https://musicmeta-phinf.pstatic.net/album/034/923/34923420.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://apis.naver.com/vibeWeb/musicapiweb/album/34923420.json",
+        id: "34923420",
+        internalName: "vibe",
+        lookup: {
+          method: "id",
+          value: "34923420",
+        },
+        name: "Naver VIBE",
+        url: "https://vibe.naver.com/album/34923420",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "Honeycomb Records",
+    },
+    {
+      name: "Kanjian",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "ivycomb",
+              externalIds: [
+                {
+                  id: "8956811",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "ivycomb",
+            },
+            {
+              creditedName: "OodleZz",
+              externalIds: [
+                {
+                  id: "9943775",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "OodleZz",
+            },
+          ],
+          length: 224000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "96143271",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "THE RINGMASTER (Feat. OodleZz)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "ivycomb",
+              externalIds: [
+                {
+                  id: "8956811",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "ivycomb",
+            },
+            {
+              creditedName: "OodleZz",
+              externalIds: [
+                {
+                  id: "9943775",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "OodleZz",
+            },
+          ],
+          length: 224000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "96143273",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "THE RINGMASTER - YouTube Mix (Feat. OodleZz)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "ivycomb",
+              externalIds: [
+                {
+                  id: "8956811",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              name: "ivycomb",
+            },
+          ],
+          length: 224000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "96143275",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "THE RINGMASTER - Instrumental",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 13,
+      month: 6,
+      year: 2025,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "THE RINGMASTER",
+}
+`;
