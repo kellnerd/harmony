@@ -38,7 +38,7 @@ export default class QobuzProvider extends MetadataApiProvider {
 		'cover size': 3000,
 		'duration precision': DurationPrecision.SECONDS,
 		'GTIN lookup': FeatureQuality.GOOD,
-		'MBID resolving': FeatureQuality.GOOD,
+		'MBID resolving': FeatureQuality.EXPENSIVE,
 		'release label': FeatureQuality.PRESENT,
 	};
 
@@ -53,7 +53,8 @@ export default class QobuzProvider extends MetadataApiProvider {
 
 	override readonly launchDate: PartialDate = {
 		year: 2007,
-		month: 8,
+		month: 9,
+		day: 18
 	};
 
 	readonly apiBaseUrl = 'https://www.qobuz.com/api.json/0.2/';
