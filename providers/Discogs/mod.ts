@@ -9,8 +9,15 @@ import type {
 	Label as HarmonyLabel,
 	LinkType,
 } from '@/harmonizer/types.ts';
-import { ApiQueryOptions, CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
+import {
+	ApiQueryOptions,
+	CacheEntry,
+	MetadataApiProvider,
+	ProviderOptions,
+	ReleaseApiLookup,
+} from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
+import { getFromEnv } from '@/utils/config.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
 import { cleanBarcode, uniqueGtinSet } from '@/utils/gtin.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
@@ -21,7 +28,38 @@ import { convertFormat, extractMoreDetailsFromFormats } from './format.ts';
 import { convertCountryStringToCodes } from './regions.ts';
 import { combineTracklistSectionsToMedia, splitTracklistIntoSections, type TracklistSection } from './tracklist.ts';
 
+const discogsKey = getFromEnv('HARMONY_DISCOGS_CONSUMER_KEY');
+const discogsSecret = getFromEnv('HARMONY_DISCOGS_CONSUMER_SECRET');
+
 export default class DiscogsProvider extends MetadataApiProvider {
+	constructor(options: ProviderOptions = {}) {
+		const isAuthenticated = Boolean(discogsKey && discogsSecret);
+
+		super({
+			rateLimitInterval: 60_000,
+			// TODO: For some reason X-Discogs-Ratelimit is always 25, even when I am authenticated and it should be 60...
+			// concurrentRequests: isAuthenticated ? 60 : 25,
+			concurrentRequests: 25,
+			...options,
+		});
+
+		let userAgent = 'Harmony';
+		if (options.appInfo) {
+			const { name, version, contact } = options.appInfo;
+			userAgent = `${name}/${version}`;
+			if (contact) {
+				userAgent += ` +${contact}`;
+			}
+		}
+
+		this.requestHeaders = new Headers({
+			'User-Agent': userAgent,
+		});
+		if (isAuthenticated) {
+			this.requestHeaders.set('Authentication', `Discogs key=${discogsKey}, secret=${discogsSecret}`);
+		}
+	}
+
 	readonly name = 'Discogs';
 
 	readonly supportedUrls = new URLPattern({
@@ -57,6 +95,9 @@ export default class DiscogsProvider extends MetadataApiProvider {
 	async query<Data>(apiUrl: URL, options: ApiQueryOptions): Promise<CacheEntry<Data>> {
 		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
 			policy: { maxTimestamp: options.snapshotMaxTimestamp },
+			requestInit: {
+				headers: this.requestHeaders,
+			},
 		});
 		return cacheEntry;
 	}
@@ -65,6 +106,8 @@ export default class DiscogsProvider extends MetadataApiProvider {
 	cleanName(name: string): string {
 		return name.replace(/ \(\d+\)$/, '');
 	}
+
+	private requestHeaders: Headers;
 }
 
 export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Release> {
