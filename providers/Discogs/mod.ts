@@ -19,11 +19,22 @@ import {
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { getFromEnv } from '@/utils/config.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
+import { ResponseError } from '@/utils/errors.ts';
 import { cleanBarcode, uniqueGtinSet } from '@/utils/gtin.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
 import { isDefined } from '@/utils/predicate.ts';
 import { parseDuration } from '@/utils/time.ts';
-import type { Artist, Identifier, Image, Label, Release, Track } from './api_types.ts';
+import type {
+	ApiError,
+	Artist,
+	Identifier,
+	Image,
+	Label,
+	Release,
+	ReleaseResult,
+	SearchResults,
+	Track,
+} from './api_types.ts';
 import { convertFormat, extractMoreDetailsFromFormats } from './format.ts';
 import { convertCountryStringToCodes } from './regions.ts';
 import { combineTracklistSectionsToMedia, splitTracklistIntoSections, type TracklistSection } from './tracklist.ts';
@@ -70,7 +81,7 @@ export default class DiscogsProvider extends MetadataApiProvider {
 	override readonly features: FeatureQualityMap = {
 		'cover size': 600,
 		'duration precision': DurationPrecision.SECONDS,
-		'GTIN lookup': FeatureQuality.MISSING,
+		'GTIN lookup': FeatureQuality.GOOD,
 		'MBID resolving': FeatureQuality.GOOD,
 		'release label': FeatureQuality.GOOD,
 	};
@@ -84,8 +95,10 @@ export default class DiscogsProvider extends MetadataApiProvider {
 
 	readonly releaseLookup = DiscogsReleaseLookup;
 
+	readonly baseUrl = 'https://www.discogs.com';
+
 	constructUrl(entity: EntityId): URL {
-		return new URL([entity.type, entity.id].join('/'), 'https://www.discogs.com');
+		return new URL([entity.type, entity.id].join('/'), this.baseUrl);
 	}
 
 	override getLinkTypesForEntity(): LinkType[] {
@@ -99,6 +112,10 @@ export default class DiscogsProvider extends MetadataApiProvider {
 				headers: this.requestHeaders,
 			},
 		});
+		const apiError = cacheEntry.content as ApiError;
+		if (apiError.message) {
+			throw new ResponseError(this.name, apiError.message, apiUrl);
+		}
 		return cacheEntry;
 	}
 
@@ -112,10 +129,43 @@ export default class DiscogsProvider extends MetadataApiProvider {
 
 export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Release> {
 	constructReleaseApiUrl(): URL {
-		return new URL(`releases/${this.lookup.value}`, 'https://api.discogs.com');
+		const apiBaseUrl = 'https://api.discogs.com';
+		switch (this.lookup.method) {
+			case 'id':
+				return new URL(`releases/${this.lookup.value}`, apiBaseUrl);
+			case 'gtin': {
+				const searchUrl = new URL('database/search', apiBaseUrl);
+				searchUrl.searchParams.set('type', 'release');
+				searchUrl.searchParams.set('barcode', this.lookup.value);
+				return searchUrl;
+			}
+		}
 	}
 
 	async getRawRelease(): Promise<Release> {
+		if (this.lookup.method !== 'id') {
+			const apiUrl = this.constructReleaseApiUrl();
+			const { content, timestamp } = await this.provider.query<SearchResults<ReleaseResult>>(apiUrl, {
+				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+			});
+			this.updateCacheTime(timestamp);
+
+			const releaseResults = content.results;
+			if (releaseResults.length) {
+				// Lookup again by ID to get release details.
+				this.lookup = {
+					method: 'id',
+					value: releaseResults[0].id.toString(),
+				};
+				if (releaseResults.length > 1) {
+					this.warnMultipleResults(
+						releaseResults.slice(1).map((result) => new URL(result.resource_url, this.provider.baseUrl)),
+					);
+				}
+			} else {
+				throw new ResponseError(this.provider.name, 'API returned no results', apiUrl);
+			}
+		}
 		const apiUrl = this.constructReleaseApiUrl();
 		const { content: release, timestamp } = await this.provider.query<Release>(apiUrl, {
 			snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,

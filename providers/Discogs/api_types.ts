@@ -102,3 +102,58 @@ export interface Image {
 	width: number;
 	height: number;
 }
+
+export interface SearchResults<T> {
+	pagination: Pagination;
+	results: T[];
+}
+
+export interface Pagination {
+	/** Current page number. */
+	page: number;
+	/** Total number of pages. */
+	pages: number;
+	/** Total number of results. */
+	items: number;
+	/** Number of results per page. Default: 50, Maximum: 100. */
+	per_page: number;
+	/** URLs of other result pages. */
+	urls: {
+		first?: string;
+		prev?: string;
+		next?: string;
+		last?: string;
+	};
+}
+
+export interface ReleaseResult {
+	type: 'release';
+	/** Discogs ID of the result. */
+	id: number;
+	/** Artist - Title */
+	title: string;
+	country: string;
+	year: string;
+	/** Release labels and other companies. */
+	label: string[];
+	catno: string;
+	/** Barcodes and other identifiers. */
+	barcode?: string[];
+	style: string[];
+	genre: string[];
+	formats: ReleaseFormat[];
+	/** Short form of the release format. */
+	format: string[];
+	/** Always empty, even when authenticated? */
+	cover_image: string;
+	/** Always empty, even when authenticated? */
+	thumb: string;
+	/** API URL of the result. */
+	resource_url: string;
+	/** Relative link to the result. */
+	uri: string;
+}
+
+export interface ApiError {
+	message: string;
+}
