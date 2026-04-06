@@ -6,6 +6,7 @@ import { ProviderRegistry } from './registry.ts';
 import BandcampProvider from './Bandcamp/mod.ts';
 import BeatportProvider from './Beatport/mod.ts';
 import DeezerProvider from './Deezer/mod.ts';
+import DiscogsProvider from './Discogs/mod.ts';
 import iTunesProvider from './iTunes/mod.ts';
 import MusicBrainzProvider from './MusicBrainz/mod.ts';
 import OtotoyProvider from './Ototoy/mod.ts';
@@ -22,6 +23,7 @@ export const providers = new ProviderRegistry({
 // Register all providers which should be used.
 providers.addMultiple(
 	MusicBrainzProvider,
+	DiscogsProvider,
 	DeezerProvider,
 	iTunesProvider,
 	SpotifyProvider,
