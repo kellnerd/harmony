@@ -140,7 +140,7 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 				types: this.provider.getLinkTypesForEntity(),
 			}],
 			media: this.convertMedia(rawRelease),
-			releaseDate: this.convertReleaseDate(parseHyphenatedDate(rawRelease.released)),
+			releaseDate: rawRelease.released ? this.convertReleaseDate(parseHyphenatedDate(rawRelease.released)) : undefined,
 			labels: rawRelease.labels.map(this.convertRawLabel.bind(this)),
 			...extractMoreDetailsFromFormats(rawRelease.formats),
 			releaseGroup: rawRelease.master_id

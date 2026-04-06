@@ -4,7 +4,7 @@ export interface Release {
 	title: string;
 	artists: Artist[];
 	/** Release date (YYYY-MM-DD). */
-	released: string;
+	released?: string;
 	/** Name of the country (or region) of release. */
 	country: string | null;
 	/** Release labels with catalog numbers. */
