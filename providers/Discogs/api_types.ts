@@ -21,6 +21,8 @@ export interface Release {
 	extraartists?: Artist[];
 	/** Credited companies. */
 	companies: Label[];
+	/** Images of the release, excluding all disabled images. */
+	images: Image[];
 	/** API URL of the release. */
 	resource_url: string;
 }
@@ -86,4 +88,17 @@ export interface ReleaseFormat {
 	descriptions: string[];
 	/** Freeform text, may contain packaging. */
 	text?: string;
+}
+
+export interface Image {
+	/** Type of the image. */
+	type: 'primary' | 'secondary';
+	/** URL of the 600x600 image. */
+	uri: string;
+	/** Same as `uri`.*/
+	resource_url: string;
+	/** URL of the 150x150 thumbnail. */
+	uri150: string;
+	width: number;
+	height: number;
 }

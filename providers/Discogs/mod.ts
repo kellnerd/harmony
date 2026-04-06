@@ -1,5 +1,6 @@
 import type {
 	ArtistCreditName,
+	Artwork,
 	CountryCode,
 	EntityId,
 	HarmonyMedium,
@@ -15,7 +16,7 @@ import { cleanBarcode, uniqueGtinSet } from '@/utils/gtin.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
 import { isDefined } from '@/utils/predicate.ts';
 import { parseDuration } from '@/utils/time.ts';
-import type { Artist, Identifier, Label, Release, Track } from './api_types.ts';
+import type { Artist, Identifier, Image, Label, Release, Track } from './api_types.ts';
 import { convertFormat, extractMoreDetailsFromFormats } from './format.ts';
 import { convertCountryStringToCodes } from './regions.ts';
 import { combineTracklistSectionsToMedia, splitTracklistIntoSections, type TracklistSection } from './tracklist.ts';
@@ -104,7 +105,7 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 					externalIds: this.provider.makeExternalIds({ type: 'master', id: rawRelease.master_id.toString() }),
 				}
 				: undefined,
-			images: [],
+			images: rawRelease.images.map(this.convertImage),
 			availableIn: rawRelease.country ? this.convertCountry(rawRelease.country) : undefined,
 			info: this.generateReleaseInfo(),
 		};
@@ -201,6 +202,14 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 		} else {
 			this.addMessage(`Unknown country '${countryName}' was ignored`, 'warning');
 		}
+	}
+
+	convertImage(image: Image): Artwork {
+		return {
+			url: image.uri,
+			// thumbUrl: image.uri150, // JPEG Q40 is too blurry
+			types: image.type === 'primary' ? ['front'] : undefined,
+		};
 	}
 
 	findBarcode(identifiers: Identifier[]): string | undefined {
