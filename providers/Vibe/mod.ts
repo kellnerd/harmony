@@ -106,6 +106,18 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 			type: 'album',
 		};
 
+		const linkTypes: LinkType[] = [];
+
+		const albumStatus = rawRelease.serviceStatusMsg?.split('_') || []; // Can have any parts of 'STREAMING_DRM_PRDD_AODD'
+
+		if (albumStatus.includes('STREAMING')) {
+			linkTypes.push('paid streaming');
+		}
+
+		if (albumStatus.includes('PRDD')) { // Determines the downloadable state of an album, Seems to correspond with 'isPrdd' on tracks
+			linkTypes.push('paid download');
+		}
+
 		return {
 			title: rawRelease.albumTitle,
 			artists: rawRelease.artists.map((artist) => this.convertRawArtist(artist)),
@@ -117,7 +129,7 @@ export class VibeReleaseLookup extends ReleaseApiLookup<VibeProvider, NaverAlbum
 			labels: this.getAlbumLabels(rawRelease),
 			externalLinks: [{
 				url: this.provider.constructUrl(this.entity).toString(),
-				types: this.provider.getLinkTypesForEntity(),
+				types: linkTypes,
 			}],
 			info: this.generateReleaseInfo(),
 		};

@@ -94,6 +94,7 @@ export interface NaverAlbum extends NaverAlbumBase {
 	agencyName: string;
 	productionName: string;
 	artists: NaverPartialArtist[];
+	serviceStatusMsg: string;
 	sizeAndDuration: string;
 	trackTotalCount: number;
 	artistTotalCount: number;
