@@ -54,7 +54,7 @@ export default class QobuzProvider extends MetadataApiProvider {
 	override readonly launchDate: PartialDate = {
 		year: 2007,
 		month: 9,
-		day: 18
+		day: 18,
 	};
 
 	readonly apiBaseUrl = 'https://www.qobuz.com/api.json/0.2/';
@@ -144,6 +144,16 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 			type: 'album',
 		};
 
+		const linkTypes: LinkType[] = [];
+
+		if (rawRelease.streamable) {
+			linkTypes.push('paid streaming');
+		}
+
+		if (rawRelease.downloadable) {
+			linkTypes.push('paid download');
+		}
+
 		return {
 			title: rawRelease.title,
 			artists: this.getAlbumCredits(rawRelease),
@@ -159,8 +169,8 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 				externalIds: this.provider.makeExternalIds({ type: 'label', id: String(rawRelease.label.id) }),
 			}],
 			externalLinks: [{
-				url: rawRelease.url,
-				types: this.provider.getLinkTypesForEntity(),
+				url: this.provider.constructUrl(this.entity).toString(),
+				types: linkTypes,
 			}],
 			info: this.generateReleaseInfo(),
 			gtin: rawRelease.upc,
