@@ -48,6 +48,7 @@ describe('Naver provider', () => {
 				await assertSnapshot(ctx, release);
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
 				assert(allTracks[0].artists?.length === 2, 'Main track should have two artists');
+				assert(release.externalLinks.find((link) => link.types?.includes('paid streaming') && !link.types.includes('paid download')), 'Release should be streamable but not downloadable')
 			},
 		}, {
 			description: 'album with many featuring artists',
@@ -79,6 +80,7 @@ describe('Naver provider', () => {
 						`Track ${index + 1} artists match join phrases`,
 					);
 				});
+				assert(release.externalLinks.find((link) => link.types?.includes('paid streaming') && link.types.includes('paid download')), 'Release should be streamable and downloadable')
 			},
 		}, {
 			description: 'album with differing numbers of featuring artists',
@@ -117,6 +119,7 @@ describe('Naver provider', () => {
 						`Track ${index + 1} matches join phrases`,
 					);
 				});
+				assert(release.externalLinks.find((link) => !link.types?.includes('paid streaming') && !link.types?.includes('paid download')), 'Release should not be streamable or downloadable')
 			},
 		}],
 	});

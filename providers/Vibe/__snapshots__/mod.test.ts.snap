@@ -19,7 +19,6 @@ snapshot[`Naver provider > release lookup > single with a featuring artist 1`] =
     {
       types: [
         "paid streaming",
-        "paid download",
       ],
       url: "https://vibe.naver.com/album/34923420",
     },
@@ -1053,10 +1052,7 @@ snapshot[`Naver provider > release lookup > album with differing numbers of feat
   ],
   externalLinks: [
     {
-      types: [
-        "paid streaming",
-        "paid download",
-      ],
+      types: [],
       url: "https://vibe.naver.com/album/3034414",
     },
   ],
