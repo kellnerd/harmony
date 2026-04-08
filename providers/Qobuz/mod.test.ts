@@ -71,6 +71,12 @@ describe('Qobuz provider', () => {
 				assert(release.artists?.length === 2, 'Release should have two artists');
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
 				assert(allTracks.every((track) => track.isrc), 'All tracks should have an ISRC');
+				assert(
+					release.externalLinks.find((link) =>
+						link.types?.includes('paid streaming') && link.types.includes('paid download')
+					),
+					'Release should be streamable and downloadable',
+				);
 			},
 		}, {
 			description: 'find release by (zero-padded) GTIN',
@@ -80,6 +86,19 @@ describe('Qobuz provider', () => {
 				assert(
 					release.externalLinks.find((link) => link.url.includes('jkfpv4xzc6zyc')),
 					'GTIN search did not return the expected release',
+				);
+			},
+		}, {
+			description: 'non-downloadable album',
+			release: new URL('https://play.qobuz.com/album/fyg86ag6jm8db'),
+			options: releaseOptions,
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+				assert(
+					release.externalLinks.find((link) =>
+						link.types?.includes('paid streaming') && !link.types.includes('paid download')
+					),
+					'Release should be streamable but not downloadable',
 				);
 			},
 		}],

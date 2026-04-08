@@ -33,7 +33,7 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
         "paid streaming",
         "paid download",
       ],
-      url: "https://www.qobuz.com/fr-fr/album/suspend-my-belief-ivycomb-stephanafro/rjrikcvbggy0b",
+      url: "https://open.qobuz.com/album/rjrikcvbggy0b",
     },
   ],
   gtin: "0748777112495",
@@ -127,6 +127,269 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
   title: "Suspend My Belief",
   types: [
     "EP",
+  ],
+}
+`;
+
+snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
+{
+  artists: [
+    {
+      creditedName: "DECO*27",
+      externalIds: [
+        {
+          id: "3284769",
+          provider: "qobuz",
+          type: "artist",
+        },
+      ],
+      name: "DECO*27",
+    },
+  ],
+  copyright: "© 2019 NBCUniversal Entertainment. ℗ 2019 NBCUniversal Entertainment.",
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+      ],
+      url: "https://open.qobuz.com/album/fyg86ag6jm8db",
+    },
+  ],
+  gtin: "5021732654168",
+  images: [
+    {
+      thumbUrl: "https://static.qobuz.com/images/covers/db/m8/fyg86ag6jm8db_230.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://static.qobuz.com/images/covers/db/m8/fyg86ag6jm8db_org.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://www.qobuz.com/api.json/0.2/album/get?album_id=fyg86ag6jm8db",
+        id: "fyg86ag6jm8db",
+        internalName: "qobuz",
+        lookup: {
+          method: "id",
+          value: "fyg86ag6jm8db",
+        },
+        name: "Qobuz",
+        url: "https://open.qobuz.com/album/fyg86ag6jm8db",
+      },
+    ],
+  },
+  labels: [
+    {
+      externalIds: [
+        {
+          id: "7642777",
+          provider: "qobuz",
+          type: "label",
+        },
+      ],
+      name: "NBCUniversal Entertainment",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: undefined,
+          isrc: "JPPI01900110",
+          length: 37000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "322082950",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "Reunion",
+        },
+        {
+          artists: undefined,
+          isrc: "JPPI01900120",
+          length: 210000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "322082951",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "アンドロイドガール",
+        },
+        {
+          artists: undefined,
+          isrc: "JPPI01900130",
+          length: 183000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "322082952",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "スクランブル交際",
+        },
+        {
+          artists: undefined,
+          isrc: "JPPI01900140",
+          length: 229000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "322082953",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "モスキート",
+        },
+        {
+          artists: undefined,
+          isrc: "JPPI01900150",
+          length: 223000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "322082954",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "乙女解剖",
+        },
+        {
+          artists: undefined,
+          isrc: "JPPI01900160",
+          length: 186000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "322082955",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "人質交換",
+        },
+        {
+          artists: undefined,
+          isrc: "JPPI01900220",
+          length: 257000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "322082956",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "シンセカイ案内所",
+        },
+        {
+          artists: undefined,
+          isrc: "JPPI01900170",
+          length: 224000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "322082957",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "サイコグラム",
+        },
+        {
+          artists: undefined,
+          isrc: "JPPI01900180",
+          length: 235000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "322082958",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "夜行性ハイズ",
+        },
+        {
+          artists: undefined,
+          isrc: "JPPI01900190",
+          length: 206000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "322082959",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "ヒバナ -Reloaded-",
+        },
+        {
+          artists: undefined,
+          isrc: "JPPI01900200",
+          length: 246000,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "322082960",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "愛言葉III",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 22,
+      month: 5,
+      year: 2019,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "アンドロイドガール",
+  types: [
+    "Album",
   ],
 }
 `;
