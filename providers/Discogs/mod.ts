@@ -35,7 +35,7 @@ import type {
 	SearchResults,
 	Track,
 } from './api_types.ts';
-import { convertFormat, extractMoreDetailsFromFormats } from './format.ts';
+import { convertFormat, extractMoreDetailsFromFormatsAndStyles } from './format.ts';
 import { convertCountryStringToCodes } from './regions.ts';
 import { combineTracklistSectionsToMedia, splitTracklistIntoSections, type TracklistSection } from './tracklist.ts';
 
@@ -192,7 +192,7 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 			media: this.convertMedia(rawRelease),
 			releaseDate: rawRelease.released ? this.convertReleaseDate(parseHyphenatedDate(rawRelease.released)) : undefined,
 			labels: rawRelease.labels.map(this.convertRawLabel.bind(this)),
-			...extractMoreDetailsFromFormats(rawRelease.formats),
+			...extractMoreDetailsFromFormatsAndStyles(rawRelease.formats, rawRelease.styles),
 			releaseGroup: rawRelease.master_id
 				? {
 					externalIds: this.provider.makeExternalIds({ type: 'master', id: rawRelease.master_id.toString() }),

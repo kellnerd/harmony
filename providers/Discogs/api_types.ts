@@ -23,6 +23,10 @@ export interface Release {
 	companies: Label[];
 	/** Images of the release, excluding all disabled images. */
 	images: Image[];
+	/** Top-level genres (and release types). */
+	genres: Genre[];
+	/** Specific genres / music styles (and release types). */
+	styles: string[];
 	/** API URL of the release. */
 	resource_url: string;
 }
@@ -102,6 +106,23 @@ export interface Image {
 	width: number;
 	height: number;
 }
+
+export type Genre =
+	| 'Electronic'
+	| 'Hip Hop'
+	| 'Jazz'
+	| 'Rock'
+	| 'Reggae'
+	| 'Latin'
+	| 'Funk / Soul'
+	| 'Blues'
+	| 'Non-Music'
+	| 'Pop'
+	| 'Classical'
+	| 'Brass & Military'
+	| "Children's"
+	| 'Folk, World, & Country'
+	| 'Stage & Screen';
 
 export interface SearchResults<T> {
 	pagination: Pagination;

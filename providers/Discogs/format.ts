@@ -28,6 +28,11 @@ export function convertFormat(format: ReleaseFormat): Array<MediumFormat | undef
 	return new Array(quantity).fill(mediumFormat);
 }
 
+/**
+ * Maps a Discogs format name to a Harmony/MusicBrainz medium format.
+ *
+ * Format names extracted from "subform/view:format_map" data on release edit page.
+ */
 const mediumFormatMap: Record<string, MediumFormat | undefined> = {
 	'Acetate': 'Acetate',
 	'Blu-ray': 'Blu-ray',
@@ -41,8 +46,8 @@ const mediumFormatMap: Record<string, MediumFormat | undefined> = {
 	// WIP
 };
 
-/** Extracts release status, type and packaging from release format specifiers. */
-export function extractMoreDetailsFromFormats(formats: ReleaseFormat[]) {
+/** Extracts release status, type and packaging from release format specifiers and styles. */
+export function extractMoreDetailsFromFormatsAndStyles(formats: ReleaseFormat[], styles?: string[]) {
 	const types: ReleaseGroupType[] = [];
 	let status: ReleaseStatus = 'Official';
 	let packaging: ReleasePackaging | undefined;
@@ -62,6 +67,15 @@ export function extractMoreDetailsFromFormats(formats: ReleaseFormat[]) {
 		}
 	}
 
+	if (styles) {
+		for (const style of styles) {
+			const mappedType = styleToReleaseType[style];
+			if (mappedType) {
+				types.push(mappedType);
+			}
+		}
+	}
+
 	if (!packaging) {
 		if (formats.every((format) => format.name === 'File')) {
 			packaging = 'None';
@@ -71,6 +85,11 @@ export function extractMoreDetailsFromFormats(formats: ReleaseFormat[]) {
 	return { status, types, packaging };
 }
 
+/**
+ * Maps a Discogs format description to a MusicBrainz release group type.
+ *
+ * Descriptions extracted from "subform/view:format_map" data on release edit page.
+ */
 const releaseTypeMap: Record<string, ReleaseGroupType> = {
 	'Album': 'Album',
 	'EP': 'EP',
@@ -83,4 +102,28 @@ const releaseTypeMap: Record<string, ReleaseGroupType> = {
 	'Partially Mixed': 'DJ-mix',
 	// 'Sampler' is for excerpts/preview of a bigger release, not 'Compilation'.
 	// 'Tour Recording' is not for one-off live albums, better guess 'Live' from titles.
+};
+
+/**
+ * Maps a Discogs style (Non-Music, Stage & Screen) to a MusicBrainz release group type.
+ *
+ * Style names extracted from "subform/view:style_map" data on release edit page.
+ */
+const styleToReleaseType: Record<string, ReleaseGroupType> = {
+	'Audiobook': 'Audiobook',
+	'Cabaret': 'Spokenword',
+	'Comedy': 'Spokenword',
+	'Dialogue': 'Spokenword',
+	'Field Recording': 'Field recording',
+	'Interview': 'Interview',
+	'Monolog': 'Spokenword',
+	'Musical': 'Soundtrack',
+	'Public Broadcast': 'Broadcast',
+	'Radioplay': 'Audio drama',
+	'Score': 'Soundtrack',
+	'Soundtrack': 'Soundtrack',
+	'Speech': 'Spokenword',
+	'Spoken Word': 'Spokenword',
+	'Theme': 'Soundtrack',
+	'Video Game Music': 'Soundtrack',
 };
