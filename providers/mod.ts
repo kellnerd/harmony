@@ -12,6 +12,7 @@ import OtotoyProvider from './Ototoy/mod.ts';
 import SpotifyProvider from './Spotify/mod.ts';
 import TidalProvider from './Tidal/mod.ts';
 import MoraProvider from './Mora/mod.ts';
+import QobuzProvider from './Qobuz/mod.ts';
 
 /** Registry with all supported providers. */
 export const providers = new ProviderRegistry({
@@ -27,6 +28,7 @@ providers.addMultiple(
 	SpotifyProvider,
 	TidalProvider,
 	BandcampProvider,
+	QobuzProvider,
 	BeatportProvider,
 	MoraProvider,
 	OtotoyProvider,

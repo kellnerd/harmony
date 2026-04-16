@@ -10,6 +10,7 @@ const providerIconMap: Record<string, string> = {
 	musicbrainz: 'brand-metabrainz',
 	mora: 'brand-mora',
 	ototoy: 'brand-ototoy',
+	qobuz: 'brand-qobuz',
 	spotify: 'brand-spotify',
 	tidal: 'brand-tidal',
 };
