@@ -204,7 +204,7 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 				artists.push({
 					name: artist.name,
 					creditedName: artist.name,
-					externalIds: this.provider.makeExternalIds({ type: 'artist', id: String(album.artist.id) }),
+					externalIds: this.provider.makeExternalIds({ type: 'artist', id: String(artist.id) }),
 				});
 				artistIds.push(artist.id);
 			}
