@@ -240,11 +240,28 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 			trackTitle = `${section.heading}: ${trackTitle}`;
 		}
 
+		let trackLengthMs = track.duration ? parseDuration(track.duration) * 1000 : undefined;
+
+		// For index tracks, we join sub-track titles and accumulate their durations.
+		if (track.type_ === 'index') {
+			const subTrackTitles = track.sub_tracks?.map((sub) => sub.title);
+			if (subTrackTitles?.length) {
+				trackTitle = `${trackTitle}: ${subTrackTitles.join(' / ')}`;
+			}
+
+			const subTrackDurations = track.sub_tracks?.map((sub) => sub.duration);
+			if (subTrackDurations?.every((duration) => duration !== '')) {
+				trackLengthMs = subTrackDurations
+					.map((duration) => parseDuration(duration) * 1000)
+					.reduce((sum, current) => sum + current);
+			}
+		}
+
 		return {
 			number: trackNumber,
 			title: trackTitle,
 			artists: track.artists?.map(this.convertRawArtist.bind(this)),
-			length: track.duration ? parseDuration(track.duration) * 1000 : undefined,
+			length: trackLengthMs,
 		};
 	}
 

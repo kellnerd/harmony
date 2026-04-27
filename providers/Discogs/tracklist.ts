@@ -1,4 +1,5 @@
 import { ProviderError } from '@/utils/errors.ts';
+import { longestCommonPrefix } from '@std/text/unstable-longest-common-prefix';
 import type { Track } from './api_types.ts';
 
 export interface TracklistSection {
@@ -44,6 +45,12 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 				}
 				currentSection.heading = track.title;
 				break;
+			case 'index':
+				// Inherit index track position from its sub-tracks (common prefix without trailing punctuation).
+				if (!track.position && track.sub_tracks) {
+					track.position = longestCommonPrefix(track.sub_tracks.map((track) => track.position)).replace(/\.$/, '');
+				}
+				// fall through to regular track position handling
 			case 'track':
 				if (currentSection.positionPrefix) {
 					if (!currentSection.positionPrefix.test(track.position)) {

@@ -68,13 +68,15 @@ export interface Track {
 	/** Track position, can be empty. */
 	position: string;
 	/** Indicates whether the object is a proper track or a structural element. */
-	type_: 'track' | 'heading';
+	type_: 'track' | 'heading' | 'index';
 	title: string;
 	artists?: Artist[];
 	/** Duration in m:ss format, can be empty. */
 	duration: string;
 	/** Credited artists and their roles. */
 	extraartists?: Artist[];
+	/** Index tracks can have multiple sub-tracks. */
+	sub_tracks?: Track[];
 }
 
 export interface Identifier {
