@@ -41,6 +41,9 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 					currentSection = {
 						tracks: [],
 						type: 'track group',
+						// Continue with the previous prefix.
+						hasMediumPrefix: currentSection.hasMediumPrefix,
+						positionPrefix: currentSection.positionPrefix,
 					};
 				}
 				currentSection.heading = track.title;
@@ -110,11 +113,10 @@ export function combineTracklistSectionsToMedia(sections: TracklistSection[]): M
 					// Store previous medium unless it is empty.
 					media.push(currentMedium);
 				}
-				media.push({
+				currentMedium = {
 					sections: [section],
 					title: section.heading,
-				});
-				currentMedium = { sections: [] };
+				};
 				break;
 			case 'side':
 				if (currentMedium.sections.filter((section) => section.type === 'side').length === 2) {
