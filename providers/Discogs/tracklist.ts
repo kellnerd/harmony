@@ -122,10 +122,13 @@ export function combineTracklistSectionsToMedia(sections: TracklistSection[]): M
 				};
 				break;
 			case 'side':
-				if (currentMedium.sections.filter((section) => section.type === 'side').length === 2) {
-					// Store previous medium if it already has two sides.
-					media.push(currentMedium);
-					currentMedium = { sections: [] };
+				if (currentMedium.sections.length) {
+					const currentSideCount = currentMedium.sections.filter((section) => section.type === 'side').length;
+					// Store previous medium if it already has two sides or only non-side sections.
+					if (currentSideCount === 2 || currentSideCount === 0) {
+						media.push(currentMedium);
+						currentMedium = { sections: [] };
+					}
 				}
 				if (!currentMedium.sections.length) {
 					// Set medium title using the first side's title.
