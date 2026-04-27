@@ -46,6 +46,7 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 						positionPrefix: currentSection.positionPrefix,
 					};
 				}
+				// TODO: handle multiple consecutive headings
 				currentSection.heading = track.title;
 				break;
 			case 'index':
@@ -57,13 +58,15 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 			case 'track':
 				if (currentSection.positionPrefix) {
 					if (!currentSection.positionPrefix.test(track.position)) {
-						// Start a new section when the position prefix changes.
-						sections.push(currentSection);
-						const lastHeading = currentSection.heading;
-						currentSection = {
-							tracks: [],
-							heading: lastHeading,
-						};
+						// Start a new section when the position prefix changes, unless the current section is empty.
+						if (currentSection.tracks.length) {
+							sections.push(currentSection);
+							currentSection = {
+								tracks: [],
+								// Continue with the previous heading.
+								heading: currentSection.heading,
+							};
+						}
 						updateCurrentPositionPrefix(track.position);
 					}
 				} else {
