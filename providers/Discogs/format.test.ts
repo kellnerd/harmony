@@ -15,6 +15,11 @@ const exampleFormats = {
 		qty: '3',
 		descriptions: ['Compilation', 'Unofficial Release'],
 	},
+	boxset: {
+		name: 'Box Set',
+		qty: '1',
+		descriptions: ['Special Edition'],
+	},
 	digitalPromoSingle: {
 		name: 'File',
 		qty: '1',
@@ -31,6 +36,7 @@ const formatConversionTests: FunctionSpec<typeof convertFormat> = [
 	['File', exampleFormats.digitalPromoSingle, ['Digital Media']],
 	['3x CD', exampleFormats.bootlegCompilationCDs, ['CD', 'CD', 'CD']],
 	['2x Vinyl LP', exampleFormats.vinylAlbum, ['12" Vinyl', '12" Vinyl']],
+	['Box Set', exampleFormats.boxset, []],
 ];
 
 describe('convertFormat', () => {

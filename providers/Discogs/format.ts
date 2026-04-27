@@ -4,6 +4,10 @@ import type { ReleaseFormat } from './api_types.ts';
 
 /** Converts a Discogs release format specifier into an array of medium formats. */
 export function convertFormat(format: ReleaseFormat): Array<MediumFormat | undefined> {
+	if (pseudoFormats.has(format.name)) {
+		return [];
+	}
+
 	let mediumFormat = mediumFormatMap[format.name];
 	if (mediumFormat) {
 		for (const description of format.descriptions) {
@@ -45,6 +49,9 @@ const mediumFormatMap: Record<string, MediumFormat | undefined> = {
 	'Vinyl': 'Vinyl',
 	// WIP
 };
+
+/** Discogs format names which describe the overall release rather than a concrete medium. */
+const pseudoFormats = new Set(['All Media', 'Box Set']);
 
 /** Extracts release status, type and packaging from release format specifiers and styles. */
 export function extractMoreDetailsFromFormatsAndStyles(formats: ReleaseFormat[], styles?: string[]) {
