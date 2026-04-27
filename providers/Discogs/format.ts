@@ -48,7 +48,7 @@ const mediumFormatMap: Record<string, MediumFormat | undefined> = {
 
 /** Extracts release status, type and packaging from release format specifiers and styles. */
 export function extractMoreDetailsFromFormatsAndStyles(formats: ReleaseFormat[], styles?: string[]) {
-	const types: ReleaseGroupType[] = [];
+	const types: Set<ReleaseGroupType> = new Set();
 	let status: ReleaseStatus = 'Official';
 	let packaging: ReleasePackaging | undefined;
 
@@ -61,7 +61,7 @@ export function extractMoreDetailsFromFormatsAndStyles(formats: ReleaseFormat[],
 			} else {
 				const mappedType = releaseTypeMap[description];
 				if (mappedType) {
-					types.push(mappedType);
+					types.add(mappedType);
 				}
 			}
 		}
@@ -71,7 +71,7 @@ export function extractMoreDetailsFromFormatsAndStyles(formats: ReleaseFormat[],
 		for (const style of styles) {
 			const mappedType = styleToReleaseType[style];
 			if (mappedType) {
-				types.push(mappedType);
+				types.add(mappedType);
 			}
 		}
 	}
@@ -82,7 +82,7 @@ export function extractMoreDetailsFromFormatsAndStyles(formats: ReleaseFormat[],
 		}
 	}
 
-	return { status, types, packaging };
+	return { status, types: [...types], packaging };
 }
 
 /**

@@ -69,6 +69,11 @@ describe('extractMoreDetailsFromFormatsAndStyles', () => {
 		assertEquals(types, ['Album', 'Soundtrack']);
 	});
 
+	it('deduplicates (mapped) release group types', () => {
+		const { types } = extractMoreDetailsFromFormatsAndStyles([], ['Score', 'Soundtrack']);
+		assertEquals(types, ['Soundtrack']);
+	});
+
 	it('detects Radioplay Broadcast as Audio Drama', () => {
 		const { types } = extractMoreDetailsFromFormatsAndStyles([], ['Radioplay', 'Public Broadcast']);
 		assertEquals(types, ['Audio drama', 'Broadcast']);
