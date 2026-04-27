@@ -86,18 +86,18 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 	return sections;
 
 	function updateCurrentPositionPrefix(trackPosition: string) {
-		const sidePrefix = trackPosition.match(/^[A-Z]+(?=\d|$)/)?.[0];
-		if (sidePrefix) {
-			currentSection.type = 'side';
-			currentSection.positionPrefix = new RegExp(String.raw`^${sidePrefix}(?=\d|$)`);
-			return;
-		}
-
-		const mediumPrefix = trackPosition.match(/^\d+-(?=\d)/)?.[0];
+		const mediumPrefix = trackPosition.match(/^(CD|DVD|BR)?\d+-(?=\d)/)?.[0];
 		if (mediumPrefix) {
 			currentSection.type = 'medium';
 			currentSection.hasMediumPrefix = true;
 			currentSection.positionPrefix = new RegExp(String.raw`^${mediumPrefix}(?=\d)`);
+			return;
+		}
+
+		const sidePrefix = trackPosition.match(/^[A-Z]+(?=\d|$)/)?.[0];
+		if (sidePrefix) {
+			currentSection.type = 'side';
+			currentSection.positionPrefix = new RegExp(String.raw`^${sidePrefix}(?=\d|$)`);
 			return;
 		}
 	}
