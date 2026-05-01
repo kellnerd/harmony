@@ -42,8 +42,8 @@ describe('Bugs! provider', () => {
 			options: releaseOptions,
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
-				assert(release.media.length === 1, 'Should have one disc');
-				assert(release.media[0].tracklist.length === 10, 'Should have 10 tracks');
+				assertEquals(release.media.length, 1, 'Should have one disc');
+				assertEquals(release.media[0].tracklist.length, 10, 'Should have 10 tracks');
 				assert(release.types?.includes('Album'), 'Should be classified as Album');
 			},
 		}, {
@@ -52,9 +52,9 @@ describe('Bugs! provider', () => {
 			options: releaseOptions,
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
-				assert(release.media.length === 2, 'Should have two discs');
-				assert(release.media[0].tracklist.length === 10, 'Disc 1 should have 10 tracks');
-				assert(release.media[1].tracklist.length === 7, 'Disc 2 should have 7 tracks');
+				assertEquals(release.media.length, 2, 'Should have two discs');
+				assertEquals(release.media[0].tracklist.length, 10, 'Disc 1 should have 10 tracks');
+				assertEquals(release.media[1].tracklist.length, 7, 'Disc 2 should have 7 tracks');
 				assert(release.types?.includes('Album'), 'Should be classified as Album');
 				const lastTrack = release.media[1].tracklist.at(-1)!;
 				assertEquals(
@@ -69,8 +69,8 @@ describe('Bugs! provider', () => {
 			options: releaseOptions,
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
-				assert(release.media.length === 1, 'Should have one disc');
-				assert(release.media[0].tracklist.length === 5, 'Should have 5 tracks');
+				assertEquals(release.media.length, 1, 'Should have one disc');
+				assertEquals(release.media[0].tracklist.length, 5, 'Should have 5 tracks');
 				assert(release.types?.includes('EP'), 'Should be classified as EP');
 			},
 		}, {
@@ -79,8 +79,8 @@ describe('Bugs! provider', () => {
 			options: releaseOptions,
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
-				assert(release.media.length === 1, 'Should have one disc');
-				assert(release.media[0].tracklist.length === 1, 'Should have 1 track');
+				assertEquals(release.media.length, 1, 'Should have one disc');
+				assertEquals(release.media[0].tracklist.length, 1, 'Should have 1 track');
 				assert(release.types?.includes('Single'), 'Should be classified as Single');
 			},
 		}, {
@@ -89,8 +89,8 @@ describe('Bugs! provider', () => {
 			options: releaseOptions,
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
-				assert(release.media.length === 1, 'Should have one disc');
-				assert(release.media[0].tracklist.length === 23, 'Should have 23 tracks (without the CD-only track)');
+				assertEquals(release.media.length, 1, 'Should have one disc');
+				assertEquals(release.media[0].tracklist.length, 23, 'Should have 23 tracks (without the CD-only track)');
 				assert(release.types?.includes('Compilation'), 'Should be classified as Compilation');
 			},
 		}],

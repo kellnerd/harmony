@@ -1240,7 +1240,7 @@ snapshot[`Bugs! provider > release lookup > Single (싱글) album 1`] = `
 }
 `;
 
-snapshot[`Bugs! provider > release lookup > Compilation/Best of (베스트) album 1`] = `
+snapshot[`Bugs! provider > release lookup > Compilation/Best of (베스트) album with an unavailable, CD-only bonus track 1`] = `
 {
   artists: [
     {

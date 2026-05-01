@@ -9,7 +9,6 @@ import { DurationPrecision, FeatureQuality, type FeatureQualityMap } from '@/pro
 import type { PartialDate } from '@/utils/date.ts';
 import { parseDuration } from '@/utils/time.ts';
 import { ProviderError } from '@/utils/errors.ts';
-import { getFromEnv } from '@/utils/config.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -22,10 +21,11 @@ import type {
 	ReleaseGroupType,
 } from '@/harmonizer/types.ts';
 import type { BugsAlbum, BugsArtist, BugsMultiResponse, BugsTrack } from './api_types.ts';
+import { getFromEnv } from '../../utils/config.ts';
 
 const IMAGE_BASE = 'https://image.bugsm.co.kr/album/images';
 
-const bugsDeviceId = getFromEnv('HARMONY_BUGS_DEVICE_ID') ?? 'harmony';
+const bugsMobileClientSecret = getFromEnv('HARMONY_BUGS_CLIENT_SECRET') || '';
 
 export default class BugsProvider extends MetadataApiProvider {
 	readonly name = 'Bugs!';
@@ -60,10 +60,6 @@ export default class BugsProvider extends MetadataApiProvider {
 
 	readonly apiBaseUrl = 'https://mapi.bugs.co.kr/music/5/multi/invoke/map';
 
-	override get internalName(): string {
-		return 'bugs';
-	}
-
 	constructUrl(entity: EntityId): URL {
 		return new URL([entity.type, entity.id].join('/'), 'https://music.bugs.co.kr/');
 	}
@@ -78,7 +74,6 @@ export default class BugsProvider extends MetadataApiProvider {
 			{ id: 'album', args: { album_id: albumId, result_type: 'DETAIL' } },
 			{ id: 'album_track', args: { album_id: albumId, result_type: 'LIST' } },
 		]);
-		if (bugsDeviceId) apiUrl.searchParams.set('device_id', bugsDeviceId);
 		const accessToken = await this.cachedAccessToken(this.requestAccessToken);
 		return this.fetchJSON<Data>(apiUrl, {
 			policy: { maxTimestamp: options.snapshotMaxTimestamp },
@@ -87,10 +82,6 @@ export default class BugsProvider extends MetadataApiProvider {
 				headers: {
 					'Content-Type': 'application/json; charset=UTF-8',
 					'Authorization': `Bearer ${accessToken}`,
-					'User-Agent': 'Mobile|Bugs|5.07.00|Android|16|SM-F936B|samsung|market|105070000',
-					'X-BUGS-MS': '58239824',
-					'Invoke-page': 'ALBUM_INFO',
-					'Invoke-ids': 'album|album_track|',
 				},
 				body,
 			},
@@ -100,9 +91,8 @@ export default class BugsProvider extends MetadataApiProvider {
 	private async requestAccessToken(): Promise<ApiAccessToken> {
 		const url = new URL('https://secure.bugs.co.kr/api/5/appToken');
 		url.searchParams.set('client_id', 'bugsapp_credentials_android');
-		url.searchParams.set('client_secret', 'd33b!z7xeu');
+		url.searchParams.set('client_secret', bugsMobileClientSecret);
 		url.searchParams.set('grant_type', 'client_credentials');
-		url.searchParams.set('device_id', bugsDeviceId);
 		const { result } = await (await fetch(url, { method: 'POST' })).json();
 		return {
 			accessToken: result.access_token,
@@ -231,12 +221,11 @@ function parseYYYYMMDD(date: string): PartialDate {
 
 function mapReleaseType(albumType?: string): ReleaseGroupType[] | undefined {
 	if (!albumType) return undefined;
-	if (albumType.includes('EP') || albumType.includes('미니')) return ['EP'];
-	if (albumType.includes('정규')) return ['Album'];
-	if (albumType.includes('싱글')) return ['Single'];
-	if (albumType.includes('베스트') || albumType.includes('컴필')) return ['Compilation'];
+	if (albumType === '싱글') return ['Single'];
+	if (albumType === '정규') return ['Album'];
+	if (albumType === 'EP(미니)') return ['EP'];
+	if (albumType === '베스트' || albumType === '컴필레이션') return ['Compilation'];
 	if (albumType === 'OST') return ['Soundtrack'];
-	if (albumType.includes('라이브')) return ['Live'];
-	if (albumType.includes('리믹스')) return ['Remix'];
+	if (albumType === '라이브') return ['Live'];
 	return undefined;
 }
