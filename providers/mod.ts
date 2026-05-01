@@ -12,6 +12,7 @@ import OtotoyProvider from './Ototoy/mod.ts';
 import SpotifyProvider from './Spotify/mod.ts';
 import TidalProvider from './Tidal/mod.ts';
 import MoraProvider from './Mora/mod.ts';
+import BugsProvider from './Bugs/mod.ts';
 
 /** Registry with all supported providers. */
 export const providers = new ProviderRegistry({
@@ -30,6 +31,7 @@ providers.addMultiple(
 	BeatportProvider,
 	MoraProvider,
 	OtotoyProvider,
+	BugsProvider,
 );
 
 /** Internal names of providers which are enabled by default (for GTIN lookups). */

@@ -30,6 +30,7 @@
 	--bandcamp: #1da0c3;
 	--beatport: #00e586;
 	--brainz: #eb743b;
+	--bugs: #ff3d33;
 	--deezer: #a238ff;
 	--mora: #02082a;
 	--musicbrainz: #ba478f;
@@ -456,6 +457,9 @@ label.bandcamp, td.bandcamp {
 }
 label.beatport, td.beatport {
 	background-color: var(--beatport);
+}
+label.bugs, td.bugs {
+	background-color: var(--bugs);
 }
 label.deezer, td.deezer {
 	background-color: var(--deezer);
