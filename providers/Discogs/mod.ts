@@ -236,7 +236,7 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 		}
 
 		let trackTitle = track.title;
-		if (section?.heading && section.type === 'track group') {
+		if (section?.heading) {
 			trackTitle = `${section.heading}: ${trackTitle}`;
 		}
 

@@ -152,7 +152,6 @@ export function combineTracklistSectionsToMedia(sections: TracklistSection[]): M
 				}
 				currentMedium = {
 					sections: [section],
-					title: section.heading,
 				};
 				break;
 			case 'side':
@@ -164,10 +163,6 @@ export function combineTracklistSectionsToMedia(sections: TracklistSection[]): M
 						currentMedium = { sections: [] };
 					}
 				}
-				if (!currentMedium.sections.length) {
-					// Set medium title using the first side's title.
-					currentMedium.title = section.heading;
-				}
 				currentMedium.sections.push(section);
 				break;
 			default:
@@ -177,6 +172,19 @@ export function combineTracklistSectionsToMedia(sections: TracklistSection[]): M
 	if (currentMedium.sections.length) {
 		// Store last medium unless it es empty.
 		media.push(currentMedium);
+	}
+
+	for (const medium of media) {
+		// If there is only one section heading on a medium, use it as medium title instead.
+		if (!medium.title) {
+			const uniqueSectionHeadings = new Set(medium.sections.map((section) => section.heading));
+			if (uniqueSectionHeadings.size === 1) {
+				medium.title = medium.sections[0].heading;
+				for (const section of medium.sections) {
+					section.heading = undefined;
+				}
+			}
+		}
 	}
 
 	return media;
