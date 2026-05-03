@@ -85,10 +85,9 @@ export class ProviderRegistry {
 				return [...this.#internalNames];
 			case 'default':
 				return this.filterInternalNames((provider) =>
-					// Providers which support inexpensive GTIN lookups are enabled by default.
-					provider.getQuality('GTIN lookup') >= FeatureQuality.PRESENT &&
-					// Exclude "internal" providers like MusicBrainz.
-					provider.name !== 'MusicBrainz'
+					// Digital providers which support inexpensive GTIN lookups are enabled by default.
+					provider.categories.has('digital') &&
+					provider.getQuality('GTIN lookup') >= FeatureQuality.PRESENT
 				);
 			case 'preferred':
 				// Get all providers for which the preference is enabled.
