@@ -9,6 +9,7 @@ import type {
 	LinkType,
 } from '@/harmonizer/types.ts';
 import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import type { ProviderCategory } from '@/providers/categories.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
@@ -29,6 +30,8 @@ export default class MoraProvider extends MetadataProvider {
 	});
 
 	protected override idPattern = /^\d+(?:\/[\w-]+)$/;
+
+	override readonly categories = new Set<ProviderCategory>(['digital']);
 
 	override readonly features: FeatureQualityMap = {
 		// The API returns a "full size" image of at most 200x200

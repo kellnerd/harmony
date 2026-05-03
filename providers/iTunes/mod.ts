@@ -18,6 +18,7 @@ import type {
 	LinkType,
 	ReleaseGroupType,
 } from '@/harmonizer/types.ts';
+import type { ProviderCategory } from '@/providers/categories.ts';
 
 // See https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI
 
@@ -28,6 +29,8 @@ export default class iTunesProvider extends MetadataApiProvider {
 		hostname: '{geo.}?(itunes|music).apple.com',
 		pathname: String.raw`/:region(\w{2})?/:type(album|artist|song|music-video)/:slug?/{id}?:id(\d+)`,
 	});
+
+	override readonly categories = new Set<ProviderCategory>(['digital']);
 
 	override readonly features: FeatureQualityMap = {
 		'cover size': 3000,

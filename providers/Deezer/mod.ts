@@ -25,6 +25,7 @@ import type {
 	ReleaseOptions,
 	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
+import type { ProviderCategory } from '@/providers/categories.ts';
 
 // See https://developers.deezer.com/api
 
@@ -43,6 +44,8 @@ export default class DeezerProvider extends MetadataApiProvider {
 		hostname: '{www.}?deezer.com',
 		pathname: String.raw`/:language(\w{2})?/:type(album|artist|track)/:id(\d+)`,
 	});
+
+	override readonly categories = new Set<ProviderCategory>(['digital']);
 
 	override readonly features: FeatureQualityMap = {
 		'cover size': 1400,

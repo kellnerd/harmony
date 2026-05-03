@@ -14,6 +14,7 @@ import {
 	type ProviderOptions,
 	ReleaseApiLookup,
 } from '@/providers/base.ts';
+import type { ProviderCategory } from '@/providers/categories.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
@@ -46,6 +47,8 @@ export default class MusicBrainzProvider extends MetadataApiProvider {
 		hostname: '{(beta|test).}?musicbrainz.(org|eu)',
 		pathname: '/:type(artist|release)/:id([0-9a-f-]{36})',
 	});
+
+	override readonly categories = new Set<ProviderCategory>(['database']);
 
 	override readonly features: FeatureQualityMap = {
 		'duration precision': DurationPrecision.S_OR_MS,

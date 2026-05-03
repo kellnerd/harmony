@@ -1,4 +1,5 @@
 import type { MetadataProvider, MetadataProviderConstructor } from './base.ts';
+import type { ProviderCategory } from './categories.ts';
 import { FeatureQuality, type ProviderFeature } from './features.ts';
 import type { AppInfo } from '@/app.ts';
 import type { ExternalEntityId } from '@/harmonizer/types.ts';
@@ -94,8 +95,7 @@ export class ProviderRegistry {
 				// The value of an enabled preference is defined by `ProviderCheckbox`.
 				return this.filterInternalNames((provider) => preferences[provider.internalName] === '1');
 			default:
-				// TODO: Add a real `categories` property to `MetadataProvider` and use it here.
-				return [];
+				return this.filterInternalNames((provider) => provider.categories.has(category as ProviderCategory));
 		}
 	}
 

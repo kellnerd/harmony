@@ -36,6 +36,7 @@ import type {
 	HarmonyTrack,
 	LinkType,
 } from '@/harmonizer/types.ts';
+import type { ProviderCategory } from '@/providers/categories.ts';
 
 // See https://developer.spotify.com/documentation/web-api
 
@@ -49,6 +50,8 @@ export default class SpotifyProvider extends MetadataApiProvider {
 		hostname: 'open.spotify.com',
 		pathname: '{/intl-:language}?/:type(artist|album|track)/:id',
 	});
+
+	override readonly categories = new Set<ProviderCategory>(['digital']);
 
 	override readonly features: FeatureQualityMap = {
 		'cover size': 2000,

@@ -7,6 +7,7 @@ import { rateLimit } from 'utils/async/rateLimit.js';
 import { simplifyName } from 'utils/string/simplify.js';
 
 import type { AppInfo } from '@/app.ts';
+import type { ProviderCategory } from './categories.ts';
 import type {
 	CountryCode,
 	EntityId,
@@ -97,6 +98,9 @@ export abstract class MetadataProvider {
 	 * If these groups are not contained in the pathname, {@linkcode extractEntityFromUrl} has to be overwritten.
 	 */
 	abstract readonly supportedUrls: URLPattern;
+
+	/** Categories of the provider. */
+	readonly categories = new Set<ProviderCategory>();
 
 	/** Features of the provider and their quality. */
 	readonly features: FeatureQualityMap = {};

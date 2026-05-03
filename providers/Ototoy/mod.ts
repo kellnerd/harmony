@@ -10,6 +10,7 @@ import type {
 	LinkType,
 } from '@/harmonizer/types.ts';
 import { type CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import type { ProviderCategory } from '@/providers/categories.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
@@ -30,6 +31,8 @@ export default class OtotoyProvider extends MetadataProvider {
 		hostname: this.supportedUrls.hostname,
 		pathname: '/labels/:id',
 	});
+
+	override readonly categories = new Set<ProviderCategory>(['digital']);
 
 	override readonly features: FeatureQualityMap = {
 		// Seems to between 1500-3000, with 1500 being most common

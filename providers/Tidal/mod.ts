@@ -24,6 +24,7 @@ import type {
 	ReleaseOptions,
 	ReleaseSpecifier,
 } from '@/harmonizer/types.ts';
+import type { ProviderCategory } from '@/providers/categories.ts';
 import type { PartialDate } from '@/utils/date.ts';
 import type { ApiError as ApiErrorV1 } from './v1/api_types.ts';
 import type { ApiError as ApiErrorV2 } from './v2/api_types.ts';
@@ -51,6 +52,8 @@ export default class TidalProvider extends MetadataApiProvider {
 		hostname: '{(www|listen).}?tidal.com',
 		pathname: String.raw`{/browse}?/:type(album|artist|track|video)/:id(\d+){/*}?`,
 	});
+
+	override readonly categories = new Set<ProviderCategory>(['digital']);
 
 	override readonly features: FeatureQualityMap = {
 		'cover size': 1280,

@@ -16,6 +16,7 @@ import {
 	ProviderOptions,
 	ReleaseApiLookup,
 } from '@/providers/base.ts';
+import type { ProviderCategory } from '@/providers/categories.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { getFromEnv } from '@/utils/config.ts';
 import { parseHyphenatedDate } from '@/utils/date.ts';
@@ -77,6 +78,8 @@ export default class DiscogsProvider extends MetadataApiProvider {
 		hostname: 'www.discogs.com',
 		pathname: String.raw`/:locale?/:type(artist|label|release|master)/:id(\d+){-:slug}?`,
 	});
+
+	override readonly categories = new Set<ProviderCategory>(['database']);
 
 	override readonly features: FeatureQualityMap = {
 		'cover size': 600,
