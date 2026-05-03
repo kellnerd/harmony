@@ -130,6 +130,7 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 		const sidePrefix = trackPosition.match(/^[A-Z]+(?=\d|$)/)?.[0];
 		if (sidePrefix) {
 			currentSection.type = 'side';
+			currentSection.hasMediumPrefix = false;
 			currentSection.positionPrefix = new RegExp(String.raw`^${sidePrefix}(?=\d|$)`);
 			return;
 		}
