@@ -131,6 +131,7 @@ describe('Discogs provider', () => {
 					'Prefix should be followed by a single semicolon',
 				);
 				assertEquals(release.media[5].tracklist[26].title, 'Credits', 'Title should have no "-" section prefix');
+				assertEquals(release.media[9].tracklist[14].title, 'Credits', 'Title should not inherit medium title prefix');
 				assertEquals(release.media[10].tracklist[1].number, '1a', 'Non-standard track number should be preserved');
 				assertEquals(
 					release.media[21].tracklist[2].title,

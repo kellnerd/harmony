@@ -59,7 +59,6 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 					} else {
 						// No index track suffixes detected.
 						// => This is an abuse of sub-tracks, these should be tracks inside their own section!
-						const previousHeading = currentSection.heading;
 						nextSection();
 						if (currentSection.heading && !currentSection.tracks.length) {
 							// Preserve previous heading if is directly above the "index track" section.
@@ -71,8 +70,6 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 							pushTrack(subTrack);
 						}
 						nextSection();
-						// Continue with the previous heading from before the index track.
-						currentSection.heading = previousHeading;
 						break;
 					}
 				}
