@@ -1,5 +1,4 @@
 import { ProviderError } from '@/utils/errors.ts';
-import { longestCommonPrefix } from '@std/text/unstable-longest-common-prefix';
 import type { Track } from './api_types.ts';
 
 export interface TracklistSection {
@@ -35,17 +34,7 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 	for (const track of tracks) {
 		switch (track.type_) {
 			case 'heading': {
-				if (currentSection.tracks.length) {
-					// Start a new section unless the current section is empty.
-					sections.push(currentSection);
-					currentSection = {
-						tracks: [],
-						type: 'track group',
-						// Continue with the previous prefix.
-						hasMediumPrefix: currentSection.hasMediumPrefix,
-						positionPrefix: currentSection.positionPrefix,
-					};
-				}
+				nextSection();
 				// TODO: handle multiple consecutive headings
 				const heading = track.title;
 				if (heading === '-') {
@@ -59,38 +48,75 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 			case 'index':
 				// Inherit index track position from its sub-tracks (common prefix without trailing punctuation).
 				if (!track.position && track.sub_tracks) {
-					track.position = longestCommonPrefix(track.sub_tracks.map((track) => track.position)).replace(/\.$/, '');
-				}
-				// fall through to regular track position handling
-			case 'track':
-				if (currentSection.positionPrefix) {
-					if (!currentSection.positionPrefix.test(track.position)) {
-						// Start a new section when the position prefix changes, unless the current section is empty.
-						if (currentSection.tracks.length) {
-							sections.push(currentSection);
-							currentSection = {
-								tracks: [],
-								// Continue with the previous heading.
-								heading: currentSection.heading,
-							};
+					const indexPositionPrefix = commonIndexPositionPrefix(track.sub_tracks.map((track) => track.position));
+					if (indexPositionPrefix) {
+						track.position = indexPositionPrefix;
+					} else {
+						// No index track suffixes detected.
+						// => This is an abuse of sub-tracks, these should be tracks inside their own section!
+						const previousHeading = currentSection.heading;
+						nextSection();
+						// Treat index track title as heading.
+						currentSection.heading = track.title;
+						for (const subTrack of track.sub_tracks) {
+							pushTrack(subTrack);
 						}
-						updateCurrentPositionPrefix(track.position);
+						nextSection();
+						// Continue with the previous heading from before the index track.
+						currentSection.heading = previousHeading;
+						break;
 					}
-				} else {
-					updateCurrentPositionPrefix(track.position);
 				}
-				currentSection.tracks.push(track);
+				pushTrack(track);
+				break;
+			case 'track':
+				pushTrack(track);
 				break;
 			default:
 				throw new ProviderError('Discogs', `Unsupported track type '${track.type_}'`);
 		}
 	}
+	// Store last section unless it is empty.
 	if (currentSection.tracks.length) {
-		// Store last section unless it es empty.
 		sections.push(currentSection);
 	}
 
 	return sections;
+
+	/** Starts a new section unless the current section is empty. */
+	function nextSection() {
+		if (currentSection.tracks.length) {
+			sections.push(currentSection);
+			currentSection = {
+				tracks: [],
+				type: 'track group',
+				// Continue with the previous prefix.
+				hasMediumPrefix: currentSection.hasMediumPrefix,
+				positionPrefix: currentSection.positionPrefix,
+			};
+		}
+	}
+
+	/** Adds the given track to the current section or a new section when the position prefix changes. */
+	function pushTrack(track: Track) {
+		if (currentSection.positionPrefix) {
+			if (!currentSection.positionPrefix.test(track.position)) {
+				// Start a new section when the position prefix changes, unless the current section is empty.
+				if (currentSection.tracks.length) {
+					sections.push(currentSection);
+					currentSection = {
+						tracks: [],
+						// Continue with the previous heading.
+						heading: currentSection.heading,
+					};
+				}
+				updateCurrentPositionPrefix(track.position);
+			}
+		} else {
+			updateCurrentPositionPrefix(track.position);
+		}
+		currentSection.tracks.push(track);
+	}
 
 	function updateCurrentPositionPrefix(trackPosition: string) {
 		const mediumPrefix = trackPosition.match(/^(CD|DVD|BR)?\d+-(?=\d)/)?.[0];
@@ -153,4 +179,33 @@ export function combineTracklistSectionsToMedia(sections: TracklistSection[]): M
 	}
 
 	return media;
+}
+
+function commonIndexPositionPrefix(trackPositions: Iterable<string>) {
+	let commonPrefix: string | undefined;
+	for (const trackPosition of trackPositions) {
+		const indexPosition = splitIndexPosition(trackPosition);
+		if (indexPosition) {
+			if (commonPrefix) {
+				if (indexPosition.prefix !== commonPrefix) {
+					return undefined;
+				}
+			} else {
+				commonPrefix = indexPosition.prefix;
+			}
+		} else {
+			return undefined;
+		}
+	}
+	return commonPrefix;
+}
+
+function splitIndexPosition(trackPosition: string) {
+	const indexMatch = trackPosition.match(/^(.*\d)([a-z]|\.\d+)$/);
+	if (indexMatch) {
+		return {
+			prefix: indexMatch[1],
+			suffix: indexMatch[2],
+		};
+	}
 }
