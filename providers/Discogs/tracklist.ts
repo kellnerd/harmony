@@ -34,7 +34,7 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 
 	for (const track of tracks) {
 		switch (track.type_) {
-			case 'heading':
+			case 'heading': {
 				if (currentSection.tracks.length) {
 					// Start a new section unless the current section is empty.
 					sections.push(currentSection);
@@ -47,8 +47,15 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 					};
 				}
 				// TODO: handle multiple consecutive headings
-				currentSection.heading = track.title;
+				const heading = track.title;
+				if (heading === '-') {
+					// Treat "empty" headings as section reset.
+					currentSection.heading = undefined;
+				} else {
+					currentSection.heading = heading;
+				}
 				break;
+			}
 			case 'index':
 				// Inherit index track position from its sub-tracks (common prefix without trailing punctuation).
 				if (!track.position && track.sub_tracks) {
