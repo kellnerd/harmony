@@ -10,6 +10,11 @@ const exampleFormats = {
 		qty: '2',
 		descriptions: ['LP', 'Album'],
 	},
+	vinylSingle: {
+		name: 'Vinyl',
+		qty: '1',
+		descriptions: ['7"', 'Single', 'Reissue'],
+	},
 	bootlegCompilationCDs: {
 		name: 'CD',
 		qty: '3',
@@ -18,7 +23,7 @@ const exampleFormats = {
 	boxset: {
 		name: 'Box Set',
 		qty: '1',
-		descriptions: ['Special Edition'],
+		descriptions: ['Compilation', 'Limited Edition'],
 	},
 	digitalPromoSingle: {
 		name: 'File',
@@ -83,5 +88,15 @@ describe('extractMoreDetailsFromFormatsAndStyles', () => {
 	it('detects Radioplay Broadcast as Audio Drama', () => {
 		const { types } = extractMoreDetailsFromFormatsAndStyles([], ['Radioplay', 'Public Broadcast']);
 		assertEquals(types, ['Audio drama', 'Broadcast']);
+	});
+
+	it('handles compilation box set which includes album and single', () => {
+		const { types, packaging } = extractMoreDetailsFromFormatsAndStyles([
+			exampleFormats.boxset,
+			exampleFormats.vinylAlbum,
+			exampleFormats.vinylSingle,
+		]);
+		assertEquals(types, ['Compilation'], 'Type extraction should ignore box contents');
+		assertEquals(packaging, 'Box');
 	});
 });

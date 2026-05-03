@@ -72,6 +72,11 @@ export function extractMoreDetailsFromFormatsAndStyles(formats: ReleaseFormat[],
 				}
 			}
 		}
+		if (format.name === 'Box Set') {
+			packaging = 'Box';
+			// Do not derive status, (sub-)types or (inner) packaging from the contents of the box set.
+			break;
+		}
 	}
 
 	if (styles) {
