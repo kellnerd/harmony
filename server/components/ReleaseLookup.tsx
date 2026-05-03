@@ -30,7 +30,7 @@ export default function ReleaseLookup({
 	return (
 		<form action={formAction} class='center'>
 			<div class='row'>
-				<InputWithOverlay name='url' id='url-input' value={externalUrl} placeholder='Provider URL'>
+				<InputWithOverlay name='url' id='url-input' value={externalUrl} placeholder='Provider release URL'>
 					<SpriteIcon name='world-www' />
 				</InputWithOverlay>
 				<InputWithOverlay name='gtin' id='gtin-input' value={gtin} placeholder='GTIN/EAN/UPC (Barcode)'>
