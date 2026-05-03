@@ -6,6 +6,8 @@ export interface TracklistSection {
 	tracks: Track[];
 	/** Heading of the section, may be a medium title. */
 	heading?: string;
+	/** Heading immediately above the section heading, likely to be a medium title. */
+	parentHeading?: string;
 	/** Common prefix of the track positions. */
 	positionPrefix?: RegExp;
 	/** Indicates whether the track position has a medium prefix. */
@@ -35,7 +37,10 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 		switch (track.type_) {
 			case 'heading': {
 				nextSection();
-				// TODO: handle multiple consecutive headings
+				if (currentSection.heading && !currentSection.tracks.length) {
+					// Preserve previous heading if there are two consecutive headings.
+					currentSection.parentHeading = currentSection.heading;
+				}
 				const heading = cleanHeading(track.title);
 				if (heading === '-') {
 					// Treat "empty" headings as section reset.
@@ -56,6 +61,10 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 						// => This is an abuse of sub-tracks, these should be tracks inside their own section!
 						const previousHeading = currentSection.heading;
 						nextSection();
+						if (currentSection.heading && !currentSection.tracks.length) {
+							// Preserve previous heading if is directly above the "index track" section.
+							currentSection.parentHeading = currentSection.heading;
+						}
 						// Treat index track title as heading.
 						currentSection.heading = cleanHeading(track.title);
 						for (const subTrack of track.sub_tracks) {
@@ -152,6 +161,7 @@ export function combineTracklistSectionsToMedia(sections: TracklistSection[]): M
 				}
 				currentMedium = {
 					sections: [section],
+					title: section.parentHeading,
 				};
 				break;
 			case 'side':
