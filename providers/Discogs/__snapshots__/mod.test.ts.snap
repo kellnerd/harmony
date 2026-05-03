@@ -1,0 +1,1057 @@
+export const snapshot = {};
+
+snapshot[`Discogs provider > release lookup > VA soundtrack CD without release date 1`] = `
+{
+  artists: [
+    {
+      creditedName: undefined,
+      externalIds: [
+        {
+          id: "194",
+          provider: "discogs",
+          type: "artist",
+        },
+      ],
+      joinPhrase: undefined,
+      name: "Various",
+    },
+  ],
+  availableIn: [
+    "XE",
+  ],
+  externalLinks: [
+    {
+      types: [
+        "discography page",
+      ],
+      url: "https://www.discogs.com/release/16004480",
+    },
+  ],
+  gtin: undefined,
+  images: [
+    {
+      types: [
+        "front",
+      ],
+      url: "https://i.discogs.com/BGacxnE6kk6uh7j8GPoONlsdfWa0nR9Oufv-XfCdtCA/rs:fit/g:sm/q:90/h:590/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MDA0/NDgwLTE2MDE3MzA4/ODEtOTYzNy5qcGVn.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/Znh-I6jwLiqc1TNIMG4IRfHZYLSckjOdaNa_D0X0fqc/rs:fit/g:sm/q:90/h:468/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MDA0/NDgwLTE2MDE3MzA4/OTItNjMxMi5qcGVn.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/3AV_4Bc-1IYSm_DxuXb0TnAuKPHdHYEiYjzFBkotjgs/rs:fit/g:sm/q:90/h:600/w:592/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MDA0/NDgwLTE2MDE3MzA4/ODEtODMxOS5qcGVn.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/oQ_aJMwZqVcE5gcrnM8I2fDwXe6-gfkCFBgkuXGSQRU/rs:fit/g:sm/q:90/h:570/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MDA0/NDgwLTE2MDE3MzA4/NzgtNjk3Ni5qcGVn.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/sesIlGftObQIHbHP8piOxlPWBCeoSw2u45t0_W8B52s/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MDA0/NDgwLTE2ODQyNjIx/MDgtODI5My5qcGVn.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/HtjjnGG94r22LAyD2rAIT0NM0SrAdpAZmRBDonuMKOQ/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MDA0/NDgwLTE2ODQyNjIx/MTAtOTQ3Ny5qcGVn.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/EWdlUna3SLBt3VPV9WEZRKomL88sAnygDN0YmrYS56M/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MDA0/NDgwLTE2ODQyNjIx/MTItNzM1OC5qcGVn.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/nXCfwtbCH9PbpFEulqTnZA4tAy6pj1CQ-P5bRJZGm4Y/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MDA0/NDgwLTE2ODQyNjIx/MTQtMTI2Mi5qcGVn.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/bLVk1F6Ruoy0o7KizaWqAIQsqZnzpgCG6-h9TwEty5g/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MDA0/NDgwLTE2ODQyNjIx/MTYtMzEzMS5qcGVn.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/2ZpPB6INmCt4kMc03C0aIhL6KG_zt7w71WzSedtTHSE/rs:fit/g:sm/q:90/h:302/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MDA0/NDgwLTE2MDE3MzA4/OTYtNDYwMy5qcGVn.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/YqQ9kr5rvQ9CRODY-Ho11ZU33jGr2QZyZu1X5NLZ7G4/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE2MDA0/NDgwLTE2ODQyNjIx/MDYtMzMzMy5qcGVn.jpeg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://api.discogs.com/releases/16004480",
+        id: "16004480",
+        internalName: "discogs",
+        lookup: {
+          method: "id",
+          value: "16004480",
+        },
+        name: "Discogs",
+        url: "https://www.discogs.com/release/16004480",
+      },
+    ],
+  },
+  labels: [
+    {
+      catalogNumber: "7599-27256-2",
+      externalIds: [
+        {
+          id: "1000",
+          provider: "discogs",
+          type: "label",
+        },
+      ],
+      name: "Warner Bros. Records",
+    },
+    {
+      catalogNumber: "927 256-2",
+      externalIds: [
+        {
+          id: "1000",
+          provider: "discogs",
+          type: "label",
+        },
+      ],
+      name: "Warner Bros. Records",
+    },
+  ],
+  media: [
+    {
+      format: "CD",
+      number: 1,
+      title: undefined,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "8672",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Walter Carlos",
+            },
+          ],
+          length: 146000,
+          number: "1",
+          title: "Title Music From A Clockwork Orange",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Rossini",
+              externalIds: [
+                {
+                  id: "442174",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Gioacchino Rossini",
+            },
+          ],
+          length: 357000,
+          number: "2",
+          title: "The Thieving Magpie (Abridged)",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "8672",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Walter Carlos",
+            },
+          ],
+          length: 109000,
+          number: "3",
+          title: "Theme From A Clockwork Orange (Beethoviana)",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "95544",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Ludwig van Beethoven",
+            },
+          ],
+          length: 232000,
+          number: "4",
+          title: "Ninth Symphony, Second Movement (Abridged)",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "8672",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Walter Carlos",
+            },
+          ],
+          length: 427000,
+          number: "5",
+          title: "March From A Clockwork Orange (Ninth Symphony, Fourth Movement, Abridged)",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "8672",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Walter Carlos",
+            },
+          ],
+          length: 80000,
+          number: "6",
+          title: "William Tell Overture (Abridged)",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "255804",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Sir Edward Elgar",
+            },
+          ],
+          length: 275000,
+          number: "7",
+          title: "Pomp And Circumstance March No. I",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "255804",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Sir Edward Elgar",
+            },
+          ],
+          length: 98000,
+          number: "8",
+          title: "Pomp And Circumstance March No. IV (Abridged)",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "8672",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Walter Carlos",
+            },
+          ],
+          length: 258000,
+          number: "9",
+          title: "Timesteps (Excerpt)",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "254072",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Terry Tucker",
+            },
+          ],
+          length: 107000,
+          number: "10",
+          title: "Overture To The Sun",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "254070",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Erika Eigen",
+            },
+          ],
+          length: 64000,
+          number: "11",
+          title: "I Want To Marry A Lighthouse Keeper",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Rossini",
+              externalIds: [
+                {
+                  id: "442174",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Gioacchino Rossini",
+            },
+          ],
+          length: 182000,
+          number: "12",
+          title: "William Tell Overture (Abridged)",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "8672",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Walter Carlos",
+            },
+          ],
+          length: 189000,
+          number: "13",
+          title: "Suicide Scherzo (Ninth Symphony, Second Movement, Abridged)",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "95544",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Ludwig van Beethoven",
+            },
+          ],
+          length: 99000,
+          number: "14",
+          title: "Ninth Symphony, Fourth Movement (Abridged)",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "182929",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Gene Kelly",
+            },
+          ],
+          length: 157000,
+          number: "15",
+          title: "Singin' In The Rain",
+        },
+      ],
+    },
+  ],
+  packaging: undefined,
+  releaseDate: undefined,
+  releaseGroup: {
+    externalIds: [
+      {
+        id: "76290",
+        provider: "discogs",
+        type: "master",
+      },
+    ],
+  },
+  status: "Official",
+  title: "Stanley Kubrick's A Clockwork Orange (Music From The Soundtrack)",
+  types: [
+    "Soundtrack",
+  ],
+}
+`;
+
+snapshot[`Discogs provider > release lookup > double vinyl LP with medium titles and sub-tracks 1`] = `
+{
+  artists: [
+    {
+      creditedName: undefined,
+      externalIds: [
+        {
+          id: "45467",
+          provider: "discogs",
+          type: "artist",
+        },
+      ],
+      joinPhrase: undefined,
+      name: "Pink Floyd",
+    },
+  ],
+  availableIn: [
+    "XW",
+  ],
+  externalLinks: [
+    {
+      types: [
+        "discography page",
+      ],
+      url: "https://www.discogs.com/release/8604223",
+    },
+  ],
+  gtin: "0825646493166",
+  images: [
+    {
+      types: [
+        "front",
+      ],
+      url: "https://i.discogs.com/bQYftMbjge0YdcHGaCp3vCtoyGuntu1R30RuoO5FRUY/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2MDQy/MjMtMTYzNzE2OTk5/My0zMDc1LmpwZWc.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/yR8y1Bt0vm6_Uqll8IwN3gqNCoAAyTX_mB3sqMWVzhA/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2MDQy/MjMtMTYzNzE3MDAw/MS05OTE2LmpwZWc.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/EEMOtg_pl1i2MbnLG0ugciI1MZl89vF0U77LNY0Dt6c/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2MDQy/MjMtMTYzNzE3MDAw/Mi03MTA3LmpwZWc.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/gR74hNDvcuXwznYMkHNtCqa64zSdmAGYrBHdYmDkGjA/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2MDQy/MjMtMTYzNzE3MDAx/MC05NDgyLmpwZWc.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/FHzBC-KEPBnZqztxs39-KrK-EvaJOdMDhQHglLkZ-qc/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2MDQy/MjMtMTYzNzE3MDAx/OS04NjA4LmpwZWc.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/aBtmgnvuU8ek8EHHrl6AX8y4-kX-nRpTGinizL6jPoE/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2MDQy/MjMtMTYzNzE3MDAy/MC01MDY4LmpwZWc.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/VbRE7lUEXVBpeyChoGQv9qEOrmVEtut-GdXst4MCPqo/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2MDQy/MjMtMTYzNzE3MDAy/Ni04MTY2LmpwZWc.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/Mj69ukVdUwe619gqDRZdHx7pcTSMK37EX649wIUrhvA/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2MDQy/MjMtMTYzNzE3MDAy/OC03OTQzLmpwZWc.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/8yf98lOys8cicSjTSLV-cmx8konjQJQQk_7XgL4epSk/rs:fit/g:sm/q:90/h:600/w:302/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2MDQy/MjMtMTYzNzE3MDA1/NC0zNjA4LmpwZWc.jpeg",
+    },
+    {
+      types: undefined,
+      url: "https://i.discogs.com/MkE-yqsinZju89lUxwQ2Jxb6NnjUx-jqW4VPe7J47Wo/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2MDQy/MjMtMTYzNzE2OTk5/My0xNTMwLmpwZWc.jpeg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://api.discogs.com/releases/8604223",
+        id: "8604223",
+        internalName: "discogs",
+        lookup: {
+          method: "id",
+          value: "8604223",
+        },
+        name: "Discogs",
+        url: "https://www.discogs.com/release/8604223",
+      },
+    ],
+  },
+  labels: [
+    {
+      catalogNumber: "PFRLP4",
+      externalIds: [
+        {
+          id: "983890",
+          provider: "discogs",
+          type: "label",
+        },
+      ],
+      name: "Pink Floyd Records",
+    },
+    {
+      catalogNumber: "0825646493166",
+      externalIds: [
+        {
+          id: "983890",
+          provider: "discogs",
+          type: "label",
+        },
+      ],
+      name: "Pink Floyd Records",
+    },
+  ],
+  media: [
+    {
+      format: '12" Vinyl',
+      number: 1,
+      title: "Live Album",
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "45467",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Pink Floyd",
+            },
+          ],
+          length: undefined,
+          number: "A1",
+          title: "Astronomy Domine",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "45467",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Pink Floyd",
+            },
+          ],
+          length: undefined,
+          number: "A2",
+          title: "Careful With That Axe Eugene",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "45467",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Pink Floyd",
+            },
+          ],
+          length: undefined,
+          number: "B1",
+          title: "Set The Controls For The Heart Of The Sun",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "45467",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Pink Floyd",
+            },
+          ],
+          length: undefined,
+          number: "B2",
+          title: "A Saucerful Of Secrets",
+        },
+      ],
+    },
+    {
+      format: '12" Vinyl',
+      number: 2,
+      title: "Studio Album",
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "110861",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Richard Wright",
+            },
+          ],
+          length: undefined,
+          number: "C1",
+          title: "Sysyphus: Part 1 / Part 2 / Part 3 / Part 4",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "110862",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Roger Waters",
+            },
+          ],
+          length: undefined,
+          number: "C2",
+          title: "Grantchester Meadows",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "110862",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Roger Waters",
+            },
+          ],
+          length: undefined,
+          number: "C3",
+          title: "Several Species Of Small Furry Animals Gathered Together In A Cave And Grooving With A Pict",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "110863",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "David Gilmour",
+            },
+          ],
+          length: undefined,
+          number: "D1",
+          title: "The Narrow Way: Part 1 / Part 2 / Part 3",
+        },
+        {
+          artists: [
+            {
+              creditedName: undefined,
+              externalIds: [
+                {
+                  id: "246097",
+                  provider: "discogs",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Nick Mason",
+            },
+          ],
+          length: undefined,
+          number: "D2",
+          title: "The Grand Vizier's Garden Party: Part 1 - Entrance / Part 2 - Entertainment / Part 3 - Exit",
+        },
+      ],
+    },
+  ],
+  packaging: undefined,
+  releaseDate: {
+    date: {
+      day: 3,
+      month: 6,
+      year: 2016,
+    },
+    quality: "none-found",
+  },
+  releaseGroup: {
+    externalIds: [
+      {
+        id: "20692",
+        provider: "discogs",
+        type: "master",
+      },
+    ],
+  },
+  status: "Official",
+  title: "Ummagumma",
+  types: [
+    "Album",
+  ],
+}
+`;
+
+snapshot[`Discogs provider > release lookup > audiobook with section titles that span across multiple CDs 1`] = `
+[
+  {
+    creditedName: undefined,
+    externalIds: [
+      {
+        id: "431056",
+        provider: "discogs",
+        type: "artist",
+      },
+    ],
+    joinPhrase: " Read By ",
+    name: "Enid Blyton",
+  },
+  {
+    creditedName: undefined,
+    externalIds: [
+      {
+        id: "152511",
+        provider: "discogs",
+        type: "artist",
+      },
+    ],
+    joinPhrase: undefined,
+    name: "Kate Winslet",
+  },
+]
+`;
+
+snapshot[`Discogs provider > release lookup > audiobook with section titles that span across multiple CDs 2`] = `
+[
+  {
+    medium: 1,
+    title: "The Enchanted Wood",
+    trackCount: 7,
+  },
+  {
+    medium: 2,
+    title: "The Enchanted Wood",
+    trackCount: 8,
+  },
+  {
+    medium: 3,
+    title: "The Enchanted Wood",
+    trackCount: 7,
+  },
+  {
+    medium: 4,
+    title: "The Enchanted Wood",
+    trackCount: 7,
+  },
+  {
+    medium: 5,
+    title: "The Magic Faraway Tree",
+    trackCount: 5,
+  },
+  {
+    medium: 6,
+    title: "The Magic Faraway Tree",
+    trackCount: 4,
+  },
+  {
+    medium: 7,
+    title: "The Magic Faraway Tree",
+    trackCount: 5,
+  },
+  {
+    medium: 8,
+    title: "The Magic Faraway Tree",
+    trackCount: 7,
+  },
+  {
+    medium: 9,
+    title: "The Folk of the Faraway Tree",
+    trackCount: 6,
+  },
+  {
+    medium: 10,
+    title: "The Folk of the Faraway Tree",
+    trackCount: 5,
+  },
+  {
+    medium: 11,
+    title: "The Folk of the Faraway Tree",
+    trackCount: 5,
+  },
+  {
+    medium: 12,
+    title: "The Folk of the Faraway Tree",
+    trackCount: 5,
+  },
+  {
+    medium: 13,
+    title: "The Folk of the Faraway Tree",
+    trackCount: 5,
+  },
+]
+`;
+
+snapshot[`Discogs provider > release lookup > huge box set with named mediums, named sections and index tracks used as sections 1`] = `
+[
+  {
+    format: "CD",
+    medium: 1,
+    title: "1965-67 Cambridge St/ation",
+    trackCount: 16,
+  },
+  {
+    format: "CD",
+    medium: 2,
+    title: undefined,
+    trackCount: 17,
+  },
+  {
+    format: "DVD-Video",
+    medium: 3,
+    title: "1965-67 Cambridge St/ation DVD",
+    trackCount: 14,
+  },
+  {
+    format: "Blu-ray",
+    medium: 4,
+    title: "1965-67 Cambridge St/ation BR",
+    trackCount: 14,
+  },
+  {
+    format: "CD",
+    medium: 5,
+    title: undefined,
+    trackCount: 13,
+  },
+  {
+    format: "DVD-Video",
+    medium: 6,
+    title: "Tienerklanken’, Brussels, Belgium, 18-19 February 1968",
+    trackCount: 27,
+  },
+  {
+    format: "Blu-ray",
+    medium: 7,
+    title: "1968 Germin/ation BR",
+    trackCount: 27,
+  },
+  {
+    format: "CD",
+    medium: 8,
+    title: "1969 Dramatis/ation",
+    trackCount: 14,
+  },
+  {
+    format: "CD",
+    medium: 9,
+    title: undefined,
+    trackCount: 15,
+  },
+  {
+    format: "DVD-Video",
+    medium: 10,
+    title: "1969 Dramatis/ation DVD",
+    trackCount: 15,
+  },
+  {
+    format: "Blu-ray",
+    medium: 11,
+    title: "1969 Dramatis/ation BR",
+    trackCount: 15,
+  },
+  {
+    format: "CD",
+    medium: 12,
+    title: undefined,
+    trackCount: 7,
+  },
+  {
+    format: "CD",
+    medium: 13,
+    title: undefined,
+    trackCount: 17,
+  },
+  {
+    format: "DVD-Video",
+    medium: 14,
+    title: "1970 Devi/ation DVD",
+    trackCount: 12,
+  },
+  {
+    format: "DVD-Video",
+    medium: 15,
+    title: undefined,
+    trackCount: 10,
+  },
+  {
+    format: "Blu-ray",
+    medium: 16,
+    title: "1970 Devi/ation BR",
+    trackCount: 21,
+  },
+  {
+    format: "CD",
+    medium: 17,
+    title: undefined,
+    trackCount: 5,
+  },
+  {
+    format: "DVD-Video",
+    medium: 18,
+    title: "1971 Reverber/ation DVD",
+    trackCount: 14,
+  },
+  {
+    format: "Blu-ray",
+    medium: 19,
+    title: "1971 Reverber/ation BR",
+    trackCount: 14,
+  },
+  {
+    format: "CD",
+    medium: 20,
+    title: "1972 Obfusc/ation",
+    trackCount: 6,
+  },
+  {
+    format: "DVD-Video",
+    medium: 21,
+    title: "1972 Obfusc/ation DVD",
+    trackCount: 15,
+  },
+  {
+    format: "Blu-ray",
+    medium: 22,
+    title: "1972 Obfusc/ation BR",
+    trackCount: 15,
+  },
+  {
+    format: "CD",
+    medium: 23,
+    title: "Bonus Continu/ation",
+    trackCount: 17,
+  },
+  {
+    format: "DVD-Video",
+    medium: 24,
+    title: "Bonus Continu/ation DVD",
+    trackCount: 12,
+  },
+  {
+    format: "DVD-Video",
+    medium: 25,
+    title: undefined,
+    trackCount: 2,
+  },
+  {
+    format: "Blu-ray",
+    medium: 26,
+    title: "Bonus Continu/ation BR",
+    trackCount: 12,
+  },
+  {
+    format: "Blu-ray",
+    medium: 27,
+    title: undefined,
+    trackCount: 2,
+  },
+  {
+    format: '7" Vinyl',
+    medium: 28,
+    title: "Arnold Layne",
+    trackCount: 2,
+  },
+  {
+    format: '7" Vinyl',
+    medium: 29,
+    title: "See Emily Play",
+    trackCount: 2,
+  },
+  {
+    format: '7" Vinyl',
+    medium: 30,
+    title: "Apples And Oranges",
+    trackCount: 2,
+  },
+  {
+    format: '7" Vinyl',
+    medium: 31,
+    title: "It Would Be So Nice",
+    trackCount: 2,
+  },
+  {
+    format: '7" Vinyl',
+    medium: 32,
+    title: "Point Me At The Sky",
+    trackCount: 2,
+  },
+  {
+    format: "CD",
+    medium: 33,
+    title: "Obscured By Clouds (2016 Remix) (Replacement CD Disc For Obfusc/ation)",
+    trackCount: 10,
+  },
+]
+`;
