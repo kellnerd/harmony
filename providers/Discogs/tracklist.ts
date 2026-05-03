@@ -36,7 +36,7 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 			case 'heading': {
 				nextSection();
 				// TODO: handle multiple consecutive headings
-				const heading = track.title;
+				const heading = cleanHeading(track.title);
 				if (heading === '-') {
 					// Treat "empty" headings as section reset.
 					currentSection.heading = undefined;
@@ -57,7 +57,7 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 						const previousHeading = currentSection.heading;
 						nextSection();
 						// Treat index track title as heading.
-						currentSection.heading = track.title;
+						currentSection.heading = cleanHeading(track.title);
 						for (const subTrack of track.sub_tracks) {
 							pushTrack(subTrack);
 						}
@@ -208,4 +208,8 @@ function splitIndexPosition(trackPosition: string) {
 			suffix: indexMatch[2],
 		};
 	}
+}
+
+function cleanHeading(heading: string): string {
+	return heading.replace(/:$/, '');
 }
