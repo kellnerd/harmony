@@ -1,0 +1,1945 @@
+export const snapshot = {};
+
+snapshot[`Bugs! provider > release lookup > Regular (정규) album 1`] = `
+{
+  artists: [
+    {
+      creditedName: "tripleS (트리플에스)",
+      externalIds: [
+        {
+          id: "20171256",
+          provider: "bugs",
+          type: "artist",
+        },
+      ],
+      name: "tripleS (트리플에스)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://music.bugs.co.kr/album/4119156",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://image.bugsm.co.kr/album/images/500/41191/4119156.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://image.bugsm.co.kr/album/images/original/41191/4119156.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://mapi.bugs.co.kr/music/5/multi/invoke/map?album_id=4119156",
+        id: "4119156",
+        internalName: "bugs",
+        lookup: {
+          method: "id",
+          value: "4119156",
+        },
+        name: "Bugs!",
+        url: "https://music.bugs.co.kr/album/4119156",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "모드하우스",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "20171256",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 62000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "6305557",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "@% (Alpha Percent)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "20171256",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 186000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "6305558",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "깨어 (Are You Alive)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "20171256",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 200000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "6305559",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "추리소설 (Detective Soseol)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "20171256",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 188000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "6305560",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "어제 우리 불꽃놀이 (Firework Diary)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "20171256",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 181000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "6305561",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Love Child",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "20171256",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 182000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "6305562",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Persona",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "20171256",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 201000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "6305563",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Too Hot",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "20171256",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 200000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "6305564",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Diablo",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "20171256",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 197000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "6305565",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Friend Zone",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "20171256",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 190000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "6305566",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Love2Love",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 12,
+      month: 5,
+      year: 2025,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "<ASSEMBLE25>",
+  types: [
+    "Album",
+  ],
+}
+`;
+
+snapshot[`Bugs! provider > release lookup > Regular (정규) album with multiple discs and multiple artists 1`] = `
+{
+  artists: [
+    {
+      creditedName: "크레용팝(Crayon Pop)",
+      externalIds: [
+        {
+          id: "80131691",
+          provider: "bugs",
+          type: "artist",
+        },
+      ],
+      name: "크레용팝(Crayon Pop)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://music.bugs.co.kr/album/590752",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://image.bugsm.co.kr/album/images/500/5907/590752.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://image.bugsm.co.kr/album/images/original/5907/590752.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://mapi.bugs.co.kr/music/5/multi/invoke/map?album_id=590752",
+        id: "590752",
+        internalName: "bugs",
+        lookup: {
+          method: "id",
+          value: "590752",
+        },
+        name: "Bugs!",
+        url: "https://music.bugs.co.kr/album/590752",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "크롬엔터테인먼트",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 180000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "4789231",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "부릉부릉(Vroom Vroom)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 182000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "4789232",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Too Much",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 190000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "4789233",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "두둠칫 (Doo Doom Chit)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 213000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "4789234",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "부기우기 (Boogie Woogie)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 212000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "4789235",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Tonight",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 179000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "4789236",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "다가와 (Get It Here)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 189000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "4789237",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "스케치북 (Sketch Book)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "소율(크레용팝)",
+              externalIds: [
+                {
+                  id: "80131703",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "소율(크레용팝)",
+            },
+          ],
+          length: 207000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "4789238",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Love Couple (feat. The Zoo)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 180000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "4789239",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "부릉부릉 (Vroom Vroom) (Inst.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 190000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "4789240",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "두둠칫 (Doo Doom Chit) (Inst.)",
+        },
+      ],
+    },
+    {
+      format: "Digital Media",
+      number: 2,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 179000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "4789241",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "빠빠빠 (Bar Bar Bar)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 193000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "4789242",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "어이 (UH-EE)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 200000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "4789243",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Dancing Queen 2.0",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 186000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "4789244",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Bing Bing",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 221000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "4789245",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "FM",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝(Crayon Pop)",
+              externalIds: [
+                {
+                  id: "80131691",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝(Crayon Pop)",
+            },
+          ],
+          length: 187000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "4789246",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Saturday Night",
+        },
+        {
+          artists: [
+            {
+              creditedName: "웨이(크레용팝)",
+              externalIds: [
+                {
+                  id: "80131708",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "웨이(크레용팝)",
+            },
+            {
+              creditedName: "초아(크레용팝)",
+              externalIds: [
+                {
+                  id: "80131707",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "초아(크레용팝)",
+            },
+          ],
+          length: 223000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "4789247",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Hello",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 26,
+      month: 9,
+      year: 2016,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Evolution Pop_Vol.1",
+  types: [
+    "Album",
+  ],
+}
+`;
+
+snapshot[`Bugs! provider > release lookup > EP (미니) album 1`] = `
+{
+  artists: [
+    {
+      creditedName: "CSR(첫사랑)",
+      externalIds: [
+        {
+          id: "80373333",
+          provider: "bugs",
+          type: "artist",
+        },
+      ],
+      name: "CSR(첫사랑)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://music.bugs.co.kr/album/4078166",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://image.bugsm.co.kr/album/images/500/40781/4078166.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://image.bugsm.co.kr/album/images/original/40781/4078166.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://mapi.bugs.co.kr/music/5/multi/invoke/map?album_id=4078166",
+        id: "4078166",
+        internalName: "bugs",
+        lookup: {
+          method: "id",
+          value: "4078166",
+        },
+        name: "Bugs!",
+        url: "https://music.bugs.co.kr/album/4078166",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "CSR E&M",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "CSR(첫사랑)",
+              externalIds: [
+                {
+                  id: "80373333",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "CSR(첫사랑)",
+            },
+          ],
+          length: 196000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "6170648",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "열일곱 (72.72Hz)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "CSR(첫사랑)",
+              externalIds: [
+                {
+                  id: "80373333",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "CSR(첫사랑)",
+            },
+          ],
+          length: 215000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "6170522",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "첫사랑 (Pop? Pop!)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "CSR(첫사랑)",
+              externalIds: [
+                {
+                  id: "80373333",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "CSR(첫사랑)",
+            },
+          ],
+          length: 200000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "6170649",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "비밀이야 (Manito)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "CSR(첫사랑)",
+              externalIds: [
+                {
+                  id: "80373333",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "CSR(첫사랑)",
+            },
+          ],
+          length: 193000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "6170650",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "지금 너에게 보내 (Toi Et Moi)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "CSR(첫사랑)",
+              externalIds: [
+                {
+                  id: "80373333",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "CSR(첫사랑)",
+            },
+          ],
+          length: 187000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "6170651",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "으랏차 (Euratcha!)",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 28,
+      month: 7,
+      year: 2022,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Sequence : 7272",
+  types: [
+    "EP",
+  ],
+}
+`;
+
+snapshot[`Bugs! provider > release lookup > Single (싱글) album 1`] = `
+{
+  artists: [
+    {
+      creditedName: "하슬 (ARTMS)",
+      externalIds: [
+        {
+          id: "80274322",
+          provider: "bugs",
+          type: "artist",
+        },
+      ],
+      name: "하슬 (ARTMS)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://music.bugs.co.kr/album/4111423",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://image.bugsm.co.kr/album/images/500/41114/4111423.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://image.bugsm.co.kr/album/images/original/41114/4111423.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://mapi.bugs.co.kr/music/5/multi/invoke/map?album_id=4111423",
+        id: "4111423",
+        internalName: "bugs",
+        lookup: {
+          method: "id",
+          value: "4111423",
+        },
+        name: "Bugs!",
+        url: "https://music.bugs.co.kr/album/4111423",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "모드하우스",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "하슬 (ARTMS)",
+              externalIds: [
+                {
+                  id: "80274322",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "하슬 (ARTMS)",
+            },
+          ],
+          length: 211000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "6275514",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Fragile Eyes",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 9,
+      month: 12,
+      year: 2024,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "<Fragile Eyes>",
+  types: [
+    "Single",
+  ],
+}
+`;
+
+snapshot[`Bugs! provider > release lookup > Compilation/Best of (베스트) album with an unavailable, CD-only bonus track 1`] = `
+{
+  artists: [
+    {
+      creditedName: "태연 (TAEYEON)",
+      externalIds: [
+        {
+          id: "80026437",
+          provider: "bugs",
+          type: "artist",
+        },
+      ],
+      name: "태연 (TAEYEON)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://music.bugs.co.kr/album/4134802",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://image.bugsm.co.kr/album/images/500/41348/4134802.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://image.bugsm.co.kr/album/images/original/41348/4134802.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://mapi.bugs.co.kr/music/5/multi/invoke/map?album_id=4134802",
+        id: "4134802",
+        internalName: "bugs",
+        lookup: {
+          method: "id",
+          value: "4134802",
+        },
+        name: "Bugs!",
+        url: "https://music.bugs.co.kr/album/4134802",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "SM ENTERTAINMENT",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 180000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "6384173",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "인사 (Panorama)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 184000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "6384174",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Letter To Myself",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 256000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "6384175",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Time Lapse (2025 Mix)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 209000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "6384176",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Fine",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 205000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "6384177",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "INVU",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 217000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "6384178",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "불티 (Spark)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 158000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "6384179",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Set Myself On Fire",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 207000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "6384180",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "그런 밤 (Some Nights)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 213000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "6384181",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Make Me Love You",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 163000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "6384182",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "I (Solo Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 207000,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "6384183",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Why",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 233000,
+          number: 12,
+          recording: {
+            externalIds: [
+              {
+                id: "6384184",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Weekend",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 170000,
+          number: 13,
+          recording: {
+            externalIds: [
+              {
+                id: "6384185",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "To. X",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 167000,
+          number: 14,
+          recording: {
+            externalIds: [
+              {
+                id: "6384186",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "What Do I Call You",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 188000,
+          number: 15,
+          recording: {
+            externalIds: [
+              {
+                id: "6384187",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "사계 (Four Seasons)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 190000,
+          number: 16,
+          recording: {
+            externalIds: [
+              {
+                id: "6384188",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "All For Nothing",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 215000,
+          number: 17,
+          recording: {
+            externalIds: [
+              {
+                id: "6384189",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "겨울나무 (I'm all ears)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 228000,
+          number: 18,
+          recording: {
+            externalIds: [
+              {
+                id: "6384190",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "11:11",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 222000,
+          number: 19,
+          recording: {
+            externalIds: [
+              {
+                id: "6384191",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Rain",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 239000,
+          number: 20,
+          recording: {
+            externalIds: [
+              {
+                id: "6384192",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Gravity",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 193000,
+          number: 21,
+          recording: {
+            externalIds: [
+              {
+                id: "6384193",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Disaster",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 274000,
+          number: 22,
+          recording: {
+            externalIds: [
+              {
+                id: "6384194",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "U R",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "80026437",
+                  provider: "bugs",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 225000,
+          number: 23,
+          recording: {
+            externalIds: [
+              {
+                id: "6384195",
+                provider: "bugs",
+                type: "track",
+              },
+            ],
+          },
+          title: "Ending Credits",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 1,
+      month: 12,
+      year: 2025,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Panorama : The Best of TAEYEON",
+  types: [
+    "Compilation",
+  ],
+}
+`;
