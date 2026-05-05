@@ -8,6 +8,7 @@ import IconBrandApple from 'tabler-icons/brand-apple.tsx';
 import IconBrandBandcamp from 'tabler-icons/brand-bandcamp.tsx';
 import IconBrandDeezer from 'tabler-icons/brand-deezer.tsx';
 import IconBrandGit from 'tabler-icons/brand-git.tsx';
+import IconBrandQobuz from '@/server/icons/QobuzOutline.tsx';
 import IconBrandSpotify from 'tabler-icons/brand-spotify.tsx';
 import IconBrandTidal from 'tabler-icons/brand-tidal.tsx';
 import IconAlertTriangle from 'tabler-icons/alert-triangle.tsx';
@@ -65,6 +66,7 @@ const icons: Icon[] = [
 	IconBrandMetaBrainz,
 	IconBrandMora,
 	IconBrandOtotoy,
+	IconBrandQobuz,
 	IconBrandSpotify,
 	IconBrandTidal,
 	IconPuzzle,
