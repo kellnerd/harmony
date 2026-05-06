@@ -153,6 +153,9 @@ export function convertLinkType(entityType: EntityType, linkType: LinkType, url?
 					return typeIds.discogs;
 				}
 			}
+			if (url?.hostname.replace('www.', '') == 'soundcloud.com') {
+				return typeIds.soundcloud;
+			}
 			return typeIds['discography page'] ?? typeIds['discography entry'];
 		case 'license':
 			return typeIds['license'];

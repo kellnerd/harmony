@@ -1,0 +1,102 @@
+export const snapshot = {};
+
+snapshot[`SoundCloud provider > release lookup > track release with downloads enabled 1`] = `
+{
+  artists: [
+    {
+      creditedName: "League of Legends",
+      externalIds: [
+        {
+          id: "leagueoflegends",
+          provider: "soundcloud",
+          type: "artist",
+        },
+      ],
+      name: "League of Legends",
+    },
+  ],
+  availableIn: undefined,
+  externalLinks: [
+    {
+      types: [
+        "free streaming",
+        "free download",
+      ],
+      url: "https://soundcloud.com/leagueoflegends/piercing-light-mako-remix",
+    },
+  ],
+  images: [
+    {
+      provider: "SoundCloud",
+      thumbUrl: "https://i1.sndcdn.com/artworks-000142912000-f05col-t300x300.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://i1.sndcdn.com/artworks-000142912000-f05col-t500x500.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://api.soundcloud.com/resolve?url=https%3A%2F%2Fsoundcloud.com%2Fleagueoflegends%2Fpiercing-light-mako-remix",
+        id: "leagueoflegends/track/piercing-light-mako-remix",
+        internalName: "soundcloud",
+        lookup: {
+          method: "id",
+          value: "leagueoflegends/track/piercing-light-mako-remix",
+        },
+        name: "SoundCloud",
+        url: "https://soundcloud.com/leagueoflegends/piercing-light-mako-remix",
+      },
+    ],
+  },
+  labels: undefined,
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "League of Legends",
+              externalIds: [
+                {
+                  id: "leagueoflegends",
+                  provider: "soundcloud",
+                  type: "artist",
+                },
+              ],
+              name: "League of Legends",
+            },
+          ],
+          availableIn: undefined,
+          isrc: undefined,
+          length: 291422,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "leagueoflegends/piercing-light-mako-remix",
+                provider: "soundcloud",
+                type: "track",
+              },
+            ],
+          },
+          title: "Piercing Light (Mako Remix)",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    day: 12,
+    month: 1,
+    year: 2016,
+  },
+  title: "Piercing Light (Mako Remix)",
+  types: [
+    "Single",
+  ],
+}
+`;
