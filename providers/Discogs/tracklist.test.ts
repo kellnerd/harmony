@@ -64,6 +64,28 @@ describe('splitTracklistIntoSections', () => {
 			],
 		);
 	});
+
+	it('detects sides after numeric positions without medium prefix', () => {
+		assertTracklistSections(
+			fakeTracksWithPositions('1', '2', 'A1', 'A2', 'B'),
+			[
+				{ type: 'medium', trackPositions: ['1', '2'] },
+				{ type: 'side', trackPositions: ['A1', 'A2'] },
+				{ type: 'side', trackPositions: ['B'] },
+			],
+		);
+	});
+
+	it('detects numeric positions without medium prefix after sides as new medium', () => {
+		assertTracklistSections(
+			fakeTracksWithPositions('A', 'B', '1', '2'),
+			[
+				{ type: 'side', trackPositions: ['A'] },
+				{ type: 'side', trackPositions: ['B'] },
+				{ type: 'medium', trackPositions: ['1', '2'] },
+			],
+		);
+	});
 });
 
 type FakeTracklistSection = Omit<TracklistSection, 'tracks' | 'positionPrefix'> & {

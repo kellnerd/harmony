@@ -125,6 +125,14 @@ export function splitTracklistIntoSections(tracks: Track[]): TracklistSection[] 
 	}
 
 	function updateCurrentPositionPrefix(trackPosition: string) {
+		const noPrefix = /^(?=\d+$)/;
+		const noPrefixMatch = trackPosition.match(noPrefix);
+		if (noPrefixMatch) {
+			currentSection.type = 'medium';
+			currentSection.hasMediumPrefix = false;
+			currentSection.positionPrefix = noPrefix;
+		}
+
 		const mediumPrefix = trackPosition.match(/^(CD|DVD|BR)?\d+-(?=\d)/)?.[0];
 		if (mediumPrefix) {
 			currentSection.type = 'medium';
