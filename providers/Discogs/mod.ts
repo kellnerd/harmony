@@ -8,6 +8,7 @@ import type {
 	HarmonyTrack,
 	Label as HarmonyLabel,
 	LinkType,
+	MediumFormat,
 } from '@/harmonizer/types.ts';
 import {
 	ApiQueryOptions,
@@ -212,6 +213,7 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 		const tracklistSections = splitTracklistIntoSections(rawRelease.tracklist);
 		const rawMedia = combineTracklistSectionsToMedia(tracklistSections);
 		const hasBrokenTracklist = rawMedia.length !== mediumFormats.length;
+		let fallbackFormat: MediumFormat | undefined;
 
 		if (hasBrokenTracklist) {
 			this.addMessage(
@@ -220,11 +222,16 @@ export class DiscogsReleaseLookup extends ReleaseApiLookup<DiscogsProvider, Rele
 				} as expected, found ${pluralWithCount(rawMedia.length, 'medium', 'media')}`,
 				'error',
 			);
+			// Still use the medium format if all mediums have the same format.
+			const uniqueFormats = new Set(mediumFormats);
+			if (uniqueFormats.size === 1) {
+				fallbackFormat = mediumFormats[0];
+			}
 		}
 
 		return rawMedia.map((rawMedium, index) => ({
 			number: index + 1,
-			format: hasBrokenTracklist ? undefined : mediumFormats[index],
+			format: hasBrokenTracklist ? fallbackFormat : mediumFormats[index],
 			title: rawMedium.title,
 			tracklist: rawMedium.sections.flatMap((section) =>
 				section.tracks.map((track) => this.convertRawTrack(track, section))
