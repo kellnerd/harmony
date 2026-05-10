@@ -1,5 +1,5 @@
 import { FeatureQuality, type FeatureQualityMap, type ProviderFeature } from './features.ts';
-import { CacheMissError, ProviderError, ResponseError } from '@/utils/errors.ts';
+import { CacheMissError, LookupError, ProviderError, ResponseError } from '@/utils/errors.ts';
 import { pluralWithCount } from '@/utils/plural.ts';
 import { delay } from 'std/async/delay.ts';
 import { getLogger } from 'std/log/get_logger.ts';
@@ -185,6 +185,9 @@ export abstract class MetadataProvider {
 		if (this.idPattern.test(id)) {
 			return { id, type };
 		} else {
+			if (id.includes('®ion=') || id.includes('>in=')) {
+				throw new LookupError('You have somehow managed to break the Harmony URL, please report how you got here...');
+			}
 			throw new ProviderError(this.name, `Invalid provider ID '${id}'`);
 		}
 	}
