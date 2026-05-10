@@ -27,7 +27,7 @@ const exampleFormats = {
 	},
 	digitalPromoSingle: {
 		name: 'File',
-		qty: '1',
+		qty: '2',
 		descriptions: ['Single', 'Promo'],
 	},
 	mixtape: {

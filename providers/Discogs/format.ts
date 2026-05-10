@@ -7,6 +7,10 @@ export function convertFormat(format: ReleaseFormat): Array<MediumFormat | undef
 	if (pseudoFormats.has(format.name)) {
 		return [];
 	}
+	if (format.name === 'File') {
+		// Ignore quantity for digital file formats, it counts tracks instead of mediums.
+		return ['Digital Media'];
+	}
 
 	let mediumFormat = mediumFormatMap[format.name];
 	if (mediumFormat) {
@@ -43,7 +47,6 @@ const mediumFormatMap: Record<string, MediumFormat | undefined> = {
 	'Cassette': 'Cassette',
 	'CD': 'CD',
 	'DVD': 'DVD',
-	'File': 'Digital Media',
 	'Flexi-disc': 'Flexi-disc',
 	'Shellac': 'Shellac',
 	'Vinyl': 'Vinyl',
