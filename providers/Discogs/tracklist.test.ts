@@ -86,13 +86,36 @@ describe('splitTracklistIntoSections', () => {
 			],
 		);
 	});
+
+	it('determines position of index track from its sub-tracks', () => {
+		assertTracklistSections(
+			[fakeIndexTrackWithPositions('1.1', '1.2'), ...fakeTracksWithPositions('2', '3')],
+			[{ type: 'medium', trackPositions: ['1', '2', '3'] }],
+			'Numeric sub-track suffixes with leading dot should be detected',
+		);
+		assertTracklistSections(
+			[...fakeTracksWithPositions('1', '2'), fakeIndexTrackWithPositions('3a', '3b', '3c')],
+			[{ type: 'medium', trackPositions: ['1', '2', '3'] }],
+			'Alphabetic sub-track suffixes should be detected',
+		);
+	});
+
+	it('treats abused index track without sub-track position suffixes as track group', () => {
+		assertTracklistSections(
+			[...fakeTracksWithPositions('1-1', '1-2'), fakeIndexTrackWithPositions('1-3', '1-4')],
+			[
+				{ type: 'medium', trackPositions: ['1-1', '1-2'], hasMediumPrefix: true },
+				{ type: 'track group', heading: 'Index track', trackPositions: ['1-3', '1-4'], hasMediumPrefix: true },
+			],
+		);
+	});
 });
 
 type FakeTracklistSection = Omit<TracklistSection, 'tracks' | 'positionPrefix'> & {
 	trackPositions: string[];
 };
 
-function assertTracklistSections(tracks: Track[], expectedSections: FakeTracklistSection[]) {
+function assertTracklistSections(tracks: Track[], expectedSections: FakeTracklistSection[], message?: string) {
 	const actualSections = splitTracklistIntoSections(tracks).map((section) => {
 		// Drop `tracks` data (irrelevant) and `positionPrefix` (implementation detail).
 		const fakeSection: FakeTracklistSection = {
@@ -112,7 +135,7 @@ function assertTracklistSections(tracks: Track[], expectedSections: FakeTracklis
 		hasMediumPrefix: false,
 		...section,
 	}));
-	assertEquals(actualSections, expectedSections);
+	assertEquals(actualSections, expectedSections, message);
 }
 
 function fakeTracksWithPositions(...positions: string[]): Track[] {
@@ -122,4 +145,19 @@ function fakeTracksWithPositions(...positions: string[]): Track[] {
 		title: `Track ${position}`,
 		type_: 'track',
 	}));
+}
+
+function fakeIndexTrackWithPositions(...positions: string[]): Track {
+	return {
+		duration: '',
+		position: '',
+		title: 'Index track',
+		type_: 'index',
+		sub_tracks: positions.map((position) => ({
+			duration: '',
+			position: position,
+			title: `Sub-track ${position}`,
+			type_: 'track',
+		})),
+	};
 }
