@@ -225,7 +225,7 @@ function commonIndexPositionPrefix(trackPositions: Iterable<string>) {
 }
 
 function splitIndexPosition(trackPosition: string) {
-	const indexMatch = trackPosition.match(/^(.*\d)([a-z]|\.\d+)$/);
+	const indexMatch = trackPosition.match(/^(.*\d)(\.?[a-z]|\.\d+)$/);
 	if (indexMatch) {
 		return {
 			prefix: indexMatch[1],

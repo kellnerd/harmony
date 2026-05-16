@@ -98,6 +98,11 @@ describe('splitTracklistIntoSections', () => {
 			[{ type: 'medium', trackPositions: ['1', '2', '3'] }],
 			'Alphabetic sub-track suffixes should be detected',
 		);
+		assertTracklistSections(
+			[...fakeTracksWithPositions('1', '2'), fakeIndexTrackWithPositions('3.a', '3.b')],
+			[{ type: 'medium', trackPositions: ['1', '2', '3'] }],
+			'Alphabetic sub-track suffixes with leading dot should be detected',
+		);
 	});
 
 	it('treats abused index track without sub-track position suffixes as track group', () => {
