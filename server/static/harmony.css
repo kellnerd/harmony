@@ -34,6 +34,7 @@
 	--discogs: #121212;
 	--mora: #02082a;
 	--musicbrainz: #ba478f;
+	--vibe: #e404aa;
 	--ototoy: #e07e01;
 	--spotify: #1db954;
 	--tidal: #000000;
@@ -472,6 +473,9 @@ label.mora, td.mora {
 }
 label.musicbrainz, td.musicbrainz {
 	background-color: var(--musicbrainz);
+}
+label.vibe, td.vibe {
+	background-color: var(--vibe);
 }
 label.ototoy, td.ototoy {
 	background-color: var(--ototoy);

@@ -1,0 +1,1853 @@
+export const snapshot = {};
+
+snapshot[`Naver provider > release lookup > single with a featuring artist 1`] = `
+{
+  artists: [
+    {
+      creditedName: "ivycomb",
+      externalIds: [
+        {
+          id: "8956811",
+          provider: "vibe",
+          type: "artist",
+        },
+      ],
+      name: "ivycomb",
+    },
+  ],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+      ],
+      url: "https://vibe.naver.com/album/34923420",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://musicmeta-phinf.pstatic.net/album/034/923/34923420.jpg?type=r480Fll&v=20250810043508",
+      types: [
+        "front",
+      ],
+      url: "https://musicmeta-phinf.pstatic.net/album/034/923/34923420.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://apis.naver.com/vibeWeb/musicapiweb/album/34923420.json",
+        id: "34923420",
+        internalName: "vibe",
+        lookup: {
+          method: "id",
+          value: "34923420",
+        },
+        name: "Naver VIBE",
+        url: "https://vibe.naver.com/album/34923420",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "Honeycomb Records",
+    },
+    {
+      name: "Kanjian",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "ivycomb",
+              externalIds: [
+                {
+                  id: "8956811",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "ivycomb",
+            },
+            {
+              creditedName: "OodleZz",
+              externalIds: [
+                {
+                  id: "9943775",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "OodleZz",
+            },
+          ],
+          length: 224000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "96143271",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "THE RINGMASTER (Feat. OodleZz)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "ivycomb",
+              externalIds: [
+                {
+                  id: "8956811",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "ivycomb",
+            },
+            {
+              creditedName: "OodleZz",
+              externalIds: [
+                {
+                  id: "9943775",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "OodleZz",
+            },
+          ],
+          length: 224000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "96143273",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "THE RINGMASTER - YouTube Mix (Feat. OodleZz)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "ivycomb",
+              externalIds: [
+                {
+                  id: "8956811",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              name: "ivycomb",
+            },
+          ],
+          length: 224000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "96143275",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "THE RINGMASTER - Instrumental",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 13,
+      month: 6,
+      year: 2025,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "THE RINGMASTER",
+}
+`;
+
+snapshot[`Naver provider > release lookup > album with many featuring artists 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Jose guapacha",
+      externalIds: [
+        {
+          id: "4475421",
+          provider: "vibe",
+          type: "artist",
+        },
+      ],
+      name: "Jose guapacha",
+    },
+    {
+      creditedName: "Sebastián Orellana",
+      externalIds: [
+        {
+          id: "2578826",
+          provider: "vibe",
+          type: "artist",
+        },
+      ],
+      name: "Sebastián Orellana",
+    },
+  ],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://vibe.naver.com/album/10304443",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://musicmeta-phinf.pstatic.net/album/010/304/10304443.jpg?type=r480Fll&v=20230921043521",
+      types: [
+        "front",
+      ],
+      url: "https://musicmeta-phinf.pstatic.net/album/010/304/10304443.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://apis.naver.com/vibeWeb/musicapiweb/album/10304443.json",
+        id: "10304443",
+        internalName: "vibe",
+        lookup: {
+          method: "id",
+          value: "10304443",
+        },
+        name: "Naver VIBE",
+        url: "https://vibe.naver.com/album/10304443",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "Happy Place Records",
+    },
+    {
+      name: "오차드",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "Jose guapacha",
+              externalIds: [
+                {
+                  id: "4475421",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " & ",
+              name: "Jose guapacha",
+            },
+            {
+              creditedName: "Sebastián Orellana",
+              externalIds: [
+                {
+                  id: "2578826",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Sebastián Orellana",
+            },
+            {
+              creditedName: 'Fernando "Percu" García',
+              externalIds: [
+                {
+                  id: "5644012",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: 'Fernando "Percu" García',
+            },
+            {
+              creditedName: "Javier Mora",
+              externalIds: [
+                {
+                  id: "829948",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Javier Mora",
+            },
+            {
+              creditedName: "Martín Benavides",
+              externalIds: [
+                {
+                  id: "3798873",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Martín Benavides",
+            },
+          ],
+          length: 190000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "67155383",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: 'Amorcito Corazón (Feat. Fernando "Percu" García, Javier Mora, Martín Benavides)',
+        },
+        {
+          artists: [
+            {
+              creditedName: "Jose guapacha",
+              externalIds: [
+                {
+                  id: "4475421",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " & ",
+              name: "Jose guapacha",
+            },
+            {
+              creditedName: "Sebastián Orellana",
+              externalIds: [
+                {
+                  id: "2578826",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Sebastián Orellana",
+            },
+            {
+              creditedName: 'Fernando "Percu" García',
+              externalIds: [
+                {
+                  id: "5644012",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: 'Fernando "Percu" García',
+            },
+            {
+              creditedName: "Javier Mora",
+              externalIds: [
+                {
+                  id: "829948",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Javier Mora",
+            },
+            {
+              creditedName: "Martín Benavides",
+              externalIds: [
+                {
+                  id: "3798873",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Martín Benavides",
+            },
+          ],
+          length: 156000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "67155387",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: 'Sin Amor (Feat. Fernando "Percu" García, Javier Mora, Martín Benavides)',
+        },
+        {
+          artists: [
+            {
+              creditedName: "Jose guapacha",
+              externalIds: [
+                {
+                  id: "4475421",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " & ",
+              name: "Jose guapacha",
+            },
+            {
+              creditedName: "Sebastián Orellana",
+              externalIds: [
+                {
+                  id: "2578826",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Sebastián Orellana",
+            },
+            {
+              creditedName: 'Fernando "Percu" García',
+              externalIds: [
+                {
+                  id: "5644012",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: 'Fernando "Percu" García',
+            },
+            {
+              creditedName: "Javier Mora",
+              externalIds: [
+                {
+                  id: "829948",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Javier Mora",
+            },
+            {
+              creditedName: "Martín Benavides",
+              externalIds: [
+                {
+                  id: "3798873",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Martín Benavides",
+            },
+          ],
+          length: 193000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "67155388",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: 'Desesperación (Feat. Fernando "Percu" García, Javier Mora, Martín Benavides)',
+        },
+        {
+          artists: [
+            {
+              creditedName: "Jose guapacha",
+              externalIds: [
+                {
+                  id: "4475421",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " & ",
+              name: "Jose guapacha",
+            },
+            {
+              creditedName: "Sebastián Orellana",
+              externalIds: [
+                {
+                  id: "2578826",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Sebastián Orellana",
+            },
+            {
+              creditedName: 'Fernando "Percu" García',
+              externalIds: [
+                {
+                  id: "5644012",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: 'Fernando "Percu" García',
+            },
+            {
+              creditedName: "Javier Mora",
+              externalIds: [
+                {
+                  id: "829948",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Javier Mora",
+            },
+            {
+              creditedName: "Martín Benavides",
+              externalIds: [
+                {
+                  id: "3798873",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Martín Benavides",
+            },
+          ],
+          length: 173000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "67155389",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: 'Caribe (Feat. Fernando "Percu" García, Javier Mora, Martín Benavides)',
+        },
+        {
+          artists: [
+            {
+              creditedName: "Jose guapacha",
+              externalIds: [
+                {
+                  id: "4475421",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " & ",
+              name: "Jose guapacha",
+            },
+            {
+              creditedName: "Sebastián Orellana",
+              externalIds: [
+                {
+                  id: "2578826",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Sebastián Orellana",
+            },
+            {
+              creditedName: 'Fernando "Percu" García',
+              externalIds: [
+                {
+                  id: "5644012",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: 'Fernando "Percu" García',
+            },
+            {
+              creditedName: "Javier Mora",
+              externalIds: [
+                {
+                  id: "829948",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Javier Mora",
+            },
+            {
+              creditedName: "Martín Benavides",
+              externalIds: [
+                {
+                  id: "3798873",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Martín Benavides",
+            },
+          ],
+          length: 202000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "67155392",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: 'Escríbeme (Feat. Fernando "Percu" García, Javier Mora, Martín Benavides)',
+        },
+        {
+          artists: [
+            {
+              creditedName: "Jose guapacha",
+              externalIds: [
+                {
+                  id: "4475421",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " & ",
+              name: "Jose guapacha",
+            },
+            {
+              creditedName: "Sebastián Orellana",
+              externalIds: [
+                {
+                  id: "2578826",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Sebastián Orellana",
+            },
+            {
+              creditedName: 'Fernando "Percu" García',
+              externalIds: [
+                {
+                  id: "5644012",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: 'Fernando "Percu" García',
+            },
+            {
+              creditedName: "Javier Mora",
+              externalIds: [
+                {
+                  id: "829948",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Javier Mora",
+            },
+            {
+              creditedName: "Martín Benavides",
+              externalIds: [
+                {
+                  id: "3798873",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Martín Benavides",
+            },
+          ],
+          length: 202000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "67155396",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: 'Una Copa Más (Feat. Fernando "Percu" García, Javier Mora, Martín Benavides)',
+        },
+        {
+          artists: [
+            {
+              creditedName: "Jose guapacha",
+              externalIds: [
+                {
+                  id: "4475421",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " & ",
+              name: "Jose guapacha",
+            },
+            {
+              creditedName: "Sebastián Orellana",
+              externalIds: [
+                {
+                  id: "2578826",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Sebastián Orellana",
+            },
+            {
+              creditedName: 'Fernando "Percu" García',
+              externalIds: [
+                {
+                  id: "5644012",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: 'Fernando "Percu" García',
+            },
+            {
+              creditedName: "Javier Mora",
+              externalIds: [
+                {
+                  id: "829948",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Javier Mora",
+            },
+            {
+              creditedName: "Martín Benavides",
+              externalIds: [
+                {
+                  id: "3798873",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Martín Benavides",
+            },
+          ],
+          length: 181000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "67155403",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: 'Dos Almas (Feat. Fernando "Percu" García, Javier Mora, Martín Benavides)',
+        },
+        {
+          artists: [
+            {
+              creditedName: "Jose guapacha",
+              externalIds: [
+                {
+                  id: "4475421",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " & ",
+              name: "Jose guapacha",
+            },
+            {
+              creditedName: "Sebastián Orellana",
+              externalIds: [
+                {
+                  id: "2578826",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Sebastián Orellana",
+            },
+            {
+              creditedName: 'Fernando "Percu" García',
+              externalIds: [
+                {
+                  id: "5644012",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: 'Fernando "Percu" García',
+            },
+            {
+              creditedName: "Javier Mora",
+              externalIds: [
+                {
+                  id: "829948",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Javier Mora",
+            },
+            {
+              creditedName: "Martín Benavides",
+              externalIds: [
+                {
+                  id: "3798873",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Martín Benavides",
+            },
+          ],
+          length: 180000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "67155410",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: 'Te Engañaron Corazon (Feat. Fernando "Percu" García, Javier Mora, Martín Benavides)',
+        },
+        {
+          artists: [
+            {
+              creditedName: "Jose guapacha",
+              externalIds: [
+                {
+                  id: "4475421",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " & ",
+              name: "Jose guapacha",
+            },
+            {
+              creditedName: "Sebastián Orellana",
+              externalIds: [
+                {
+                  id: "2578826",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Sebastián Orellana",
+            },
+            {
+              creditedName: 'Fernando "Percu" García',
+              externalIds: [
+                {
+                  id: "5644012",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: 'Fernando "Percu" García',
+            },
+            {
+              creditedName: "Javier Mora",
+              externalIds: [
+                {
+                  id: "829948",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Javier Mora",
+            },
+            {
+              creditedName: "Martín Benavides",
+              externalIds: [
+                {
+                  id: "3798873",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Martín Benavides",
+            },
+          ],
+          length: 208000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "67155417",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: 'Aunque Me Cueste la Vida (Feat. Fernando "Percu" García, Javier Mora, Martín Benavides)',
+        },
+        {
+          artists: [
+            {
+              creditedName: "Jose guapacha",
+              externalIds: [
+                {
+                  id: "4475421",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " & ",
+              name: "Jose guapacha",
+            },
+            {
+              creditedName: "Sebastián Orellana",
+              externalIds: [
+                {
+                  id: "2578826",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Sebastián Orellana",
+            },
+            {
+              creditedName: 'Fernando "Percu" García',
+              externalIds: [
+                {
+                  id: "5644012",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: 'Fernando "Percu" García',
+            },
+            {
+              creditedName: "Javier Mora",
+              externalIds: [
+                {
+                  id: "829948",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Javier Mora",
+            },
+            {
+              creditedName: "Martín Benavides",
+              externalIds: [
+                {
+                  id: "3798873",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Martín Benavides",
+            },
+          ],
+          length: 203000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "67155422",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: 'En el Juego de la Vida (Feat. Fernando "Percu" García, Javier Mora, Martín Benavides)',
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 2,
+      month: 9,
+      year: 2022,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Sebastian Orellana Presenta a José Guapachá",
+}
+`;
+
+snapshot[`Naver provider > release lookup > album with differing numbers of featuring artists 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Steve Aoki",
+      externalIds: [
+        {
+          id: "134560",
+          provider: "vibe",
+          type: "artist",
+        },
+      ],
+      name: "Steve Aoki",
+    },
+  ],
+  externalLinks: [
+    {
+      types: [],
+      url: "https://vibe.naver.com/album/3034414",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://musicmeta-phinf.pstatic.net/album/003/034/3034414.jpg?type=r480Fll&v=20260324011012",
+      types: [
+        "front",
+      ],
+      url: "https://musicmeta-phinf.pstatic.net/album/003/034/3034414.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://apis.naver.com/vibeWeb/musicapiweb/album/3034414.json",
+        id: "3034414",
+        internalName: "vibe",
+        lookup: {
+          method: "id",
+          value: "3034414",
+        },
+        name: "Naver VIBE",
+        url: "https://vibe.naver.com/album/3034414",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "Ultra Records, LLC",
+    },
+    {
+      name: "소니뮤직",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              name: "Steve Aoki",
+            },
+          ],
+          length: 256000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "27139984",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Neon Future III (Intro)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "Louis Tomlinson(One Direction)",
+              externalIds: [
+                {
+                  id: "200191",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              name: "Louis Tomlinson(One Direction)",
+            },
+          ],
+          length: 199000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "27139985",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Just Hold On",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "방탄소년단",
+              externalIds: [
+                {
+                  id: "143179",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "방탄소년단",
+            },
+          ],
+          length: 192000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "27139986",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Waste It On Me (Feat. 방탄소년단)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " & ",
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "Nicky Romero",
+              externalIds: [
+                {
+                  id: "155746",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Nicky Romero",
+            },
+            {
+              creditedName: "Kiiara",
+              externalIds: [
+                {
+                  id: "463128",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Kiiara",
+            },
+          ],
+          length: 205000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "27139987",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Be Somebody (Feat. Kiiara)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "Lil Yachty",
+              externalIds: [
+                {
+                  id: "498506",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Lil Yachty",
+            },
+            {
+              creditedName: "AJR",
+              externalIds: [
+                {
+                  id: "327998",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "AJR",
+            },
+          ],
+          length: 189000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "27139994",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Pretender (Feat. Lil Yachty, AJR)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "Mike Posner",
+              externalIds: [
+                {
+                  id: "134549",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Mike Posner",
+            },
+          ],
+          length: 208000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "27139989",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "A Lover And A Memory (Feat. Mike Posner)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "blink-182",
+              externalIds: [
+                {
+                  id: "1529",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "blink-182",
+            },
+          ],
+          length: 228000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "27139995",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Why Are We So Broken (Feat. blink-182)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "Jim Adkins",
+              externalIds: [
+                {
+                  id: "86032",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Jim Adkins",
+            },
+          ],
+          length: 203000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "27139988",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Golden Days (Feat. Jim Adkins)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "Lady Antebellum",
+              externalIds: [
+                {
+                  id: "125978",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Lady Antebellum",
+            },
+          ],
+          length: 173000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "27139997",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Our Love Glows (Feat. Lady Antebellum)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "Era Istrefi",
+              externalIds: [
+                {
+                  id: "484250",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Era Istrefi",
+            },
+          ],
+          length: 179000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "27139991",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Anything More (Feat. Era Istrefi)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "Lauren Jauregui",
+              externalIds: [
+                {
+                  id: "1409759",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              name: "Lauren Jauregui",
+            },
+          ],
+          length: 205000,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "27139996",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "All Night",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "Bella Thorne",
+              externalIds: [
+                {
+                  id: "166213",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Bella Thorne",
+            },
+          ],
+          length: 163000,
+          number: 12,
+          recording: {
+            externalIds: [
+              {
+                id: "27139990",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Do Not Disturb (Feat. Bella Thorne)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "Ina Wroldsen",
+              externalIds: [
+                {
+                  id: "350183",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Ina Wroldsen",
+            },
+          ],
+          length: 179000,
+          number: 13,
+          recording: {
+            externalIds: [
+              {
+                id: "27139999",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Lie To Me (Feat. Ina Wroldsen)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "Daddy Yankee",
+              externalIds: [
+                {
+                  id: "12634",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              name: "Daddy Yankee",
+            },
+            {
+              creditedName: "Play-N-Skillz",
+              externalIds: [
+                {
+                  id: "537644",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              name: "Play-N-Skillz",
+            },
+            {
+              creditedName: "Elvis Crespo",
+              externalIds: [
+                {
+                  id: "3139",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              name: "Elvis Crespo",
+            },
+          ],
+          length: 226000,
+          number: 14,
+          recording: {
+            externalIds: [
+              {
+                id: "27139993",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Azukita",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "TWIIG",
+              externalIds: [
+                {
+                  id: "2383832",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              name: "TWIIG",
+            },
+          ],
+          length: 207000,
+          number: 15,
+          recording: {
+            externalIds: [
+              {
+                id: "27139998",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Hoovela",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Don Diablo",
+              externalIds: [
+                {
+                  id: "15765",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Don Diablo",
+            },
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "Lush",
+              externalIds: [
+                {
+                  id: "6656",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " & ",
+              name: "Lush",
+            },
+            {
+              creditedName: "Simon",
+              externalIds: [
+                {
+                  id: "347341",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Simon",
+            },
+            {
+              creditedName: "Bullysongs",
+              externalIds: [
+                {
+                  id: "349221",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Bullysongs",
+            },
+          ],
+          length: 203000,
+          number: 16,
+          recording: {
+            externalIds: [
+              {
+                id: "27139992",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "What We Started (Feat. Bullysongs)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Aoki",
+              externalIds: [
+                {
+                  id: "134560",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: " feat. ",
+              name: "Steve Aoki",
+            },
+            {
+              creditedName: "Bill Nye",
+              externalIds: [
+                {
+                  id: "1829984",
+                  provider: "vibe",
+                  type: "artist",
+                },
+              ],
+              joinPhrase: undefined,
+              name: "Bill Nye",
+            },
+          ],
+          length: 219000,
+          number: 17,
+          recording: {
+            externalIds: [
+              {
+                id: "27140000",
+                provider: "vibe",
+                type: "track",
+              },
+            ],
+          },
+          title: "Noble Gas (Feat. Bill Nye)",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 9,
+      month: 11,
+      year: 2018,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Neon Future III",
+}
+`;
