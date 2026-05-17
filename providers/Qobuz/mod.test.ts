@@ -52,7 +52,11 @@ describe('Qobuz provider', () => {
 			url: new URL('https://play.qobuz.com/track/285222652'),
 			id: { type: 'track', id: '285222652' },
 		}, {
-			description: 'label page',
+			description: 'www.qobuz label page with locale and slug',
+			url: new URL('https://www.qobuz.com/us-en/label/honeycomb-records-4/download-streaming-albums/6464867'),
+			id: { type: 'label', id: '6464867', slug: 'honeycomb-records-4' },
+		}, {
+			description: 'play.qobuz label page',
 			url: new URL('https://play.qobuz.com/label/97377'),
 			id: { type: 'label', id: '97377' },
 			isCanonical: true,
