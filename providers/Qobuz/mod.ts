@@ -112,14 +112,14 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 
 	constructReleaseApiUrl(): URL {
 		if (this.lookup.method === 'gtin') {
-			return new URL(`album/search?query=${this.padBarcode(String(this.lookup.value))}`, this.provider.apiBaseUrl);
+			return new URL(`album/search?query=${this.padBarcode(this.lookup.value)}`, this.provider.apiBaseUrl);
 		} else { // if (this.lookup.method === 'id')
 			return new URL(`album/get?album_id=${this.lookup.value}`, this.provider.apiBaseUrl);
 		}
 	}
 
 	protected async getRawRelease(): Promise<QobuzAlbum> {
-		const apiUrl = this.constructReleaseApiUrl();
+		let apiUrl = this.constructReleaseApiUrl();
 		if (this.lookup.method === 'gtin') {
 			const { content: searchResponse, timestamp } = await this.provider.query<QobuzSearchResponse>(apiUrl, {
 				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
@@ -131,23 +131,15 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 			}
 			this.lookup.method = 'id';
 			this.lookup.value = matchingAlbum.id;
-
-			const { content: release, timestamp: timestamp2 } = await this.provider.query<QobuzAlbum>(
-				this.constructReleaseApiUrl(),
-				{
-					snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
-				},
-			);
-			this.updateCacheTime(timestamp2);
-			return release;
-		} else {
-			const { content: release, timestamp } = await this.provider.query<QobuzAlbum>(apiUrl, {
-				snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
-			});
-			this.updateCacheTime(timestamp);
-
-			return release;
+			apiUrl = this.constructReleaseApiUrl();
 		}
+
+		const { content: release, timestamp } = await this.provider.query<QobuzAlbum>(apiUrl, {
+			snapshotMaxTimestamp: this.options.snapshotMaxTimestamp,
+		});
+		this.updateCacheTime(timestamp);
+
+		return release;
 	}
 
 	protected convertRawRelease(rawRelease: QobuzAlbum): HarmonyRelease {
