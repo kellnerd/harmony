@@ -4,7 +4,8 @@ import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/provider
 import { getFromEnv } from '@/utils/config.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
-import {
+import { isEqualGTIN } from '@/utils/gtin.ts';
+import type {
 	ArtistCreditName,
 	Artwork,
 	EntityId,
@@ -21,8 +22,8 @@ import {
 	QobuzMinimalArtist,
 	QobuzPartialTrack,
 	QobuzSearchResponse,
-} from '@/providers/Qobuz/api_types.ts';
-import { isEqualGTIN } from '../../utils/gtin.ts';
+} from './api_types.ts';
+import { ResponseError as SnapResponseError } from 'snap-storage';
 
 const qobuzAppId = getFromEnv('HARMONY_QOBUZ_APP_ID') || '';
 const qobuzAuthToken = getFromEnv('HARMONY_QOBUZ_AUTH_TOKEN') || '';
@@ -84,20 +85,38 @@ export default class QobuzProvider extends MetadataApiProvider {
 	}
 
 	async query<Data>(apiUrl: URL, options: ApiQueryOptions): Promise<CacheEntry<Data>> {
-		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
-			policy: { maxTimestamp: options.snapshotMaxTimestamp },
-			requestInit: {
-				headers: {
-					'X-App-Id': qobuzAppId,
-					'X-User-Auth-Token': qobuzAuthToken,
+		try {
+			const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
+				policy: { maxTimestamp: options.snapshotMaxTimestamp },
+				requestInit: {
+					headers: {
+						'X-App-Id': qobuzAppId,
+						'X-User-Auth-Token': qobuzAuthToken,
+					},
 				},
-			},
-		});
-		const error = cacheEntry.content as ApiError;
-		if (error.message || error.code) {
-			throw new QobuzResponseError(error, apiUrl);
+			});
+			const error = cacheEntry.content as ApiError;
+			if (error.message) {
+				throw new QobuzResponseError(error, apiUrl);
+			}
+			return cacheEntry;
+		} catch (error) {
+			let apiError: ApiError | undefined;
+			if (error instanceof SnapResponseError) {
+				try {
+					// Clone the response so the body of the original response can be
+					// consumed later if the error gets re-thrown.
+					apiError = await error.response.clone().json();
+				} catch {
+					// Ignore secondary JSON parsing error, rethrow original error.
+				}
+			}
+			if (apiError?.message) {
+				throw new QobuzResponseError(apiError, apiUrl);
+			} else {
+				throw error;
+			}
 		}
-		return cacheEntry;
 	}
 }
 
@@ -128,7 +147,7 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 			this.updateCacheTime(timestamp);
 			const matchingAlbum = searchResponse.albums?.items.find((album) => isEqualGTIN(album.upc, this.lookup.value));
 			if (!matchingAlbum) {
-				throw new ResponseError(this.provider.name, 'API returned no matching results', this.constructReleaseApiUrl());
+				throw new ResponseError(this.provider.name, 'API returned no matching results', apiUrl);
 			}
 			this.lookup.method = 'id';
 			this.lookup.value = matchingAlbum.id;
@@ -278,6 +297,10 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 
 class QobuzResponseError extends ResponseError {
 	constructor(readonly details: ApiError, url: URL) {
-		super('Qobuz', `${details.message} (code ${details.code})`, url);
+		let message = `${details.message} (code ${details.code})`;
+		if (details.code === 404) {
+			message += ' / API only returns results which are available in Harmony’s region';
+		}
+		super('Qobuz', message, url);
 	}
 }
