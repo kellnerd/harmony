@@ -18,7 +18,7 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
       creditedName: "Stephanafro",
       externalIds: [
         {
-          id: "11054867",
+          id: "12651905",
           provider: "qobuz",
           type: "artist",
         },
@@ -54,7 +54,9 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
         id: "rjrikcvbggy0b",
         internalName: "qobuz",
         lookup: {
+          language: "en",
           method: "id",
+          region: "US",
           value: "rjrikcvbggy0b",
         },
         name: "Qobuz",

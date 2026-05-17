@@ -367,6 +367,9 @@ export abstract class ReleaseLookup<Provider extends MetadataProvider, RawReleas
 				this.lookup.region = entity.region;
 				this.options.regions = new Set([entity.region]);
 			}
+			if (entity.language) {
+				this.lookup.language = entity.language;
+			}
 		} else if (typeof specifier === 'string') {
 			this.lookup = { method: 'id', value: specifier };
 		} else if (typeof specifier === 'number') {

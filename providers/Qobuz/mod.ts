@@ -31,7 +31,8 @@ export default class QobuzProvider extends MetadataApiProvider {
 
 	readonly supportedUrls = new URLPattern({
 		hostname: '(play|www|open).qobuz.com',
-		pathname: '/:locale?/:type(artist|album|track|interpreter|label)/:slug?{/download-streaming-albums}?/:id',
+		pathname:
+			'/:region(\\w{2}-\\w{2})?/:type(artist|album|track|interpreter|label)/:slug?{/download-streaming-albums}?/:id',
 	});
 
 	override readonly features: FeatureQualityMap = {
@@ -64,6 +65,17 @@ export default class QobuzProvider extends MetadataApiProvider {
 			return new URL([entity.type, entity.id].join('/'), 'https://play.qobuz.com'); //Qobuz doesn't have label pages on open.qobuz.com, but they do on play.qobuz.com
 		}
 		return new URL([entity.type, entity.id].join('/'), 'https://open.qobuz.com');
+	}
+
+	override extractEntityFromUrl(url: URL): EntityId | undefined {
+		const entityId = super.extractEntityFromUrl(url);
+		if (entityId?.region) {
+			// Split Qobuz locale into country and language.
+			const [country, language] = entityId.region.split('-', 2);
+			entityId.region = country;
+			entityId.language = language.toLowerCase();
+		}
+		return entityId;
 	}
 
 	override getLinkTypesForEntity(): LinkType[] {

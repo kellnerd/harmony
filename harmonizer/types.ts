@@ -22,6 +22,12 @@ export interface EntityId {
 	 * Only used by providers which have region-specific API endpoints or pages.
 	 */
 	region?: CountryCode;
+	/**
+	 * Language of the entity page or release metadata.
+	 *
+	 * Only used by providers which have language-specific API endpoints or pages.
+	 */
+	language?: LanguageCode;
 	/** Preserved slug from the original entity URL. */
 	slug?: string;
 }
@@ -154,6 +160,9 @@ export type Language = {
 /** ISO 3166-1 alpha-2 two letter country code (upper case). */
 export type CountryCode = string;
 
+/** ISO 639-1 two letter country code (lower case). */
+export type LanguageCode = string;
+
 /** Release lookup options. */
 export type ReleaseOptions = Partial<{
 	withSeparateMedia: boolean;
@@ -184,6 +193,8 @@ export type ReleaseLookupParameters = {
 	value: string;
 	/** Release region which was specified with the lookup method. */
 	region?: CountryCode;
+	/** Release language which was specified with the lookup method. */
+	language?: LanguageCode;
 };
 
 /**

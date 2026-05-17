@@ -32,7 +32,7 @@ describe('Qobuz provider', () => {
 		}, {
 			description: 'www.qobuz release page with locale and slug',
 			url: new URL('https://www.qobuz.com/fr-fr/album/let-me-battle-9lana/n288n588k0dza'),
-			id: { type: 'album', id: 'n288n588k0dza', slug: 'let-me-battle-9lana' },
+			id: { type: 'album', id: 'n288n588k0dza', region: 'FR', language: 'fr', slug: 'let-me-battle-9lana' },
 		}, {
 			description: 'open.qobuz artist page',
 			url: new URL('https://open.qobuz.com/artist/19452726'),
@@ -41,7 +41,7 @@ describe('Qobuz provider', () => {
 		}, {
 			description: 'www.qobuz artist page with locale and slug',
 			url: new URL('https://www.qobuz.com/us-en/interpreter/9lana/19452726'),
-			id: { type: 'interpreter', id: '19452726', slug: '9lana' },
+			id: { type: 'interpreter', id: '19452726', region: 'US', language: 'en', slug: '9lana' },
 		}, {
 			description: 'open.qobuz track page',
 			url: new URL('https://open.qobuz.com/track/285222652'),
@@ -54,7 +54,7 @@ describe('Qobuz provider', () => {
 		}, {
 			description: 'www.qobuz label page with locale and slug',
 			url: new URL('https://www.qobuz.com/us-en/label/honeycomb-records-4/download-streaming-albums/6464867'),
-			id: { type: 'label', id: '6464867', slug: 'honeycomb-records-4' },
+			id: { type: 'label', id: '6464867', region: 'US', language: 'en', slug: 'honeycomb-records-4' },
 		}, {
 			description: 'play.qobuz label page',
 			url: new URL('https://play.qobuz.com/label/97377'),
@@ -68,7 +68,7 @@ describe('Qobuz provider', () => {
 		invalidIds: [],
 		releaseLookup: [{
 			description: 'single by two artists',
-			release: new URL('https://play.qobuz.com/album/rjrikcvbggy0b'),
+			release: new URL('https://www.qobuz.com/us-en/album/suspend-my-belief-ivycomb-stephanafro/rjrikcvbggy0b'),
 			options: releaseOptions,
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
@@ -94,7 +94,7 @@ describe('Qobuz provider', () => {
 			},
 		}, {
 			description: 'non-downloadable album',
-			release: new URL('https://play.qobuz.com/album/fyg86ag6jm8db'),
+			release: new URL('https://open.qobuz.com/album/fyg86ag6jm8db'),
 			options: releaseOptions,
 			assert: async (release, ctx) => {
 				await assertSnapshot(ctx, release);
