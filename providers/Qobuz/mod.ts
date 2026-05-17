@@ -18,6 +18,7 @@ import {
 	ApiError,
 	QobuzAlbum,
 	QobuzExtendedAlbum,
+	QobuzMinimalArtist,
 	QobuzPartialTrack,
 	QobuzSearchResponse,
 } from '@/providers/Qobuz/api_types.ts';
@@ -200,16 +201,23 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 		}];
 	}
 
+	private convertRawArtist(rawArtist: QobuzMinimalArtist): ArtistCreditName {
+		const artist: ArtistCreditName = {
+			name: rawArtist.name,
+			creditedName: rawArtist.name,
+		};
+		if (rawArtist.id) {
+			artist.externalIds = this.provider.makeExternalIds({ type: 'artist', id: String(rawArtist.id) });
+		}
+		return artist;
+	}
+
 	private getAlbumCredits(album: QobuzExtendedAlbum): ArtistCreditName[] {
 		const artists: ArtistCreditName[] = [];
 		const artistIds: number[] = [];
 		[album.artist, ...album.artists].forEach((artist) => {
 			if (!artistIds.includes(artist.id)) {
-				artists.push({
-					name: artist.name,
-					creditedName: artist.name,
-					externalIds: this.provider.makeExternalIds({ type: 'artist', id: String(artist.id) }),
-				});
+				artists.push(this.convertRawArtist(artist));
 				artistIds.push(artist.id);
 			}
 		});
@@ -241,14 +249,13 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 	}
 
 	private convertRawTrack(rawTrack: QobuzPartialTrack): HarmonyTrack {
-		const { performer } = rawTrack;
+		const mainArtist = rawTrack.performer;
+		const additionalArtists = this.parsePerformers(rawTrack.performers).filter(({ name, roles }) =>
+			name !== mainArtist.name && roles.some((role) => role === 'MainArtist' || role === 'FeaturedArtist')
+		);
 		return {
 			title: `${rawTrack.title}${rawTrack.version ? ` (${rawTrack.version})` : ''}`,
-			artists: [{
-				name: performer.name,
-				creditedName: performer.name,
-				externalIds: this.provider.makeExternalIds({ type: 'artist', id: String(performer.id) }),
-			}],
+			artists: [mainArtist, ...additionalArtists].map(this.convertRawArtist.bind(this)),
 			number: rawTrack.track_number,
 			length: rawTrack.duration * 1000,
 			isrc: rawTrack.isrc,
@@ -256,6 +263,16 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 				externalIds: this.provider.makeExternalIds({ type: 'track', id: String(rawTrack.id) }),
 			},
 		};
+	}
+
+	private parsePerformers(performers: string) {
+		return performers.split(' - ').map((performerAndRoles) => {
+			const [performer, ...roles] = performerAndRoles.split(', ');
+			return {
+				name: performer,
+				roles,
+			};
+		});
 	}
 }
 

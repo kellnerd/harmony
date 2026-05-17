@@ -94,6 +94,10 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
               ],
               name: "ivycomb",
             },
+            {
+              creditedName: "Stephanafro",
+              name: "Stephanafro",
+            },
           ],
           isrc: "QZPEW2452614",
           length: 181000,

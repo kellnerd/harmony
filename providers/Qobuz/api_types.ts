@@ -243,6 +243,11 @@ export interface QobuzAlbumsSameArtist {
 	items: unknown[];
 }
 
+export interface QobuzMinimalArtist {
+	name: string;
+	id?: number;
+}
+
 //Extended Types
 export interface QobuzExtendedArtist extends QobuzPartialArtist, Partial<Omit<QobuzArtist, keyof QobuzPartialArtist>> {}
 export interface QobuzExtendedArtistRole
