@@ -15,7 +15,7 @@ import type {
 	LinkType,
 	ReleaseGroupType,
 } from '@/harmonizer/types.ts';
-import {
+import type {
 	ApiError,
 	QobuzAlbum,
 	QobuzExtendedAlbum,
@@ -23,6 +23,7 @@ import {
 	QobuzPartialTrack,
 	QobuzSearchResponse,
 } from './api_types.ts';
+import { makeLocale } from './regions.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
 
 const qobuzAppId = getFromEnv('HARMONY_QOBUZ_APP_ID') || '';
@@ -63,9 +64,9 @@ export default class QobuzProvider extends MetadataApiProvider {
 	readonly apiBaseUrl = 'https://www.qobuz.com/api.json/0.2/';
 
 	constructUrl(entity: EntityId): URL {
-		// Prefer the more reliable, localized www.qobuz.com URL if we know the region and language.
-		if (entity.region && entity.language) {
-			const locale = [entity.region.toLowerCase(), entity.language].join('-');
+		// Prefer the more reliable, localized www.qobuz.com URL if we know the region.
+		if (entity.region) {
+			const locale = makeLocale(entity.region, entity.language);
 			let { type, slug } = entity;
 			if (type === 'artist') {
 				// For some reason www.qobuz.com artist URLs are invalid.
