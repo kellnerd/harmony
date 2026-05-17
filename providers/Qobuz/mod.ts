@@ -63,8 +63,29 @@ export default class QobuzProvider extends MetadataApiProvider {
 	readonly apiBaseUrl = 'https://www.qobuz.com/api.json/0.2/';
 
 	constructUrl(entity: EntityId): URL {
-		if (entity.type == 'label') {
-			return new URL([entity.type, entity.id].join('/'), 'https://play.qobuz.com'); //Qobuz doesn't have label pages on open.qobuz.com, but they do on play.qobuz.com
+		// Prefer the more reliable, localized www.qobuz.com URL if we know the region and language.
+		if (entity.region && entity.language) {
+			const locale = [entity.region.toLowerCase(), entity.language].join('-');
+			let { type, slug } = entity;
+			if (type === 'artist') {
+				// For some reason www.qobuz.com artist URLs are invalid.
+				type = 'interpreter';
+			}
+			if (!slug && type !== 'label') {
+				// Use a placeholder slug, except for labels which would become invalid.
+				slug = '-';
+			}
+			if (slug) {
+				if (type === 'label') {
+					slug += '/download-streaming-albums';
+				}
+				return new URL([locale, type, slug ?? '-', entity.id].join('/'), 'https://www.qobuz.com');
+			}
+		}
+		// Fallback to open.qobuz.com URL without region and slug.
+		if (entity.type === 'label') {
+			// Qobuz doesn't have label pages on open.qobuz.com, but they do on play.qobuz.com
+			return new URL([entity.type, entity.id].join('/'), 'https://play.qobuz.com');
 		}
 		return new URL([entity.type, entity.id].join('/'), 'https://open.qobuz.com');
 	}
@@ -163,10 +184,15 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 	}
 
 	protected convertRawRelease(rawRelease: QobuzAlbum): HarmonyRelease {
-		this.entity = {
-			id: rawRelease.id,
-			type: 'album',
-		};
+		if (!this.entity) {
+			this.entity = {
+				id: rawRelease.id,
+				type: 'album',
+				slug: rawRelease.slug,
+				region: this.lookup.region,
+				language: this.lookup.language,
+			};
+		}
 
 		const linkTypes: LinkType[] = [];
 

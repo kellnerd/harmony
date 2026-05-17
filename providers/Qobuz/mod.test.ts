@@ -33,6 +33,7 @@ describe('Qobuz provider', () => {
 			description: 'www.qobuz release page with locale and slug',
 			url: new URL('https://www.qobuz.com/fr-fr/album/let-me-battle-9lana/n288n588k0dza'),
 			id: { type: 'album', id: 'n288n588k0dza', region: 'FR', language: 'fr', slug: 'let-me-battle-9lana' },
+			isCanonical: true,
 		}, {
 			description: 'open.qobuz artist page',
 			url: new URL('https://open.qobuz.com/artist/19452726'),
@@ -42,6 +43,7 @@ describe('Qobuz provider', () => {
 			description: 'www.qobuz artist page with locale and slug',
 			url: new URL('https://www.qobuz.com/us-en/interpreter/9lana/19452726'),
 			id: { type: 'interpreter', id: '19452726', region: 'US', language: 'en', slug: '9lana' },
+			isCanonical: true,
 		}, {
 			description: 'open.qobuz track page',
 			url: new URL('https://open.qobuz.com/track/285222652'),
@@ -55,6 +57,7 @@ describe('Qobuz provider', () => {
 			description: 'www.qobuz label page with locale and slug',
 			url: new URL('https://www.qobuz.com/us-en/label/honeycomb-records-4/download-streaming-albums/6464867'),
 			id: { type: 'label', id: '6464867', region: 'US', language: 'en', slug: 'honeycomb-records-4' },
+			isCanonical: true,
 		}, {
 			description: 'play.qobuz label page',
 			url: new URL('https://play.qobuz.com/label/97377'),
