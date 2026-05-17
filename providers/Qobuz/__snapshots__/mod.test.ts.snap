@@ -82,7 +82,19 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
       number: 1,
       tracklist: [
         {
-          artists: undefined,
+          artists: [
+            {
+              creditedName: "ivycomb",
+              externalIds: [
+                {
+                  id: "11054867",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "ivycomb",
+            },
+          ],
           isrc: "QZPEW2452614",
           length: 181000,
           number: 1,
@@ -98,7 +110,19 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
           title: "Suspend My Belief",
         },
         {
-          artists: undefined,
+          artists: [
+            {
+              creditedName: "ivycomb",
+              externalIds: [
+                {
+                  id: "11054867",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "ivycomb",
+            },
+          ],
           isrc: "QZPEW2452615",
           length: 181000,
           number: 2,
@@ -201,7 +225,19 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
       number: 1,
       tracklist: [
         {
-          artists: undefined,
+          artists: [
+            {
+              creditedName: "DECO*27",
+              externalIds: [
+                {
+                  id: "3284769",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "DECO*27",
+            },
+          ],
           isrc: "JPPI01900110",
           length: 37000,
           number: 1,
@@ -217,7 +253,19 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "Reunion",
         },
         {
-          artists: undefined,
+          artists: [
+            {
+              creditedName: "DECO*27",
+              externalIds: [
+                {
+                  id: "3284769",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "DECO*27",
+            },
+          ],
           isrc: "JPPI01900120",
           length: 210000,
           number: 2,
@@ -233,7 +281,19 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "アンドロイドガール",
         },
         {
-          artists: undefined,
+          artists: [
+            {
+              creditedName: "DECO*27",
+              externalIds: [
+                {
+                  id: "3284769",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "DECO*27",
+            },
+          ],
           isrc: "JPPI01900130",
           length: 183000,
           number: 3,
@@ -249,7 +309,19 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "スクランブル交際",
         },
         {
-          artists: undefined,
+          artists: [
+            {
+              creditedName: "DECO*27",
+              externalIds: [
+                {
+                  id: "3284769",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "DECO*27",
+            },
+          ],
           isrc: "JPPI01900140",
           length: 229000,
           number: 4,
@@ -265,7 +337,19 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "モスキート",
         },
         {
-          artists: undefined,
+          artists: [
+            {
+              creditedName: "DECO*27",
+              externalIds: [
+                {
+                  id: "3284769",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "DECO*27",
+            },
+          ],
           isrc: "JPPI01900150",
           length: 223000,
           number: 5,
@@ -281,7 +365,19 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "乙女解剖",
         },
         {
-          artists: undefined,
+          artists: [
+            {
+              creditedName: "DECO*27",
+              externalIds: [
+                {
+                  id: "3284769",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "DECO*27",
+            },
+          ],
           isrc: "JPPI01900160",
           length: 186000,
           number: 6,
@@ -297,7 +393,19 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "人質交換",
         },
         {
-          artists: undefined,
+          artists: [
+            {
+              creditedName: "DECO*27",
+              externalIds: [
+                {
+                  id: "3284769",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "DECO*27",
+            },
+          ],
           isrc: "JPPI01900220",
           length: 257000,
           number: 7,
@@ -313,7 +421,19 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "シンセカイ案内所",
         },
         {
-          artists: undefined,
+          artists: [
+            {
+              creditedName: "DECO*27",
+              externalIds: [
+                {
+                  id: "3284769",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "DECO*27",
+            },
+          ],
           isrc: "JPPI01900170",
           length: 224000,
           number: 8,
@@ -329,7 +449,19 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "サイコグラム",
         },
         {
-          artists: undefined,
+          artists: [
+            {
+              creditedName: "DECO*27",
+              externalIds: [
+                {
+                  id: "3284769",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "DECO*27",
+            },
+          ],
           isrc: "JPPI01900180",
           length: 235000,
           number: 9,
@@ -345,7 +477,19 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "夜行性ハイズ",
         },
         {
-          artists: undefined,
+          artists: [
+            {
+              creditedName: "DECO*27",
+              externalIds: [
+                {
+                  id: "3284769",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "DECO*27",
+            },
+          ],
           isrc: "JPPI01900190",
           length: 206000,
           number: 10,
@@ -361,7 +505,19 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "ヒバナ -Reloaded-",
         },
         {
-          artists: undefined,
+          artists: [
+            {
+              creditedName: "DECO*27",
+              externalIds: [
+                {
+                  id: "3284769",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "DECO*27",
+            },
+          ],
           isrc: "JPPI01900200",
           length: 246000,
           number: 11,
