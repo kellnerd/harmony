@@ -1,5 +1,4 @@
 import { ProviderIcon } from '@/server/components/ProviderIcon.tsx';
-
 import { musicbrainzTargetServer } from '@/config.ts';
 import type { ResolvableEntity } from '@/harmonizer/types.ts';
 import { providers } from '@/providers/mod.ts';
@@ -20,10 +19,12 @@ export function LinkedEntity({ entity, entityType, displayName }: {
 			))}
 			{entity.mbid
 				? (
-<a href={join(musicbrainzTargetServer, entityType, entity.mbid).href}>
-    <ProviderIcon providerName='MusicBrainz' size={18} stroke={1.5} />
-</a>
-{displayName}
+					<>
+						<a href={join(musicbrainzTargetServer, entityType, entity.mbid).href}>
+							<ProviderIcon providerName='MusicBrainz' size={18} stroke={1.5} />
+						</a>
+						{displayName}
+					</>
 				)
 				: displayName}
 		</span>
