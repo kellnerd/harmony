@@ -20,10 +20,10 @@ export function LinkedEntity({ entity, entityType, displayName }: {
 			))}
 			{entity.mbid
 				? (
-					<a href={join(musicbrainzTargetServer, entityType, entity.mbid).href}>
-						<ProviderIcon providerName='MusicBrainz' size={18} stroke={1.5} />
-						{displayName}
-					</a>
+<a href={join(musicbrainzTargetServer, entityType, entity.mbid).href}>
+    <ProviderIcon providerName='MusicBrainz' size={18} stroke={1.5} />
+</a>
+{displayName}
 				)
 				: displayName}
 		</span>
