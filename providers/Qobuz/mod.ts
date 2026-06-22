@@ -332,7 +332,10 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 		};
 	}
 
-	private parsePerformers(performers: string) {
+	private parsePerformers(performers?: string) {
+		if (!performers) {
+			return [];
+		}
 		return performers.split(' - ').map((performerAndRoles) => {
 			const [performer, ...roles] = performerAndRoles.split(', ');
 			return {
