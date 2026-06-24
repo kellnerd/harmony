@@ -505,6 +505,25 @@ h2.release-title {
 	margin-bottom: 0;
 }
 
+div.release-artist {
+	display: flex;
+	flex-direction: row;
+}
+
+/* ArtistCredit.tsx */
+
+span.artist-credit {
+	display: flex;
+	flex-direction: row;
+	gap: 0.25em;
+}
+
+/* AlternativeValues.tsx */
+
+.alt-values > li {
+	display: flex;
+}
+
 /* Tooltip.tsx */
 
 span.tooltip-anchor {
