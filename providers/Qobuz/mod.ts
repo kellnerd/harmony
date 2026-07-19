@@ -5,7 +5,7 @@ import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/provider
 import { getFromEnv } from '@/utils/config.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ResponseError } from '@/utils/errors.ts';
-import { isEqualGTIN } from '@/utils/gtin.ts';
+import { checkDigit, isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -28,6 +28,14 @@ import { availableRegionsAndLanguages, makeQobuzLocale } from './regions.ts';
 import { ResponseError as SnapResponseError } from 'snap-storage';
 
 const qobuzAppId = getFromEnv('HARMONY_QOBUZ_APP_ID') || '';
+
+export function normalizeQobuzGtin(upc: string): string {
+	if (isValidGTIN(upc) || !/^\d{13}$/.test(upc)) {
+		return upc;
+	}
+
+	return `${upc}${checkDigit(`${upc}0`)}`;
+}
 
 export default class QobuzProvider extends MetadataApiProvider {
 	readonly name = 'Qobuz';
@@ -245,7 +253,7 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 				types: linkTypes,
 			}],
 			info: this.generateReleaseInfo(),
-			gtin: rawRelease.upc,
+			gtin: normalizeQobuzGtin(rawRelease.upc),
 		};
 	}
 
