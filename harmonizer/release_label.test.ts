@@ -20,6 +20,25 @@ describe('cleanupBogusReleaseLabels', () => {
 		});
 	});
 
+	it('replaces self-published label matching the artist name with [no label]', () => {
+		const label: Label = {
+			name: 'Test Artist',
+			catalogNumber: '12345',
+			externalIds: [],
+		};
+		cleanupBogusReleaseLabels([label], [{ name: 'Test Artist' }]);
+		assertEquals(label, {
+			...noLabel,
+			catalogNumber: '12345',
+		});
+	});
+
+	it('replaces a label matching the credited artist alias', () => {
+		const label: Label = { name: 'Test Artist Alias', externalIds: [] };
+		cleanupBogusReleaseLabels([label], [{ name: 'Test Artist', creditedName: 'Test Artist Alias' }]);
+		assertEquals(label, noLabel);
+	});
+
 	const distroKidPlaceholders = [
 		'Distro Kid', // Tidal
 		'123456 Records DK',

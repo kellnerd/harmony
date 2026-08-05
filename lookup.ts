@@ -306,7 +306,7 @@ export class CombinedReleaseLookup {
 		detectLanguageAndScript(release);
 		normalizeReleaseISRCs(release);
 		if (release.labels) {
-			cleanupBogusReleaseLabels(release.labels);
+			cleanupBogusReleaseLabels(release.labels, release.artists);
 		}
 
 		return release;
