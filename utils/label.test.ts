@@ -17,6 +17,11 @@ describe('split labels', () => {
 			name: 'IDJ',
 		}]],
 		['preserves label whose suffix contains a slash', 'EMI Belgium SA/NV', [{ name: 'EMI Belgium SA/NV' }]],
+		[
+			'splits multiple comma-separated labels',
+			'WAKEONE, 스윙엔터테인먼트',
+			[{ name: 'WAKEONE' }, { name: '스윙엔터테인먼트' }],
+		],
 	];
 
 	passingCases.forEach(([description, input, expected]) => {
