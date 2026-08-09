@@ -3,6 +3,7 @@ import { DurationPrecision, FeatureQuality, type FeatureQualityMap } from '@/pro
 import type { ProviderCategory } from '@/providers/categories.ts';
 import type { PartialDate } from '@/utils/date.ts';
 import { ProviderError } from '@/utils/errors.ts';
+import { splitLabels } from '@/utils/label.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -21,7 +22,6 @@ import type {
 	MelonSong,
 	MelonSongListResponse,
 } from './api_types.ts';
-import { splitLabels } from '@/utils/label.ts';
 
 const API_BASE = 'https://m2.melon.com/m6/';
 
@@ -29,7 +29,7 @@ export default class MelonProvider extends MetadataApiProvider {
 	readonly name = 'Melon';
 
 	readonly supportedUrls = new URLPattern({
-		hostname: ':subdomain(www|m2).melon.com',
+		hostname: '(www|m2).melon.com',
 		pathname: '/:type(album|song|artist)/:page(detail|music).htm',
 		search: ':type(album|song|artist)Id=:id(\\d+){&*}?',
 	});

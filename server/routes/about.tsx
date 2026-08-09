@@ -83,6 +83,11 @@ export default function About() {
 				</tr>
 				{providers.displayNames.map((name) => {
 					const provider = providers.findByName(name)!;
+					const { supportedUrls } = provider;
+					let supportedPathAndQuery = supportedUrls.pathname;
+					if (supportedUrls.search !== '*') {
+						supportedPathAndQuery += '?' + supportedUrls.search;
+					}
 					return (
 						<tr>
 							<td class={['provider-icon', provider.internalName].join(' ')}>
@@ -95,10 +100,10 @@ export default function About() {
 								<code>{provider.internalName}</code>
 							</td>
 							<td>
-								<code>{provider.supportedUrls.hostname}</code>
+								<code>{supportedUrls.hostname}</code>
 							</td>
 							<td>
-								<code>{provider.supportedUrls.pathname}</code>
+								<code>{supportedPathAndQuery}</code>
 							</td>
 							<td class='center'>{provider.getQuality('GTIN lookup') > FeatureQuality.UNKNOWN ? '✓' : '✗'}</td>
 						</tr>
