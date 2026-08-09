@@ -15,6 +15,7 @@ import TidalProvider from './Tidal/mod.ts';
 import MoraProvider from './Mora/mod.ts';
 import QobuzProvider from './Qobuz/mod.ts';
 import BugsProvider from './Bugs/mod.ts';
+import MelonProvider from './Melon/mod.ts';
 
 /** Registry with all supported providers. */
 export const providers = new ProviderRegistry({
@@ -36,6 +37,7 @@ providers.addMultiple(
 	MoraProvider,
 	OtotoyProvider,
 	BugsProvider,
+	MelonProvider,
 );
 
 /** Internal names of providers which are enabled by default (for GTIN lookups). */
