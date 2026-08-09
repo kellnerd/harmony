@@ -29,6 +29,7 @@ import { ResponseError as SnapResponseError } from 'snap-storage';
 
 const qobuzAppId = getFromEnv('HARMONY_QOBUZ_APP_ID') || '';
 
+/** Appends the missing check digit to invalid 13 digit barcodes from older Qobuz releases. */
 export function normalizeQobuzGtin(upc: string): string {
 	if (isValidGTIN(upc) || !/^\d{13}$/.test(upc)) {
 		return upc;

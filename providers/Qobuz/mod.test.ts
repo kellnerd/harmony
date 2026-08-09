@@ -130,11 +130,11 @@ describe('Qobuz provider', () => {
 	});
 
 	describe('GTIN normalization', () => {
-		it('appends a missing check digit to legacy 13-digit UPC values', () => {
+		it('appends a missing check digit to invalid 13-digit barcodes, turning them into valid GTIN-14', () => {
 			assertEquals(normalizeQobuzGtin('0001589171735'), '00015891717357');
 		});
 
-		it('preserves UPC values which already have a valid check digit', () => {
+		it('preserves GTIN-13 values which already have a valid check digit', () => {
 			assertEquals(normalizeQobuzGtin('0198884774947'), '0198884774947');
 		});
 	});
