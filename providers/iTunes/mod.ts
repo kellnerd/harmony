@@ -61,6 +61,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 
 	readonly apiBaseUrl = 'https://itunes.apple.com';
 
+	// Unofficial Apple Music catalog API used when iTunes Search omits streaming-only tracks.
 	readonly ampApiBaseUrl = 'https://amp-api.music.apple.com';
 
 	/** URLs without specified region implicitly query the US iTunes store. */
@@ -92,6 +93,8 @@ export default class iTunesProvider extends MetadataApiProvider {
 		return cacheEntry;
 	}
 
+	// Queries the Apple Music catalog (AMP) API.
+	// Requires a MusicKit JWT and Origin: https://music.apple.com or AMP returns 401/403.
 	async queryAmp<Data>(apiUrl: URL, options: ApiQueryOptions = {}): Promise<CacheEntry<Data>> {
 		const accessToken = await this.cachedAccessToken(() => this.requestAmpAccessToken());
 		return await this.fetchJSON<Data>(apiUrl, {
@@ -100,6 +103,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 			requestInit: {
 				headers: {
 					'Authorization': `Bearer ${accessToken}`,
+					// AMP rejects requests that do not look like they come from the Apple Music web app.
 					'Origin': 'https://music.apple.com',
 					'Accept': 'application/json',
 				},
@@ -113,6 +117,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 		return url;
 	}
 
+	// Loads an AMP album and follows `next` until the full tracklist is collected.
 	async fetchAmpAlbum(
 		albumId: string,
 		region: CountryCode,
@@ -133,6 +138,7 @@ export default class iTunesProvider extends MetadataApiProvider {
 			}
 
 			if (!album) {
+				// First page is the album resource; later pages are additional tracks only.
 				const albumResource = (body.data ?? []).find((resource): resource is AmpAlbum => resource.type === 'albums');
 				if (!albumResource) {
 					throw new ProviderError(this.name, 'Apple Music catalog API returned no album');
@@ -150,6 +156,8 @@ export default class iTunesProvider extends MetadataApiProvider {
 		return { album: album!, tracks, timestamp };
 	}
 
+	// AMP has no public client-credentials flow. The web app embeds a MusicKit JWT in
+	// music.apple.com HTML or JS; scrape that token (not the album DOM) and cache it until `exp`.
 	private async requestAmpAccessToken(): Promise<ApiAccessToken> {
 		const pageUrl = new URL('https://music.apple.com');
 		const page = await this.fetchSnapshot(pageUrl);
@@ -243,6 +251,8 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 			validTrackKinds.includes(result.kind)
 		) as Track[];
 
+		// iTunes Search often returns the collection but no songs for Apple Music–only DJ mixes.
+		// Fall back to AMP for tracks and UPC & keep the iTunes collection for title/artist/cover.
 		let ampTracks: AmpTrack[] = [];
 		let ampUpc: string | undefined;
 		if (!tracks.length) {
@@ -394,6 +404,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		return media;
 	}
 
+	// Converts AMP catalog tracks (including ISRCs) into Harmony format.
 	private convertAmpTracklist(tracklist: AmpTrack[]): HarmonyMedium[] {
 		if (!tracklist.length) {
 			return [];

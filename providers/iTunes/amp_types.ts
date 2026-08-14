@@ -1,4 +1,6 @@
-/** Minimal types for the unofficial Apple Music catalog (AMP) API. */
+// Minimal types for the unofficial Apple Music catalog (AMP) API
+// (https://amp-api.music.apple.com/v1/catalog/...).
+// Not the public Apple Music AP, used as a fallback when iTunes Search returns no tracks.
 
 export type AmpResourceType = 'albums' | 'songs' | 'music-videos' | 'artists';
 

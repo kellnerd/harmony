@@ -1,9 +1,12 @@
+// Helpers for the unofficial Apple Music catalog (AMP) API.
+// Metadata is loaded from amp-api.music.apple.com; music.apple.com is only used to obtain a JWT.
 import { decodeBase64 } from 'std/encoding/base64.ts';
 import type { AmpAlbum, AmpArtist, AmpDocument, AmpTrack } from './amp_types.ts';
 
-/** JWT as embedded in Apple Music / MusicKit assets. */
+// JWT as embedded in Apple Music / MusicKit assets.
 const jwtPattern = /["'](eyJ[A-Za-z0-9_-]+\.eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+)["']/g;
 
+// Returns the JWT with the latest expiry when a page or script embeds more than one token.
 export function extractAppleMusicJwt(source: string): string | undefined {
 	const matches = source.matchAll(jwtPattern);
 	let best: string | undefined;
@@ -32,6 +35,7 @@ export function parseJwtExpiry(token: string): number | undefined {
 	}
 }
 
+// Script URLs that typically contain the MusicKit developer token.
 export function extractScriptUrls(html: string): string[] {
 	const urls: string[] = [];
 	const seen = new Set<string>();
@@ -52,6 +56,7 @@ export function extractScriptUrls(html: string): string[] {
 	return urls;
 }
 
+// AMP pagination `next` is often a path (`/v1/catalog/...`), not an absolute URL.
 export function resolveAmpUrl(next: string, apiBaseUrl: string): URL {
 	if (next.startsWith('http://') || next.startsWith('https://')) {
 		return new URL(next);
@@ -63,6 +68,8 @@ export function isAmpTrack(resource: AmpAlbum | AmpTrack | AmpArtist): resource 
 	return resource.type === 'songs' || resource.type === 'music-videos';
 }
 
+// Collects tracks from an AMP page.
+// Relationships may only list IDs; full objects (name, ISRC, duration) are often in `included`.
 export function collectAmpTracks(body: AmpDocument, album?: AmpAlbum): AmpTrack[] {
 	const includedTracks = (body.included ?? []).filter(isAmpTrack);
 	const byId = new Map(includedTracks.map((track) => [track.id, track] as const));
