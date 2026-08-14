@@ -1,11 +1,14 @@
 import { availableRegions } from './regions.ts';
-import { type ApiQueryOptions, type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
+import { type ApiAccessToken, type ApiQueryOptions, type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { fillMediumsTracklistGaps } from '@/harmonizer/tracklist_gap.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
+import { ProviderError } from '@/utils/errors.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
+import { collectAmpTracks, extractAppleMusicJwt, extractScriptUrls, parseJwtExpiry, resolveAmpUrl } from './amp.ts';
 
 import type { Collection, Kind, ReleaseResult, Track } from './api_types.ts';
+import type { AmpAlbum, AmpDocument, AmpTrack } from './amp_types.ts';
 import type {
 	ArtistCreditName,
 	Artwork,
@@ -15,6 +18,7 @@ import type {
 	GTIN,
 	HarmonyMedium,
 	HarmonyRelease,
+	HarmonyTrack,
 	LinkType,
 	ReleaseGroupType,
 } from '@/harmonizer/types.ts';
@@ -57,6 +61,8 @@ export default class iTunesProvider extends MetadataApiProvider {
 
 	readonly apiBaseUrl = 'https://itunes.apple.com';
 
+	readonly ampApiBaseUrl = 'https://amp-api.music.apple.com';
+
 	/** URLs without specified region implicitly query the US iTunes store. */
 	readonly defaultRegion: CountryCode = 'US';
 
@@ -78,11 +84,105 @@ export default class iTunesProvider extends MetadataApiProvider {
 		return ['paid streaming'];
 	}
 
-	async query<Data>(apiUrl: URL, options: ApiQueryOptions): Promise<CacheEntry<Data>> {
+	async query<Data>(apiUrl: URL, options: ApiQueryOptions = {}): Promise<CacheEntry<Data>> {
 		const cacheEntry = await this.fetchJSON<Data>(apiUrl, {
 			policy: { maxTimestamp: options.snapshotMaxTimestamp },
+			offline: options.offline,
 		});
 		return cacheEntry;
+	}
+
+	async queryAmp<Data>(apiUrl: URL, options: ApiQueryOptions = {}): Promise<CacheEntry<Data>> {
+		const accessToken = await this.cachedAccessToken(() => this.requestAmpAccessToken());
+		return await this.fetchJSON<Data>(apiUrl, {
+			policy: { maxTimestamp: options.snapshotMaxTimestamp },
+			offline: options.offline,
+			requestInit: {
+				headers: {
+					'Authorization': `Bearer ${accessToken}`,
+					'Origin': 'https://music.apple.com',
+					'Accept': 'application/json',
+				},
+			},
+		});
+	}
+
+	constructAmpAlbumUrl(albumId: string, region: CountryCode): URL {
+		const url = new URL(`v1/catalog/${region.toLowerCase()}/albums/${albumId}`, this.ampApiBaseUrl);
+		url.searchParams.set('include', 'tracks');
+		return url;
+	}
+
+	async fetchAmpAlbum(
+		albumId: string,
+		region: CountryCode,
+		options: ApiQueryOptions = {},
+	): Promise<{ album: AmpAlbum; tracks: AmpTrack[]; timestamp: number }> {
+		let nextUrl: URL | undefined = this.constructAmpAlbumUrl(albumId, region);
+		let album: AmpAlbum | undefined;
+		const tracks: AmpTrack[] = [];
+		let timestamp = 0;
+
+		while (nextUrl) {
+			const cacheEntry: CacheEntry<AmpDocument> = await this.queryAmp(nextUrl, options);
+			timestamp = Math.max(timestamp, cacheEntry.timestamp);
+			const body: AmpDocument = cacheEntry.content;
+			if (body.errors?.length) {
+				const detail = body.errors.map((error) => error.detail ?? error.title).join('; ');
+				throw new ProviderError(this.name, `Apple Music catalog API error: ${detail || 'unknown error'}`);
+			}
+
+			if (!album) {
+				const albumResource = (body.data ?? []).find((resource): resource is AmpAlbum => resource.type === 'albums');
+				if (!albumResource) {
+					throw new ProviderError(this.name, 'Apple Music catalog API returned no album');
+				}
+				album = albumResource;
+				tracks.push(...collectAmpTracks(body, album));
+				const next = album.relationships?.tracks?.next ?? body.next;
+				nextUrl = next ? resolveAmpUrl(next, this.ampApiBaseUrl) : undefined;
+			} else {
+				tracks.push(...collectAmpTracks(body));
+				nextUrl = body.next ? resolveAmpUrl(body.next, this.ampApiBaseUrl) : undefined;
+			}
+		}
+
+		return { album: album!, tracks, timestamp };
+	}
+
+	private async requestAmpAccessToken(): Promise<ApiAccessToken> {
+		const pageUrl = new URL('https://music.apple.com');
+		const page = await this.fetchSnapshot(pageUrl);
+		const html = await page.content.text();
+		const fromHtml = extractAppleMusicJwt(html);
+		if (fromHtml) {
+			return this.ampTokenFromJwt(fromHtml);
+		}
+
+		for (const scriptSrc of extractScriptUrls(html)) {
+			const scriptUrl = new URL(scriptSrc, pageUrl);
+			if (!scriptUrl.hostname.endsWith('apple.com') && !scriptUrl.hostname.endsWith('mzstatic.com')) {
+				continue;
+			}
+			try {
+				const script = await this.fetchSnapshot(scriptUrl);
+				const fromScript = extractAppleMusicJwt(await script.content.text());
+				if (fromScript) {
+					return this.ampTokenFromJwt(fromScript);
+				}
+			} catch {
+				// Try the next candidate script.
+			}
+		}
+
+		throw new ProviderError(this.name, 'Failed to extract Apple Music catalog API token from music.apple.com');
+	}
+
+	private ampTokenFromJwt(accessToken: string): ApiAccessToken {
+		return {
+			accessToken,
+			validUntilTimestamp: parseJwtExpiry(accessToken) ?? (Date.now() + 60 * 60 * 1000),
+		};
 	}
 }
 
@@ -118,7 +218,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		});
 	}
 
-	protected convertRawRelease(data: ReleaseResult): HarmonyRelease {
+	protected async convertRawRelease(data: ReleaseResult): Promise<HarmonyRelease> {
 		// API sometimes also returns other release variants for GTIN lookups, only use the first collection result.
 		const collections = data.results.filter((result) => result.wrapperType === 'collection') as Collection[];
 		let collection = collections[0];
@@ -143,9 +243,30 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 			validTrackKinds.includes(result.kind)
 		) as Track[];
 
-		// Warn about releases without returned tracks.
+		let ampTracks: AmpTrack[] = [];
+		let ampUpc: string | undefined;
 		if (!tracks.length) {
 			this.addMessage('The API returned no tracks, which usually happens for streaming-only releases', 'warning');
+			try {
+				const amp = await this.provider.fetchAmpAlbum(
+					collection.collectionId.toString(),
+					this.lookup.region ?? this.provider.defaultRegion,
+					{ snapshotMaxTimestamp: this.options.snapshotMaxTimestamp },
+				);
+				this.updateCacheTime(amp.timestamp);
+				ampTracks = amp.tracks;
+				ampUpc = amp.album.attributes?.upc;
+				if (ampTracks.length) {
+					this.addMessage(
+						`Filled ${ampTracks.length} tracks from the Apple Music catalog API (iTunes Search API returned none)`,
+					);
+				} else {
+					this.addMessage('Apple Music catalog API also returned no tracks', 'warning');
+				}
+			} catch (error) {
+				const detail = error instanceof Error ? error.message : String(error);
+				this.addMessage(`Apple Music catalog API fallback failed: ${detail}`, 'warning');
+			}
 		}
 
 		// Warn about results which belong to a different collection.
@@ -168,15 +289,20 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 			// but then it is technically also not yet available for download.
 			linkTypes.push('paid download');
 		}
-		if (tracks.every((track) => track.isStreamable || track.kind === 'music-video')) {
+		if (
+			ampTracks.length ||
+			(tracks.length && tracks.every((track) => track.isStreamable || track.kind === 'music-video'))
+		) {
 			// All audio tracks should be streamable, music videos are always streamable but have no `isStreamable` property.
 			linkTypes.push('paid streaming');
 		}
 
 		const releaseUrl = this.cleanViewUrl(collection.collectionViewUrl);
-		const gtin = this.extractGTINFromUrl(collection.artworkUrl100);
+		const gtin = ampUpc && isValidGTIN(ampUpc) ? ampUpc : this.extractGTINFromUrl(collection.artworkUrl100);
 
-		if (!gtin) {
+		if (ampUpc && isValidGTIN(ampUpc)) {
+			this.addMessage(`Successfully extracted GTIN ${ampUpc} from Apple Music catalog API`);
+		} else if (!gtin) {
 			this.addMessage('Failed to extract GTIN from artwork URL', 'warning');
 		} else if (this.lookup.method === 'gtin' && !isEqualGTIN(gtin, this.lookup.value)) {
 			this.addMessage(
@@ -195,7 +321,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 				url: releaseUrl.href,
 				types: linkTypes,
 			}],
-			media: this.convertRawTracklist(tracks),
+			media: ampTracks.length ? this.convertAmpTracklist(ampTracks) : this.convertRawTracklist(tracks),
 			releaseDate: this.convertReleaseDate(parseISODateTime(collection.releaseDate)),
 			status: 'Official',
 			types,
@@ -263,6 +389,47 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 				'warning',
 			);
 			fillMediumsTracklistGaps(media, totalTrackCount);
+		}
+
+		return media;
+	}
+
+	private convertAmpTracklist(tracklist: AmpTrack[]): HarmonyMedium[] {
+		if (!tracklist.length) {
+			return [];
+		}
+
+		const discCount = Math.max(1, ...tracklist.map((track) => track.attributes?.discNumber ?? 1));
+		const media: HarmonyMedium[] = new Array(discCount).fill(null).map((_, index) => ({
+			format: 'Digital Media',
+			number: index + 1,
+			tracklist: [],
+		}));
+
+		for (const track of tracklist) {
+			const attributes = track.attributes;
+			if (!attributes) continue;
+			const discNumber = attributes.discNumber ?? 1;
+			const medium = media[discNumber - 1];
+			if (!medium) continue;
+
+			const linkTypes: LinkType[] = ['paid streaming'];
+			medium.tracklist.push({
+				number: attributes.trackNumber,
+				title: attributes.name,
+				length: attributes.durationInMillis,
+				artists: [this.convertRawArtist(attributes.artistName)],
+				isrc: attributes.isrc,
+				type: track.type === 'music-videos' ? 'video' : undefined,
+				recording: {
+					externalIds: this.provider.makeExternalIds({
+						type: track.type === 'music-videos' ? 'music-video' : 'song',
+						id: track.id,
+						region: this.lookup.region,
+						linkTypes,
+					}),
+				},
+			});
 		}
 
 		return media;
