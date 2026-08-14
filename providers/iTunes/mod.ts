@@ -1,5 +1,11 @@
 import { availableRegions } from './regions.ts';
-import { type ApiAccessToken, type ApiQueryOptions, type CacheEntry, MetadataApiProvider, ReleaseApiLookup } from '@/providers/base.ts';
+import {
+	type ApiAccessToken,
+	type ApiQueryOptions,
+	type CacheEntry,
+	MetadataApiProvider,
+	ReleaseApiLookup,
+} from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { fillMediumsTracklistGaps } from '@/harmonizer/tracklist_gap.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
@@ -18,7 +24,6 @@ import type {
 	GTIN,
 	HarmonyMedium,
 	HarmonyRelease,
-	HarmonyTrack,
 	LinkType,
 	ReleaseGroupType,
 } from '@/harmonizer/types.ts';
