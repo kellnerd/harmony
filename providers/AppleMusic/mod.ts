@@ -40,7 +40,7 @@ const ampApiBaseUrl = 'https://amp-api.music.apple.com';
 
 const officialToken = getFromEnv('HARMONY_APPLE_MUSIC_TOKEN') || '';
 const ampToken = getFromEnv('HARMONY_APPLE_MUSIC_AMP_TOKEN') || '';
-const scrapeToken = getBooleanFromEnv('HARMONY_APPLE_MUSIC_SCRAPE_TOKEN');
+const scrapeToken = getBooleanFromEnv('HARMONY_APPLE_MUSIC_SCRAPE');
 
 export type AppleMusicBackend = 'official' | 'amp';
 
