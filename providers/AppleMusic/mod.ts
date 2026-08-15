@@ -36,8 +36,10 @@ import type { ProviderCategory } from '@/providers/categories.ts';
 
 // Official catalog: https://developer.apple.com/documentation/applemusicapi
 const officialApiBaseUrl = 'https://api.music.apple.com';
+// Unofficial web catalog (AMP). Same JSON shape as the official API, used when no developer token is set.
 const ampApiBaseUrl = 'https://amp-api.music.apple.com';
 
+// Auth is one of: official JWT, AMP JWT, or scrape a MusicKit JWT from music.apple.com.
 const officialToken = getFromEnv('HARMONY_APPLE_MUSIC_TOKEN') || '';
 const ampToken = getFromEnv('HARMONY_APPLE_MUSIC_AMP_TOKEN') || '';
 const scrapeToken = getBooleanFromEnv('HARMONY_APPLE_MUSIC_SCRAPE');
@@ -55,6 +57,7 @@ export function appleMusicBackend(): AppleMusicBackend {
 export default class AppleMusicProvider extends MetadataApiProvider {
 	readonly name = 'Apple Music';
 
+	// music.apple.com only; itunes.apple.com stays on the iTunes Search provider.
 	readonly supportedUrls = new URLPattern({
 		hostname: '{geo.}?music.apple.com',
 		pathname: String.raw`/:region(\w{2})?/:type(album|artist|song|music-video)/:slug?/{id}?:id(\d+)`,
@@ -86,6 +89,7 @@ export default class AppleMusicProvider extends MetadataApiProvider {
 		day: 30,
 	};
 
+	// Official API if HARMONY_APPLE_MUSIC_TOKEN is set, otherwise AMP.
 	readonly apiBaseUrl = officialToken ? officialApiBaseUrl : ampApiBaseUrl;
 
 	readonly backend: AppleMusicBackend = appleMusicBackend();
@@ -110,12 +114,14 @@ export default class AppleMusicProvider extends MetadataApiProvider {
 	}
 
 	async query<Data>(apiUrl: URL, options: ApiQueryOptions = {}): Promise<CacheEntry<Data>> {
+		// Both backends require a Bearer JWT; AMP also needs Origin (set below).
 		const accessToken = await this.cachedAccessToken(() => this.requestAccessToken());
 		const headers: Record<string, string> = {
 			'Authorization': `Bearer ${accessToken}`,
 			'Accept': 'application/json',
 		};
 		if (this.backend === 'amp') {
+			// AMP rejects requests that do not look like they come from the Apple Music web app.
 			headers['Origin'] = 'https://music.apple.com';
 		}
 		return await this.fetchJSON<Data>(apiUrl, {
@@ -137,6 +143,7 @@ export default class AppleMusicProvider extends MetadataApiProvider {
 		return url;
 	}
 
+	// Loads a catalog album and follows `next` until the full tracklist is collected.
 	async fetchCatalogAlbum(
 		albumId: string,
 		region: CountryCode,
@@ -157,6 +164,7 @@ export default class AppleMusicProvider extends MetadataApiProvider {
 			}
 
 			if (!album) {
+				// First page is the album resource; later pages are additional tracks only.
 				const albumResource = (body.data ?? []).find((resource): resource is CatalogAlbum =>
 					resource.type === 'albums'
 				);
@@ -186,6 +194,8 @@ export default class AppleMusicProvider extends MetadataApiProvider {
 		return await this.scrapeAccessToken();
 	}
 
+	// AMP has no public client-credentials flow. The web app embeds a MusicKit JWT in
+	// music.apple.com HTML or JS; scrape that token (not the album DOM) and cache it until `exp`.
 	private async scrapeAccessToken(): Promise<ApiAccessToken> {
 		const pageUrl = new URL('https://music.apple.com');
 		const page = await this.fetchSnapshot(pageUrl);
@@ -239,6 +249,7 @@ export class AppleMusicReleaseLookup extends ReleaseApiLookup<AppleMusicProvider
 			this.options.regions = new Set([this.provider.defaultRegion]);
 		}
 
+		// Catalog filter[upc] returns album IDs, not a full tracklist; fetch the album next.
 		if (this.lookup.method === 'gtin') {
 			const albumId = await this.queryAlbumIdByGtin(this.lookup.value);
 			if (!albumId) {

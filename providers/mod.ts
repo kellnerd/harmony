@@ -30,6 +30,7 @@ providers.addMultiple(
 	DiscogsProvider,
 	DeezerProvider,
 );
+// Apple Music claims music.apple.com URLs when credentials are set; otherwise iTunes handles them.
 if (isAppleMusicConfigured()) {
 	providers.add(AppleMusicProvider);
 }
