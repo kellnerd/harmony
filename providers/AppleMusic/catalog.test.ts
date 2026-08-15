@@ -1,6 +1,13 @@
 import { assertEquals } from 'std/assert/assert_equals.ts';
 import { describe, it } from '@std/testing/bdd';
-import { collectAmpTracks, extractAppleMusicJwt, extractScriptUrls, parseJwtExpiry, resolveAmpUrl } from './amp.ts';
+import {
+	catalogArtworkUrl,
+	collectCatalogTracks,
+	extractAppleMusicJwt,
+	extractScriptUrls,
+	parseJwtExpiry,
+	resolveCatalogUrl,
+} from './catalog.ts';
 
 function makeJwt(exp: number): string {
 	const encode = (value: object) =>
@@ -8,7 +15,7 @@ function makeJwt(exp: number): string {
 	return `${encode({ alg: 'ES256', typ: 'JWT' })}.${encode({ exp })}.sig`;
 }
 
-describe('Apple Music AMP helpers', () => {
+describe('Apple Music catalog helpers', () => {
 	it('extracts the JWT with the latest expiry', () => {
 		const older = makeJwt(1_700_000_000);
 		const newer = makeJwt(2_000_000_000);
@@ -30,7 +37,7 @@ describe('Apple Music AMP helpers', () => {
 	});
 
 	it('hydrates track stubs from included resources', () => {
-		const tracks = collectAmpTracks({
+		const tracks = collectCatalogTracks({
 			data: [{
 				id: '1',
 				type: 'albums',
@@ -55,11 +62,18 @@ describe('Apple Music AMP helpers', () => {
 		assertEquals(tracks[0].attributes?.name, 'Track One');
 	});
 
-	it('resolves relative AMP pagination URLs', () => {
-		const next = resolveAmpUrl(
+	it('resolves relative catalog pagination URLs', () => {
+		const next = resolveCatalogUrl(
 			'/v1/catalog/au/albums/1/tracks?offset=10',
-			'https://amp-api.music.apple.com',
+			'https://api.music.apple.com',
 		);
-		assertEquals(next.href, 'https://amp-api.music.apple.com/v1/catalog/au/albums/1/tracks?offset=10');
+		assertEquals(next.href, 'https://api.music.apple.com/v1/catalog/au/albums/1/tracks?offset=10');
+	});
+
+	it('fills artwork template dimensions', () => {
+		assertEquals(
+			catalogArtworkUrl({ url: 'https://example.com/{w}x{h}bb.jpg', width: 3000, height: 3000 }, 250),
+			'https://example.com/250x250bb.jpg',
+		);
 	});
 });
