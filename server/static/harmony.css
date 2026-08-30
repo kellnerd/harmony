@@ -33,6 +33,7 @@
 	--bugs: #ff3d33;
 	--deezer: #a238ff;
 	--discogs: #121212;
+	--genie: #0096ff;
 	--melon: #00cd3c;
 	--mora: #02082a;
 	--musicbrainz: #ba478f;
@@ -501,6 +502,10 @@ td.deezer {
 label.discogs,
 td.discogs {
 	background-color: var(--discogs);
+}
+label.genie,
+td.genie {
+	background-color: var(--genie);
 }
 label.itunes,
 td.itunes {
