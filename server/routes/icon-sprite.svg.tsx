@@ -5,6 +5,7 @@ import IconBrandMetaBrainz from '@/server/icons/BrandMetaBrainz.tsx';
 import IconBrandOtotoy from '@/server/icons/BrandOtotoy.tsx';
 import IconBrandBugs from '@/server/icons/BrandBugs.tsx';
 import IconBrandMora from '@/server/icons/BrandMora.tsx';
+import IconBrandGenie from '@/server/icons/BrandGenie.tsx';
 import IconBrandMelon from '@/server/icons/BrandMelon.tsx';
 import IconBrandApple from 'tabler-icons/brand-apple.tsx';
 import IconBrandBandcamp from 'tabler-icons/brand-bandcamp.tsx';
@@ -64,6 +65,7 @@ const icons: Icon[] = [
 	IconBrandBugs,
 	IconBrandDeezer,
 	IconBrandDiscogs,
+	IconBrandGenie,
 	IconBrandGit,
 	IconBrandIfpi,
 	IconBrandMetaBrainz,

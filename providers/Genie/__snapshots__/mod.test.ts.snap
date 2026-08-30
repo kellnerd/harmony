@@ -1,0 +1,3515 @@
+export const snapshot = {};
+
+snapshot[`Genie provider > release lookup > Single/EP (싱글/EP) album 1`] = `
+{
+  artists: [
+    {
+      creditedName: "오마이걸 (OH MY GIRL)",
+      externalIds: [
+        {
+          id: "80357324",
+          provider: "genie",
+          type: "artist",
+        },
+      ],
+      name: "오마이걸 (OH MY GIRL)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://www.genie.co.kr/detail/albumInfo?axnm=81020130",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/081/020/130/81020130_1515483498408_1_600x600.JPG/dims/resize/Q_80,0",
+      types: [
+        "front",
+      ],
+      url: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/081/020/130/81020130_1515483498408_1_600x600.JPG",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://info.genie.co.kr/info/album?axnm=81020130",
+        id: "81020130",
+        internalName: "genie",
+        lookup: {
+          method: "id",
+          value: "81020130",
+        },
+        name: "Genie",
+        url: "https://www.genie.co.kr/detail/albumInfo?axnm=81020130",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "WM Entertainment",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 244000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "87667080",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "비밀정원",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 237000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "87667081",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Love O'clock",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 233000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "87667082",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Butterfly",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 202000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "87667083",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Sixteen",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 185000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "87667084",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Magic",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 9,
+      month: 1,
+      year: 2018,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "비밀정원",
+  types: [
+    "Single",
+    "EP",
+  ],
+}
+`;
+
+snapshot[`Genie provider > release lookup > Regular (정규앨범) album 1`] = `
+{
+  artists: [
+    {
+      creditedName: "츄 (CHUU)",
+      externalIds: [
+        {
+          id: "80610785",
+          provider: "genie",
+          type: "artist",
+        },
+      ],
+      name: "츄 (CHUU)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://www.genie.co.kr/detail/albumInfo?axnm=87060653",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/087/060/653/87060653_1767676647864_1_600x600.JPG/dims/resize/Q_80,0",
+      types: [
+        "front",
+      ],
+      url: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/087/060/653/87060653_1767676647864_1_600x600.JPG",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://info.genie.co.kr/info/album?axnm=87060653",
+        id: "87060653",
+        internalName: "genie",
+        lookup: {
+          method: "id",
+          value: "87060653",
+        },
+        name: "Genie",
+        url: "https://www.genie.co.kr/detail/albumInfo?axnm=87060653",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "ATRP",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "츄 (CHUU)",
+              externalIds: [
+                {
+                  id: "80610785",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "츄 (CHUU)",
+            },
+          ],
+          length: 202000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "113106607",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "XO, My Cyberlove",
+        },
+        {
+          artists: [
+            {
+              creditedName: "츄 (CHUU)",
+              externalIds: [
+                {
+                  id: "80610785",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "츄 (CHUU)",
+            },
+          ],
+          length: 176000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "113106608",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Canary",
+        },
+        {
+          artists: [
+            {
+              creditedName: "츄 (CHUU)",
+              externalIds: [
+                {
+                  id: "80610785",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "츄 (CHUU)",
+            },
+          ],
+          length: 164000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "113106609",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Cocktail Dress",
+        },
+        {
+          artists: [
+            {
+              creditedName: "츄 (CHUU)",
+              externalIds: [
+                {
+                  id: "80610785",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "츄 (CHUU)",
+            },
+          ],
+          length: 159000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "113106610",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Limoncello",
+        },
+        {
+          artists: [
+            {
+              creditedName: "츄 (CHUU)",
+              externalIds: [
+                {
+                  id: "80610785",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "츄 (CHUU)",
+            },
+          ],
+          length: 191000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "113106611",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Teeny Tiny Heart",
+        },
+        {
+          artists: [
+            {
+              creditedName: "츄 (CHUU)",
+              externalIds: [
+                {
+                  id: "80610785",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "츄 (CHUU)",
+            },
+          ],
+          length: 160000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "113106612",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Love Potion",
+        },
+        {
+          artists: [
+            {
+              creditedName: "츄 (CHUU)",
+              externalIds: [
+                {
+                  id: "80610785",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "츄 (CHUU)",
+            },
+          ],
+          length: 186000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "113106613",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Heart Tea Bag",
+        },
+        {
+          artists: [
+            {
+              creditedName: "츄 (CHUU)",
+              externalIds: [
+                {
+                  id: "80610785",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "츄 (CHUU)",
+            },
+          ],
+          length: 153000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "113106614",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Hide & Seek",
+        },
+        {
+          artists: [
+            {
+              creditedName: "츄 (CHUU)",
+              externalIds: [
+                {
+                  id: "80610785",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "츄 (CHUU)",
+            },
+          ],
+          length: 163000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "113106615",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "첫눈이 오면 그때 거기서 만나 (Loving You!)",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 7,
+      month: 1,
+      year: 2026,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "XO, My Cyberlove",
+  types: [
+    "Album",
+  ],
+}
+`;
+
+snapshot[`Genie provider > release lookup > OST (기타앨범) 1`] = `
+{
+  artists: [
+    {
+      creditedName: "오마이걸 (OH MY GIRL)",
+      externalIds: [
+        {
+          id: "80357324",
+          provider: "genie",
+          type: "artist",
+        },
+      ],
+      name: "오마이걸 (OH MY GIRL)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://www.genie.co.kr/detail/albumInfo?axnm=81318832",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/081/318/832/81318832_1574910949102_1_600x600.JPG/dims/resize/Q_80,0",
+      types: [
+        "front",
+      ],
+      url: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/081/318/832/81318832_1574910949102_1_600x600.JPG",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://info.genie.co.kr/info/album?axnm=81318832",
+        id: "81318832",
+        internalName: "genie",
+        lookup: {
+          method: "id",
+          value: "81318832",
+        },
+        name: "Genie",
+        url: "https://www.genie.co.kr/detail/albumInfo?axnm=81318832",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "스튜디오S",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 198000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "89656145",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "기억해",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 198000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "89656146",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "기억해 (Inst.)",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 28,
+      month: 11,
+      year: 2019,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "워너비챌린지 OST Part.1",
+  types: undefined,
+}
+`;
+
+snapshot[`Genie provider > release lookup > Compilation (베스트/컬렉션) album 1`] = `
+{
+  artists: [
+    {
+      creditedName: "오마이걸 (OH MY GIRL)",
+      externalIds: [
+        {
+          id: "80357324",
+          provider: "genie",
+          type: "artist",
+        },
+      ],
+      name: "오마이걸 (OH MY GIRL)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://www.genie.co.kr/detail/albumInfo?axnm=82590151",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/590/151/82590151_1647445534222_1_600x600.JPG/dims/resize/Q_80,0",
+      types: [
+        "front",
+      ],
+      url: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/082/590/151/82590151_1647445534222_1_600x600.JPG",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://info.genie.co.kr/info/album?axnm=82590151",
+        id: "82590151",
+        internalName: "genie",
+        lookup: {
+          method: "id",
+          value: "82590151",
+        },
+        name: "Genie",
+        url: "https://www.genie.co.kr/detail/albumInfo?axnm=82590151",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "Sony Music Labels Inc.",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 203000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "96301503",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Real Love (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 222000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "96301504",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Dun Dun Dance (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 178000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "96301505",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Dolphin (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 205000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "96301506",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Nonstop (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 245000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "96301507",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Etoile",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 254000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "96301508",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Eternally",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 178000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "96301509",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "BUNGEE (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 241000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "96301510",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "5th Season (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 195000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "96301511",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Hanabi(Remember Me) (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 215000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "96301512",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Twilight (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 246000,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "96301513",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Secret Garden (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 202000,
+          number: 12,
+          recording: {
+            externalIds: [
+              {
+                id: "96301514",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Sixteen (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 188000,
+          number: 13,
+          recording: {
+            externalIds: [
+              {
+                id: "96301515",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Coloring Book (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 214000,
+          number: 14,
+          recording: {
+            externalIds: [
+              {
+                id: "96301516",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "A-ing (Japanese Ver.) (Feat. Hashihi)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 251000,
+          number: 15,
+          recording: {
+            externalIds: [
+              {
+                id: "96301517",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Windy Day (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 196000,
+          number: 16,
+          recording: {
+            externalIds: [
+              {
+                id: "96301518",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Liar Liar (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 225000,
+          number: 17,
+          recording: {
+            externalIds: [
+              {
+                id: "96301519",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "One Step Two Step (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 207000,
+          number: 18,
+          recording: {
+            externalIds: [
+              {
+                id: "96301520",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Closer (Japanese Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "오마이걸 (OH MY GIRL)",
+              externalIds: [
+                {
+                  id: "80357324",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "오마이걸 (OH MY GIRL)",
+            },
+          ],
+          length: 209000,
+          number: 19,
+          recording: {
+            externalIds: [
+              {
+                id: "96301521",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Cupid (Japanese Ver.)",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 30,
+      month: 3,
+      year: 2022,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "OH MY GIRL BEST",
+  types: [
+    "Compilation",
+  ],
+}
+`;
+
+snapshot[`Genie provider > release lookup > Compilation (컴필레이션) with an unavailable CD-only track 1`] = `
+{
+  artists: [
+    {
+      creditedName: "태연 (TAEYEON)",
+      externalIds: [
+        {
+          id: "56069675",
+          provider: "genie",
+          type: "artist",
+        },
+      ],
+      name: "태연 (TAEYEON)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://www.genie.co.kr/detail/albumInfo?axnm=87003645",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/087/003/645/87003645_1764564727608_1_600x600.JPG/dims/resize/Q_80,0",
+      types: [
+        "front",
+      ],
+      url: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/087/003/645/87003645_1764564727608_1_600x600.JPG",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://info.genie.co.kr/info/album?axnm=87003645",
+        id: "87003645",
+        internalName: "genie",
+        lookup: {
+          method: "id",
+          value: "87003645",
+        },
+        name: "Genie",
+        url: "https://www.genie.co.kr/detail/albumInfo?axnm=87003645",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "SM ENTERTAINMENT",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 180000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "112887042",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "인사 (Panorama)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 184000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "112887043",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Letter To Myself",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 256000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "112887044",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Time Lapse (2025 Mix)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 209000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "112887045",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Fine",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 205000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "112887046",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "INVU",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 218000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "112887047",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "불티 (Spark)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 158000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "112887048",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Set Myself On Fire",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 208000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "112887049",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "그런 밤 (Some Nights)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 213000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "112887050",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Make Me Love You",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 163000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "112887051",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "I (Solo Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 208000,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "112887052",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Why",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 233000,
+          number: 12,
+          recording: {
+            externalIds: [
+              {
+                id: "112887053",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Weekend",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 170000,
+          number: 13,
+          recording: {
+            externalIds: [
+              {
+                id: "112887054",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "To. X",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 168000,
+          number: 14,
+          recording: {
+            externalIds: [
+              {
+                id: "112887055",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "What Do I Call You",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 188000,
+          number: 15,
+          recording: {
+            externalIds: [
+              {
+                id: "112887056",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "사계 (Four Seasons)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 191000,
+          number: 16,
+          recording: {
+            externalIds: [
+              {
+                id: "112887057",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "All For Nothing",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 215000,
+          number: 17,
+          recording: {
+            externalIds: [
+              {
+                id: "112887058",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "겨울나무 (I'm all ears)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 228000,
+          number: 18,
+          recording: {
+            externalIds: [
+              {
+                id: "112887059",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "11:11",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 222000,
+          number: 19,
+          recording: {
+            externalIds: [
+              {
+                id: "112887060",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Rain",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 240000,
+          number: 20,
+          recording: {
+            externalIds: [
+              {
+                id: "112887061",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Gravity",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 193000,
+          number: 21,
+          recording: {
+            externalIds: [
+              {
+                id: "112887030",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Disaster",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 274000,
+          number: 22,
+          recording: {
+            externalIds: [
+              {
+                id: "112887031",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "U R",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "56069675",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 225000,
+          number: 23,
+          recording: {
+            externalIds: [
+              {
+                id: "112887032",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Ending Credits",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 1,
+      month: 12,
+      year: 2025,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Panorama : The Best of TAEYEON",
+  types: [
+    "Compilation",
+  ],
+}
+`;
+
+snapshot[`Genie provider > release lookup > Album with two discs of different lengths 1`] = `
+{
+  artists: [
+    {
+      creditedName: "크레용팝 (CRAYON POP)",
+      externalIds: [
+        {
+          id: "80172188",
+          provider: "genie",
+          type: "artist",
+        },
+      ],
+      name: "크레용팝 (CRAYON POP)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://www.genie.co.kr/detail/albumInfo?axnm=80874223",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/080/874/223/80874223_1474871726468_1_600x600.JPG/dims/resize/Q_80,0",
+      types: [
+        "front",
+      ],
+      url: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/080/874/223/80874223_1474871726468_1_600x600.JPG",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://info.genie.co.kr/info/album?axnm=80874223",
+        id: "80874223",
+        internalName: "genie",
+        lookup: {
+          method: "id",
+          value: "80874223",
+        },
+        name: "Genie",
+        url: "https://www.genie.co.kr/detail/albumInfo?axnm=80874223",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "크롬엔터테인먼트",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 181000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "86621046",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "부릉부릉 (Vroom Vroom)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 183000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "86621047",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Too Much",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 191000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "86621048",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "두둠칫 (Doo Doom Chit)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 214000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "86621049",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "부기우기 (Boogie Woogie)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 213000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "86621050",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Tonight",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 180000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "86621051",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "다가와 (Get It Here)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 189000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "86621052",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "스케치북 (Sketch Book)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "소율",
+              externalIds: [
+                {
+                  id: "80328649",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "소율",
+            },
+          ],
+          length: 208000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "86621053",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Love Couple (Feat. The Zoo)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 181000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "86621054",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "부릉부릉 (Vroom Vroom) (Inst.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 191000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "86621055",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "두둠칫 (Doo Doom Chit) (Inst.)",
+        },
+      ],
+    },
+    {
+      format: "Digital Media",
+      number: 2,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 179000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "86621056",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "빠빠빠 (Bar Bar Bar)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 193000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "86621057",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "어이 (UH-EE)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 201000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "86621058",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Dancing Queen 2.0",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 187000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "86621059",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Bing Bing",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 221000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "86621060",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "FM",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝 (CRAYON POP)",
+              externalIds: [
+                {
+                  id: "80172188",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝 (CRAYON POP)",
+            },
+          ],
+          length: 188000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "86621061",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Saturday Night",
+        },
+        {
+          artists: [
+            {
+              creditedName: "웨이 & 초아",
+              externalIds: [
+                {
+                  id: "80533181",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "웨이 & 초아",
+            },
+          ],
+          length: 224000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "86621062",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Hello",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 26,
+      month: 9,
+      year: 2016,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Evolution Pop_Vol.1",
+  types: [
+    "Album",
+  ],
+}
+`;
+
+snapshot[`Genie provider > release lookup > Album with three discs 1`] = `
+{
+  artists: [
+    {
+      creditedName: "러블리즈",
+      externalIds: [
+        {
+          id: "80301760",
+          provider: "genie",
+          type: "artist",
+        },
+      ],
+      name: "러블리즈",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://www.genie.co.kr/detail/albumInfo?axnm=81103448",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/081/103/448/81103448_1536566849273_1_600x600.JPG/dims/resize/Q_80,0",
+      types: [
+        "front",
+      ],
+      url: "https://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/081/103/448/81103448_1536566849273_1_600x600.JPG",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://info.genie.co.kr/info/album?axnm=81103448",
+        id: "81103448",
+        internalName: "genie",
+        lookup: {
+          method: "id",
+          value: "81103448",
+        },
+        name: "Genie",
+        url: "https://www.genie.co.kr/detail/albumInfo?axnm=81103448",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "울림엔터테인먼트",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 213000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "88237541",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Destiny (나의 지구)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 220000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "88237542",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "비밀여행",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 193000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "88237543",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "놀이공원",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 164000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "88237544",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "이별 Chapter 1",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 211000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "88237545",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "퐁당",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 185000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "88237546",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "WoW!",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 239000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "88237547",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "숨바꼭질",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 214000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "88237548",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Aya",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 202000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "88237549",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "그냥",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 231000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "88237550",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "졸린 꿈",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 217000,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "88237551",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "비밀정원",
+        },
+      ],
+    },
+    {
+      format: "Digital Media",
+      number: 2,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 206000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "88237552",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "안녕 (Hi~)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 223000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "88237553",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Candy Jelly Love",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 219000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "88237554",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Ah-Choo",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 226000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "88237555",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Hug Me",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 209000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "88237556",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "그대에게",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 221000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "88237557",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "1cm",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 200000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "88237558",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Cameo",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 191000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "88237559",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Emotion",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 196000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "88237560",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "지금, 우리",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 223000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "88237561",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "종소리",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 211000,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "88237562",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "삼각형",
+        },
+      ],
+    },
+    {
+      format: "Digital Media",
+      number: 3,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 221000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "88237563",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "어제처럼 굿나잇",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 234000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "88237564",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "남보다 못한 사이 (Feat. 휘성) (Babysoul Solo)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 238000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "88237565",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "너만 없다 (JIN Solo)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 195000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "88237566",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "작별하나",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 215000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "88237567",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Circle",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 209000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "88237568",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "책갈피",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 211000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "88237569",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "새벽별 (Babysoul & Kei & JIN)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 201000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "88237570",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "첫눈",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 265000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "88237571",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "Night and Day",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 209000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "88237572",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "FALLIN'",
+        },
+        {
+          artists: [
+            {
+              creditedName: "러블리즈",
+              externalIds: [
+                {
+                  id: "80301760",
+                  provider: "genie",
+                  type: "artist",
+                },
+              ],
+              name: "러블리즈",
+            },
+          ],
+          length: 207000,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "88237573",
+                provider: "genie",
+                type: "song",
+              },
+            ],
+          },
+          title: "인형",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 10,
+      month: 9,
+      year: 2018,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Muse on Music",
+  types: [
+    "Album",
+  ],
+}
+`;
