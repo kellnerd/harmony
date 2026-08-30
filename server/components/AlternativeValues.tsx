@@ -22,8 +22,10 @@ export function setupAlternativeValues<Root>(providerMap: Record<ProviderName, R
 					{uniqueValues.map(
 						([value, providerNames]) => (
 							<li>
-								{display ? display(value) : value}
-								{providerNames.map((name) => <ProviderIcon providerName={name} stroke={1.25} key={name} />)}
+								<span class='alt-value'>
+									{display ? display(value) : value}
+									{providerNames.map((name) => <ProviderIcon providerName={name} stroke={1.25} key={name} />)}
+								</span>
 							</li>
 						),
 					)}

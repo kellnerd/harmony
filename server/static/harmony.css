@@ -148,6 +148,11 @@ ul.alt-values {
 	list-style: square;
 }
 
+span.alt-value {
+	display: flex;
+	flex-direction: row;
+}
+
 span.label svg.icon, ul.alt-values svg.icon {
 	height: 16px;
 	width: 16px;
@@ -317,6 +322,11 @@ code.isrc > span:not(:last-child)::after {
 }
 
 /* LinkedEntity.tsx */
+
+span.entity-links {
+	display: inline-flex;
+	flex-direction: row;
+}
 
 span.entity-links > a {
 	text-decoration-style: dotted;
@@ -503,25 +513,6 @@ div.region-list > span.label + button {
 
 h2.release-title {
 	margin-bottom: 0;
-}
-
-div.release-artist {
-	display: flex;
-	flex-direction: row;
-}
-
-/* ArtistCredit.tsx */
-
-span.artist-credit {
-	display: flex;
-	flex-direction: row;
-	gap: 0.25em;
-}
-
-/* AlternativeValues.tsx */
-
-.alt-values > li {
-	display: flex;
 }
 
 /* Tooltip.tsx */
