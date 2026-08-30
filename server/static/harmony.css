@@ -503,7 +503,9 @@ td.discogs {
 	background-color: var(--discogs);
 }
 label.itunes,
-td.itunes {
+td.itunes,
+label.applemusic,
+td.applemusic {
 	background-color: var(--apple);
 }
 label.melon,

@@ -7,6 +7,7 @@ import BandcampProvider from './Bandcamp/mod.ts';
 import BeatportProvider from './Beatport/mod.ts';
 import DeezerProvider from './Deezer/mod.ts';
 import DiscogsProvider from './Discogs/mod.ts';
+import AppleMusicProvider, { isAppleMusicConfigured } from './AppleMusic/mod.ts';
 import iTunesProvider from './iTunes/mod.ts';
 import MusicBrainzProvider from './MusicBrainz/mod.ts';
 import OtotoyProvider from './Ototoy/mod.ts';
@@ -28,6 +29,12 @@ providers.addMultiple(
 	MusicBrainzProvider,
 	DiscogsProvider,
 	DeezerProvider,
+);
+// Apple Music claims music.apple.com URLs when credentials are set; otherwise iTunes handles them.
+if (isAppleMusicConfigured()) {
+	providers.add(AppleMusicProvider);
+}
+providers.addMultiple(
 	iTunesProvider,
 	SpotifyProvider,
 	TidalProvider,
