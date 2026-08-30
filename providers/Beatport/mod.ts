@@ -1,13 +1,27 @@
 import type { Artist, BeatportNextData, BeatportRelease, Release, Track } from './json_types.ts';
 import type { ArtistCreditName, EntityId, HarmonyRelease, HarmonyTrack, LinkType } from '@/harmonizer/types.ts';
 import { variousArtists } from '@/musicbrainz/special_entities.ts';
-import { CacheEntry, MetadataProvider, ReleaseLookup } from '@/providers/base.ts';
+import { CacheEntry, MetadataProvider, ProviderOptions, ReleaseLookup } from '@/providers/base.ts';
 import { DurationPrecision, FeatureQuality, FeatureQualityMap } from '@/providers/features.ts';
 import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { extractTextFromHtml } from '@/utils/html.ts';
 
 export default class BeatportProvider extends MetadataProvider {
+	constructor(options: ProviderOptions = {}) {
+		super(options);
+
+		if (options.appInfo) {
+			const { name, version, contact } = options.appInfo;
+			this.userAgent = `${name}/${version}`;
+			if (contact) {
+				this.userAgent += ` +${contact}`;
+			}
+		} else {
+			this.userAgent = 'Harmony';
+		}
+	}
+
 	readonly name = 'Beatport';
 
 	readonly supportedUrls = new URLPattern({
@@ -52,6 +66,11 @@ export default class BeatportProvider extends MetadataProvider {
 	extractEmbeddedJson<Data>(webUrl: URL, maxTimestamp?: number): Promise<CacheEntry<Data>> {
 		return this.fetchJSON<Data>(webUrl, {
 			policy: { maxTimestamp },
+			requestInit: {
+				headers: {
+					'User-Agent': this.userAgent,
+				},
+			},
 			responseMutator: async (response) => {
 				const html = await response.text();
 				const nextData = extractTextFromHtml(
@@ -66,6 +85,8 @@ export default class BeatportProvider extends MetadataProvider {
 			},
 		});
 	}
+
+	readonly userAgent: string;
 }
 
 export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Release> {
