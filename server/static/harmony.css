@@ -152,6 +152,11 @@ ul.alt-values {
 	list-style: square;
 }
 
+span.alt-value {
+	display: flex;
+	flex-direction: row;
+}
+
 span.label svg.icon,
 ul.alt-values svg.icon {
 	height: 16px;
@@ -329,6 +334,11 @@ code.isrc > span:not(:last-child)::after {
 }
 
 /* LinkedEntity.tsx */
+
+span.entity-links {
+	display: inline-flex;
+	flex-direction: row;
+}
 
 span.entity-links > a {
 	text-decoration-style: dotted;
