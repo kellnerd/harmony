@@ -6,7 +6,7 @@ import { assert } from 'std/assert/assert.ts';
 import { afterAll, describe, it } from '@std/testing/bdd';
 import { assertSnapshot } from '@std/testing/snapshot';
 
-import QobuzProvider from './mod.ts';
+import QobuzProvider, { normalizeQobuzGtin } from './mod.ts';
 import { assertEquals } from 'std/assert/assert_equals.ts';
 
 describe('Qobuz provider', () => {
@@ -127,6 +127,16 @@ describe('Qobuz provider', () => {
 			'https://play.qobuz.com/label/97377',
 			'Region should be ignored for label without slug, URL would be invalid',
 		);
+	});
+
+	describe('GTIN normalization', () => {
+		it('appends a missing check digit to invalid 13-digit barcodes, turning them into valid GTIN-14', () => {
+			assertEquals(normalizeQobuzGtin('0001589171735'), '00015891717357');
+		});
+
+		it('preserves GTIN-13 values which already have a valid check digit', () => {
+			assertEquals(normalizeQobuzGtin('0198884774947'), '0198884774947');
+		});
 	});
 
 	afterAll(() => {

@@ -30,8 +30,10 @@
 	--bandcamp: #1da0c3;
 	--beatport: #00e586;
 	--brainz: #eb743b;
+	--bugs: #ff3d33;
 	--deezer: #a238ff;
 	--discogs: #121212;
+	--melon: #00cd3c;
 	--mora: #02082a;
 	--musicbrainz: #ba478f;
 	--ototoy: #e07e01;
@@ -117,14 +119,16 @@ ul.inline > li:not(:last-child)::after {
 	margin-left: 0.5em;
 }
 
-a:link, a:visited {
+a:link,
+a:visited {
 	color: var(--link);
 }
 a:hover {
 	color: var(--link-accent);
 }
 
-a.label, span.label {
+a.label,
+span.label {
 	display: inline-flex;
 	align-items: center;
 	padding: 0.4em;
@@ -153,7 +157,8 @@ span.alt-value {
 	flex-direction: row;
 }
 
-span.label svg.icon, ul.alt-values svg.icon {
+span.label svg.icon,
+ul.alt-values svg.icon {
 	height: 16px;
 	width: 16px;
 }
@@ -206,16 +211,21 @@ input#region-input {
 	width: 14em;
 }
 
-input[type='submit'], button {
+input[type='submit'],
+button {
 	color: var(--text);
 	background-color: var(--button-fill);
 	border: 2px outset var(--button-border);
 	border-radius: 0.3em;
 }
-input[type='submit']:active, button:active {
+input[type='submit']:active,
+button:active {
 	border-style: inset;
 }
-input[type='submit']:focus, button:focus, input[type='submit']:hover, button:hover {
+input[type='submit']:focus,
+button:focus,
+input[type='submit']:hover,
+button:hover {
 	background-color: var(--button-focus);
 	cursor: pointer;
 }
@@ -233,7 +243,8 @@ tbody > tr:nth-child(even) {
 	background-color: var(--even-fill);
 }
 
-td, th {
+td,
+th {
 	padding: 0.1em 0.2em;
 }
 
@@ -272,7 +283,8 @@ button.copy:hover {
 	opacity: 0.8;
 }
 
-td > button.copy:first-child, div.region-list > button.copy {
+td > button.copy:first-child,
+div.region-list > button.copy {
 	float: right;
 }
 
@@ -344,7 +356,8 @@ div.action-group {
 
 /* MessageBox.tsx, LinkWithMusicBrainz.tsx, actions.tsx */
 
-div.message, div.action {
+div.message,
+div.action {
 	display: flex;
 	align-items: center;
 	background-color: var(--theme-fill);
@@ -354,7 +367,8 @@ div.message, div.action {
 	border-radius: 5px;
 }
 
-div.message > svg.icon, div.action > svg.icon {
+div.message > svg.icon,
+div.action > svg.icon {
 	min-width: fit-content;
 	margin-right: 0.3em;
 }
@@ -364,7 +378,10 @@ div.message span.provider {
 	margin-right: 0.5em;
 }
 
-div.message p, div.message ul, div.action p, div.action ul {
+div.message p,
+div.message ul,
+div.action p,
+div.action ul {
 	margin: 0;
 }
 
@@ -424,7 +441,8 @@ nav > ul > li > a {
 	align-items: center;
 }
 
-nav a:link, nav a:visited {
+nav a:link,
+nav a:visited {
 	color: inherit;
 	text-decoration: none;
 }
@@ -447,7 +465,8 @@ button.open-all-links {
 	font-family: inherit;
 }
 
-button.open-all-links:focus, button.open-all-links:hover {
+button.open-all-links:focus,
+button.open-all-links:hover {
 	background-color: var(--button-accent-focus);
 }
 
@@ -463,37 +482,56 @@ label.provider-input {
 	gap: 0.5em;
 }
 
-label.bandcamp, td.bandcamp {
+label.bandcamp,
+td.bandcamp {
 	background-color: var(--bandcamp);
 }
-label.beatport, td.beatport {
+label.beatport,
+td.beatport {
 	background-color: var(--beatport);
 }
-label.deezer, td.deezer {
+label.bugs,
+td.bugs {
+	background-color: var(--bugs);
+}
+label.deezer,
+td.deezer {
 	background-color: var(--deezer);
 }
-label.discogs, td.discogs {
+label.discogs,
+td.discogs {
 	background-color: var(--discogs);
 }
-label.itunes, td.itunes {
+label.itunes,
+td.itunes {
 	background-color: var(--apple);
 }
-label.mora, td.mora {
+label.melon,
+td.melon {
+	background-color: var(--melon);
+}
+label.mora,
+td.mora {
 	background-color: var(--mora);
 }
-label.musicbrainz, td.musicbrainz {
+label.musicbrainz,
+td.musicbrainz {
 	background-color: var(--musicbrainz);
 }
-label.ototoy, td.ototoy {
+label.ototoy,
+td.ototoy {
 	background-color: var(--ototoy);
 }
-label.qobuz, td.qobuz {
+label.qobuz,
+td.qobuz {
 	background-color: var(--qobuz);
 }
-label.spotify, td.spotify {
+label.spotify,
+td.spotify {
 	background-color: var(--spotify);
 }
-label.tidal, td.tidal {
+label.tidal,
+td.tidal {
 	background-color: var(--tidal);
 }
 
@@ -563,7 +601,8 @@ span.tooltip-anchor:hover > div[role='tooltip'] {
 	display: inline-block;
 }
 
-div[role='tooltip'] > ol, div[role='tooltip'] > ul {
+div[role='tooltip'] > ol,
+div[role='tooltip'] > ul {
 	margin: 0;
 	padding-inline-start: 1.5em;
 	text-align: left;

@@ -35,6 +35,7 @@ export function stubProviderLookups(provider: MetadataProvider, {
 			let response: Response;
 
 			if (downloadMode) {
+				// @ts-ignore-error -- Protected method is not visible in TS, but accessible in JS.
 				response = await provider.fetch(input, options?.requestInit);
 				if (options?.responseMutator) {
 					response = await options.responseMutator(response);

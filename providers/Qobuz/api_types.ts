@@ -87,7 +87,7 @@ export interface QobuzAlbum extends QobuzPartialAlbum {
 export interface QobuzPartialTrack {
 	maximum_bit_depth: number;
 	copyright: string;
-	performers: string;
+	performers?: string;
 	audio_info: AudioInfo;
 	performer: QobuzPerformer;
 	album?: QobuzPartialAlbum;

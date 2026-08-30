@@ -27,6 +27,7 @@ const scriptCombinations: Record<CombinedScriptCode, UnicodeScriptCode[]> = {
 
 // TODO: Tune weights of logographic scripts.
 export const scriptWeights: Partial<Record<UnicodeScriptCode, number>> = {
+	'Hang': 3,
 	'Hani': 4,
 	'Hira': 3,
 	'Kana': 3,

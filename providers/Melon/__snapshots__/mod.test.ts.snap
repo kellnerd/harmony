@@ -1,0 +1,1894 @@
+export const snapshot = {};
+
+snapshot[`Melon provider > release lookup > Compilation (베스트) album with an unavailable CD-only track 1`] = `
+{
+  artists: [
+    {
+      creditedName: "태연 (TAEYEON)",
+      externalIds: [
+        {
+          id: "236797",
+          provider: "melon",
+          type: "artist",
+        },
+      ],
+      name: "태연 (TAEYEON)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://www.melon.com/album/detail.htm?albumId=12416346",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://cdnimg.melon.co.kr/cm2/album/images/124/16/346/12416346_20251201142132_500.jpg?629ef777c3da841518096862ef556ce6",
+      types: [
+        "front",
+      ],
+      url: "https://cdnimg.melon.co.kr/cm2/album/images/124/16/346/12416346_20251201142132_org.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://m2.melon.com/m6/v3/album/info.json?albumId=12416346",
+        id: "12416346",
+        internalName: "melon",
+        lookup: {
+          method: "id",
+          value: "12416346",
+        },
+        name: "Melon",
+        url: "https://www.melon.com/album/detail.htm?albumId=12416346",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "SM ENTERTAINMENT",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 180000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "600604835",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "인사 (Panorama)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 185000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "600604836",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Letter To Myself",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 256000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "600604837",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Time Lapse (2025 Mix)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 210000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "600604838",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Fine",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 205000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "600604839",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "INVU",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 218000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "600604840",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "불티 (Spark)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 158000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "600604841",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Set Myself On Fire",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 208000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "600604842",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "그런 밤 (Some Nights)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 214000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "600604843",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Make Me Love You",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 163000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "600604844",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "I (Solo Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 208000,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "600604845",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Why",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 234000,
+          number: 12,
+          recording: {
+            externalIds: [
+              {
+                id: "600604846",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Weekend",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 171000,
+          number: 13,
+          recording: {
+            externalIds: [
+              {
+                id: "600604847",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "To. X",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 168000,
+          number: 14,
+          recording: {
+            externalIds: [
+              {
+                id: "600604848",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "What Do I Call You",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 189000,
+          number: 15,
+          recording: {
+            externalIds: [
+              {
+                id: "600604849",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "사계 (Four Seasons)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 191000,
+          number: 16,
+          recording: {
+            externalIds: [
+              {
+                id: "600604850",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "All For Nothing",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 216000,
+          number: 17,
+          recording: {
+            externalIds: [
+              {
+                id: "600604851",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "겨울나무 (I'm all ears)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 229000,
+          number: 18,
+          recording: {
+            externalIds: [
+              {
+                id: "600604852",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "11:11",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 223000,
+          number: 19,
+          recording: {
+            externalIds: [
+              {
+                id: "600604853",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Rain",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 240000,
+          number: 20,
+          recording: {
+            externalIds: [
+              {
+                id: "600604854",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Gravity",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 194000,
+          number: 21,
+          recording: {
+            externalIds: [
+              {
+                id: "600604855",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Disaster",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 275000,
+          number: 22,
+          recording: {
+            externalIds: [
+              {
+                id: "600604856",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "U R",
+        },
+        {
+          artists: [
+            {
+              creditedName: "태연 (TAEYEON)",
+              externalIds: [
+                {
+                  id: "236797",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "태연 (TAEYEON)",
+            },
+          ],
+          length: 226000,
+          number: 23,
+          recording: {
+            externalIds: [
+              {
+                id: "600604857",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Ending Credits",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 1,
+      month: 12,
+      year: 2025,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Panorama : The Best of TAEYEON",
+  types: [
+    "Compilation",
+  ],
+}
+`;
+
+snapshot[`Melon provider > release lookup > Regular (정규) album with multiple discs and multiple artists 1`] = `
+{
+  artists: [
+    {
+      creditedName: "크레용팝",
+      externalIds: [
+        {
+          id: "685904",
+          provider: "melon",
+          type: "artist",
+        },
+      ],
+      name: "크레용팝",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://www.melon.com/album/detail.htm?albumId=10000727",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://cdnimg.melon.co.kr/cm/album/images/100/00/727/10000727_500.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://cdnimg.melon.co.kr/cm/album/images/100/00/727/10000727_org.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://m2.melon.com/m6/v3/album/info.json?albumId=10000727",
+        id: "10000727",
+        internalName: "melon",
+        lookup: {
+          method: "id",
+          value: "10000727",
+        },
+        name: "Melon",
+        url: "https://www.melon.com/album/detail.htm?albumId=10000727",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "크롬엔터테인먼트",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 180000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "30004162",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "부릉부릉 (Vroom Vroom)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 182000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "30004163",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Too Much",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 190000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "30004164",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "두둠칫 (Doo Doom Chit)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 213000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "30004165",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "부기우기 (Boogie Woogie)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 212000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "30004166",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Tonight",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 179000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "30004167",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "다가와 (Get It Here)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 189000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "30004168",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "스케치북 (Sketch Book)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "소율",
+              externalIds: [
+                {
+                  id: "685916",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "소율",
+            },
+          ],
+          length: 207000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "30004169",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Love Couple (Feat. The Zoo)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 180000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "30004170",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "부릉부릉 (Vroom Vroom) (Inst.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 190000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "30004171",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "두둠칫 (Doo Doom Chit) (Inst.)",
+        },
+      ],
+    },
+    {
+      format: "Digital Media",
+      number: 2,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 179000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "30004172",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "빠빠빠 (Bar Bar Bar)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 193000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "30004173",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "어이 (UH-EE)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 200000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "30004174",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Dancing Queen 2.0",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 186000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "30004175",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Bing Bing",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 221000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "30004176",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "FM",
+        },
+        {
+          artists: [
+            {
+              creditedName: "크레용팝",
+              externalIds: [
+                {
+                  id: "685904",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "크레용팝",
+            },
+          ],
+          length: 187000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "30004177",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Saturday Night",
+        },
+        {
+          artists: [
+            {
+              creditedName: "웨이 (크레용팝)",
+              externalIds: [
+                {
+                  id: "685918",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "웨이 (크레용팝)",
+            },
+            {
+              creditedName: "초아 (크레용팝)",
+              externalIds: [
+                {
+                  id: "685917",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "초아 (크레용팝)",
+            },
+          ],
+          length: 223000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "30004178",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Hello",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 26,
+      month: 9,
+      year: 2016,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Evolution Pop_Vol.1",
+  types: [
+    "Album",
+  ],
+}
+`;
+
+snapshot[`Melon provider > release lookup > EP (미니) album 1`] = `
+{
+  artists: [
+    {
+      creditedName: "tripleS (트리플에스)",
+      externalIds: [
+        {
+          id: "3137294",
+          provider: "melon",
+          type: "artist",
+        },
+      ],
+      name: "tripleS (트리플에스)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://www.melon.com/album/detail.htm?albumId=13693526",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://cdnimg.melon.co.kr/cm2/album/images/136/93/526/13693526_20260528115553_500.jpg?41b5d7a536bb19d0c982ac5b9d8b505c",
+      types: [
+        "front",
+      ],
+      url: "https://cdnimg.melon.co.kr/cm2/album/images/136/93/526/13693526_20260528115553_org.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://m2.melon.com/m6/v3/album/info.json?albumId=13693526",
+        id: "13693526",
+        internalName: "melon",
+        lookup: {
+          method: "id",
+          value: "13693526",
+        },
+        name: "Melon",
+        url: "https://www.melon.com/album/detail.htm?albumId=13693526",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "모드하우스",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "3137294",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 162000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "602111503",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Sad Girls Schemin'",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "3137294",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 61000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "602111504",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Peer",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "3137294",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 188000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "602111505",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Baby Flower",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "3137294",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 189000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "602111506",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Type of Girl",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "3137294",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 151000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "602111507",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Sleek",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "3137294",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 136000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "602111508",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "I Like That",
+        },
+        {
+          artists: [
+            {
+              creditedName: "tripleS (트리플에스)",
+              externalIds: [
+                {
+                  id: "3137294",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "tripleS (트리플에스)",
+            },
+          ],
+          length: 139000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "602111509",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Me Myself Mode",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 1,
+      month: 6,
+      year: 2026,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "<LOVE&POP> pt.1",
+  types: [
+    "EP",
+  ],
+}
+`;
+
+snapshot[`Melon provider > release lookup > Single (싱글) album 1`] = `
+{
+  artists: [
+    {
+      creditedName: "하슬 (ARTMS)",
+      externalIds: [
+        {
+          id: "1273010",
+          provider: "melon",
+          type: "artist",
+        },
+      ],
+      name: "하슬 (ARTMS)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://www.melon.com/album/detail.htm?albumId=13732020",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://cdnimg.melon.co.kr/cm2/album/images/137/32/020/13732020_20260612150041_500.jpg?6dfaa6d8ce62309cfe5304f7f6205bc2",
+      types: [
+        "front",
+      ],
+      url: "https://cdnimg.melon.co.kr/cm2/album/images/137/32/020/13732020_20260612150041_org.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://m2.melon.com/m6/v3/album/info.json?albumId=13732020",
+        id: "13732020",
+        internalName: "melon",
+        lookup: {
+          method: "id",
+          value: "13732020",
+        },
+        name: "Melon",
+        url: "https://www.melon.com/album/detail.htm?albumId=13732020",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "㈜노느니특공대엔터테인먼트",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "하슬 (ARTMS)",
+              externalIds: [
+                {
+                  id: "1273010",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "하슬 (ARTMS)",
+            },
+          ],
+          length: 227000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "602249438",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Again",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 14,
+      month: 6,
+      year: 2026,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Again",
+  types: [
+    "Single",
+  ],
+}
+`;
+
+snapshot[`Melon provider > release lookup > EP with two labels 1`] = `
+{
+  artists: [
+    {
+      creditedName: "Kep1er (케플러)",
+      externalIds: [
+        {
+          id: "3058246",
+          provider: "melon",
+          type: "artist",
+        },
+      ],
+      name: "Kep1er (케플러)",
+    },
+  ],
+  availableIn: [
+    "KR",
+  ],
+  excludedFrom: [],
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://www.melon.com/album/detail.htm?albumId=10830226",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://cdnimg.melon.co.kr/cm2/album/images/108/30/226/10830226_20211231171127_500.jpg?c4219b256d52303bf773968b467cd300",
+      types: [
+        "front",
+      ],
+      url: "https://cdnimg.melon.co.kr/cm2/album/images/108/30/226/10830226_20211231171127_org.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://m2.melon.com/m6/v3/album/info.json?albumId=10830226",
+        id: "10830226",
+        internalName: "melon",
+        lookup: {
+          method: "id",
+          value: "10830226",
+        },
+        name: "Melon",
+        url: "https://www.melon.com/album/detail.htm?albumId=10830226",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "WAKEONE",
+    },
+    {
+      name: "스윙엔터테인먼트",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: [
+            {
+              creditedName: "Kep1er (케플러)",
+              externalIds: [
+                {
+                  id: "3058246",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "Kep1er (케플러)",
+            },
+          ],
+          length: 112000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "34491912",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "See The Light",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Kep1er (케플러)",
+              externalIds: [
+                {
+                  id: "3058246",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "Kep1er (케플러)",
+            },
+          ],
+          length: 184000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "34491913",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "WA DA DA",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Kep1er (케플러)",
+              externalIds: [
+                {
+                  id: "3058246",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "Kep1er (케플러)",
+            },
+          ],
+          length: 191000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "34491914",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "MVSK",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Kep1er (케플러)",
+              externalIds: [
+                {
+                  id: "3058246",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "Kep1er (케플러)",
+            },
+          ],
+          length: 215000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "34491915",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Shine (Kep1er Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Kep1er (케플러)",
+              externalIds: [
+                {
+                  id: "3058246",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "Kep1er (케플러)",
+            },
+          ],
+          length: 202000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "34491916",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "Another Dream (Kep1er Ver.)",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Kep1er (케플러)",
+              externalIds: [
+                {
+                  id: "3058246",
+                  provider: "melon",
+                  type: "artist",
+                },
+              ],
+              name: "Kep1er (케플러)",
+            },
+          ],
+          length: 248000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "34491917",
+                provider: "melon",
+                type: "song",
+              },
+            ],
+          },
+          title: "O.O.O (Over&Over&Over) (Kep1er Ver.)",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 3,
+      month: 1,
+      year: 2022,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "FIRST IMPACT",
+  types: [
+    "EP",
+  ],
+}
+`;

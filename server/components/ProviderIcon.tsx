@@ -5,9 +5,11 @@ import { providers } from '@/providers/mod.ts';
 const providerIconMap: Record<string, string> = {
 	bandcamp: 'brand-bandcamp',
 	beatport: 'brand-beatport',
+	bugs: 'brand-bugs',
 	deezer: 'brand-deezer',
 	discogs: 'brand-discogs',
 	itunes: 'brand-apple',
+	melon: 'brand-melon',
 	musicbrainz: 'brand-metabrainz',
 	mora: 'brand-mora',
 	ototoy: 'brand-ototoy',

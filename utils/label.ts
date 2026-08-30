@@ -7,7 +7,7 @@ import { Label } from '@/harmonizer/types.ts';
  * @returns List of `Label` entries
  */
 export function splitLabels(labels: string): Label[] {
-	return labels?.split(/(?<=[^/]{3,})\/(?=[^/]{3,})/).map((label) => ({
+	return labels?.split(/(?<=[^/]{3,})[/,](?=[^/]{3,})/).map((label) => ({
 		name: label.trim(),
 	}));
 }

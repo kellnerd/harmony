@@ -1,4 +1,5 @@
 import { LinkedEntity } from './LinkedEntity.tsx';
+import { MessageBox } from './MessageBox.tsx';
 import { SpriteIcon } from './SpriteIcon.tsx';
 import { OpenAllLinks } from '@/server/islands/OpenAllLinks.tsx';
 
@@ -30,6 +31,7 @@ export function LinkWithMusicBrainz({ entities, entityType, sourceEntityUrl, ent
 
 	if (entitiesWithMbEditLinks.length === 0) return null;
 
+	const existingLinksNotChecked = !entityCache?.length;
 	const actions = entitiesWithMbEditLinks.map(({ entity, mbEditLink }) => (
 		<LinkWithMusicBrainzAction
 			mbEditLink={mbEditLink}
@@ -37,13 +39,22 @@ export function LinkWithMusicBrainz({ entities, entityType, sourceEntityUrl, ent
 			entityType={entityType}
 		/>
 	));
-	if (actions.length > 1) {
+	if (actions.length > 1 || existingLinksNotChecked) {
 		return (
 			<div class='action-group'>
 				<OpenAllLinks
 					links={entitiesWithMbEditLinks.map(({ mbEditLink }) => mbEditLink.href)}
 					linkType={entityType}
 				/>
+				{existingLinksNotChecked && (
+					<MessageBox
+						message={{
+							type: 'warning',
+							text:
+								`Already existing ${entityType} links on MusicBrainz could not be checked. There may be no new external IDs to add.`,
+						}}
+					/>
+				)}
 				{actions}
 			</div>
 		);
