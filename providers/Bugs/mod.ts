@@ -8,7 +8,7 @@ import {
 import type { ProviderCategory } from '@/providers/categories.ts';
 import { DurationPrecision, FeatureQuality, type FeatureQualityMap } from '@/providers/features.ts';
 import { getFromEnv } from '@/utils/config.ts';
-import type { PartialDate } from '@/utils/date.ts';
+import { parseCompactDate, type PartialDate } from '@/utils/date.ts';
 import { parseDuration } from '@/utils/time.ts';
 import { ProviderError } from '@/utils/errors.ts';
 import type {
@@ -149,7 +149,7 @@ export class BugsReleaseLookup extends ReleaseApiLookup<BugsProvider, BugsRawRel
 		return {
 			title: raw.album.title,
 			artists: raw.album.artists.map((a) => this.convertRawArtist(a)),
-			releaseDate: this.convertReleaseDate(parseYYYYMMDD(raw.album.release_ymd)),
+			releaseDate: this.convertReleaseDate(parseCompactDate(raw.album.release_ymd)),
 			labels: this.extractLabels(raw.album),
 			images: [this.coverArtwork(raw.album.image.path)],
 			types: mapReleaseType(raw.album.album_tp_nm),
@@ -218,16 +218,6 @@ export class BugsReleaseLookup extends ReleaseApiLookup<BugsProvider, BugsRawRel
 interface BugsRawRelease {
 	album: BugsAlbum;
 	tracks: BugsTrack[];
-}
-
-function parseYYYYMMDD(date: string): PartialDate {
-	const match = date.match(/^(\d{4})(\d{2})(\d{2})$/);
-	if (!match) return {};
-	return {
-		year: parseInt(match[1]),
-		month: parseInt(match[2]),
-		day: parseInt(match[3]),
-	};
 }
 
 function mapReleaseType(albumType?: string): ReleaseGroupType[] | undefined {

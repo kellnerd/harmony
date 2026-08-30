@@ -28,10 +28,23 @@ export function formatPartialDate(date: PartialDate) {
 	return dateComponents.join('-');
 }
 
-/** Parses `YYYY-MM-DD` date strings */
+/** Parses `YYYY-MM-DD`, `YYYY-MM`, and `YYYY` date strings */
 export function parseHyphenatedDate(date: string): PartialDate {
 	if (date.match(/^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?$/)) {
 		return zipObject(['year', 'month', 'day'], date.split('-').map((component) => Number.parseInt(component)));
+	}
+	return {};
+}
+
+/** Parses `YYYYMMDD` date strings */
+export function parseCompactDate(date: string): PartialDate {
+	const match = date.match(/^(\d{4})(\d{2})(\d{2})$/);
+	if (match) {
+		return {
+			year: Number.parseInt(match[1]),
+			month: Number.parseInt(match[2]),
+			day: Number.parseInt(match[3]),
+		};
 	}
 	return {};
 }
