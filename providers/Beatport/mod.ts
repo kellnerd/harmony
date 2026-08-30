@@ -18,7 +18,7 @@ export default class BeatportProvider extends MetadataProvider {
 	override readonly features: FeatureQualityMap = {
 		'cover size': 1400,
 		'duration precision': DurationPrecision.MS,
-		'GTIN lookup': FeatureQuality.EXPENSIVE,
+		'GTIN lookup': FeatureQuality.MISSING, // no longer working
 		'MBID resolving': FeatureQuality.PRESENT,
 		'release label': FeatureQuality.GOOD,
 	};
