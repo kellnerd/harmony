@@ -12,6 +12,7 @@ import { parseHyphenatedDate, PartialDate } from '@/utils/date.ts';
 import { splitLabels } from '@/utils/label.ts';
 import { ProviderError, ResponseError } from '@/utils/errors.ts';
 import { formatGtin, isEqualGTIN } from '@/utils/gtin.ts';
+import { distinctBy } from '@std/collections/distinct-by';
 
 import type { ApiError, MinimalArtist, Release, ReleaseTrack, Result, Track, TracklistItem } from './api_types.ts';
 import type {
@@ -204,7 +205,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 
 		return {
 			title: rawRelease.title,
-			artists: rawRelease.contributors.map(this.convertRawArtist.bind(this)),
+			artists: distinctBy(rawRelease.contributors, (c) => c.id).map(this.convertRawArtist.bind(this)),
 			gtin: rawRelease.upc,
 			externalLinks: [{
 				url: rawRelease.link,
@@ -274,7 +275,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 
 		if ('contributors' in track) {
 			// all available details about this track have been fetched
-			result.artists = track.contributors.map(this.convertRawArtist.bind(this));
+			result.artists = distinctBy(track.contributors, (c) => c.id).map(this.convertRawArtist.bind(this));
 			result.availableIn = track.available_countries;
 		} else {
 			result.artists = [this.convertRawArtist(track.artist)];
