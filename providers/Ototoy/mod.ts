@@ -1,5 +1,6 @@
 import type { AlbumMeta, Artist, Label as RawLabel, PackagePage, Track } from './json_types.ts';
 import type {
+	AdvisoryRating,
 	ArtistCreditName,
 	Artwork,
 	EntityId,
@@ -248,6 +249,13 @@ export default class OtotoyProvider extends MetadataProvider {
 	//       <p class="label-name">Label: <a href="/labels/246810">Baz label</a></p>
 	//       <p class="catalog-id>Catalog number: NKCD-6849</p>
 	//    </div>
+	//    <ul class="tag-cloud">
+	//       <li>
+	//           <a class="oty-btn-tag" href="/tags/foo">
+	//               foo
+	//           </a>
+	//       </li>
+	//    </ul>
 	// </div>
 	//
 	// NOTES:
@@ -303,11 +311,26 @@ export default class OtotoyProvider extends MetadataProvider {
 			}
 		});
 
+		const tagCloud: string[] = [];
+		const tagCloudList = albumMetadata.querySelector('ul.tag-cloud');
+		if (tagCloudList) {
+			const tags = tagCloudList.querySelectorAll('li > a.oty-btn-tag');
+			tags.forEach((el) => {
+				const ariaLabel = el.getAttribute('aria-label');
+				if (ariaLabel && ariaLabel == 'Add tags') {
+					return; // Skip the add button
+				}
+
+				tagCloud.push(el.textContent.trim());
+			});
+		}
+
 		const albumMeta: AlbumMeta = {
 			title,
 			artists,
 			releaseDate,
 			originalReleaseDate,
+			tagCloud: tagCloud.length > 0 ? tagCloud : undefined,
 		};
 
 		const labelAnchor = details.querySelector('p.label-name > a');
@@ -392,6 +415,9 @@ export class OtotoyReleaseLookup extends ReleaseLookup<OtotoyProvider, PackagePa
 				types: ['paid download'],
 			}],
 			images: [this.getArtwork(albumPage.thumbUrl)],
+			advisoryRating: albumPage.albumMeta.tagCloud
+				? this.convertRawAdvisoryRating(albumPage.albumMeta.tagCloud)
+				: undefined,
 			info: this.generateReleaseInfo(),
 		};
 
@@ -454,6 +480,17 @@ export class OtotoyReleaseLookup extends ReleaseLookup<OtotoyProvider, PackagePa
 			catalogNumber: label.catalogNumber,
 			externalIds: this.provider.makeExternalIdsFromUrl(label.url),
 		};
+	}
+
+	convertRawAdvisoryRating(tagCloud: string[]): AdvisoryRating | undefined {
+		for (const tag of tagCloud) {
+			switch (tag) {
+				case 'Explicit ver.':
+					return 'explicit';
+				case 'Clean ver.':
+					return 'clean';
+			}
+		}
 	}
 
 	getArtwork(thumbUrl: string): Artwork {

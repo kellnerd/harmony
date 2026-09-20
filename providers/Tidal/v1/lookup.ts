@@ -7,8 +7,15 @@ import { parseHyphenatedDate } from '@/utils/date.ts';
 import { selectLargestImage } from '@/utils/image.ts';
 import type TidalProvider from '@/providers/Tidal/mod.ts';
 
-import type { Album, AlbumItem, Resource, Result, SimpleArtist } from './api_types.ts';
-import type { ArtistCreditName, HarmonyMedium, HarmonyRelease, HarmonyTrack, Label } from '@/harmonizer/types.ts';
+import type { Album, AlbumItem, Properties, Resource, Result, SimpleArtist } from './api_types.ts';
+import type {
+	AdvisoryRating,
+	ArtistCreditName,
+	HarmonyMedium,
+	HarmonyRelease,
+	HarmonyTrack,
+	Label,
+} from '@/harmonizer/types.ts';
 
 export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album> {
 	readonly apiBaseUrl = 'https://openapi.tidal.com/';
@@ -115,8 +122,13 @@ export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album>
 			packaging: 'None',
 			images: artwork ? [artwork] : [],
 			labels: this.getLabels(rawRelease),
+			advisoryRating: this.convertAdvisoryRating(rawRelease.properties),
 			info: this.generateReleaseInfo(),
 		};
+	}
+
+	private convertAdvisoryRating(properties: Properties): AdvisoryRating | undefined {
+		return properties.content === 'explicit' ? 'explicit' : undefined;
 	}
 
 	private convertRawTracklist(tracklist: AlbumItem[]): HarmonyMedium[] {
@@ -159,6 +171,7 @@ export class TidalV1ReleaseLookup extends ReleaseApiLookup<TidalProvider, Album>
 			isrc: track.isrc,
 			artists: track.artists.map(this.convertRawArtist.bind(this)),
 			type: track.artifactType === 'video' ? 'video' : 'audio',
+			advisoryRating: this.convertAdvisoryRating(track.properties),
 		};
 
 		return result;

@@ -343,6 +343,7 @@ export class SpotifyReleaseLookup extends ReleaseApiLookup<SpotifyProvider, Albu
 			recording: {
 				externalIds: this.provider.makeExternalIds({ type: 'track', id: this.getTrackId(track) }),
 			},
+			advisoryRating: track.explicit ? 'explicit' : undefined,
 		};
 
 		return result;

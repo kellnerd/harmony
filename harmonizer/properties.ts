@@ -27,12 +27,14 @@ export const immutableReleaseProperties = [
 	'images', // TODO: make images combinable? combine if not only front covers?
 	'copyright',
 	'credits',
+	'advisoryRating',
 ] as const satisfies Array<keyof HarmonyRelease>;
 
 /** Track properties which have to be taken from one provider and can not be combined from data of multiple providers. */
 export const immutableTrackProperties = [
 	'isrc',
 	'length',
+	'advisoryRating',
 ] as const satisfies Array<keyof HarmonyTrack>;
 
 /** Track properties which can be combined from data of multiple providers. */

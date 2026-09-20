@@ -4,6 +4,7 @@ import { ISRC } from './ISRC.tsx';
 import { LinkedEntity } from './LinkedEntity.tsx';
 import { SpriteIcon } from './SpriteIcon.tsx';
 import { CopyTracklistButton } from '@/server/islands/CopyButton.tsx';
+import { AdvisoryRatingIcon } from './AdvisoryRatingIcon.tsx';
 
 import { pluralWithCount } from '@/utils/plural.ts';
 import { mapValues } from '@/utils/record.ts';
@@ -69,6 +70,7 @@ export function Tracklist({ medium, mediumMap, showTitle = false }: TracklistPro
 								? <LinkedEntity entity={track.recording} entityType='recording' displayName={track.title} />
 								: track.title}
 							<AlternativeValues property={(track) => track?.title} />
+							{track.advisoryRating && <AdvisoryRatingIcon advisoryRating={track.advisoryRating} />}
 						</td>
 						<td>
 							{track.artists && (

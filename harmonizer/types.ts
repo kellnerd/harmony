@@ -67,6 +67,7 @@ export type HarmonyRelease = {
 	availableIn?: CountryCode[];
 	excludedFrom?: CountryCode[];
 	releaseGroup?: ResolvableEntity;
+	advisoryRating?: AdvisoryRating;
 	info: ReleaseInfo;
 };
 
@@ -92,6 +93,7 @@ export type HarmonyTrack = {
 	type?: TrackType;
 	isrc?: string;
 	availableIn?: CountryCode[];
+	advisoryRating?: AdvisoryRating;
 	recording?: ResolvableEntity;
 };
 
@@ -154,6 +156,16 @@ export type TrackType = 'audio' | 'video';
 
 /** Global Trade Item Number with 8 (EAN-8), 12 (UPC), 13 (EAN-13) or 14 digits. */
 export type GTIN = number | string;
+
+/**
+ * The advisory rating of a release or track:
+ * - `clean`: An edited version of an originally explicit release/track. This is **not** the
+ *   same as a release that was non-explicit to begin with. In that case, no `AdvisoryRating`
+ *   is specified.
+ * - `explicit`: The release/track has some sort of parental advisory warning. Possibly due
+ *   to the contents of its lyrics and/or cover art.
+ */
+export type AdvisoryRating = 'clean' | 'explicit';
 
 export type Language = {
 	/** ISO 639-3 three letter code. */
