@@ -108,6 +108,34 @@ describe('Qobuz provider', () => {
 					'Release should be streamable but not downloadable',
 				);
 			},
+		}, {
+			description: 'explicit release',
+			release: new URL('https://open.qobuz.com/album/hgukd7uvy8lqc'),
+			options: releaseOptions,
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+				assertEquals(
+					release.advisoryRating,
+					'explicit',
+					'Release should be marked explicit',
+				);
+			},
+		}, {
+			description: 'partially explicit release',
+			release: new URL('https://open.qobuz.com/album/ohej7aqvk85gt'),
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+
+				assertEquals(release.advisoryRating, 'explicit', 'The release should be marked explicit');
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				allTracks.forEach((track, index) => {
+					if (index === 2) {
+						assertEquals(track.advisoryRating, 'explicit', 'The third track should be marked explicit');
+					} else {
+						assertEquals(track.advisoryRating, undefined, `Track ${index + 1} should have no advisory rating`);
+					}
+				});
+			},
 		}],
 	});
 

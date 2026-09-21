@@ -202,8 +202,6 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 
 		const fallbackCoverUrl = new URL(`album/${this.entity.id}/image`, this.provider.apiBaseUrl);
 
-		const advisoryRating = rawRelease.explicit_lyrics ? 'explicit' : undefined;
-
 		return {
 			title: rawRelease.title,
 			artists: rawRelease.contributors.map(this.convertRawArtist.bind(this)),
@@ -224,7 +222,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 				types: ['front'],
 			}],
 			availableIn: this.determineAvailability(media),
-			advisoryRating,
+			advisoryRating: rawRelease.explicit_lyrics ? 'explicit' : undefined,
 			info: this.generateReleaseInfo(),
 		};
 	}
@@ -267,6 +265,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 			recording: {
 				externalIds: this.provider.makeExternalIds({ type: 'track', id: track.id.toString() }),
 			},
+			advisoryRating: track.explicit_lyrics ? 'explicit' : undefined,
 		};
 
 		if ('isrc' in track) {

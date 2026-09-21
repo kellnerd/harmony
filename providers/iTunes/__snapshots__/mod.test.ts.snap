@@ -2,6 +2,7 @@ export const snapshot = {};
 
 snapshot[`iTunes provider > release lookup > multi-disc download with video tracks 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "Queen",
@@ -66,6 +67,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
       number: 1,
       tracklist: [
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -101,6 +103,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -136,6 +139,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -171,6 +175,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -206,6 +211,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -241,6 +247,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -276,6 +283,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -311,6 +319,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -346,6 +355,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -381,6 +391,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -416,6 +427,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -451,6 +463,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -492,6 +505,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
       number: 2,
       tracklist: [
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -527,6 +541,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -562,6 +577,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -597,6 +613,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -632,6 +649,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -667,6 +685,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -702,6 +721,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: undefined,
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -737,6 +757,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: "video",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -772,6 +793,7 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
           type: "video",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Queen",
@@ -821,6 +843,608 @@ snapshot[`iTunes provider > release lookup > multi-disc download with video trac
   },
   status: "Official",
   title: "A Night at the Opera (Deluxe Edition)",
+  types: [],
+}
+`;
+
+snapshot[`iTunes provider > release lookup > clean release 1`] = `
+{
+  advisoryRating: "clean",
+  artists: [
+    {
+      creditedName: "Lil Nas X & Jack Harlow",
+      externalIds: [
+        {
+          id: "1400730578",
+          provider: "itunes",
+          region: "US",
+          slug: "lil-nas-x",
+          type: "artist",
+        },
+      ],
+      name: "Lil Nas X & Jack Harlow",
+    },
+  ],
+  copyright: "℗ 2021 Columbia Records, a Division of Sony Music Entertainment",
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+        "paid streaming",
+      ],
+      url: "https://music.apple.com/us/album/1577414584",
+    },
+  ],
+  gtin: "886449403929",
+  images: [
+    {
+      thumbUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/f7/16/67/f7166746-6299-5e54-8c7c-9535e941a53e/886449403929.jpg/250x250bb.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://a1.mzstatic.com/us/r1000/063/Music115/v4/f7/16/67/f7166746-6299-5e54-8c7c-9535e941a53e/886449403929.jpg",
+    },
+  ],
+  info: {
+    messages: [
+      {
+        provider: "iTunes",
+        text: "Successfully extracted GTIN 886449403929 from artwork URL",
+        type: "info",
+      },
+    ],
+    providers: [
+      {
+        apiUrl: "https://itunes.apple.com/lookup?entity=song&limit=200&id=1577414584&country=us",
+        id: "1577414584",
+        internalName: "itunes",
+        lookup: {
+          method: "id",
+          region: "US",
+          value: "1577414584",
+        },
+        name: "iTunes",
+        url: "https://music.apple.com/us/album/1577414584",
+      },
+    ],
+  },
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          advisoryRating: "clean",
+          artists: [
+            {
+              creditedName: "Lil Nas X & Jack Harlow",
+              externalIds: [
+                {
+                  id: "1400730578",
+                  provider: "itunes",
+                  region: "US",
+                  slug: "lil-nas-x",
+                  type: "artist",
+                },
+              ],
+              name: "Lil Nas X & Jack Harlow",
+            },
+          ],
+          length: 212000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "1577414972",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
+                provider: "itunes",
+                region: "US",
+                type: "song",
+              },
+            ],
+          },
+          title: "INDUSTRY BABY",
+          type: undefined,
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 23,
+      month: 7,
+      year: 2021,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "INDUSTRY BABY",
+  types: [
+    "Single",
+  ],
+}
+`;
+
+snapshot[`iTunes provider > release lookup > partially explicit release 1`] = `
+{
+  advisoryRating: "explicit",
+  artists: [
+    {
+      creditedName: "Slow Pulp",
+      externalIds: [
+        {
+          id: "1247711013",
+          provider: "itunes",
+          region: "US",
+          slug: "slow-pulp",
+          type: "artist",
+        },
+      ],
+      name: "Slow Pulp",
+    },
+  ],
+  copyright: "℗ 2026 Anti",
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+        "paid streaming",
+      ],
+      url: "https://music.apple.com/us/album/6769823972",
+    },
+  ],
+  gtin: "0045778817160",
+  images: [
+    {
+      thumbUrl: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/af/23/87/af2387f9-b84c-0664-54ae-fc67f35be87a/0045778817160.png/250x250bb.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://a1.mzstatic.com/us/r1000/063/Music221/v4/af/23/87/af2387f9-b84c-0664-54ae-fc67f35be87a/0045778817160.png",
+    },
+  ],
+  info: {
+    messages: [
+      {
+        provider: "iTunes",
+        text: "Successfully extracted GTIN 0045778817160 from artwork URL",
+        type: "info",
+      },
+    ],
+    providers: [
+      {
+        apiUrl: "https://itunes.apple.com/lookup?entity=song&limit=200&id=6769823972&country=us",
+        id: "6769823972",
+        internalName: "itunes",
+        lookup: {
+          method: "id",
+          region: "US",
+          value: "6769823972",
+        },
+        name: "iTunes",
+        url: "https://music.apple.com/us/album/6769823972",
+      },
+    ],
+  },
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "1247711013",
+                  provider: "itunes",
+                  region: "US",
+                  slug: "slow-pulp",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 186573,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "6769823973",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
+                provider: "itunes",
+                region: "US",
+                type: "song",
+              },
+            ],
+          },
+          title: "Yellow and Green",
+          type: undefined,
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "1247711013",
+                  provider: "itunes",
+                  region: "US",
+                  slug: "slow-pulp",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 208871,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "6769823974",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
+                provider: "itunes",
+                region: "US",
+                type: "song",
+              },
+            ],
+          },
+          title: "These Days",
+          type: undefined,
+        },
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "1247711013",
+                  provider: "itunes",
+                  region: "US",
+                  slug: "slow-pulp",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 183228,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "6769823975",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
+                provider: "itunes",
+                region: "US",
+                type: "song",
+              },
+            ],
+          },
+          title: "Better Man",
+          type: undefined,
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "1247711013",
+                  provider: "itunes",
+                  region: "US",
+                  slug: "slow-pulp",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 125722,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "6769823976",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
+                provider: "itunes",
+                region: "US",
+                type: "song",
+              },
+            ],
+          },
+          title: "Melodie",
+          type: undefined,
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "1247711013",
+                  provider: "itunes",
+                  region: "US",
+                  slug: "slow-pulp",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 208938,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "6769824067",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
+                provider: "itunes",
+                region: "US",
+                type: "song",
+              },
+            ],
+          },
+          title: "Red Car",
+          type: undefined,
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "1247711013",
+                  provider: "itunes",
+                  region: "US",
+                  slug: "slow-pulp",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 189291,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "6769824068",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
+                provider: "itunes",
+                region: "US",
+                type: "song",
+              },
+            ],
+          },
+          title: "Not for Nothing",
+          type: undefined,
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "1247711013",
+                  provider: "itunes",
+                  region: "US",
+                  slug: "slow-pulp",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 174060,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "6769824069",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
+                provider: "itunes",
+                region: "US",
+                type: "song",
+              },
+            ],
+          },
+          title: "Entertainer",
+          type: undefined,
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "1247711013",
+                  provider: "itunes",
+                  region: "US",
+                  slug: "slow-pulp",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 151762,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "6769824070",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
+                provider: "itunes",
+                region: "US",
+                type: "song",
+              },
+            ],
+          },
+          title: "Like Me",
+          type: undefined,
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "1247711013",
+                  provider: "itunes",
+                  region: "US",
+                  slug: "slow-pulp",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 195912,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "6769824071",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
+                provider: "itunes",
+                region: "US",
+                type: "song",
+              },
+            ],
+          },
+          title: "Spill",
+          type: undefined,
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "1247711013",
+                  provider: "itunes",
+                  region: "US",
+                  slug: "slow-pulp",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 163855,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "6769824072",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
+                provider: "itunes",
+                region: "US",
+                type: "song",
+              },
+            ],
+          },
+          title: "Up to You",
+          type: undefined,
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "1247711013",
+                  provider: "itunes",
+                  region: "US",
+                  slug: "slow-pulp",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 166494,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "6769824073",
+                linkTypes: [
+                  "paid download",
+                  "paid streaming",
+                ],
+                provider: "itunes",
+                region: "US",
+                type: "song",
+              },
+            ],
+          },
+          title: "Slip Away",
+          type: undefined,
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 18,
+      month: 9,
+      year: 2026,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Melodie",
   types: [],
 }
 `;

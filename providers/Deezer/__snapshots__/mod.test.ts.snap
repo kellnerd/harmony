@@ -2,6 +2,7 @@ export const snapshot = {};
 
 snapshot[`Deezer provider > release lookup > single by two artists 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "Lady Gaga",
@@ -261,6 +262,7 @@ snapshot[`Deezer provider > release lookup > single by two artists 1`] = `
       number: 1,
       tracklist: [
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Lady Gaga",
@@ -524,6 +526,516 @@ snapshot[`Deezer provider > release lookup > single by two artists 1`] = `
   title: "Die With A Smile",
   types: [
     "Single",
+  ],
+}
+`;
+
+snapshot[`Deezer provider > release lookup > explicit release 1`] = `
+{
+  advisoryRating: "explicit",
+  artists: [
+    {
+      creditedName: "Lil Nas X",
+      externalIds: [
+        {
+          id: "15166511",
+          provider: "deezer",
+          type: "artist",
+        },
+      ],
+      name: "Lil Nas X",
+    },
+    {
+      creditedName: "Jack Harlow",
+      externalIds: [
+        {
+          id: "9093938",
+          provider: "deezer",
+          type: "artist",
+        },
+      ],
+      name: "Jack Harlow",
+    },
+  ],
+  availableIn: undefined,
+  externalLinks: [
+    {
+      types: [
+        "free streaming",
+      ],
+      url: "https://www.deezer.com/album/245878832",
+    },
+  ],
+  gtin: "886449403912",
+  images: [
+    {
+      thumbUrl: "https://cdn-images.dzcdn.net/images/cover/a65e86966cfd34b2aa292856136ef9ac/250x250-000000-80-0-0.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://cdn-images.dzcdn.net/images/cover/a65e86966cfd34b2aa292856136ef9ac/1000x1000-000000-80-0-0.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://api.deezer.com/album/245878832",
+        id: "245878832",
+        internalName: "deezer",
+        lookup: {
+          method: "id",
+          value: "245878832",
+        },
+        name: "Deezer",
+        url: "https://www.deezer.com/album/245878832",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "Columbia",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Lil Nas X",
+              externalIds: [
+                {
+                  id: "15166511",
+                  provider: "deezer",
+                  type: "artist",
+                },
+              ],
+              name: "Lil Nas X",
+            },
+          ],
+          length: 214000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "1439691952",
+                provider: "deezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "INDUSTRY BABY",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 23,
+      month: 7,
+      year: 2021,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "INDUSTRY BABY",
+  types: [
+    "Single",
+  ],
+}
+`;
+
+snapshot[`Deezer provider > release lookup > partially explicit release 1`] = `
+{
+  advisoryRating: "explicit",
+  artists: [
+    {
+      creditedName: "Slow Pulp",
+      externalIds: [
+        {
+          id: "12611413",
+          provider: "deezer",
+          type: "artist",
+        },
+      ],
+      name: "Slow Pulp",
+    },
+  ],
+  availableIn: undefined,
+  externalLinks: [
+    {
+      types: [
+        "free streaming",
+      ],
+      url: "https://www.deezer.com/album/982951161",
+    },
+  ],
+  gtin: "045778817160",
+  images: [
+    {
+      thumbUrl: "https://cdn-images.dzcdn.net/images/cover/845e0ea1fd1619049f23bbdb7692b253/250x250-000000-80-0-0.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://cdn-images.dzcdn.net/images/cover/845e0ea1fd1619049f23bbdb7692b253/1000x1000-000000-80-0-0.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://api.deezer.com/album/982951161",
+        id: "982951161",
+        internalName: "deezer",
+        lookup: {
+          method: "id",
+          value: "982951161",
+        },
+        name: "Deezer",
+        url: "https://www.deezer.com/album/982951161",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "Anti",
+    },
+    {
+      name: "Epitaph",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "12611413",
+                  provider: "deezer",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 186000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "4022194781",
+                provider: "deezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "Yellow and Green",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "12611413",
+                  provider: "deezer",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 208000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "4022194791",
+                provider: "deezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "These Days",
+        },
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "12611413",
+                  provider: "deezer",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 183000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "4022194801",
+                provider: "deezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "Better Man",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "12611413",
+                  provider: "deezer",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 125000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "4022194811",
+                provider: "deezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "Melodie",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "12611413",
+                  provider: "deezer",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 208000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "4022194821",
+                provider: "deezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "Red Car",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "12611413",
+                  provider: "deezer",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 189000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "4022194831",
+                provider: "deezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "Not for Nothing",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "12611413",
+                  provider: "deezer",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 174000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "4022194841",
+                provider: "deezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "Entertainer",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "12611413",
+                  provider: "deezer",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 151000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "4022194851",
+                provider: "deezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "Like Me",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "12611413",
+                  provider: "deezer",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 195000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "4022194861",
+                provider: "deezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "Spill",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "12611413",
+                  provider: "deezer",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 163000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "4022194871",
+                provider: "deezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "Up to You",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "12611413",
+                  provider: "deezer",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          length: 166000,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "4022194881",
+                provider: "deezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "Slip Away",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 18,
+      month: 9,
+      year: 2026,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Melodie",
+  types: [
+    "Album",
   ],
 }
 `;

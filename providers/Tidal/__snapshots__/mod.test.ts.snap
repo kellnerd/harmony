@@ -2,6 +2,7 @@ export const snapshot = {};
 
 snapshot[`Tidal provider > release lookup > live album with video tracks and featured artist (v1 API) 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "JAY Z",
@@ -58,6 +59,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
       number: 1,
       tracklist: [
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -78,6 +80,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -98,6 +101,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -118,6 +122,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -138,6 +143,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -158,6 +164,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Beyoncé",
@@ -189,6 +196,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -209,6 +217,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -240,6 +249,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -260,6 +270,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "video",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -280,6 +291,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "video",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -300,6 +312,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "video",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -320,6 +333,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "video",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -340,6 +354,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "video",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Beyoncé",
@@ -371,6 +386,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "video",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -391,6 +407,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
           type: "video",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "JAY Z",
@@ -444,6 +461,7 @@ snapshot[`Tidal provider > release lookup > live album with video tracks and fea
 
 snapshot[`Tidal provider > release lookup > single by two artists (v2 API) 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "Lady Gaga",
@@ -515,6 +533,7 @@ snapshot[`Tidal provider > release lookup > single by two artists (v2 API) 1`] =
       number: 1,
       tracklist: [
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Lady Gaga",
@@ -576,6 +595,7 @@ snapshot[`Tidal provider > release lookup > single by two artists (v2 API) 1`] =
 
 snapshot[`Tidal provider > release lookup > lyric video (v2 API) 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "Taylor Swift",
@@ -636,6 +656,7 @@ snapshot[`Tidal provider > release lookup > lyric video (v2 API) 1`] = `
       number: 1,
       tracklist: [
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Taylor Swift",
@@ -686,6 +707,7 @@ snapshot[`Tidal provider > release lookup > lyric video (v2 API) 1`] = `
 
 snapshot[`Tidal provider > release lookup > release with paginated tracklist and version info (v2 API) 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "Air Max '97",
@@ -718,6 +740,7 @@ snapshot[`Tidal provider > release lookup > release with paginated tracklist and
 
 snapshot[`Tidal provider > release lookup > release with missing tracks and missing artist (v2 API) 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       externalIds: [
@@ -819,4 +842,550 @@ snapshot[`Tidal provider > release lookup > release with missing tracks and miss
     type: "error",
   },
 ]
+`;
+
+snapshot[`Tidal provider > release lookup > explicit release (v2 API) 1`] = `
+{
+  advisoryRating: "explicit",
+  artists: [
+    {
+      creditedName: "Lil Nas X",
+      externalIds: [
+        {
+          id: "9996466",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Lil Nas X",
+    },
+    {
+      creditedName: "Jack Harlow",
+      externalIds: [
+        {
+          id: "7286900",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Jack Harlow",
+    },
+  ],
+  copyright: "℗ 2021 Columbia Records, a Division of Sony Music Entertainment",
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+      ],
+      url: "https://tidal.com/album/191569964",
+    },
+  ],
+  gtin: "886449403912",
+  images: [
+    {
+      thumbUrl: "https://resources.tidal.com/images/0eb92f59/070d/4cea/8fec/797e05b8083d/320x320.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://resources.tidal.com/images/0eb92f59/070d/4cea/8fec/797e05b8083d/1280x1280.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://openapi.tidal.com/v2/albums?countryCode=US&include=artists%2Citems.artists%2Cproviders%2CcoverArt&filter%5Bid%5D=191569964",
+        id: "191569964",
+        internalName: "tidal",
+        lookup: {
+          method: "id",
+          region: "US",
+          value: "191569964",
+        },
+        name: "Tidal",
+        url: "https://tidal.com/album/191569964",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "Sony Music",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Lil Nas X",
+              externalIds: [
+                {
+                  id: "9996466",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Lil Nas X",
+            },
+            {
+              creditedName: "Jack Harlow",
+              externalIds: [
+                {
+                  id: "7286900",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Jack Harlow",
+            },
+          ],
+          isrc: "USSM12104539",
+          length: 212000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "191569965",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "INDUSTRY BABY",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 23,
+      month: 7,
+      year: 2021,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "INDUSTRY BABY",
+  types: [
+    "Single",
+  ],
+}
+`;
+
+snapshot[`Tidal provider > release lookup > partially explicit release (v2 API) 1`] = `
+{
+  advisoryRating: "explicit",
+  artists: [
+    {
+      creditedName: "Slow Pulp",
+      externalIds: [
+        {
+          id: "8837991",
+          provider: "tidal",
+          type: "artist",
+        },
+      ],
+      name: "Slow Pulp",
+    },
+  ],
+  copyright: "Anti",
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+      ],
+      url: "https://tidal.com/album/524698793",
+    },
+  ],
+  gtin: "0045778817160",
+  images: [
+    {
+      thumbUrl: "https://resources.tidal.com/images/2c2f23da/f004/4ee2/83c6/025ac29a3765/320x320.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://resources.tidal.com/images/2c2f23da/f004/4ee2/83c6/025ac29a3765/1280x1280.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://openapi.tidal.com/v2/albums?countryCode=US&include=artists%2Citems.artists%2Cproviders%2CcoverArt&filter%5Bid%5D=524698793",
+        id: "524698793",
+        internalName: "tidal",
+        lookup: {
+          method: "id",
+          region: "US",
+          value: "524698793",
+        },
+        name: "Tidal",
+        url: "https://tidal.com/album/524698793",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "IIP-DDS",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "8837991",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621001",
+          length: 187000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "524698794",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "Yellow and Green",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "8837991",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621002",
+          length: 209000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "524698796",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "These Days",
+          type: "audio",
+        },
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "8837991",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621003",
+          length: 183000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "524698797",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "Better Man",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "8837991",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621004",
+          length: 126000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "524698799",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "Melodie",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "8837991",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621005",
+          length: 209000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "524698800",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "Red Car",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "8837991",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621006",
+          length: 189000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "524698801",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "Not for Nothing",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "8837991",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621007",
+          length: 174000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "524698802",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "Entertainer",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "8837991",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621008",
+          length: 152000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "524698803",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "Like Me",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "8837991",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621009",
+          length: 196000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "524698804",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "Spill",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "8837991",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621010",
+          length: 164000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "524698806",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "Up to You",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "8837991",
+                  provider: "tidal",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621011",
+          length: 166000,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "524698808",
+                provider: "tidal",
+                type: "track",
+              },
+            ],
+          },
+          title: "Slip Away",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 18,
+      month: 9,
+      year: 2026,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Melodie",
+  types: [
+    "Album",
+  ],
+}
 `;

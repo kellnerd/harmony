@@ -2,6 +2,7 @@ export const snapshot = {};
 
 snapshot[`OTOTOY provider > release lookup > single track release 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "sasakure.UK",
@@ -92,9 +93,10 @@ snapshot[`OTOTOY provider > release lookup > single track release 1`] = `
 
 snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
-      creditedName: "ザ・ビートルズ",
+      creditedName: "The Beatles",
       externalIds: [
         {
           id: "218489",
@@ -102,7 +104,7 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
           type: "artist",
         },
       ],
-      name: "ザ・ビートルズ",
+      name: "The Beatles",
     },
   ],
   externalLinks: [
@@ -166,15 +168,15 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
         {
           artists: [
             {
-              creditedName: "ジョン・レノン",
+              creditedName: "John Lennon",
               externalIds: [
                 {
-                  id: "284005",
+                  id: "918373",
                   provider: "ototoy",
                   type: "artist",
                 },
               ],
-              name: "ジョン・レノン",
+              name: "John Lennon",
             },
           ],
           length: 11000,
@@ -185,15 +187,15 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
         {
           artists: [
             {
-              creditedName: "ザ・クォーリー・メン",
+              creditedName: "The Quarrymen",
               externalIds: [
                 {
-                  id: "1823343",
+                  id: "2122701",
                   provider: "ototoy",
                   type: "artist",
                 },
               ],
-              name: "ザ・クォーリー・メン",
+              name: "The Quarrymen",
             },
           ],
           length: 129000,
@@ -204,15 +206,15 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
         {
           artists: [
             {
-              creditedName: "ザ・クォーリー・メン",
+              creditedName: "The Quarrymen",
               externalIds: [
                 {
-                  id: "1823343",
+                  id: "2122701",
                   provider: "ototoy",
                   type: "artist",
                 },
               ],
-              name: "ザ・クォーリー・メン",
+              name: "The Quarrymen",
             },
           ],
           length: 164000,
@@ -223,15 +225,15 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
         {
           artists: [
             {
-              creditedName: "ポール・マッカートニー",
+              creditedName: "Paul McCartney",
               externalIds: [
                 {
-                  id: "268135",
+                  id: "1426056",
                   provider: "ototoy",
                   type: "artist",
                 },
               ],
-              name: "ポール・マッカートニー",
+              name: "Paul McCartney",
             },
           ],
           length: 18000,
@@ -263,15 +265,15 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
         {
           artists: [
             {
-              creditedName: "ポール・マッカートニー",
+              creditedName: "Paul McCartney",
               externalIds: [
                 {
-                  id: "268135",
+                  id: "1426056",
                   provider: "ototoy",
                   type: "artist",
                 },
               ],
-              name: "ポール・マッカートニー",
+              name: "Paul McCartney",
             },
           ],
           length: 7000,
@@ -282,7 +284,7 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
         {
           artists: [
             {
-              creditedName: "ザ・ビートルズ",
+              creditedName: "The Beatles",
               externalIds: [
                 {
                   id: "218489",
@@ -290,18 +292,18 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
                   type: "artist",
                 },
               ],
-              name: "ザ・ビートルズ",
+              name: "The Beatles",
             },
             {
-              creditedName: "ビートルズとトニー・シェリダン",
+              creditedName: "Tony Sheridan",
               externalIds: [
                 {
-                  id: "274608",
+                  id: "2122702",
                   provider: "ototoy",
                   type: "artist",
                 },
               ],
-              name: "ビートルズとトニー・シェリダン",
+              name: "Tony Sheridan",
             },
           ],
           length: 162000,
@@ -326,15 +328,15 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
         {
           artists: [
             {
-              creditedName: "ジョン・レノン",
+              creditedName: "John Lennon",
               externalIds: [
                 {
-                  id: "284005",
+                  id: "918373",
                   provider: "ototoy",
                   type: "artist",
                 },
               ],
-              name: "ジョン・レノン",
+              name: "John Lennon",
             },
           ],
           length: 9000,
@@ -345,15 +347,15 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
         {
           artists: [
             {
-              creditedName: "ブライアン・エプスタイン",
+              creditedName: "Brian Epstein",
               externalIds: [
                 {
-                  id: "1823344",
+                  id: "2122706",
                   provider: "ototoy",
                   type: "artist",
                 },
               ],
-              name: "ブライアン・エプスタイン",
+              name: "Brian Epstein",
             },
           ],
           length: 18000,
@@ -399,15 +401,15 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
         {
           artists: [
             {
-              creditedName: "ブライアン・エプスタイン",
+              creditedName: "Brian Epstein",
               externalIds: [
                 {
-                  id: "1823344",
+                  id: "2122706",
                   provider: "ototoy",
                   type: "artist",
                 },
               ],
-              name: "ブライアン・エプスタイン",
+              name: "Brian Epstein",
             },
           ],
           length: 32000,
@@ -474,15 +476,15 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
         {
           artists: [
             {
-              creditedName: "ジョン・レノン",
+              creditedName: "John Lennon",
               externalIds: [
                 {
-                  id: "284005",
+                  id: "918373",
                   provider: "ototoy",
                   type: "artist",
                 },
               ],
-              name: "ジョン・レノン",
+              name: "John Lennon",
             },
           ],
           length: 12000,
@@ -1661,6 +1663,7 @@ snapshot[`OTOTOY provider > release lookup > multi-disc release 1`] = `
 
 snapshot[`OTOTOY provider > release lookup > multiple artists 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "sasakure.UK",
@@ -1795,6 +1798,7 @@ snapshot[`OTOTOY provider > release lookup > multiple artists 1`] = `
 
 snapshot[`OTOTOY provider > release lookup > no label 1`] = `
 {
+  advisoryRating: "explicit",
   artists: [
     {
       creditedName: "Benjazzy",
@@ -1818,11 +1822,11 @@ snapshot[`OTOTOY provider > release lookup > no label 1`] = `
   ],
   images: [
     {
-      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/3228/00000003.3228080.1763569536.7217_320.jpg",
+      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/3228/00000003.3228080.1765970185.6207_320.jpg",
       types: [
         "front",
       ],
-      url: "https://imgs.ototoy.jp/imgs/jacket/3228/00000003.3228080.1763569536.7217orig.jpg",
+      url: "https://imgs.ototoy.jp/imgs/jacket/3228/00000003.3228080.1765970185.6207orig.jpg",
     },
   ],
   info: {
@@ -2108,7 +2112,7 @@ snapshot[`OTOTOY provider > release lookup > no label 1`] = `
               creditedName: "般若",
               externalIds: [
                 {
-                  id: "214647",
+                  id: "8585",
                   provider: "ototoy",
                   type: "artist",
                 },
@@ -2147,6 +2151,7 @@ snapshot[`OTOTOY provider > release lookup > no label 1`] = `
 
 snapshot[`OTOTOY provider > release lookup > original release date only 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "YOASOBI",
@@ -2170,11 +2175,11 @@ snapshot[`OTOTOY provider > release lookup > original release date only 1`] = `
   ],
   images: [
     {
-      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1695204881.8512_320.jpg",
+      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1822344.1781248983.0236_320.jpg",
       types: [
         "front",
       ],
-      url: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1695204881.8512orig.jpg",
+      url: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1822344.1781248983.0236orig.jpg",
     },
   ],
   info: {
@@ -2300,6 +2305,7 @@ snapshot[`OTOTOY provider > release lookup > original release date only 1`] = `
 
 snapshot[`OTOTOY provider > release lookup > catalog number 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "YOASOBI",
@@ -2323,11 +2329,11 @@ snapshot[`OTOTOY provider > release lookup > catalog number 1`] = `
   ],
   images: [
     {
-      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1695204881.8512_320.jpg",
+      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1822344.1781248983.0236_320.jpg",
       types: [
         "front",
       ],
-      url: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1695204881.8512orig.jpg",
+      url: "https://imgs.ototoy.jp/imgs/jacket/1822/00000003.1822344.1781248983.0236orig.jpg",
     },
   ],
   info: {
@@ -2453,6 +2459,7 @@ snapshot[`OTOTOY provider > release lookup > catalog number 1`] = `
 
 snapshot[`OTOTOY provider > release lookup > per-track artists 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "Various Artists",
@@ -2699,5 +2706,405 @@ snapshot[`OTOTOY provider > release lookup > per-track artists 1`] = `
   },
   status: "Official",
   title: "Friends",
+}
+`;
+
+snapshot[`OTOTOY provider > release lookup > explicit release 1`] = `
+{
+  advisoryRating: "explicit",
+  artists: [
+    {
+      creditedName: "Steve Lacy",
+      externalIds: [
+        {
+          id: "386946",
+          provider: "ototoy",
+          type: "artist",
+        },
+      ],
+      name: "Steve Lacy",
+    },
+  ],
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://ototoy.jp/_/default/p/1289692",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/1289/00000003.1657229286.1438_320.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://imgs.ototoy.jp/imgs/jacket/1289/00000003.1657229286.1438orig.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "1289692",
+        internalName: "ototoy",
+        lookup: {
+          method: "id",
+          value: "1289692",
+        },
+        name: "OTOTOY",
+        url: "https://ototoy.jp/_/default/p/1289692",
+      },
+    ],
+  },
+  labels: [
+    {
+      catalogNumber: "G0100047877840",
+      externalIds: [
+        {
+          id: "1113591",
+          provider: "ototoy",
+          type: "label",
+        },
+      ],
+      name: "L-M Records/RCA Records",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: undefined,
+          length: 156000,
+          number: 1,
+          title: "Static",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 201000,
+          number: 2,
+          title: "Helmet",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 295000,
+          number: 3,
+          title: "Mercury",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 184000,
+          number: 4,
+          title: "Buttons",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 232000,
+          number: 5,
+          title: "Bad Habit",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Lacy",
+              externalIds: [
+                {
+                  id: "386946",
+                  provider: "ototoy",
+                  type: "artist",
+                },
+              ],
+              name: "Steve Lacy",
+            },
+            {
+              creditedName: "Matt Martians",
+              externalIds: [
+                {
+                  id: "1004299",
+                  provider: "ototoy",
+                  type: "artist",
+                },
+              ],
+              name: "Matt Martians",
+            },
+          ],
+          length: 50000,
+          number: 6,
+          title: "2Gether (Enterlude)",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 240000,
+          number: 7,
+          title: "Cody Freestyle",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 173000,
+          number: 8,
+          title: "Amber",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Lacy",
+              externalIds: [
+                {
+                  id: "386946",
+                  provider: "ototoy",
+                  type: "artist",
+                },
+              ],
+              name: "Steve Lacy",
+            },
+            {
+              creditedName: "Fousheé",
+              externalIds: [
+                {
+                  id: "851399",
+                  provider: "ototoy",
+                  type: "artist",
+                },
+              ],
+              name: "Fousheé",
+            },
+          ],
+          length: 293000,
+          number: 9,
+          title: "Sunshine (feat. Fousheé)",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 273000,
+          number: 10,
+          title: "Give You the World",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 15,
+      month: 7,
+      year: 2022,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Gemini Rights",
+}
+`;
+
+snapshot[`OTOTOY provider > release lookup > clean release 1`] = `
+{
+  advisoryRating: "clean",
+  artists: [
+    {
+      creditedName: "Steve Lacy",
+      externalIds: [
+        {
+          id: "386946",
+          provider: "ototoy",
+          type: "artist",
+        },
+      ],
+      name: "Steve Lacy",
+    },
+  ],
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://ototoy.jp/_/default/p/3915185",
+    },
+  ],
+  images: [
+    {
+      thumbUrl: "https://imgs.ototoy.jp/imgs/jacket/3915/00000003.3915185.1783386796.7557_320.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://imgs.ototoy.jp/imgs/jacket/3915/00000003.3915185.1783386796.7557orig.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "3915185",
+        internalName: "ototoy",
+        lookup: {
+          method: "id",
+          value: "3915185",
+        },
+        name: "OTOTOY",
+        url: "https://ototoy.jp/_/default/p/3915185",
+      },
+    ],
+  },
+  labels: [
+    {
+      catalogNumber: "G010005873292T",
+      externalIds: [
+        {
+          id: "1113591",
+          provider: "ototoy",
+          type: "label",
+        },
+      ],
+      name: "L-M Records/RCA Records",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          artists: undefined,
+          length: 156000,
+          number: 1,
+          title: "Static",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 201000,
+          number: 2,
+          title: "Helmet",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 295000,
+          number: 3,
+          title: "Mercury",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 184000,
+          number: 4,
+          title: "Buttons",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 232000,
+          number: 5,
+          title: "Bad Habit",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Lacy",
+              externalIds: [
+                {
+                  id: "386946",
+                  provider: "ototoy",
+                  type: "artist",
+                },
+              ],
+              name: "Steve Lacy",
+            },
+            {
+              creditedName: "Matt Martians",
+              externalIds: [
+                {
+                  id: "1004299",
+                  provider: "ototoy",
+                  type: "artist",
+                },
+              ],
+              name: "Matt Martians",
+            },
+          ],
+          length: 50000,
+          number: 6,
+          title: "2Gether (Enterlude)",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 240000,
+          number: 7,
+          title: "Cody Freestyle",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 173000,
+          number: 8,
+          title: "Amber",
+          type: "audio",
+        },
+        {
+          artists: [
+            {
+              creditedName: "Steve Lacy",
+              externalIds: [
+                {
+                  id: "386946",
+                  provider: "ototoy",
+                  type: "artist",
+                },
+              ],
+              name: "Steve Lacy",
+            },
+            {
+              creditedName: "Fousheé",
+              externalIds: [
+                {
+                  id: "851399",
+                  provider: "ototoy",
+                  type: "artist",
+                },
+              ],
+              name: "Fousheé",
+            },
+          ],
+          length: 293000,
+          number: 9,
+          title: "Sunshine (feat. Fousheé)",
+          type: "audio",
+        },
+        {
+          artists: undefined,
+          length: 273000,
+          number: 10,
+          title: "Give You the World",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 14,
+      month: 7,
+      year: 2022,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Gemini Rights",
 }
 `;

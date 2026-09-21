@@ -2,6 +2,7 @@ export const snapshot = {};
 
 snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "ivycomb",
@@ -85,6 +86,7 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
       number: 1,
       tracklist: [
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "ivycomb",
@@ -117,6 +119,7 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
           title: "Suspend My Belief",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "ivycomb",
@@ -166,6 +169,7 @@ snapshot[`Qobuz provider > release lookup > single by two artists 1`] = `
 
 snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "DECO*27",
@@ -233,6 +237,7 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
       number: 1,
       tracklist: [
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "DECO*27",
@@ -261,6 +266,7 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "Reunion",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "DECO*27",
@@ -289,6 +295,7 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "アンドロイドガール",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "DECO*27",
@@ -317,6 +324,7 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "スクランブル交際",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "DECO*27",
@@ -345,6 +353,7 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "モスキート",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "DECO*27",
@@ -373,6 +382,7 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "乙女解剖",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "DECO*27",
@@ -401,6 +411,7 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "人質交換",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "DECO*27",
@@ -429,6 +440,7 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "シンセカイ案内所",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "DECO*27",
@@ -457,6 +469,7 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "サイコグラム",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "DECO*27",
@@ -485,6 +498,7 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "夜行性ハイズ",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "DECO*27",
@@ -513,6 +527,7 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
           title: "ヒバナ -Reloaded-",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "DECO*27",
@@ -554,6 +569,549 @@ snapshot[`Qobuz provider > release lookup > non-downloadable album 1`] = `
   },
   status: "Official",
   title: "アンドロイドガール",
+  types: [
+    "Album",
+  ],
+}
+`;
+
+snapshot[`Qobuz provider > release lookup > explicit release 1`] = `
+{
+  advisoryRating: "explicit",
+  artists: [
+    {
+      creditedName: "Lil Nas X",
+      externalIds: [
+        {
+          id: "4384197",
+          provider: "qobuz",
+          type: "artist",
+        },
+      ],
+      name: "Lil Nas X",
+    },
+    {
+      creditedName: "Jack Harlow",
+      externalIds: [
+        {
+          id: "3337986",
+          provider: "qobuz",
+          type: "artist",
+        },
+      ],
+      name: "Jack Harlow",
+    },
+  ],
+  copyright: "(P) 2021 Columbia Records, a Division of Sony Music Entertainment",
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://open.qobuz.com/album/hgukd7uvy8lqc",
+    },
+  ],
+  gtin: "0886449403912",
+  images: [
+    {
+      thumbUrl: "https://static.qobuz.com/images/covers/qc/8l/hgukd7uvy8lqc_230.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://static.qobuz.com/images/covers/qc/8l/hgukd7uvy8lqc_org.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://www.qobuz.com/api.json/0.2/album/get?album_id=hgukd7uvy8lqc",
+        id: "hgukd7uvy8lqc",
+        internalName: "qobuz",
+        lookup: {
+          method: "id",
+          value: "hgukd7uvy8lqc",
+        },
+        name: "Qobuz",
+        url: "https://open.qobuz.com/album/hgukd7uvy8lqc",
+      },
+    ],
+  },
+  labels: [
+    {
+      externalIds: [
+        {
+          id: "4592",
+          provider: "qobuz",
+          slug: "columbia",
+          type: "label",
+        },
+      ],
+      name: "Columbia",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Lil Nas X",
+              externalIds: [
+                {
+                  id: "4384197",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Lil Nas X",
+            },
+            {
+              creditedName: "Jack Harlow",
+              name: "Jack Harlow",
+            },
+          ],
+          isrc: "USSM12104539",
+          length: 212000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "127040661",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "INDUSTRY BABY",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 23,
+      month: 7,
+      year: 2021,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "INDUSTRY BABY",
+  types: [
+    "Single",
+  ],
+}
+`;
+
+snapshot[`Qobuz provider > release lookup > partially explicit release 1`] = `
+{
+  advisoryRating: "explicit",
+  artists: [
+    {
+      creditedName: "Slow Pulp",
+      externalIds: [
+        {
+          id: "7230866",
+          provider: "qobuz",
+          type: "artist",
+        },
+      ],
+      name: "Slow Pulp",
+    },
+  ],
+  copyright: "2026 Anti 2026 Anti",
+  externalLinks: [
+    {
+      types: [
+        "paid streaming",
+        "paid download",
+      ],
+      url: "https://open.qobuz.com/album/ohej7aqvk85gt",
+    },
+  ],
+  gtin: "0045778817160",
+  images: [
+    {
+      thumbUrl: "https://static.qobuz.com/images/covers/gt/85/ohej7aqvk85gt_230.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://static.qobuz.com/images/covers/gt/85/ohej7aqvk85gt_org.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://www.qobuz.com/api.json/0.2/album/get?album_id=ohej7aqvk85gt",
+        id: "ohej7aqvk85gt",
+        internalName: "qobuz",
+        lookup: {
+          method: "id",
+          value: "ohej7aqvk85gt",
+        },
+        name: "Qobuz",
+        url: "https://open.qobuz.com/album/ohej7aqvk85gt",
+      },
+    ],
+  },
+  labels: [
+    {
+      externalIds: [
+        {
+          id: "10623438",
+          provider: "qobuz",
+          slug: "antiepitaph",
+          type: "label",
+        },
+      ],
+      name: "Anti/Epitaph",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      number: 1,
+      tracklist: [
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "7230866",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621001",
+          length: 186000,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "418639466",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "Yellow and Green",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "7230866",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621002",
+          length: 208000,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "418639467",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "These Days",
+        },
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "7230866",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621003",
+          length: 183000,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "418639468",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "Better Man",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "7230866",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621004",
+          length: 125000,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "418639469",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "Melodie",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "7230866",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621005",
+          length: 208000,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "418639470",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "Red Car",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "7230866",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621006",
+          length: 189000,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "418639471",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "Not for Nothing",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "7230866",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621007",
+          length: 174000,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "418639472",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "Entertainer",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "7230866",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621008",
+          length: 151000,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "418639473",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "Like Me",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "7230866",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621009",
+          length: 195000,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "418639474",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "Spill",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "7230866",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621010",
+          length: 163000,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "418639475",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "Up to You",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Slow Pulp",
+              externalIds: [
+                {
+                  id: "7230866",
+                  provider: "qobuz",
+                  type: "artist",
+                },
+              ],
+              name: "Slow Pulp",
+            },
+          ],
+          isrc: "USEP42621011",
+          length: 166000,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "418639476",
+                provider: "qobuz",
+                type: "track",
+              },
+            ],
+          },
+          title: "Slip Away",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 18,
+      month: 9,
+      year: 2026,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Melodie",
   types: [
     "Album",
   ],
