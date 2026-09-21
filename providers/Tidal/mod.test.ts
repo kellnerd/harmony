@@ -154,6 +154,32 @@ describe('Tidal provider', () => {
 				await assertSnapshot(ctx, release.artists, 'Release has a placeholder artist');
 				await assertSnapshot(ctx, release.info.messages, 'Lookup generates warnings for missing tracks and artist');
 			},
+		}, {
+			description: 'explicit release (v2 API)',
+			release: new URL('https://tidal.com/album/191569964'),
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+
+				assertEquals(release.advisoryRating, 'explicit', 'The release should be marked explicit');
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assert(allTracks.every((track) => track.advisoryRating === 'explicit'), 'All tracks should be marked explicit');
+			},
+		}, {
+			description: 'partially explicit release (v2 API)',
+			release: new URL('https://tidal.com/album/524698793'),
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+
+				assertEquals(release.advisoryRating, 'explicit', 'The release should be marked explicit');
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				allTracks.forEach((track, index) => {
+					if (index === 2) {
+						assertEquals(track.advisoryRating, 'explicit', 'The third track should be marked explicit');
+					} else {
+						assertEquals(track.advisoryRating, undefined, `Track ${index + 1} should have no advisory rating`);
+					}
+				});
+			},
 		}],
 	});
 

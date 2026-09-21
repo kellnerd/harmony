@@ -100,6 +100,32 @@ describe('Spotify provider', () => {
 					type: 'track',
 				}], 'Track 55 has its original track ID, not the ID of the replacement track');
 			},
+		}, {
+			description: 'explicit release',
+			release: new URL('https://open.spotify.com/album/622NFw5Yk0OReMJ2XWcXUh'),
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+
+				assertEquals(release.advisoryRating, 'explicit', 'The release should be marked explicit');
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assert(allTracks.every((track) => track.advisoryRating === 'explicit'), 'All tracks should be marked explicit');
+			},
+		}, {
+			description: 'partially explicit release',
+			release: new URL('https://open.spotify.com/album/3pCuWK1YLBdu96F3wIGqjy'),
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+
+				assertEquals(release.advisoryRating, 'explicit', 'The release should be marked explicit');
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				allTracks.forEach((track, index) => {
+					if (index === 2) {
+						assertEquals(track.advisoryRating, 'explicit', 'The third track should be marked explicit');
+					} else {
+						assertEquals(track.advisoryRating, undefined, `Track ${index + 1} should have no advisory rating`);
+					}
+				});
+			},
 		}],
 	});
 

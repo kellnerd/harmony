@@ -95,7 +95,7 @@ export type Track = {
 	isStreamable?: boolean;
 };
 
-export type Explicitness = 'clean' | 'explicit' | 'notExplicit';
+export type Explicitness = 'cleaned' | 'explicit' | 'notExplicit';
 
 export type Kind =
 	| 'album'

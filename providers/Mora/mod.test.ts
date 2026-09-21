@@ -51,6 +51,22 @@ describe('Mora provider', () => {
 				assertEquals(trackCount, 1, 'Release should have 1 track');
 				assertEquals(release.media[0].tracklist[0].type, 'video');
 			},
+		}, {
+			description: 'explicit release',
+			release: '43000006/00881061522348',
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+
+				assertEquals(release.advisoryRating, 'explicit', 'Release should be marked explicit');
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				allTracks.forEach((track, index) => {
+					if ([8, 16, 22].includes(index)) {
+						assertEquals(track.advisoryRating, 'explicit', `Track ${index + 1} should be marked explicit`);
+					} else {
+						assertEquals(track.advisoryRating, undefined, `Track ${index + 1} should have no advisory rating`);
+					}
+				});
+			},
 		}],
 	});
 

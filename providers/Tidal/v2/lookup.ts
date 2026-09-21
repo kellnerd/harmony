@@ -159,6 +159,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			packaging: 'None',
 			images: artwork ? [artwork] : [],
 			labels: this.getLabels(rawRelease),
+			advisoryRating: rawRelease.data.attributes.explicit ? 'explicit' : undefined,
 			info: this.generateReleaseInfo(),
 		};
 	}
@@ -272,6 +273,7 @@ export class TidalV2ReleaseLookup extends ReleaseApiLookup<TidalProvider, Single
 			recording: {
 				externalIds: this.provider.makeExternalIds({ type: track.type === 'videos' ? 'video' : 'track', id: track.id }),
 			},
+			advisoryRating: track.attributes.explicit ? 'explicit' : undefined,
 		};
 	}
 

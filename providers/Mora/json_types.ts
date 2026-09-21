@@ -14,6 +14,7 @@ export interface PackageMeta {
 	labelcompanyname: string;
 	master: string;
 	distPartNo: string;
+	explicitFlg: string;
 	startDate: string;
 	mediaFormatNo: MediaFormat;
 	mediaType: MediaType;
@@ -30,6 +31,7 @@ export interface Track {
 	artistNo: number;
 	/** Track duration in seconds */
 	duration: number;
+	explicitFlg: string;
 	mediaFormatNo: MediaFormat;
 	mediaType: MediaType;
 	title: string;

@@ -272,6 +272,32 @@ caption > ul.alt-values {
 	margin: 0 auto;
 }
 
+/* AdvisoryRatingIcon.tsx */
+
+span.advisory-rating {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 1.25em;
+	height: 1.25em;
+	border-radius: 3px;
+	color: var(--badge-text);
+	background-color: var(--badge-fill);
+	font-weight: 700;
+	font-size: 0.8em;
+	line-height: 1;
+	user-select: none;
+	vertical-align: middle;
+	align-self: center;
+	margin-left: 0.35em;
+}
+
+span.advisory-rating > abbr[title] {
+	text-decoration: none;
+	border-bottom: none;
+}
+
 /* CopyButton.tsx */
 
 button.copy {
@@ -551,6 +577,13 @@ div.region-list > span.label + button {
 
 h2.release-title {
 	margin-bottom: 0;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5em;
+}
+
+h2.release-title > span.advisory-rating {
+	margin-left: 0;
 }
 
 /* Tooltip.tsx */

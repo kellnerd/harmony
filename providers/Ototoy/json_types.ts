@@ -10,6 +10,7 @@ export interface AlbumMeta {
 	originalReleaseDate?: string;
 	releaseDate?: string;
 	label?: Label;
+	tagCloud?: string[];
 }
 
 export interface Artist {

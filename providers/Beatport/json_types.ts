@@ -101,6 +101,7 @@ export interface Release extends MinimalRelease {
 	exclusive: boolean;
 	grid: null;
 	is_available_for_streaming: boolean;
+	is_explicit: boolean;
 	is_hype: boolean;
 	new_release_date: string;
 	override_price: boolean;
@@ -145,6 +146,7 @@ export interface Track extends EntityWithUrl {
 	free_download_end_date: null;
 	genre: Genre;
 	is_available_for_streaming: boolean;
+	is_explicit: boolean;
 	is_hype: boolean;
 	isrc: string | null;
 	key: Key;

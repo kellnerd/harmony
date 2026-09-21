@@ -8,6 +8,7 @@ import { TextWithLineBreaks } from './TextWithLineBreaks.tsx';
 import { Tracklist } from './Tracklist.tsx';
 import { CopyButton, CopyLinksButton } from '@/server/islands/CopyButton.tsx';
 import RegionList from '@/server/islands/RegionList.tsx';
+import { AdvisoryRatingIcon } from './AdvisoryRatingIcon.tsx';
 
 import { getMaxCacheTimestamp } from '@/harmonizer/timestamp.ts';
 import { determineReleaseEventCountries } from '@/musicbrainz/release_countries.ts';
@@ -30,7 +31,10 @@ export function Release({ release, releaseMap }: { release: MergedHarmonyRelease
 	return (
 		<div class='release'>
 			{info.messages.map((message, index) => <MessageBox message={message} key={index} />)}
-			<h2 class='release-title'>{release.title}</h2>
+			<h2 class='release-title'>
+				{release.title}
+				{release.advisoryRating && <AdvisoryRatingIcon advisoryRating={release.advisoryRating} />}
+			</h2>
 			<AlternativeValues property={(release) => release.title} />
 			<div class='release-artist'>
 				by <ArtistCredit artists={release.artists} />

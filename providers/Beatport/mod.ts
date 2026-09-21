@@ -182,6 +182,7 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 				thumbUrl: rawRelease.image.dynamic_uri.replace('{w}x{h}', '250x250'),
 				types: ['front'],
 			}],
+			advisoryRating: rawRelease.is_explicit ? 'explicit' : undefined,
 			info: this.generateReleaseInfo(),
 		};
 	}
@@ -201,6 +202,7 @@ export class BeatportReleaseLookup extends ReleaseLookup<BeatportProvider, Relea
 			recording: {
 				externalIds: this.provider.makeExternalIds({ type: 'track', id: rawTrack.id.toString(), slug: rawTrack.slug }),
 			},
+			advisoryRating: rawTrack.is_explicit ? 'explicit' : undefined,
 		};
 	}
 

@@ -222,6 +222,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 				types: ['front'],
 			}],
 			availableIn: this.determineAvailability(media),
+			advisoryRating: rawRelease.explicit_lyrics ? 'explicit' : undefined,
 			info: this.generateReleaseInfo(),
 		};
 	}
@@ -264,6 +265,7 @@ export class DeezerReleaseLookup extends ReleaseApiLookup<DeezerProvider, Releas
 			recording: {
 				externalIds: this.provider.makeExternalIds({ type: 'track', id: track.id.toString() }),
 			},
+			advisoryRating: track.explicit_lyrics ? 'explicit' : undefined,
 		};
 
 		if ('isrc' in track) {

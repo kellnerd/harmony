@@ -99,6 +99,22 @@ describe('OTOTOY provider', () => {
 				assertEquals(media.tracklist.length, 6);
 				assertEquals(media.tracklist[5].artists!.length, 3);
 			},
+		}, {
+			description: 'explicit release',
+			release: '1289692',
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+
+				assertEquals(release.advisoryRating, 'explicit');
+			},
+		}, {
+			description: 'clean release',
+			release: '3915185',
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+
+				assertEquals(release.advisoryRating, 'clean');
+			},
 		}],
 	});
 

@@ -1,7 +1,7 @@
 import type { ReleaseOptions } from '@/harmonizer/types.ts';
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
 import { stubProviderLookups } from '@/providers/test_stubs.ts';
-import { assert } from 'std/assert/assert.ts';
+import { assert, assertEquals } from 'std/assert/mod.ts';
 import { afterAll, describe } from '@std/testing/bdd';
 import { assertSnapshot } from '@std/testing/snapshot';
 
@@ -65,6 +65,32 @@ describe('Deezer provider', () => {
 				const allTracks = release.media.flatMap((medium) => medium.tracklist);
 				assert(allTracks.every((track) => track.artists?.length === 1), 'Tracks should not have multiple artists');
 				assert(allTracks.every((track) => !track.isrc), 'Tracks should not have an ISRC');
+			},
+		}, {
+			description: 'explicit release',
+			release: '245878832',
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+
+				assertEquals(release.advisoryRating, 'explicit', 'The release should be marked explicit');
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assertEquals(allTracks[0].advisoryRating, 'explicit', 'The track should be marked explicit');
+			},
+		}, {
+			description: 'partially explicit release',
+			release: '982951161',
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+
+				assertEquals(release.advisoryRating, 'explicit', 'The release should be marked explicit');
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				allTracks.forEach((track, index) => {
+					if (index === 2) {
+						assertEquals(track.advisoryRating, 'explicit', 'The third track should be marked explicit');
+					} else {
+						assertEquals(track.advisoryRating, undefined, `Track ${index + 1} should have no advisory rating`);
+					}
+				});
 			},
 		}],
 	});

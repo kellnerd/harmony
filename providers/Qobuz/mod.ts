@@ -255,6 +255,7 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 			}],
 			info: this.generateReleaseInfo(),
 			gtin: normalizeQobuzGtin(rawRelease.upc),
+			advisoryRating: rawRelease.parental_warning ? 'explicit' : undefined,
 		};
 	}
 
@@ -338,6 +339,7 @@ export class QobuzReleaseLookup extends ReleaseApiLookup<QobuzProvider, QobuzAlb
 			recording: {
 				externalIds: this.provider.makeExternalIds({ type: 'track', id: String(rawTrack.id) }),
 			},
+			advisoryRating: rawTrack.parental_warning ? 'explicit' : undefined,
 		};
 	}
 

@@ -5,8 +5,9 @@ import { fillMediumsTracklistGaps } from '@/harmonizer/tracklist_gap.ts';
 import { parseISODateTime, PartialDate } from '@/utils/date.ts';
 import { isEqualGTIN, isValidGTIN } from '@/utils/gtin.ts';
 
-import type { Collection, Kind, ReleaseResult, Track } from './api_types.ts';
+import type { Collection, Explicitness, Kind, ReleaseResult, Track } from './api_types.ts';
 import type {
+	AdvisoryRating,
 	ArtistCreditName,
 	Artwork,
 	ArtworkType,
@@ -202,6 +203,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 			packaging: 'None',
 			images: [this.processImage(collection.artworkUrl100, ['front'])],
 			copyright: collection.copyright,
+			advisoryRating: this.convertAdvisoryRating(collection.collectionExplicitness),
 			info: this.generateReleaseInfo(),
 		};
 
@@ -254,6 +256,7 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 						linkTypes,
 					}),
 				},
+				advisoryRating: this.convertAdvisoryRating(track.trackExplicitness),
 			});
 		});
 
@@ -266,6 +269,12 @@ export class iTunesReleaseLookup extends ReleaseApiLookup<iTunesProvider, Releas
 		}
 
 		return media;
+	}
+
+	private convertAdvisoryRating(explicitness: Explicitness): AdvisoryRating | undefined {
+		if (explicitness === 'explicit') return explicitness;
+
+		return explicitness === 'cleaned' ? 'clean' : undefined;
 	}
 
 	private convertRawArtist(name: string, url?: string): ArtistCreditName {

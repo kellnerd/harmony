@@ -2,6 +2,7 @@ export const snapshot = {};
 
 snapshot[`Mora provider > release lookup > release with GTIN in distPartNo 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "Ado",
@@ -62,6 +63,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in distPartNo 1`] =
       format: "Digital Media",
       tracklist: [
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Ado",
@@ -99,6 +101,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in distPartNo 1`] =
 
 snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "Various Artists",
@@ -159,6 +162,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
       format: "Digital Media",
       tracklist: [
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Poppin'Party",
@@ -178,6 +182,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Poppin'Party",
@@ -197,6 +202,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Poppin'Party",
@@ -216,6 +222,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Afterglow",
@@ -235,6 +242,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Afterglow",
@@ -254,6 +262,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Afterglow",
@@ -273,6 +282,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Pastel*Palettes",
@@ -292,6 +302,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Pastel*Palettes",
@@ -311,6 +322,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Pastel*Palettes",
@@ -330,6 +342,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Roselia",
@@ -349,6 +362,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Roselia",
@@ -368,6 +382,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Roselia",
@@ -387,6 +402,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Poppin'Party, 高松 燈(CV:羊宮妃那)",
@@ -406,6 +422,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Pastel*Palettes, 美竹 蘭(CV:佐倉綾音)",
@@ -425,6 +442,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "ハロー、ハッピーワールド！",
@@ -444,6 +462,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "ハロー、ハッピーワールド！",
@@ -463,6 +482,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "ハロー、ハッピーワールド！",
@@ -482,6 +502,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Morfonica",
@@ -501,6 +522,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Morfonica",
@@ -520,6 +542,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Morfonica",
@@ -539,6 +562,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "RAISE A SUILEN",
@@ -558,6 +582,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "RAISE A SUILEN",
@@ -577,6 +602,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "MyGO!!!!!",
@@ -596,6 +622,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "MyGO!!!!!",
@@ -615,6 +642,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "MyGO!!!!!",
@@ -634,6 +662,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "Roselia, レイヤ(CV:Raychell)",
@@ -653,6 +682,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
           type: "audio",
         },
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "ハロー、ハッピーワールド！, 倉田ましろ(CV:進藤あまね)",
@@ -690,6 +720,7 @@ snapshot[`Mora provider > release lookup > release with GTIN in cdPartNo 1`] = `
 
 snapshot[`Mora provider > release lookup > video release 1`] = `
 {
+  advisoryRating: undefined,
   artists: [
     {
       creditedName: "The Last Dinner Party",
@@ -750,6 +781,7 @@ snapshot[`Mora provider > release lookup > video release 1`] = `
       format: "Digital Media",
       tracklist: [
         {
+          advisoryRating: undefined,
           artists: [
             {
               creditedName: "The Last Dinner Party",
@@ -782,5 +814,564 @@ snapshot[`Mora provider > release lookup > video release 1`] = `
   },
   status: "Official",
   title: "Woman is a Tree",
+}
+`;
+
+snapshot[`Mora provider > release lookup > explicit release 1`] = `
+{
+  advisoryRating: "explicit",
+  artists: [
+    {
+      creditedName: "Carly Rae Jepsen",
+      externalIds: [
+        {
+          id: "295546",
+          provider: "mora",
+          type: "artist",
+        },
+      ],
+      name: "Carly Rae Jepsen",
+    },
+  ],
+  availableIn: [
+    "JP",
+  ],
+  copyright: "℗ 2026 School Boy/Interscope Records",
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+      ],
+      url: "https://mora.jp/package/43000006/00881061522348/",
+    },
+  ],
+  gtin: "00881061522348",
+  images: [
+    {
+      types: [
+        "front",
+      ],
+      url: "https://cf.mora.jp/contents/package/0000/00000083/0048/578/965/0048578965.200.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: "https://cf.mora.jp/contents/package/0000/00000083/0048/578/965/packageMeta.json",
+        id: "43000006/00881061522348",
+        internalName: "mora",
+        lookup: {
+          method: "id",
+          value: "43000006/00881061522348",
+        },
+        name: "mora",
+        url: "https://mora.jp/package/43000006/00881061522348/",
+      },
+    ],
+  },
+  labels: [
+    {
+      name: "School Boy/Interscope Records",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 252000,
+          number: 1,
+          title: "After All",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 177000,
+          number: 2,
+          title: "Habits of Creatures",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 194000,
+          number: 3,
+          title: "Versailles",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 202000,
+          number: 4,
+          title: "On Wires",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 149000,
+          number: 5,
+          title: "Blue Skies",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 210000,
+          number: 6,
+          title: "Burning Heart",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 229000,
+          number: 7,
+          title: "Wild Child",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 249000,
+          number: 8,
+          title: "Good Fine Alright",
+          type: "audio",
+        },
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 177000,
+          number: 9,
+          title: "Something Tragic",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 183000,
+          number: 10,
+          title: "Soft",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 210000,
+          number: 11,
+          title: "Lonely Side of the Bed",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 228000,
+          number: 12,
+          title: "Just a Little Walk on the Moon",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 319000,
+          number: 13,
+          title: "Never Let a Good Thing Die",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 179000,
+          number: 14,
+          title: "Amalfi Coast",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 209000,
+          number: 15,
+          title: "Patience Power Passion",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 192000,
+          number: 16,
+          title: "Don't Leave Me on the Dance Floor",
+          type: "audio",
+        },
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 233000,
+          number: 17,
+          title: "Motivation",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 194000,
+          number: 18,
+          title: "You Don't Know How It Feels",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 197000,
+          number: 19,
+          title: "Near or Far",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 186000,
+          number: 20,
+          title: "Diver",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 236000,
+          number: 21,
+          title: "Hold Me to the Light",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 222000,
+          number: 22,
+          title: "That's Just Me",
+          type: "audio",
+        },
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 220000,
+          number: 23,
+          title: "No Labels, I Love You",
+          type: "audio",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Carly Rae Jepsen",
+              externalIds: [
+                {
+                  id: "295546",
+                  provider: "mora",
+                  type: "artist",
+                },
+              ],
+              name: "Carly Rae Jepsen",
+            },
+          ],
+          length: 241000,
+          number: 24,
+          title: "Super Sage",
+          type: "audio",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 18,
+      month: 9,
+      year: 2026,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Day and Night",
 }
 `;

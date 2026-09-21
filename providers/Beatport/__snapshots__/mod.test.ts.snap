@@ -1,0 +1,575 @@
+export const snapshot = {};
+
+snapshot[`Beatport provider > release lookup > partially explicit release 1`] = `
+{
+  advisoryRating: "explicit",
+  artists: [
+    {
+      creditedName: "Haezer",
+      externalIds: [
+        {
+          id: "141373",
+          provider: "beatport",
+          slug: "haezer",
+          type: "artist",
+        },
+      ],
+      name: "Haezer",
+    },
+    {
+      creditedName: "Circe Electro",
+      externalIds: [
+        {
+          id: "678893",
+          provider: "beatport",
+          slug: "circe-electro",
+          type: "artist",
+        },
+      ],
+      name: "Circe Electro",
+    },
+    {
+      creditedName: "Jax Panik",
+      externalIds: [
+        {
+          id: "2397497",
+          provider: "beatport",
+          slug: "jax-panik",
+          type: "artist",
+        },
+      ],
+      name: "Jax Panik",
+    },
+  ],
+  externalLinks: [
+    {
+      types: [
+        "paid download",
+        "paid streaming",
+      ],
+      url: "https://www.beatport.com/release/little-grunts/7059114",
+    },
+  ],
+  gtin: "824296930656",
+  images: [
+    {
+      thumbUrl: "https://geo-media.beatport.com/image_size/250x250/bb7f6646-3825-407e-9c7f-9319559230c7.jpg",
+      types: [
+        "front",
+      ],
+      url: "https://geo-media.beatport.com/image_size/1400x1400/bb7f6646-3825-407e-9c7f-9319559230c7.jpg",
+    },
+  ],
+  info: {
+    messages: [],
+    providers: [
+      {
+        apiUrl: undefined,
+        id: "7059114",
+        internalName: "beatport",
+        lookup: {
+          method: "id",
+          value: "7059114",
+        },
+        name: "Beatport",
+        url: "https://www.beatport.com/release/little-grunts/7059114",
+      },
+    ],
+  },
+  labels: [
+    {
+      catalogNumber: "CNSLR018",
+      externalIds: [
+        {
+          id: "71710",
+          provider: "beatport",
+          slug: "cnslr-recordings",
+          type: "label",
+        },
+      ],
+      name: "CNSLR Recordings",
+    },
+  ],
+  media: [
+    {
+      format: "Digital Media",
+      tracklist: [
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Haezer",
+              externalIds: [
+                {
+                  id: "141373",
+                  provider: "beatport",
+                  slug: "haezer",
+                  type: "artist",
+                },
+              ],
+              name: "Haezer",
+            },
+          ],
+          isrc: "GBWUL2672382",
+          length: 252923,
+          number: 1,
+          recording: {
+            externalIds: [
+              {
+                id: "29313839",
+                provider: "beatport",
+                slug: "james-bond",
+                type: "track",
+              },
+            ],
+          },
+          title: "James Bond",
+        },
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Haezer",
+              externalIds: [
+                {
+                  id: "141373",
+                  provider: "beatport",
+                  slug: "haezer",
+                  type: "artist",
+                },
+              ],
+              name: "Haezer",
+            },
+            {
+              creditedName: "Circe Electro",
+              externalIds: [
+                {
+                  id: "678893",
+                  provider: "beatport",
+                  slug: "circe-electro",
+                  type: "artist",
+                },
+              ],
+              name: "Circe Electro",
+            },
+          ],
+          isrc: "GBWUL2672387",
+          length: 285625,
+          number: 2,
+          recording: {
+            externalIds: [
+              {
+                id: "29313840",
+                provider: "beatport",
+                slug: "who-the-fuck-is-haezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "Who The Fuck is Haezer (remix)",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Haezer",
+              externalIds: [
+                {
+                  id: "141373",
+                  provider: "beatport",
+                  slug: "haezer",
+                  type: "artist",
+                },
+              ],
+              name: "Haezer",
+            },
+          ],
+          isrc: "GBWUL2672420",
+          length: 251076,
+          number: 3,
+          recording: {
+            externalIds: [
+              {
+                id: "29313841",
+                provider: "beatport",
+                slug: "joey-bloom",
+                type: "track",
+              },
+            ],
+          },
+          title: "Joey Bloom",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Haezer",
+              externalIds: [
+                {
+                  id: "141373",
+                  provider: "beatport",
+                  slug: "haezer",
+                  type: "artist",
+                },
+              ],
+              name: "Haezer",
+            },
+          ],
+          isrc: "GBWUL2672423",
+          length: 237230,
+          number: 4,
+          recording: {
+            externalIds: [
+              {
+                id: "29313842",
+                provider: "beatport",
+                slug: "anarchy",
+                type: "track",
+              },
+            ],
+          },
+          title: "Anarchy!",
+        },
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Haezer",
+              externalIds: [
+                {
+                  id: "141373",
+                  provider: "beatport",
+                  slug: "haezer",
+                  type: "artist",
+                },
+              ],
+              name: "Haezer",
+            },
+            {
+              creditedName: "Circe Electro",
+              externalIds: [
+                {
+                  id: "678893",
+                  provider: "beatport",
+                  slug: "circe-electro",
+                  type: "artist",
+                },
+              ],
+              name: "Circe Electro",
+            },
+          ],
+          isrc: "GBWUL2672427",
+          length: 195692,
+          number: 5,
+          recording: {
+            externalIds: [
+              {
+                id: "29313843",
+                provider: "beatport",
+                slug: "gangsta-shit",
+                type: "track",
+              },
+            ],
+          },
+          title: "Gangsta Shit",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Haezer",
+              externalIds: [
+                {
+                  id: "141373",
+                  provider: "beatport",
+                  slug: "haezer",
+                  type: "artist",
+                },
+              ],
+              name: "Haezer",
+            },
+          ],
+          isrc: "GBWUL2672432",
+          length: 236076,
+          number: 6,
+          recording: {
+            externalIds: [
+              {
+                id: "29313844",
+                provider: "beatport",
+                slug: "tell-me-im-bad",
+                type: "track",
+              },
+            ],
+          },
+          title: "Tell Me I'm Bad",
+        },
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Haezer",
+              externalIds: [
+                {
+                  id: "141373",
+                  provider: "beatport",
+                  slug: "haezer",
+                  type: "artist",
+                },
+              ],
+              name: "Haezer",
+            },
+            {
+              creditedName: "Circe Electro",
+              externalIds: [
+                {
+                  id: "678893",
+                  provider: "beatport",
+                  slug: "circe-electro",
+                  type: "artist",
+                },
+              ],
+              name: "Circe Electro",
+            },
+          ],
+          isrc: "GBWUL2672435",
+          length: 194307,
+          number: 7,
+          recording: {
+            externalIds: [
+              {
+                id: "29313845",
+                provider: "beatport",
+                slug: "who-the-fuck-is-haezer",
+                type: "track",
+              },
+            ],
+          },
+          title: "Who The Fuck is Haezer",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Haezer",
+              externalIds: [
+                {
+                  id: "141373",
+                  provider: "beatport",
+                  slug: "haezer",
+                  type: "artist",
+                },
+              ],
+              name: "Haezer",
+            },
+          ],
+          isrc: "GBWUL2672452",
+          length: 319384,
+          number: 8,
+          recording: {
+            externalIds: [
+              {
+                id: "29313846",
+                provider: "beatport",
+                slug: "full-tilt",
+                type: "track",
+              },
+            ],
+          },
+          title: "Full Tilt",
+        },
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Haezer",
+              externalIds: [
+                {
+                  id: "141373",
+                  provider: "beatport",
+                  slug: "haezer",
+                  type: "artist",
+                },
+              ],
+              name: "Haezer",
+            },
+            {
+              creditedName: "Circe Electro",
+              externalIds: [
+                {
+                  id: "678893",
+                  provider: "beatport",
+                  slug: "circe-electro",
+                  type: "artist",
+                },
+              ],
+              name: "Circe Electro",
+            },
+          ],
+          isrc: "GBWUL2672455",
+          length: 213230,
+          number: 9,
+          recording: {
+            externalIds: [
+              {
+                id: "29313847",
+                provider: "beatport",
+                slug: "yasi",
+                type: "track",
+              },
+            ],
+          },
+          title: "Yasi",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Haezer",
+              externalIds: [
+                {
+                  id: "141373",
+                  provider: "beatport",
+                  slug: "haezer",
+                  type: "artist",
+                },
+              ],
+              name: "Haezer",
+            },
+          ],
+          isrc: "GBWUL2672459",
+          length: 230769,
+          number: 10,
+          recording: {
+            externalIds: [
+              {
+                id: "29313848",
+                provider: "beatport",
+                slug: "fists-in-the-air",
+                type: "track",
+              },
+            ],
+          },
+          title: "Fists in the Air",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Haezer",
+              externalIds: [
+                {
+                  id: "141373",
+                  provider: "beatport",
+                  slug: "haezer",
+                  type: "artist",
+                },
+              ],
+              name: "Haezer",
+            },
+          ],
+          isrc: "GBWUL2672463",
+          length: 309532,
+          number: 11,
+          recording: {
+            externalIds: [
+              {
+                id: "29313849",
+                provider: "beatport",
+                slug: "amber",
+                type: "track",
+              },
+            ],
+          },
+          title: "Amber",
+        },
+        {
+          advisoryRating: undefined,
+          artists: [
+            {
+              creditedName: "Haezer",
+              externalIds: [
+                {
+                  id: "141373",
+                  provider: "beatport",
+                  slug: "haezer",
+                  type: "artist",
+                },
+              ],
+              name: "Haezer",
+            },
+          ],
+          isrc: "GBWUL2672467",
+          length: 228346,
+          number: 12,
+          recording: {
+            externalIds: [
+              {
+                id: "29313850",
+                provider: "beatport",
+                slug: "i-wont",
+                type: "track",
+              },
+            ],
+          },
+          title: "I Won't",
+        },
+        {
+          advisoryRating: "explicit",
+          artists: [
+            {
+              creditedName: "Haezer",
+              externalIds: [
+                {
+                  id: "141373",
+                  provider: "beatport",
+                  slug: "haezer",
+                  type: "artist",
+                },
+              ],
+              name: "Haezer",
+            },
+            {
+              creditedName: "Jax Panik",
+              externalIds: [
+                {
+                  id: "2397497",
+                  provider: "beatport",
+                  slug: "jax-panik",
+                  type: "artist",
+                },
+              ],
+              name: "Jax Panik",
+            },
+          ],
+          isrc: "GBWUL2672470",
+          length: 184615,
+          number: 13,
+          recording: {
+            externalIds: [
+              {
+                id: "29313851",
+                provider: "beatport",
+                slug: "sirens-in-the-night",
+                type: "track",
+              },
+            ],
+          },
+          title: "Sirens In The Night",
+        },
+      ],
+    },
+  ],
+  packaging: "None",
+  releaseDate: {
+    date: {
+      day: 29,
+      month: 6,
+      year: 2026,
+    },
+    quality: "assumed-valid",
+  },
+  status: "Official",
+  title: "Little Grunts",
+}
+`;

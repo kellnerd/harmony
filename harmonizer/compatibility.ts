@@ -57,14 +57,22 @@ interface CompatibilityCheck<Entity> {
 	errorMessage: string;
 }
 
-const releaseCompatibilityChecks: CompatibilityCheck<HarmonyRelease>[] = [{
-	property: (release) => release.gtin ? Number(release.gtin) : undefined,
-	errorMessage: 'Providers have returned multiple different GTIN',
-}, {
-	property: trackCountSummary,
-	// TODO: Support releases with the same total track count.
-	errorMessage: 'Providers have returned incompatible track lists',
-}];
+const releaseCompatibilityChecks: CompatibilityCheck<HarmonyRelease>[] = [
+	{
+		property: (release) => release.gtin ? Number(release.gtin) : undefined,
+		errorMessage: 'Providers have returned multiple different GTIN',
+	},
+	{
+		property: trackCountSummary,
+		// TODO: Support releases with the same total track count.
+		errorMessage: 'Providers have returned incompatible track lists',
+	},
+	// Explicit and clean versions should be separate releases
+	{
+		property: (release) => release.advisoryRating,
+		errorMessage: 'Providers have returned conflicting advisory ratings',
+	},
+];
 
 /** Determines whether the given releases are compatible and can be merged (with the primary provider's data). */
 function determineReleaseIncompatibility(

@@ -1,6 +1,7 @@
 import type { ApiArgs, PackageMeta, Track } from './json_types.ts';
 import { MediaFormat } from './json_types.ts';
 import type {
+	AdvisoryRating,
 	ArtistCreditName,
 	Artwork,
 	EntityId,
@@ -203,10 +204,15 @@ export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> 
 			}],
 			images: [this.getArtwork(albumPage)],
 			copyright: albumPage.master,
+			advisoryRating: this.convertRawAdvisoryRating(albumPage.explicitFlg),
 			info: this.generateReleaseInfo(),
 		};
 
 		return release;
+	}
+
+	convertRawAdvisoryRating(explicitFlg: string): AdvisoryRating | undefined {
+		return explicitFlg === '1' ? 'explicit' : undefined;
 	}
 
 	convertRawTrack(rawTrack: Track): HarmonyTrack {
@@ -216,6 +222,7 @@ export class MoraReleaseLookup extends ReleaseLookup<MoraProvider, PackageMeta> 
 			type: rawTrack.mediaFormatNo == MediaFormat.Video ? 'video' : 'audio',
 			artists: [this.makeArtistCreditName(rawTrack.artistName, rawTrack.artistNo)],
 			length: rawTrack.duration * 1000,
+			advisoryRating: this.convertRawAdvisoryRating(rawTrack.explicitFlg),
 		};
 	}
 

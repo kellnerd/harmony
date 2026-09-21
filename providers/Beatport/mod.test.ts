@@ -1,10 +1,14 @@
 import { describeProvider, makeProviderOptions } from '@/providers/test_spec.ts';
-import { describe } from '@std/testing/bdd';
+import { afterAll, describe } from '@std/testing/bdd';
+import { assertSnapshot } from '@std/testing/snapshot';
+import { assertEquals } from 'std/assert/mod.ts';
+import { stubProviderLookups } from '@/providers/test_stubs.ts';
 
 import BeatportProvider from './mod.ts';
 
 describe('Beatport provider', () => {
 	const beatport = new BeatportProvider(makeProviderOptions());
+	const lookupStub = stubProviderLookups(beatport);
 
 	describeProvider(beatport, {
 		urls: [{
@@ -29,6 +33,26 @@ describe('Beatport provider', () => {
 			isCanonical: true,
 		}],
 		invalidIds: ['text'],
-		releaseLookup: [],
+		releaseLookup: [{
+			description: 'partially explicit release',
+			release: new URL('https://www.beatport.com/release/little-grunts/7059114'),
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+
+				assertEquals(release.advisoryRating, 'explicit', 'Release should be marked explicit');
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				allTracks.forEach((track, index) => {
+					if ([0, 1, 4, 6, 8, 12].includes(index)) {
+						assertEquals(track.advisoryRating, 'explicit', 'The third track should be marked explicit');
+					} else {
+						assertEquals(track.advisoryRating, undefined, `Track ${index + 1} should have no advisory rating`);
+					}
+				});
+			},
+		}],
+	});
+
+	afterAll(() => {
+		lookupStub.restore();
 	});
 });

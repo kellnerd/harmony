@@ -104,6 +104,30 @@ describe('iTunes provider', () => {
 					'Lookup generates a warning about the missing tracks',
 				);
 			},
+		}, {
+			description: 'clean release',
+			release: '1577414584',
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+				assertEquals(release.advisoryRating, 'clean', 'The release should be marked clean');
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				assertEquals(allTracks[0].advisoryRating, 'clean', 'The track should be marked clean');
+			},
+		}, {
+			description: 'partially explicit release',
+			release: '6769823972',
+			assert: async (release, ctx) => {
+				await assertSnapshot(ctx, release);
+				assertEquals(release.advisoryRating, 'explicit', 'The release should be marked explicit');
+				const allTracks = release.media.flatMap((medium) => medium.tracklist);
+				allTracks.forEach((track, index) => {
+					if (index === 2) {
+						assertEquals(track.advisoryRating, 'explicit', 'The third track should be marked explicit');
+					} else {
+						assertEquals(track.advisoryRating, undefined, `Track ${index + 1} should have no advisory rating`);
+					}
+				});
+			},
 		}],
 	});
 
