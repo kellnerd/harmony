@@ -13,7 +13,7 @@ export function convertFormat(format: ReleaseFormat): Array<MediumFormat | undef
 	}
 
 	let mediumFormat = mediumFormatMap[format.name];
-	if (mediumFormat) {
+	if (mediumFormat && format.descriptions) {
 		for (const description of format.descriptions) {
 			if (['Vinyl', 'Acetate', 'Shellac'].includes(mediumFormat)) {
 				if (description === 'LP') {
@@ -63,7 +63,7 @@ export function extractMoreDetailsFromFormatsAndStyles(formats: ReleaseFormat[],
 	let packaging: ReleasePackaging | undefined;
 
 	for (const format of formats) {
-		for (const description of format.descriptions) {
+		for (const description of format.descriptions ?? []) {
 			if (description === 'Promo') {
 				status = 'Promotion';
 			} else if (description.includes('Unofficial')) {

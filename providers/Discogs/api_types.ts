@@ -91,7 +91,7 @@ export interface ReleaseFormat {
 	/** Numeric quantity of the format. */
 	qty: string;
 	/** Descriptions like size, speed, status etc. */
-	descriptions: string[];
+	descriptions?: string[] | null;
 	/** Freeform text, may contain packaging. */
 	text?: string;
 }
