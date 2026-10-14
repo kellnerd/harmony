@@ -14,6 +14,7 @@ import type {
 	Artwork,
 	IncompatibilityInfo,
 	MergedHarmonyRelease,
+	ProviderReleaseMap,
 	ReleaseOptions,
 	ResolvableEntity,
 } from '@/harmonizer/types.ts';
@@ -44,6 +45,7 @@ export default defineRoute(async (req, ctx) => {
 	let mbRecordings: EntityWithUrlRels[] = [];
 	let allImages: Artwork[] = [];
 	let allRecordings: ResolvableEntity[] = [];
+	let providerReleaseMap: ProviderReleaseMap = {};
 
 	try {
 		releaseMbid = ctx.url.searchParams.get('release_mbid') ?? undefined;
@@ -92,7 +94,7 @@ export default defineRoute(async (req, ctx) => {
 				primaryProvider: 'MusicBrainz',
 			});
 
-			const providerReleaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
+			providerReleaseMap = filterErrorEntries(await lookup.getCompleteProviderReleaseMapping());
 			allImages = Object.entries(providerReleaseMap).flatMap(([provider, release]) =>
 				release.images?.map((image) => ({ ...image, provider })) ?? []
 			);
@@ -198,6 +200,7 @@ export default defineRoute(async (req, ctx) => {
 						release={release}
 						targetMbid={releaseMbid}
 						recordingsCache={mbRecordings}
+						providerReleaseMap={providerReleaseMap}
 					/>
 				)}
 				{releaseUrl && (
